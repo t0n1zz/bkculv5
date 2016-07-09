@@ -1,0 +1,32 @@
+.modalphotos img:hover{
+    cursor: pointer;
+    cursor: hand;
+}
+
+.warptext {
+    word-wrap: break-word;
+    word-break: normal;
+    white-space: pre-wrap;
+}
+
+table.dataTable td.focus {
+    outline: none;
+    outline-offset: none;
+    background-color:#3c8dbc;
+    color:#fff;
+}
+
+table.dataTable thead tr{
+	background-color:#3c8dbc;
+	color:#fff;
+	white-space: nowrap;
+}
+
+.lead{
+    font-weight: 600;
+}
+
+.progress-group .progress-text{
+    font-size: small;
+    font-weight: 600;
+}
