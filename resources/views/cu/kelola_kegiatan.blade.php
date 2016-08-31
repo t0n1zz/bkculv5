@@ -6,8 +6,8 @@ $imagepath = "images_staf/";
 
 @section('css')
         <!-- DataTables CSS -->
-{{ HTML::style('plugins/dataTables/bootstrap/dataTables.bootstrap.css') }}
-{{ HTML::style('plugins/dataTables/extension/Responsive/css/dataTables.responsive.css') }}
+{{ Html::style('plugins/dataTables/bootstrap/dataTables.bootstrap.css') }}
+{{ Html::style('plugins/dataTables/extension/Responsive/css/dataTables.responsive.css') }}
 @stop
 
 @section('content')
@@ -136,10 +136,10 @@ $imagepath = "images_staf/";
 @stop
 
 @section('javascript')
-        <!-- DataTables JavaScript -->
-{{ HTML::script('plugins/dataTables/jquery.dataTables.js') }}
-{{ HTML::script('plugins/dataTables/bootstrap/dataTables.bootstrap.js') }}
-{{ HTML::script('plugins/dataTables/extension/Responsive/js/dataTables.responsive.js') }}
+<!-- DataTables JavaScript -->
+{{ Html::script('plugins/dataTables/jquery.dataTables.js') }}
+{{ Html::script('plugins/dataTables/bootstrap/dataTables.bootstrap.js') }}
+{{ Html::script('plugins/dataTables/extension/Responsive/js/dataTables.responsive.js') }}
 <script>
     $(document).ready(function() {
         var table = $('#dataTables-example').dataTable({

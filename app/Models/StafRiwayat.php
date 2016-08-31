@@ -8,7 +8,7 @@ class StafRiwayat extends Model {
     protected $table = 'staf_riwayat';
 
     protected $fillable = [
-        'id_staf','tipe','name','mulai','selesai'
+        'id_staf','tipe','name','keterangan','keterangan2','mulai','selesai','sekarang'
     ];
 
 }

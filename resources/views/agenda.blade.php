@@ -111,45 +111,45 @@
             </div>
         </div>
         {{--kegiatan--}}
-        <div class="hr1 margin-top"></div>
+        {{--<div class="hr1 margin-top"></div>--}}
         {{--foto kegiatan--}}
-        <div class="row">
-            <div class="col-md-12">
-                <h4 class="classic-title"><span>Foto Kegiatan</span></h4>
-                <div class="recent-projects">
-                    <div class="projects-carousel touch-carousel navigation-3">
-                        @foreach($gambars as $gambar)
-                            <div class="portfolio-item item ">
-                                <div class="portfolio-border">
-                                    <div class="portfolio-thumb">
-                                        <?php
-                                        $img_url = "http://farm{$gambar['farm']}.staticflickr.com/{$gambar['server']}/{$gambar['id']}_{$gambar['secret']}.jpg";
-                                        $img_url_big = "http://farm{$gambar['farm']}.staticflickr.com/{$gambar['server']}/{$gambar['id']}_{$gambar['secret']}_b.jpg";
-                                        ?>
-                                        <a class="lightbox" data-lightbox-type="ajax" title="" href="{{ $img_url_big }}">
-                                            <div class="thumb-overlay"><i class="fa fa-arrows-alt"></i></div>
-                                            <div style="width: 265px;height: 176px;overflow: hidden">
-                                                <img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
-                                                     data-src="{{$img_url}}" alt="flickr bkcu image" />
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-12" data-animation="fadeInDown" data-animation-delay="01">
-                <div class="hr1 margin-top"></div>
-                <div class="call-action call-action-boxed call-action-style2 clearfix">
-                    <div class="button-side" style="margin-top:4px;">
-                        <a href="https://www.flickr.com/photos/127271987@N07/"
-                           target="_blank" class="btn-system border-btn btn-medium">Lihat Semua Foto</a></div>
-                    <h2 class="primary">Ingin melihat semua <strong>Foto Kegiatan?</strong></h2>
-                    <p>Semua foto kegiatan kami simpan di <strong>flickr</strong> </p>
-                </div>
-            </div>
+        {{--<div class="row">--}}
+            {{--<div class="col-md-12">--}}
+                {{--<h4 class="classic-title"><span>Foto Kegiatan</span></h4>--}}
+                {{--<div class="recent-projects">--}}
+                    {{--<div class="projects-carousel touch-carousel navigation-3">--}}
+                        {{--@foreach($gambars as $gambar)--}}
+                            {{--<div class="portfolio-item item ">--}}
+                                {{--<div class="portfolio-border">--}}
+                                    {{--<div class="portfolio-thumb">--}}
+                                        {{--<?php--}}
+                                        {{--$img_url = "http://farm{$gambar['farm']}.staticflickr.com/{$gambar['server']}/{$gambar['id']}_{$gambar['secret']}.jpg";--}}
+                                        {{--$img_url_big = "http://farm{$gambar['farm']}.staticflickr.com/{$gambar['server']}/{$gambar['id']}_{$gambar['secret']}_b.jpg";--}}
+                                        {{--?>--}}
+                                        {{--<a class="lightbox" data-lightbox-type="ajax" title="" href="{{ $img_url_big }}">--}}
+                                            {{--<div class="thumb-overlay"><i class="fa fa-arrows-alt"></i></div>--}}
+                                            {{--<div style="width: 265px;height: 176px;overflow: hidden">--}}
+                                                {{--<img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="--}}
+                                                     {{--data-src="{{$img_url}}" alt="flickr bkcu image" />--}}
+                                            {{--</div>--}}
+                                        {{--</a>--}}
+                                    {{--</div>--}}
+                                {{--</div>--}}
+                            {{--</div>--}}
+                        {{--@endforeach--}}
+                    {{--</div>--}}
+                {{--</div>--}}
+            {{--</div>--}}
+            {{--<div class="col-md-12" data-animation="fadeInDown" data-animation-delay="01">--}}
+                {{--<div class="hr1 margin-top"></div>--}}
+                {{--<div class="call-action call-action-boxed call-action-style2 clearfix">--}}
+                    {{--<div class="button-side" style="margin-top:4px;">--}}
+                        {{--<a href="https://www.flickr.com/photos/127271987@N07/"--}}
+                           {{--target="_blank" class="btn-system border-btn btn-medium">Lihat Semua Foto</a></div>--}}
+                    {{--<h2 class="primary">Ingin melihat semua <strong>Foto Kegiatan?</strong></h2>--}}
+                    {{--<p>Semua foto kegiatan kami simpan di <strong>flickr</strong> </p>--}}
+                {{--</div>--}}
+            {{--</div>--}}
         </div>
         {{--foto kegiatan--}}
     </div>

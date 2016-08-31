@@ -4,6 +4,13 @@ $kelas = "kegiatan";
 ?>
 @extends('admins._layouts.layout')
 
+@section('css')
+@include('admins._components.datatable_CSS')
+<link rel="stylesheet" type="text/css" href="{{asset('plugins/summernote/summernote.css')}}" >
+<link rel="stylesheet" type="text/css" href="{{asset('plugins/select/dist/css/select2.min.css')}}" >
+<link rel="stylesheet" type="text/css" href="{{asset('plugins/select/dist/css/select2-bootstrap.min.css')}}" >
+@stop
+
 @section('content')
 
 <!-- header -->
@@ -14,7 +21,7 @@ $kelas = "kegiatan";
     </h1>
     <ol class="breadcrumb">
         <li><a href="{{ URL::to('admins') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li><i class="fa fa-calendar"></i> Kegiatan</li>
+        <li><a href="{{ URL::to('admins/kegiatan') }}"><i class="fa fa-calendar"></i> Kegiatan</a></li>
         <li class="active"><i class="fa fa-database"></i> {{ $title }}</li>
     </ol>
 </section>
@@ -23,745 +30,654 @@ $kelas = "kegiatan";
     <!-- Alert -->
     @include('admins._layouts.alert')
     <!-- /Alert -->
-    <div class="callout callout-info" style="margin-bottom: 0!important;">
-        <h4>Diklat Pimpinan Manajemen Tingkat Pertama</h4>
-        <i class="fa fa-circle-o"></i> Tahun Buku 2014
-    </div>
-    <br/>
-    <a href="#" class="btn btn-primary btn-sm" ><i class="fa fa-print"></i> Print</a>
-    <a href="#" class="btn btn-warning btn-sm"><i class="fa fa-list-alt"></i> One Page</a>
-    <br/><br/>
-    <div class="nav-tabs-custom">
-        <ul class="nav nav-tabs">
-            <li class="active"><a href="#info_1" data-toggle="tab"><b>Info</b></a></li>
-            <li><a href="#info_2" data-toggle="tab"><b>Biaya</b></a></li>
-            <li><a href="#info_3" data-toggle="tab"><b>Evaluasi</b></a></li>
-        </ul>
-        <div class="tab-content">
-            <div class="tab-pane fade in active" id="info_1">
-                <div class="row">
-                    <div class="col-sm-3 ">
-                        <b>District Office</b>: Barat
-                        <br/><br/>
-                        <b>Lama Kegiatan</b>: 33 Hari
-                        <br/>
-                        <b>Tanggal Mulai</b>: 24 Mei 2015
-                        <br/>
-                        <b>Tanggal Selesai</b>: 27 Juni 2015
-                        <br/><br/>
-                        <b>Sasaran Peserta</b><br/>
-                        <p>Manajemen Baru / Staf Baru bukan staf magang</p>
-                        <b>Tempat</b><br/>
-                        <p>Sarikan dan RRC Pontianak</p>
-                    </div>
-                    <div class="col-sm-4 ">
-                        <p class="lead">Deskripsi Kegiatan</p>
-                        <p>"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architect</p>
-                    </div>
-                    <div class="col-sm-5">
-                        <p class="lead">Status</p>
-                        <div class="info-box bg-yellow">
-                            <span class="info-box-icon"><i class="fa fa-check"></i></span>
-                            <div class="info-box-content">
-                                <span class="info-box-text">Kegiatan</span>
-                                <span class="info-box-number">100%</span>
-                                <div class="progress">
-                                    <div class="progress-bar" style="width: 100%"></div>
-                                </div>
-                          <span class="progress-description">
-                            Sudah selesai dilaksanakan
-                          </span>
-                            </div><!-- /.info-box-content -->
-                        </div><!-- /.info-box -->
-                        <div class="info-box bg-aqua">
-                            <span class="info-box-icon"><i class="fa fa-user"></i></span>
-                            <div class="info-box-content">
-                                <span class="info-box-text">Peserta</span>
-                                <span class="info-box-number">30 orang</span>
-                                <div class="progress">
-                                    <div class="progress-bar" style="width: 80%"></div>
-                                </div>
-                          <span class="progress-description">
-                            Max : 50 | Min : 20
-                          </span>
-                            </div><!-- /.info-box-content -->
-                        </div><!-- /.info-box -->
-                    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <!-- Profile Image -->
+            <div class="box box-primary">
+                <div class="box-body box-profile">
+                    <h2 class="profile-username text-center">{{ $data->name }}</h2>
+                    @if(!empty($data->wilayah))
+                        <p class="text-muted text-center">{{ $data->wilayah }}</p>
+                    @else
+                        <p class="text-muted text-center">-</p>
+                    @endif
+
+                    <ul class="list-group list-group-unbordered">
+                        <li class="list-group-item">
+                            @if(!empty($data->tanggal))
+                                <?php $date = new Date($data->tanggal); ?>
+                                <b>Tanggal Mulai</b> <a class="pull-right">{{  $date->format('d-n-Y') }}</a>
+                            @else
+                                <b>Tanggal Mulai</b> <a class="pull-right">-</a>
+                            @endif
+                        </li>
+                        <li class="list-group-item">
+                            @if(!empty($data->tanggal))
+                                <?php $date2 = new Date($data->tanggal2); ?>
+                                <b>Tanggal Selesai</b> <a class="pull-right">{{  $date2->format('d-n-Y') }}</a>
+                            @else
+                                <b>Tanggal Selesai</b> <a class="pull-right">-</a>
+                            @endif
+                        </li>
+                        <li class="list-group-item">
+                            <b>Periode Kegiatan</b> <a class="pull-right">2016</a>
+                        </li>
+                    </ul>
+                    @if($data->status == "0")
+                        <a href="#" class="btn btn-default btn-block"><b><i class="fa fa-ban"></i> Belum Dilaksanakan</b></a>
+                    @else
+                        <a href="#" class="btn btn-warning btn-block"><b><i class="fa fa-check"></i> Sudah Terlaksana</b></a>
+                    @endif
                 </div>
-            </div><!-- /.tab-pane -->
-            <div class="tab-pane fade" id="info_2">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="table-responsive">
-                            <a href="#" class="btn btn-sm btn-primary"><i class="fa fa-plus"></i> Tambah Penerimaan Kas</a>
-                            <a href="#" class="btn btn-sm btn-warning"><i class="fa fa-plus"></i> Tambah Pengeluaran Kas</a>
-                            <br/><br/>
-                            <table class="table table-striped">
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+            <div class="small-box bg-aqua">
+                <div class="inner">
+                    <h3>44</h3>
+
+                    <p>Peserta Terdaftar</p>
+                </div>
+                <div class="icon">
+                    <i class="fa fa-users"></i>
+                </div>
+                <a href="#2" data-toggle="tab" class="small-box-footer">
+                    Detail <i class="fa fa-arrow-circle-right"></i>
+                </a>
+            </div>
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title"><i class="fa fa-map-marker margin-r-5"></i> Tempat</h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <strong></strong>
+                    <p class="text-muted">{{ $data->tempat }}</p>
+                </div>
+                <!-- /.box-body -->
+            </div>
+        </div>
+        <!-- /.col -->
+        <div class="col-md-9">
+            <div class="nav-tabs-custom">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#1" data-toggle="tab">Tujuan & Pokok Bahasan</a></li>
+                    <li><a href="#2" data-toggle="tab">Peserta, Fasilitator & Panitia</a></li>
+                    <li><a href="#3" data-toggle="tab">Biaya</a></li>
+                    <li><a href="#4" data-toggle="tab">Evaluasi & Saran</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div class="fade in active tab-pane" id="1">
+                        <div class="post">
+                            <h3>Tujuan
+                                <small>
+                                    @if(!empty($data->tujuan))
+                                        <a href="#" id="edittujuan" onclick="edit_tujuan()"><i class="fa fa-pencil-square-o"></i></a>
+                                    @else
+                                        <a href="#" style="display: none" id="edittujuan2" onclick="edit_tujuan2()"><i class="fa fa-pencil-square-o"></i></a>
+                                    @endif
+                                </small>
+                            </h3>
+                            <form id="tujuan" action="#">
+                            @if(!empty($data->tujuan))
+                                <div class="texttujuan">
+                                    {!! $data->tujuan !!}
+                                </div>
+                                <button id="savetujuan" data-loading-text="Menyimpan..." style="display: none" class="btn btn-primary" type="button"><i class="fa fa-save"></i> Simpan</button>
+                                <button id="bataltujuan" style="display: none" onclick="batal_tujuan()" class="btn btn-danger" type="button"><i class="fa fa-times"></i> Batal</button>
+                            @else
+                                <div class="texttujuan2"></div>
+                                <button id="savetujuan2" style="display: inline" class="btn btn-primary" type="button"><i class="fa fa-save"></i> Simpan</button>
+                                <button id="bataltujuan2" style="display: none" onclick="batal_tujuan()" class="btn btn-danger" type="button"><i class="fa fa-times"></i> Batal</button>
+                            @endif
+                            </form>
+                        </div>
+                        <div class="post">
+                            <h3>Pokok Bahasan
+                                <small>
+                                    @if(!empty($data->pokok))
+                                        <a href="#" id="editpokok" onclick="edit_pokok()"><i class="fa fa-pencil-square-o"></i></a>
+                                    @else
+                                        <a href="#" style="display: none" id="editpokok2" onclick="edit_pokok2()"><i class="fa fa-pencil-square-o"></i></a>
+                                    @endif
+                                </small>
+                            </h3>
+                            <form id="pokok" action="#">
+                                @if(!empty($data->pokok))
+                                    <div class="textpokok">
+                                        {!! $data->pokok !!}
+                                    </div>
+                                    <button id="savepokok" style="display: none" class="btn btn-primary" type="button"><i class="fa fa-save"></i> Simpan</button>
+                                    <button id="batalpokok" style="display: none" onclick="batal_pokok()" class="btn btn-danger" type="button"><i class="fa fa-times"></i> Batal</button>
+                                @else
+                                    <div class="textpokok2"></div>
+                                    <button id="savepokok2" style="display: inline" class="btn btn-primary" type="button"><i class="fa fa-save"></i> Simpan</button>
+                                    <button id="batalpokok2" style="display: none" onclick="batal_pokok2()" class="btn btn-danger" type="button"><i class="fa fa-times"></i> Batal</button>
+                                @endif
+                            </form>
+                        </div>
+                    </div>
+                    <!-- /.tab-pane -->
+                    <div class="fade tab-pane" id="2">
+                        <div class="post">
+                            <h3>Fasilitator & Panitia</h3>
+                            <table class="table table-striped table-hover" id="datatablepanitia">
                                 <thead>
                                 <tr>
-                                    <th>No</th>
-                                    <th>Uraian</th>
-                                    <th>Tanggal</th>
-                                    <th>Keterangan</th>
-                                    <th>Satuan</th>
-                                    <th>Nominal</th>
-                                    <th>Total</th>
-                                    <th>Hapus</th>
+                                    <th hidden></th>
+                                    <th>Nama</th>
+                                    <th>Jenis Kelamin</th>
+                                    <th>Tugas</th>
                                 </tr>
                                 </thead>
                                 <tbody>
+                                @foreach($datapanitia as $data)
+                                    <tr>
+                                        <td hidden>{{ $data->id }}</td>
+                                        @if(!empty($data->staf->nama))<td>{{ $data->staf->nama }}</td>@else<td>-</td>@endif
+                                        @if(!empty($data->staf->kelamin))<td>{{ $data->staf->kelamin }}</td>@else<td>-</td>@endif
+                                        @if(!empty($data->tugas))<td>{{ $data->tugas }}</td>@else<td>-</td>@endif
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="post">
+                            <h3>Peserta</h3>
+                            <table class="table table-striped table-hover dataTables" >
+                                <thead>
                                 <tr>
-                                    <td colspan="8"><b>Penerimaan Kas<b/></td>
+                                    <th hidden></th>
+                                    <th>Nama</th>
+                                    <th>Jenis Kelamin</th>
+                                    <th>Asal CU</th>
                                 </tr>
-                                <tr>
-                                    <td>1</td>
-                                    <td>Kas Awal</td>
-                                    <td>22-5-2015</td>
-                                    <td>El snort testosterone trophy </td>
-                                    <td></td>
-                                    <td>4.000.000,-</td>
-                                    <td>4.000.000,-</td>
-                                    <td><a href="#" class="btn btn-danger"><i class="fa fa-trash"></i></a></td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>Kas Tambahan</td>
-                                    <td>22-5-2015</td>
-                                    <td>El snort testosterone trophy </td>
-                                    <td></td>
-                                    <td>2.000.000,-</td>
-                                    <td>2.000.000,-</td>
-                                    <td><a href="#" class="btn btn-danger"><i class="fa fa-trash"></i></a></td>
-                                </tr>
-                                <tr>
-                                    <td colspan="6"><b>Total Penerimaan Kas</b></td>
-                                    <td><b>6.000.000,-</b></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td colspan="8"><b>Pengeluaran Kas</b></td>
-                                </tr>
-                                <tr>
-                                    <td>1</td>
-                                    <td>Call of Duty</td>
-                                    <td>22-5-2015</td>
-                                    <td>El snort testosterone trophy </td>
-                                    <td>2</td>
-                                    <td>1.000.000,-</td>
-                                    <td>2.000.000,-</td>
-                                    <td><a href="#" class="btn btn-danger"><i class="fa fa-trash"></i></a></td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>Need for Speed IV</td>
-                                    <td>28-5-2015</td>
-                                    <td>Wes Anderson umami biodiesel</td>
-                                    <td>1</td>
-                                    <td>800.000,-</td>
-                                    <td>800.000,-</td>
-                                    <td><a href="#" class="btn btn-danger"><i class="fa fa-trash"></i></a></td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td>Monsters DVD</td>
-                                    <td>24-5-2015</td>
-                                    <td>Terry Richardson helvetica</td>
-                                    <td>1</td>
-                                    <td>1.500.000,-</td>
-                                    <td>1.500.000,-</td>
-                                    <td><a href="#" class="btn btn-danger"><i class="fa fa-trash"></i></a></td>
-                                </tr>
-                                <tr>
-                                    <td>4</td>
-                                    <td>Grown Ups Blue Ray</td>
-                                    <td>30-5-2015</td>
-                                    <td>Tousled lomo letterpress</td>
-                                    <td>2</td>
-                                    <td>500.000,-</td>
-                                    <td>1.000.000,-</td>
-                                    <td><a href="#" class="btn btn-danger"><i class="fa fa-trash"></i></a></td>
-                                </tr>
-                                <tr>
-                                    <td colspan="6"><b>Total Pengeluaran Kas</b></td>
-                                    <td><b>5.300.000,-</b></td>
-                                    <td></td>
-                                </tr>
+                                </thead>
+                                <tbody>
+                                @foreach($datapeserta as $data)
+                                    <tr>
+                                        <td hidden>{{ $data->id }}</td>
+                                        @if(!empty($data->staf->nama))<td>{{ $data->staf->nama }}</td>@else<td>-</td>@endif
+                                        @if(!empty($data->staf->kelamin))<td>{{ $data->staf->kelamin }}</td>@else<td>-</td>@endif
+                                        @if(!empty($data->staf->cu))<td>{{ $data->staf->cu }}</td>@else<td>-</td>@endif
+                                    </tr>
+                                @endforeach
                                 </tbody>
                             </table>
                         </div>
                     </div>
-                    <div class="col-sm-5">
-                        <div class="table-responsive">
-                            <table class="table table-bordered">
-                                <tr>
-                                    <th style="width:50%">Total Penerimaan Kas</th>
-                                    <td>Rp. 6.000.000</td>
-                                </tr>
-                                <tr>
-                                    <th>Total Pengeluaran Kas</th>
-                                    <td>Rp. 5.300.000,-</td>
-                                </tr>
-                                <tr>
-                                    <th>Saldo Akhir Kas</th>
-                                    <td>Rp. 700.000,-</td>
-                                </tr>
-                            </table>
-                        </div>
+                    <!-- /.tab-pane -->
+                    <div class="fade tab-pane" id="3">
                     </div>
+                    <!-- /.tab-pane -->
+                    <div class="fade tab-pane" id="4">
+                    </div>
+                    <!-- /.tab-pane -->
                 </div>
-            </div><!-- /.tab-pane -->
-            <div class="tab-pane fade" id="info_3">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <p class="lead" style="text-align: center">Penyelenggara</p>
-                    </div>
-                    <div class="col-sm-3">
-                        <p class="text-left">
-                            <strong><i class="fa fa-clock-o"></i> Waktu</strong>
-                        </p>
-                        <div class="progress-group">
-                            <span class="progress-text"><b>A</b> | Sangat Memuaskan</span>
-                            <span class="progress-number"><b>15</b>/30</span>
-                            <div class="progress sm">
-                                <div class="progress-bar progress-bar-blue" style="width: 50%"></div>
-                            </div>
-                        </div><!-- /.progress-group -->
-                        <div class="progress-group">
-                            <span class="progress-text">B | Memuaskan</span>
-                            <span class="progress-number"><b>9</b>/30</span>
-                            <div class="progress sm">
-                                <div class="progress-bar progress-bar-aqua" style="width: 30%"></div>
-                            </div>
-                        </div><!-- /.progress-group -->
-                        <div class="progress-group">
-                            <span class="progress-text">C | Cukup Memuaskan</span>
-                            <span class="progress-number"><b>3</b>/30</span>
-                            <div class="progress sm">
-                                <div class="progress-bar progress-bar-green" style="width:10%"></div>
-                            </div>
-                        </div><!-- /.progress-group -->
-                        <div class="progress-group">
-                            <span class="progress-text">D | Kurang Memuaskan</span>
-                            <span class="progress-number"><b>2</b>/30</span>
-                            <div class="progress sm">
-                                <div class="progress-bar progress-bar-yellow" style="width: 5%"></div>
-                            </div>
-                        </div>
-                        <div class="progress-group">
-                            <span class="progress-text">E | Tidak Memuaskan</span>
-                            <span class="progress-number"><b>2</b>/30</span>
-                            <div class="progress sm">
-                                <div class="progress-bar progress-bar-red" style="width: 5%"></div>
-                            </div>
-                        </div><!-- /.progress-group -->
-                    </div>
-                    <div class="col-sm-3">
-                        <p class="text-left">
-                            <strong><i class="fa fa-home"></i> Tempat</strong>
-                        </p>
-                        <div class="progress-group">
-                            <span class="progress-text">A | Sangat Memuaskan</span>
-                            <span class="progress-number"><b>15</b>/30</span>
-                            <div class="progress sm">
-                                <div class="progress-bar progress-bar-blue" style="width: 50%"></div>
-                            </div>
-                        </div><!-- /.progress-group -->
-                        <div class="progress-group">
-                            <span class="progress-text">B | Memuaskan</span>
-                            <span class="progress-number"><b>9</b>/30</span>
-                            <div class="progress sm">
-                                <div class="progress-bar progress-bar-aqua" style="width: 30%"></div>
-                            </div>
-                        </div><!-- /.progress-group -->
-                        <div class="progress-group">
-                            <span class="progress-text">C | Cukup Memuaskan</span>
-                            <span class="progress-number"><b>3</b>/30</span>
-                            <div class="progress sm">
-                                <div class="progress-bar progress-bar-green" style="width:10%"></div>
-                            </div>
-                        </div><!-- /.progress-group -->
-                        <div class="progress-group">
-                            <span class="progress-text">D | Kurang Memuaskan</span>
-                            <span class="progress-number"><b>2</b>/30</span>
-                            <div class="progress sm">
-                                <div class="progress-bar progress-bar-yellow" style="width: 5%"></div>
-                            </div>
-                        </div>
-                        <div class="progress-group">
-                            <span class="progress-text">E | Tidak Memuaskan</span>
-                            <span class="progress-number"><b>2</b>/30</span>
-                            <div class="progress sm">
-                                <div class="progress-bar progress-bar-red" style="width: 5%"></div>
-                            </div>
-                        </div><!-- /.progress-group -->
-                    </div>
-                    <div class="col-sm-3">
-                        <p class="text-left">
-                            <strong><i class="fa fa-cutlery"></i> Konsumsi</strong>
-                        </p>
-                        <div class="progress-group">
-                            <span class="progress-text">A | Sangat Memuaskan</span>
-                            <span class="progress-number"><b>15</b>/30</span>
-                            <div class="progress sm">
-                                <div class="progress-bar progress-bar-blue" style="width: 50%"></div>
-                            </div>
-                        </div><!-- /.progress-group -->
-                        <div class="progress-group">
-                            <span class="progress-text">B | Memuaskan</span>
-                            <span class="progress-number"><b>9</b>/30</span>
-                            <div class="progress sm">
-                                <div class="progress-bar progress-bar-aqua" style="width: 30%"></div>
-                            </div>
-                        </div><!-- /.progress-group -->
-                        <div class="progress-group">
-                            <span class="progress-text">C | Cukup Memuaskan</span>
-                            <span class="progress-number"><b>3</b>/30</span>
-                            <div class="progress sm">
-                                <div class="progress-bar progress-bar-green" style="width:10%"></div>
-                            </div>
-                        </div><!-- /.progress-group -->
-                        <div class="progress-group">
-                            <span class="progress-text">D | Kurang Memuaskan</span>
-                            <span class="progress-number"><b>2</b>/30</span>
-                            <div class="progress sm">
-                                <div class="progress-bar progress-bar-yellow" style="width: 5%"></div>
-                            </div>
-                        </div>
-                        <div class="progress-group">
-                            <span class="progress-text">E | Tidak Memuaskan</span>
-                            <span class="progress-number"><b>2</b>/30</span>
-                            <div class="progress sm">
-                                <div class="progress-bar progress-bar-red" style="width: 5%"></div>
-                            </div>
-                        </div><!-- /.progress-group -->
-                    </div>
-                    <div class="col-sm-3">
-                        <p class="text-left">
-                            <strong><i class="fa fa-user"></i> Panitia</strong>
-                        </p>
-                        <div class="progress-group">
-                            <span class="progress-text">A | Sangat Memuaskan</span>
-                            <span class="progress-number"><b>15</b>/30</span>
-                            <div class="progress sm">
-                                <div class="progress-bar progress-bar-blue" style="width: 50%"></div>
-                            </div>
-                        </div><!-- /.progress-group -->
-                        <div class="progress-group">
-                            <span class="progress-text">B | Memuaskan</span>
-                            <span class="progress-number"><b>9</b>/30</span>
-                            <div class="progress sm">
-                                <div class="progress-bar progress-bar-aqua" style="width: 30%"></div>
-                            </div>
-                        </div><!-- /.progress-group -->
-                        <div class="progress-group">
-                            <span class="progress-text">C | Cukup Memuaskan</span>
-                            <span class="progress-number"><b>3</b>/30</span>
-                            <div class="progress sm">
-                                <div class="progress-bar progress-bar-green" style="width:10%"></div>
-                            </div>
-                        </div><!-- /.progress-group -->
-                        <div class="progress-group">
-                            <span class="progress-text">D | Kurang Memuaskan</span>
-                            <span class="progress-number"><b>2</b>/30</span>
-                            <div class="progress sm">
-                                <div class="progress-bar progress-bar-yellow" style="width: 5%"></div>
-                            </div>
-                        </div>
-                        <div class="progress-group">
-                            <span class="progress-text">E | Tidak Memuaskan</span>
-                            <span class="progress-number"><b>2</b>/30</span>
-                            <div class="progress sm">
-                                <div class="progress-bar progress-bar-red" style="width: 5%"></div>
-                            </div>
-                        </div><!-- /.progress-group -->
-                    </div>
-                    <div class="col-sm-12">
-                        <hr/>
-                        <p class="lead" style="text-align: center">Fasilitator</p>
-                    </div>
-                    <div class="col-sm-4">
-                        <p class="text-left">
-                            <strong><i class="fa fa-crosshairs"></i> Penyampaian</strong>
-                        </p>
-                        <div class="progress-group">
-                            <span class="progress-text"><b>A</b> | Sangat Memuaskan</span>
-                            <span class="progress-number"><b>15</b>/30</span>
-                            <div class="progress sm">
-                                <div class="progress-bar progress-bar-blue" style="width: 50%"></div>
-                            </div>
-                        </div><!-- /.progress-group -->
-                        <div class="progress-group">
-                            <span class="progress-text">B | Memuaskan</span>
-                            <span class="progress-number"><b>9</b>/30</span>
-                            <div class="progress sm">
-                                <div class="progress-bar progress-bar-aqua" style="width: 30%"></div>
-                            </div>
-                        </div><!-- /.progress-group -->
-                        <div class="progress-group">
-                            <span class="progress-text">C | Cukup Memuaskan</span>
-                            <span class="progress-number"><b>3</b>/30</span>
-                            <div class="progress sm">
-                                <div class="progress-bar progress-bar-green" style="width:10%"></div>
-                            </div>
-                        </div><!-- /.progress-group -->
-                        <div class="progress-group">
-                            <span class="progress-text">D | Kurang Memuaskan</span>
-                            <span class="progress-number"><b>2</b>/30</span>
-                            <div class="progress sm">
-                                <div class="progress-bar progress-bar-yellow" style="width: 5%"></div>
-                            </div>
-                        </div>
-                        <div class="progress-group">
-                            <span class="progress-text">E | Tidak Memuaskan</span>
-                            <span class="progress-number"><b>2</b>/30</span>
-                            <div class="progress sm">
-                                <div class="progress-bar progress-bar-red" style="width: 5%"></div>
-                            </div>
-                        </div><!-- /.progress-group -->
-                    </div>
-                    <div class="col-sm-4">
-                        <p class="text-left">
-                            <strong><i class="fa fa-book"></i> Penyajian</strong>
-                        </p>
-                        <div class="progress-group">
-                            <span class="progress-text">A | Sangat Memuaskan</span>
-                            <span class="progress-number"><b>15</b>/30</span>
-                            <div class="progress sm">
-                                <div class="progress-bar progress-bar-blue" style="width: 50%"></div>
-                            </div>
-                        </div><!-- /.progress-group -->
-                        <div class="progress-group">
-                            <span class="progress-text">B | Memuaskan</span>
-                            <span class="progress-number"><b>9</b>/30</span>
-                            <div class="progress sm">
-                                <div class="progress-bar progress-bar-aqua" style="width: 30%"></div>
-                            </div>
-                        </div><!-- /.progress-group -->
-                        <div class="progress-group">
-                            <span class="progress-text">C | Cukup Memuaskan</span>
-                            <span class="progress-number"><b>3</b>/30</span>
-                            <div class="progress sm">
-                                <div class="progress-bar progress-bar-green" style="width:10%"></div>
-                            </div>
-                        </div><!-- /.progress-group -->
-                        <div class="progress-group">
-                            <span class="progress-text">D | Kurang Memuaskan</span>
-                            <span class="progress-number"><b>2</b>/30</span>
-                            <div class="progress sm">
-                                <div class="progress-bar progress-bar-yellow" style="width: 5%"></div>
-                            </div>
-                        </div>
-                        <div class="progress-group">
-                            <span class="progress-text">E | Tidak Memuaskan</span>
-                            <span class="progress-number"><b>2</b>/30</span>
-                            <div class="progress sm">
-                                <div class="progress-bar progress-bar-red" style="width: 5%"></div>
-                            </div>
-                        </div><!-- /.progress-group -->
-                    </div>
-                    <div class="col-sm-4">
-                        <p class="text-left">
-                            <strong><i class="fa fa-gears"></i> Alat</strong>
-                        </p>
-                        <div class="progress-group">
-                            <span class="progress-text">A | Sangat Memuaskan</span>
-                            <span class="progress-number"><b>15</b>/30</span>
-                            <div class="progress sm">
-                                <div class="progress-bar progress-bar-blue" style="width: 50%"></div>
-                            </div>
-                        </div><!-- /.progress-group -->
-                        <div class="progress-group">
-                            <span class="progress-text">B | Memuaskan</span>
-                            <span class="progress-number"><b>9</b>/30</span>
-                            <div class="progress sm">
-                                <div class="progress-bar progress-bar-aqua" style="width: 30%"></div>
-                            </div>
-                        </div><!-- /.progress-group -->
-                        <div class="progress-group">
-                            <span class="progress-text">C | Cukup Memuaskan</span>
-                            <span class="progress-number"><b>3</b>/30</span>
-                            <div class="progress sm">
-                                <div class="progress-bar progress-bar-green" style="width:10%"></div>
-                            </div>
-                        </div><!-- /.progress-group -->
-                        <div class="progress-group">
-                            <span class="progress-text">D | Kurang Memuaskan</span>
-                            <span class="progress-number"><b>2</b>/30</span>
-                            <div class="progress sm">
-                                <div class="progress-bar progress-bar-yellow" style="width: 5%"></div>
-                            </div>
-                        </div>
-                        <div class="progress-group">
-                            <span class="progress-text">E | Tidak Memuaskan</span>
-                            <span class="progress-number"><b>2</b>/30</span>
-                            <div class="progress sm">
-                                <div class="progress-bar progress-bar-red" style="width: 5%"></div>
-                            </div>
-                        </div><!-- /.progress-group -->
-                    </div>
-                    <div class="col-sm-12">
-                        <hr/>
-                        <p class="lead" style="text-align: center">Peserta</p>
-                    </div>
-                    <div class="col-sm-4">
-                        <p class="text-left">
-                            <strong><i class="fa fa-comments-o"></i> Keaktifan</strong>
-                        </p>
-                        <div class="progress-group">
-                            <span class="progress-text"><b>A</b> | Sangat Memuaskan</span>
-                            <span class="progress-number"><b>15</b>/30</span>
-                            <div class="progress sm">
-                                <div class="progress-bar progress-bar-blue" style="width: 50%"></div>
-                            </div>
-                        </div><!-- /.progress-group -->
-                        <div class="progress-group">
-                            <span class="progress-text">B | Memuaskan</span>
-                            <span class="progress-number"><b>9</b>/30</span>
-                            <div class="progress sm">
-                                <div class="progress-bar progress-bar-aqua" style="width: 30%"></div>
-                            </div>
-                        </div><!-- /.progress-group -->
-                        <div class="progress-group">
-                            <span class="progress-text">C | Cukup Memuaskan</span>
-                            <span class="progress-number"><b>3</b>/30</span>
-                            <div class="progress sm">
-                                <div class="progress-bar progress-bar-green" style="width:10%"></div>
-                            </div>
-                        </div><!-- /.progress-group -->
-                        <div class="progress-group">
-                            <span class="progress-text">D | Kurang Memuaskan</span>
-                            <span class="progress-number"><b>2</b>/30</span>
-                            <div class="progress sm">
-                                <div class="progress-bar progress-bar-yellow" style="width: 5%"></div>
-                            </div>
-                        </div>
-                        <div class="progress-group">
-                            <span class="progress-text">E | Tidak Memuaskan</span>
-                            <span class="progress-number"><b>2</b>/30</span>
-                            <div class="progress sm">
-                                <div class="progress-bar progress-bar-red" style="width: 5%"></div>
-                            </div>
-                        </div><!-- /.progress-group -->
-                    </div>
-                    <div class="col-sm-4">
-                        <p class="text-left">
-                            <strong><i class="fa fa-child"></i> Daya Serap</strong>
-                        </p>
-                        <div class="progress-group">
-                            <span class="progress-text">A | Sangat Memuaskan</span>
-                            <span class="progress-number"><b>15</b>/30</span>
-                            <div class="progress sm">
-                                <div class="progress-bar progress-bar-blue" style="width: 50%"></div>
-                            </div>
-                        </div><!-- /.progress-group -->
-                        <div class="progress-group">
-                            <span class="progress-text">B | Memuaskan</span>
-                            <span class="progress-number"><b>9</b>/30</span>
-                            <div class="progress sm">
-                                <div class="progress-bar progress-bar-aqua" style="width: 30%"></div>
-                            </div>
-                        </div><!-- /.progress-group -->
-                        <div class="progress-group">
-                            <span class="progress-text">C | Cukup Memuaskan</span>
-                            <span class="progress-number"><b>3</b>/30</span>
-                            <div class="progress sm">
-                                <div class="progress-bar progress-bar-green" style="width:10%"></div>
-                            </div>
-                        </div><!-- /.progress-group -->
-                        <div class="progress-group">
-                            <span class="progress-text">D | Kurang Memuaskan</span>
-                            <span class="progress-number"><b>2</b>/30</span>
-                            <div class="progress sm">
-                                <div class="progress-bar progress-bar-yellow" style="width: 5%"></div>
-                            </div>
-                        </div>
-                        <div class="progress-group">
-                            <span class="progress-text">E | Tidak Memuaskan</span>
-                            <span class="progress-number"><b>2</b>/30</span>
-                            <div class="progress sm">
-                                <div class="progress-bar progress-bar-red" style="width: 5%"></div>
-                            </div>
-                        </div><!-- /.progress-group -->
-                    </div>
-                    <div class="col-sm-4">
-                        <p class="text-left">
-                            <strong><i class="fa fa-thumbs-up"></i> Memenuhi Harapan?</strong>
-                        </p>
-                        <div class="progress-group">
-                            <span class="progress-text">A | Sangat Memuaskan</span>
-                            <span class="progress-number"><b>15</b>/30</span>
-                            <div class="progress sm">
-                                <div class="progress-bar progress-bar-blue" style="width: 50%"></div>
-                            </div>
-                        </div><!-- /.progress-group -->
-                        <div class="progress-group">
-                            <span class="progress-text">B | Memuaskan</span>
-                            <span class="progress-number"><b>9</b>/30</span>
-                            <div class="progress sm">
-                                <div class="progress-bar progress-bar-aqua" style="width: 30%"></div>
-                            </div>
-                        </div><!-- /.progress-group -->
-                        <div class="progress-group">
-                            <span class="progress-text">C | Cukup Memuaskan</span>
-                            <span class="progress-number"><b>3</b>/30</span>
-                            <div class="progress sm">
-                                <div class="progress-bar progress-bar-green" style="width:10%"></div>
-                            </div>
-                        </div><!-- /.progress-group -->
-                        <div class="progress-group">
-                            <span class="progress-text">D | Kurang Memuaskan</span>
-                            <span class="progress-number"><b>2</b>/30</span>
-                            <div class="progress sm">
-                                <div class="progress-bar progress-bar-yellow" style="width: 5%"></div>
-                            </div>
-                        </div>
-                        <div class="progress-group">
-                            <span class="progress-text">E | Tidak Memuaskan</span>
-                            <span class="progress-number"><b>2</b>/30</span>
-                            <div class="progress sm">
-                                <div class="progress-bar progress-bar-red" style="width: 5%"></div>
-                            </div>
-                        </div><!-- /.progress-group -->
-                    </div>
-                </div>
+                <!-- /.tab-content -->
             </div>
-        </div><!-- /.tab-content -->
-    </div>
-    <div class="nav-tabs-custom">
-        <ul class="nav nav-tabs">
-            <li class="active"><a href="#tab_1" data-toggle="tab"><b>Fasilitator / Panitia</b></a></li>
-            <li><a href="#tab_2" data-toggle="tab"><b>Peserta</b></a></li>
-        </ul>
-        <div class="tab-content">
-            <div class="tab-pane fade in active" id="tab_1">
-                <div class="table-responsive">
-                    <a href="#" class="btn btn-sm btn-primary"><i class="fa fa-plus"></i> Tambah Fasilitator / Panitia</a>
-                    <br/><br/>
-                    <table class="table table-striped">
-                        <thead>
-                        <tr>
-                            <th>Nama</th>
-                            <th>Asal</th>
-                            <th>Materi</th>
-                            <th>Status</th>
-                            <th>Insentif</th>
-                            <th>Foto</th>
-                            <th>Detail</th>
-                            <th>Hapus</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>Call of Duty</td>
-                            <td>testosterone </td>
-                            <td>El snort testosterone trophy driving gloves handsome</td>
-                            <td>Fasilitator</td>
-                            <td>2.000.000,-</td>
-                            <td>{{ HTML::image('images/no_image_man.jpg', 'a picture', array('class' => 'img-responsive',
-                            'id' => 'tampilgambar', 'width' => '50')) }}</td>
-                            <td><a href="#" class="btn btn-info"><i class="fa fa-database"></i></a></td>
-                            <td><a href="#" class="btn btn-danger"><i class="fa fa-trash"></i></a></td>
-                        </tr>
-                        <tr>
-                            <td>Need for Speed IV</td>
-                            <td>Anderson</td>
-                            <td>Wes Anderson umami biodiesel</td>
-                            <td>Panitia</td>
-                            <td>800.000,-</td>
-                            <td>{{ HTML::image('images/no_image_man.jpg', 'a picture', array('class' => 'img-responsive',
-                            'id' => 'tampilgambar', 'width' => '50')) }}</td>
-                            <td><a href="#" class="btn btn-info"><i class="fa fa-database"></i></a></td>
-                            <td><a href="#" class="btn btn-danger"><i class="fa fa-trash"></i></a></td>
-                        </tr>
-                        <tr>
-                            <td>Monsters DVD</td>
-                            <td>helvetica</td>
-                            <td>Terry Richardson helvetica tousled street art master</td>
-                            <td>Co-Fasilitator</td>
-                            <td>1.500.000,-</td>
-                            <td>{{ HTML::image('images/no_image_man.jpg', 'a picture', array('class' => 'img-responsive',
-                            'id' => 'tampilgambar', 'width' => '50')) }}</td>
-                            <td><a href="#" class="btn btn-info"><i class="fa fa-database"></i></a></td>
-                            <td><a href="#" class="btn btn-danger"><i class="fa fa-trash"></i></a></td>
-                        </tr>
-                        <tr>
-                            <td>Grown Ups Blue Ray</td>
-                            <td>letterpress</td>
-                            <td>Tousled lomo letterpress</td>
-                            <td>Trainee</td>
-                            <td>1.000.000,-</td>
-                            <td>{{ HTML::image('images/no_image_man.jpg', 'a picture', array('class' => 'img-responsive',
-                            'id' => 'tampilgambar', 'width' => '50')) }}</td>
-                            <td><a href="#" class="btn btn-info"><i class="fa fa-database"></i></a></td>
-                            <td><a href="#" class="btn btn-danger"><i class="fa fa-trash"></i></a></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div><!-- /.tab-pane -->
-            <div class="tab-pane fade" id="tab_2">
-                <div class="table-responsive">
-                    <a href="#" class="btn btn-sm btn-primary"><i class="fa fa-plus"></i> Tambah Peserta</a>
-                    <br/><br/>
-                    <table class="table table-striped">
-                        <thead>
-                        <tr>
-                            <th>Nama</th>
-                            <th>Asal</th>
-                            <th>Jabatan</th>
-                            <th>Jenis Kelamin</th>
-                            <th>Foto</th>
-                            <th>Detail</th>
-                            <th>Hapus</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>Call of Duty</td>
-                            <td>testosterone </td>
-                            <td>El snort testosterone trophy driving gloves handsome</td>
-                            <td>Laki-laki</td>
-                            <td>{{ HTML::image('images/no_image_man.jpg', 'a picture', array('class' => 'img-responsive',
-                            'id' => 'tampilgambar', 'width' => '50')) }}</td>
-                            <td><a href="#" class="btn btn-info"><i class="fa fa-database"></i></a></td>
-                            <td><a href="#" class="btn btn-danger"><i class="fa fa-trash"></i></a></td>
-                        </tr>
-                        <tr>
-                            <td>Need for Speed IV</td>
-                            <td>Anderson</td>
-                            <td>Wes Anderson umami biodiesel</td>
-                            <td>Laki-laki</td>
-                            <td>{{ HTML::image('images/no_image_man.jpg', 'a picture', array('class' => 'img-responsive',
-                            'id' => 'tampilgambar', 'width' => '50')) }}</td>
-                            <td><a href="#" class="btn btn-info"><i class="fa fa-database"></i></a></td>
-                            <td><a href="#" class="btn btn-danger"><i class="fa fa-trash"></i></a></td>
-                        </tr>
-                        <tr>
-                            <td>Monsters DVD</td>
-                            <td>helvetica</td>
-                            <td>Terry Richardson helvetica tousled street art master</td>
-                            <td>Laki-laki</td>
-                            <td>{{ HTML::image('images/no_image_man.jpg', 'a picture', array('class' => 'img-responsive',
-                            'id' => 'tampilgambar', 'width' => '50')) }}</td>
-                            <td><a href="#" class="btn btn-info"><i class="fa fa-database"></i></a></td>
-                            <td><a href="#" class="btn btn-danger"><i class="fa fa-trash"></i></a></td>
-                        </tr>
-                        <tr>
-                            <td>Grown Ups Blue Ray</td>
-                            <td>letterpress</td>
-                            <td>Tousled lomo letterpress</td>
-                            <td>Laki-laki</td>
-                            <td>{{ HTML::image('images/no_image_man.jpg', 'a picture', array('class' => 'img-responsive',
-                            'id' => 'tampilgambar', 'width' => '50')) }}</td>
-                            <td><a href="#" class="btn btn-info"><i class="fa fa-database"></i></a></td>
-                            <td><a href="#" class="btn btn-danger"><i class="fa fa-trash"></i></a></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div><!-- /.tab-pane -->
-        </div><!-- /.tab-content -->
+            <!-- /.nav-tabs-custom -->
+        </div>
+        <!-- /.col -->
     </div>
 </section>
 <div class="clearfix"></div>
+<div class="modal modal-wide fade" id="modal2show"  role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <form id="pokok" action="#">
+    <div class="modal-dialog">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 clasas="modal-title"><i class="fa fa-plus"></i> Tambah Fasilitator atau Panitia</h4>
+            </div>
+            <div class="modal-body">
+                <h4>Fasilitator atau Panitia</h4>
+                <input type="text" name="id" value="" id="modal2id" hidden>
+                <select class="form-control select2" name="fasilitator" id="selectdata" style="width: 100%">
+                    <option disabled selected>Pilih fasilitator atau panitia</option>
+                </select>
+                <h4>Tugas</h4>
+                <select class="form-control" name="tugas">
+                    <option value="1">Fasilitator</option>
+                    <option value="2">Co-Fasilitator</option>
+                    <option value="3">Trainee</option>
+                    <option value="4">Panitia</option>
+                </select>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-warning" id="modalbutton"><i class="fa fa-check"></i> Iya</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i> Batal</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+    </form>
+</div>
+<div class="modal fade" id="modal1show" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    {{ Form::open(array('route' => array('admins.'.$kelas.'.destroy',$kelas), 'method' => 'delete')) }}
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 clasas="modal-title"><i class="fa fa-trash"></i> Hapus Fasilitator Atau Panitia</h4>
+            </div>
+            <div class="modal-body">
+                <strong>Menghapus fasilitator atau panitia ini ?</strong>
+                <input type="text" name="id" value="" id="modal1id" hidden>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-warning" id="modalbutton"><i class="fa fa-check"></i> Iya</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i> Batal</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+    {{ Form::close() }}
+</div>
+@stop
+
+@section('js')
+@include('admins._components.datatable_JS')
+<script type="text/javascript" src="{{ URL::asset('plugins/summernote/summernote.js') }}"></script>
+<script type="text/javascript" src="{{ URL::asset('plugins/select/dist/js/select2.full.min.js') }}"></script>
+<script>
+    // tujuan1
+    var edit_tujuan = function () {
+        $('.texttujuan').summernote({
+            focus:true,
+            minHeight: 100,
+            toolbar:[
+                ['style', ['bold', 'italic', 'underline', 'clear']],
+                ['para', ['ul', 'ol']]
+            ],
+            callbacks: {
+                onPaste: function (e) {
+                    var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+                    e.preventDefault();
+                    document.execCommand('insertText', false, bufferText);
+                }
+            }
+        });
+        document.getElementById('bataltujuan').style.display='inline';
+        document.getElementById('savetujuan').style.display='inline';
+        document.getElementById('edittujuan').style.display='none';
+    };
+    var batal_tujuan = function(){
+        $('.texttujuan').summernote('destroy');
+        document.getElementById('bataltujuan').style.display='none';
+        document.getElementById('savetujuan').style.display='none';
+        document.getElementById('edittujuan').style.display='inline';
+    };
+    $("#savetujuan").click(function (e) {
+        var $btn = $(this).button('loading');
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        e.preventDefault();
+        var id= "{{ $data->id }}";
+        var markup = $('.texttujuan').summernote('code');
+        var datastring ={
+            id: id,
+            markup: markup
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "/admins/kegiatan/update_tujuan" ,
+            data: datastring,
+            dataType:'json',
+            success: function(response){
+                console.log(response);
+            }
+        });
+
+        $btn.button('reset');
+        $('.texttujuan').summernote('destroy');
+        document.getElementById('bataltujuan').style.display='none';
+        document.getElementById('savetujuan').style.display='none';
+        document.getElementById('edittujuan').style.display='inline';
+    });
+    //tujuan2
+    $('.texttujuan2').summernote({
+        placeholder:'Silahkan paparkan tujuan dilaksanakannya kegiatan ini...',
+        minHeight: 100,
+        toolbar:[
+            ['style', ['bold', 'italic', 'underline', 'clear']],
+            ['para', ['ul', 'ol']]
+        ],
+        callbacks: {
+            onPaste: function (e) {
+                var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+                e.preventDefault();
+                document.execCommand('insertText', false, bufferText);
+            }
+        }
+    });
+    var edit_tujuan2 = function () {
+        $('.texttujuan2').summernote({
+            focus:true,
+            minHeight: 100,
+            toolbar:[
+                ['style', ['bold', 'italic', 'underline', 'clear']],
+                ['para', ['ul', 'ol']]
+            ],
+            callbacks: {
+                onPaste: function (e) {
+                    var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+                    e.preventDefault();
+                    document.execCommand('insertText', false, bufferText);
+                }
+            }
+        });
+        document.getElementById('bataltujuan2').style.display='inline';
+        document.getElementById('savetujuan2').style.display='inline';
+        document.getElementById('edittujuan2').style.display='none';
+    };
+    var batal_tujuan2 = function(){
+        $('.texttujuan2').summernote('destroy');
+        document.getElementById('bataltujuan2').style.display='none';
+        document.getElementById('savetujuan2').style.display='none';
+        document.getElementById('edittujuan2').style.display='inline';
+    };
+    $("#savetujuan2").click(function (e) {
+        var $btn = $(this).button('loading');
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        e.preventDefault();
+        var id= "{{ $data->id }}";
+        var markup = $('.texttujuan2').summernote('code');
+        var datastring ={
+            id: id,
+            markup: markup
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "/admins/kegiatan/update_tujuan" ,
+            data: datastring,
+            dataType:'json',
+            success: function(response){
+                console.log(response);
+            }
+        });
+
+        $btn.button('reset');
+        $('.texttujuan2').summernote('destroy');
+        document.getElementById('bataltujuan2').style.display='none';
+        document.getElementById('savetujuan2').style.display='none';
+        document.getElementById('edittujuan2').style.display='inline';
+    });
+    // pokok1
+    var edit_pokok = function () {
+        $('.textpokok').summernote({
+            focus:true,
+            minHeight: 100,
+            toolbar:[
+                ['style', ['bold', 'italic', 'underline', 'clear']],
+                ['para', ['ul', 'ol']]
+            ],
+            callbacks: {
+                onPaste: function (e) {
+                    var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+                    e.preventDefault();
+                    document.execCommand('insertText', false, bufferText);
+                }
+            }
+        });
+        document.getElementById('batalpokok').style.display='inline';
+        document.getElementById('savepokok').style.display='inline';
+        document.getElementById('editpokok').style.display='none';
+    };
+    var batal_pokok = function(){
+        $('.textpokok').summernote('destroy');
+        document.getElementById('batalpokok').style.display='none';
+        document.getElementById('savepokok').style.display='none';
+        document.getElementById('editpokok').style.display='inline';
+    };
+    $("#savepokok").click(function (e) {
+        var $btn = $(this).button('loading');
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        e.preventDefault();
+
+        var id= "{{ $data->id }}";
+        var markup = $('.textpokok').summernote('code');
+        var datastring ={
+            id: id,
+            markup: markup
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "/admins/kegiatan/update_pokok" ,
+            data: datastring,
+            dataType:'json',
+            success: function(response){
+                console.log(response);
+            }
+        });
+
+        $btn.button('reset');
+        $('.textpokok').summernote('destroy');
+        document.getElementById('batalpokok').style.display='none';
+        document.getElementById('savepokok').style.display='none';
+        document.getElementById('editpokok').style.display='inline';
+    });
+    //pokok2
+    $('.textpokok2').summernote({
+        placeholder:'Silahkan paparkan pokok pembahasan kegiatan ini...',
+        minHeight: 100,
+        toolbar:[
+            ['style', ['bold', 'italic', 'underline', 'clear']],
+            ['para', ['ul', 'ol']]
+        ],
+        callbacks: {
+            onPaste: function (e) {
+                var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+                e.preventDefault();
+                document.execCommand('insertText', false, bufferText);
+            }
+        }
+    });
+    var edit_pokok2 = function () {
+        $('.textpokok2').summernote({
+            focus:true,
+            minHeight: 100,
+            toolbar:[
+                ['style', ['bold', 'italic', 'underline', 'clear']],
+                ['para', ['ul', 'ol']]
+            ],
+            callbacks: {
+                onPaste: function (e) {
+                    var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+                    e.preventDefault();
+                    document.execCommand('insertText', false, bufferText);
+                }
+            }
+        });
+        document.getElementById('batalpokok2').style.display='inline';
+        document.getElementById('savepokok2').style.display='inline';
+        document.getElementById('editpokok2').style.display='none';
+    };
+    var batal_pokok2 = function(){
+        $('.textpokok2').summernote('destroy');
+        document.getElementById('batalpokok2').style.display='none';
+        document.getElementById('savepokok2').style.display='none';
+        document.getElementById('editpokok2').style.display='inline';
+    };
+    $("#savepokok2").click(function (e) {
+        var $btn = $(this).button('loading');
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        e.preventDefault();
+
+        var id= "{{ $data->id }}";
+        var markup = $('.textpokok2').summernote('code');
+        var datastring ={
+            id: id,
+            markup: markup
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "/admins/kegiatan/update_pokok" ,
+            data: datastring,
+            dataType:'json',
+            success: function(response){
+                console.log(response);
+            }
+        });
+        $btn.button('reset');
+        $('.textpokok2').summernote('destroy');
+        document.getElementById('batalpokok2').style.display='none';
+        document.getElementById('savepokok2').style.display='none';
+        document.getElementById('editpokok2').style.display='inline';
+    });
+    //select fasilitator
+    $('#selectdata').select2({
+        theme: "bootstrap",
+        ajax: {
+            url: "/admins/kegiatan/getselect2",
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return{
+                    q: params.term,
+                    page: params.page
+                };
+            },
+            processResults: function (data,params) {
+                params.page = params.page || 1;
+                return{
+                    results: data,
+                    pagination:{
+                        more: (params.page * 30) < data.total_count
+                    }
+                };
+
+            },
+            cache: true
+        },
+        escapeMarkup: function (markup) { return markup; },
+        minimumInputLength: 1,
+        placeholder: function(){
+            $(this).data('placeholder');
+        },
+        templateResult: formatTemplate,
+        templateSelection: selectionTemplate
+    });
+
+    function formatTemplate(data) {
+        if(data.loading) return data.text;
+
+        var markup = "<div class='media'>";
+
+        if(data.gambar) {
+            markup += "<div class='media-left'><img class='media-object'  width='50px'  src=/images_staf/'" + data.gambar + "' /></div>";
+        }else{
+            if(data.kelamin = "Pria"){
+                markup += "<div class='media-left'><img class='media-object' width='50px' src='/images/no_image_man.jpg' /></div>";
+            }else{
+                markup += "<div class='media-left'><img class='media-object' width='50px'   src='/images/no_image_woman.jpg' /></div>";
+            }
+        }
+        markup += "<div class='media-body'><b style='font-size: medium'>" + data.name + "</b> <br/>";
+
+        if(data.cu == '0'){
+            markup += "<small ><i class='fa fa-building'></i> PUSKOPDIT BKCU KALIMANTAN</small>" ;
+        }else{
+            markup += "<small ><i class='fa fa-building'></i> CU " + data.cuprimer.name + "</small>";
+        }
+
+        markup += "</div></div>";
+
+        console.log(data);
+        return markup;
+
+    }
+
+    function selectionTemplate(data) {
+        return data.name || data.text; // I think its either text or label, not sure.
+    }
+    //table fasiliator dan panitia
+    var table = $('#datatablepanitia').DataTable({
+        dom: 'Bf',
+        select: true,
+        scrollY: '50vh',
+        "autoWidth": false,
+        scrollCollapse : true,
+        paging : false,
+        stateSave : true,
+        order : [[ 1, "asc" ]],
+        buttons: [
+            {
+                text: '<i class="fa fa-plus"></i> Tambah',
+                action: function () {
+                    $('#modal2show').modal({show:true});
+                    $('#modal2id').attr('value',"{{ $data->id }}");
+                }
+            },
+            {
+                text: '<i class="fa fa-pencil"></i> Ubah',
+                action: function () {
+                    var id = $.map(table.rows({ selected: true }).data(),function(item){
+                        return item[0];
+                    });
+                    if(id != ""){
+                        $('#modal2show').modal({show:true});
+                        $('#modal2id').attr('value',id);
+                    }
+                }
+            },
+            {
+                text: '<i class="fa fa-trash"></i> Hapus',
+                action: function () {
+                    var id = $.map(table.rows({ selected: true }).data(),function(item){
+                        return item[0];
+                    });
+                    if(id != ""){
+                        $('#modal1show').modal({show:true});
+                        $('#modal1id').attr('value',id);
+                    }
+                }
+            }
+        ],
+        language: {
+            buttons : {
+                colvis: "<i class='fa fa-columns'></i> Kolom",
+            },
+            select:{
+                rows:{
+                    _: "",
+                    0: "",
+                    1: ""
+                }
+            },
+            "emptyTable": "Tidak terdapat data di tabel",
+            "info": "",
+            "infoEmpty": "",
+            "infoFiltered":   "",
+            "search": "<i class='fa fa-search'></i> Cari:",
+            "paginate": {
+                "next":       ">",
+                "previous":   "<"
+            },
+            "zeroRecords": "Tidak ditemukan data yang sesuai",
+        }
+    });
+
+</script>
 @stop

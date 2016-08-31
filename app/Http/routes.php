@@ -40,6 +40,25 @@ Route::group(array('prefix' => 'cu'), function(){
     Route::get('logout',array('as' => 'cu.logout','uses' => 'AdminAuthController@getLogout_public'));
 });
 
+Route::get('cu',array('as' => 'cu','middleware' => 'auth.public', function()
+{
+    return View::make('cu.index');
+}));
+
+Route::group(array('prefix'=>'cu','middleware' => 'auth.public'),function(){
+    Route::get('edit_info',array('as' => 'cu.edit_info','uses' => 'AdminCuprimerController@edit_info_public'));
+    Route::get('edit_deskripsi',array('as' => 'cu.edit_deskripsi','uses' => 'AdminCuprimerController@edit_deskripsi_public'));
+    Route::post('update_info',array('as' => 'cu.update_info','uses' => 'AdminCuprimerController@update_info_public'));
+    Route::post('update_deskripsi',array('as' => 'cu.update_deskripsi','uses' => 'AdminCuprimerController@update_deskripsi_public'));
+    Route::get('kelola_kegiatan',array('as' => 'cu.kelola_kegiatan','uses' => 'AdminKegiatanController@index_public'));
+    Route::get('daftar_kegiatan/{id}',array('as' => 'cu.daftar_kegiatan','uses' => 'AdminKegiatanController@daftar_kegiatan'));
+    Route::get('kelola_staf',array('as' => 'cu.kelola_staf','uses' => 'AdminStafController@index_public'));
+    Route::get('create_staf',array('as' => 'cu.create_staf','uses' => 'AdminStafController@create_public'));
+    Route::get('detail_staf/{id}',array('as' => 'cu.detail_staf','uses' => 'AdminStafController@detail_public'));
+    Route::get('edit_staf/{id}',array('as' => 'cu.edit_staf','uses' => 'AdminStafController@edit_public'));
+    Route::delete('destroy_staf',array('as' => 'cu.destroy_staf','uses' => 'AdminStafController@destroy_public'));
+});
+
 Route::group(array('prefix' => 'admins'), function(){
     Route::get('login',array('as' => 'admins.login','uses' => 'AdminAuthController@getLogin'));
     Route::post('login',array('as' =>'admins.login.post','uses' => 'AdminAuthController@postLogin'));
@@ -88,22 +107,43 @@ Route::group(array('prefix' => 'admins','middleware' => 'auth'), function(){
         'as' => 'admins.cuprimer.update_bergabung',
         'uses' => 'AdminCuprimerController@update_bergabung'
     ));
+//perkembangan CU
+    Route::resource('perkembangancu','AdminPerkembangancuController',array('except' => array('show')));
+    Route::post('perkembangancu/importexcel',array(
+        'as' => 'admins.perkembangancu.importexcel',
+        'uses' => 'AdminPerkembangancuController@importexcel'
+    ));
+    Route::get('perkembangancu/index_cu/{id}',array(
+        'as' => 'admins.perkembangancu.index_cu',
+        'uses' => 'AdminPerkembangancuController@index_cu'));
+    Route::get('perkembangancu/index_periode/{periode}',array(
+        'as' => 'admins.perkembangancu.index_periode',
+        'uses' => 'AdminPerkembangancuController@index_periode'));
+//tp CU
+    Route::resource('tpcu','AdminTpcuController',array('except' => array('show')));
+    Route::get('tpcu/index_cu/{id}',array(
+        'as' => 'admins.tpcu.index_cu',
+        'uses' => 'AdminTpcuController@index_cu'));
 // staf    
     Route::resource('staf','AdminStafController',array('except' => array('show')));
     Route::get('staf/index_bkcu',array(
         'as' => 'admins.staf.index_bkcu',
         'uses' => 'AdminStafController@index_bkcu'
     ));
+    Route::get('staf/allstaf',array(
+        'as' => 'admins.staf.allstaf',
+        'uses' => 'AdminStafController@allstaf'
+    ));
     Route::get('staf/index_cu/{id}',array(
         'as' => 'admins.staf.index_cu',
         'uses' => 'AdminStafController@index_cu'));
-    Route::get('staf/detail/{id}',array(
+    Route::get('staf/{id}/detail',array(
         'as' => 'admins.staf.detail',
         'uses' => 'AdminStafController@detail'
     ));
-    Route::post('staf/store_riwayat',array(
-        'as' => 'admins.staf.store_riwayat',
-        'uses' => 'AdminStafController@store_riwayat'
+    Route::post('staf/riwayat',array(
+        'as' => 'admins.staf.riwayat',
+        'uses' => 'AdminStafController@riwayat'
     ));
     Route::post('staf/update_riwayat',array(
         'as' => 'admins.staf.update_riwayat',
@@ -163,9 +203,21 @@ Route::group(array('prefix' => 'admins','middleware' => 'auth'), function(){
         'as' => 'admins.kegiatan.update_selesai',
         'uses' => 'AdminKegiatanController@update_selesai'
     ));
-    Route::get('kegiatan/detail',array(
+    Route::get('kegiatan/{id}/detail',array(
         'as' => 'admins.kegiatan.detail',
         'uses' => 'AdminKegiatanController@detail'
+    ));
+    Route::post('kegiatan/update_tujuan',array(
+        'as' => 'admins.kegiatan.update_tujuan',
+        'uses' => 'AdminKegiatanController@update_tujuan'
+    ));
+    Route::post('kegiatan/update_pokok',array(
+        'as' => 'admins.kegiatan.update_pokok',
+        'uses' => 'AdminKegiatanController@update_pokok'
+    ));
+    Route::get('kegiatan/getselect2',array(
+        'as' => 'admins.kegiatan.getselect2',
+        'uses' => 'AdminKegiatanController@getselect2'
     ));
 // statisitik
     Route::get('statistik',array('as' => 'statistik', function()
@@ -186,8 +238,6 @@ Route::group(array('prefix' => 'admins','middleware' => 'auth'), function(){
         'as' => 'admins.infogerakan.create_litbang',
         'uses' => 'AdminInfoGerakanController@create_litbang'
     ));
-//perkembangan CU    
-    Route::resource('perkembangancu','AdminPerkembangancuController',array('except' => array('show')));
 //download, kategori artikel, wilayah cu primer, saran
     Route::resource('download','AdminDownloadController',array('except' => array('show')));
     Route::resource('kategoriartikel','AdminKategoriArtikelController',array('except' => array('show','create','edit')));
@@ -209,3 +259,17 @@ Route::get('importexport', function()
 Route::get('importExport', 'ExcelController@importExport');
 Route::get('downloadExcel/{type}', 'ExcelController@downloadExcel');
 Route::post('importExcel', 'ExcelController@importExcel');
+Route::get('/getreq',function (){
+   if(Request::ajax()){
+       return 'get request loaded';
+   }
+});
+Route::post('/register',function (){
+    if(Request::ajax()){
+        return Response::json(Request::all());
+    }
+});
+
+//echo '<pre>';
+//echo var_dump($datacu->staf);
+//echo '<pre>';

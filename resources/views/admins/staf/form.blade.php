@@ -13,78 +13,105 @@ $file_max = intval($file_max);
 <!-- /Alert -->
 <!-- content -->
 <div class="box box-primary">
-    <div class="box-header with-border">
-        <div class="form-group">
-            <button type="submit" name="simpan" accesskey="s" class="btn btn-primary">
-                <i class="fa fa-save"></i> <u>S</u>impan</button>
-            <button type="submit" name="simpan2" accesskey="m" class="btn btn-primary">
-                <i class="fa fa-save fa-fw"></i><i class="fa fa-plus"></i> Si<u>m</u>pan dan buat baru</button>
-            <a href="{{ route('admins.'.$kelas.'.index') }}" name="batal" accesskey="b" class="btn btn-danger">
-                <i class="fa fa-times"></i> <u>B</u>atal</a>
-        </div>
-    </div>
     <div class="box-body">
         <div class="row">
             <!--nama-->
             <div class="col-lg-6">
                 <div class="form-group">
-                    <h4>Nama</h4> 
-                    {{ Form::text('name',null,array('class' => 'form-control', 'placeholder' => 'Silahkan masukkan nama staff',
-                        'required','data-error' => 'Nama staf wajib diisi',
-                        'autocomplete'=>'off'))}}
+                    <h4>No. Identitas</h4>
+                    <div class="input-group">
+                        <span class="input-group-addon">0-9</span>
+                        {{ Form::text('noid',null,array('class' => 'form-control', 'placeholder' => 'Silahkan masukkan nomor identitas',
+                            'required','data-error' => 'Nomor identitas wajib di isi',
+                            'autocomplete'=>'off'))}}
+                    </div>
+                    <div class="help-block with-errors"></div>
+                    {!! $errors->first('name', '<p class="text-warning">:message</p>') !!}
+                </div>
+                <div class="form-group">
+                    <h4>Nama</h4>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-font"></i></span>
+                        {{ Form::text('name',null,array('class' => 'form-control', 'placeholder' => 'Silahkan masukkan nama staff',
+                            'required','data-error' => 'Nama staf wajib diisi',
+                            'autocomplete'=>'off'))}}
+                    </div>
                     <div class="help-block with-errors"></div>
                     {!! $errors->first('name', '<p class="text-warning">:message</p>') !!}
                 </div>
                 <div class="form-group">
                     <h4>Credit Union</h4>
-                    <select class="form-control" name="cu" required data-error="Credit Union wajib dipilih">
-                        <option selected disabled>Silahkan pilih Credit Union</option>
-                        <option value="0"
-                        @if(!empty($data))
-                            @if($data->cu == "0")
-                                {!! "selected" !!}
-                                    @endif
-                                @endif
-                                >Puskopdit BKCU Kalimantan</option>
-                        @foreach($datas2 as $data2)
-                            <option value="{{ $data2->id }}"
-                            @if(!empty($data))
-                                @if($data->cu == $data2->id)
-                                    {!! "selected" !!}
+                    <div class="input-group">
+                        <div class="input-group-addon"><i class="fa fa-list"></i></div>
+                        <select class="form-control" name="cu" required data-error="Credit Union wajib dipilih">
+                            <option selected disabled>Silahkan pilih Credit Union</option>
+                            <option value="0"
+                                @if(!empty($data))
+                                    @if($data->cu == "0")
+                                        {!! "selected" !!}
+                                            @endif
                                         @endif
-                                    @endif
-                                    >{!! $data2->name !!}</option>
-                        @endforeach
-                    </select>
+                                        >Puskopdit BKCU Kalimantan</option>
+                                @foreach($datas2 as $data2)
+                                    <option value="{{ $data2->id }}"
+                                    @if(!empty($data))
+                                        @if($data->cu == $data2->id)
+                                            {!! "selected" !!}
+                                                @endif
+                                            @endif
+                                            >{!! $data2->name !!}</option>
+                                @endforeach
+                            <option value="tambah">Lembaga Lain</option>
+                        </select>
+                    </div>
                     <div class="help-block with-errors"></div>
+                </div>
+                <div class="row" id="pilihan" style="display: none;">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <h4>Kategori Baru</h4>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-font"></i></span>
+                                {{ Form::text('kategori_baru',null,array('class' => 'form-control',
+                                    'placeholder' => 'Silahkan masukkan kategori baru',
+                                    'autocomplete'=>'off','maxlength' => '50'))}}
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group">
                     <h4>Gender</h4>
-                    <select class="form-control" name="kelamin">
-                        <option selected disabled>Silahkan pilih jenis kelamin</option>
-                        <option value="Pria"
-                        @if(!empty($data))
-                            @if($data->kelamin == "Pria")
-                                {{ "selected" }}
+                    <div class="input-group">
+                        <div class="input-group-addon"><i class="fa fa-list"></i></div>
+                        <select class="form-control" name="kelamin">
+                            <option selected disabled>Silahkan pilih jenis kelamin</option>
+                            <option value="Pria"
+                            @if(!empty($data))
+                                @if($data->kelamin == "Pria")
+                                    {{ "selected" }}
+                                        @endif
                                     @endif
-                                @endif
-                                >Pria</option>
-                        <option value="Wanita"
-                        @if(!empty($staff))
-                            @if($staff->kelamin == "Wanita")
-                                {{ "selected" }}
+                                    >Pria</option>
+                            <option value="Wanita"
+                            @if(!empty($staff))
+                                @if($staff->kelamin == "Wanita")
+                                    {{ "selected" }}
+                                        @endif
                                     @endif
-                                @endif
-                                >Wanita</option>
-                    </select>
+                                    >Wanita</option>
+                        </select>
+                    </div>
                     {{ $errors->first('kelamin', '<p class="text-warning">:message</p>') }}
                 </div>
                 <div class="form-group">
                     <h4>Tempat & Tanggal Lahir</h4>
                     <div class="row">
                         <div class="col-sm-6">
-                            {{ Form::text('tempat_lahir',null,array('class' => 'form-control', 'placeholder' => 'Tempat'))}}
-                            {{ $errors->first('tempat_lahir', '<p class="text-warning">:message</p>') }}
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-font"></i></span>
+                                {{ Form::text('tempat_lahir',null,array('class' => 'form-control', 'placeholder' => 'Tempat'))}}
+                                {{ $errors->first('tempat_lahir', '<p class="text-warning">:message</p>') }}
+                            </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="input-group">
@@ -104,55 +131,77 @@ $file_max = intval($file_max);
 
                 <div class="form-group">
                     <h4>Agama</h4>
-                    <select class="form-control" name="agama">
-                        <option selected disabled>Silahkan pilih agama</option>
-                        <option value="Khatolik"
-                        @if(!empty($data))
-                            @if($data->agama == "Khatolik")
-                                {{ "selected" }}
+                    <div class="input-group">
+                        <div class="input-group-addon"><i class="fa fa-list"></i></div>
+                        <select class="form-control" name="agama">
+                            <option selected disabled>Silahkan pilih agama</option>
+                            <option value="Khatolik"
+                            @if(!empty($data))
+                                @if($data->agama == "Khatolik")
+                                    {{ "selected" }}
+                                        @endif
                                     @endif
-                                @endif
-                                >Khatolik</option>
-                        <option value="Protestan"
-                        @if(!empty($data))
-                            @if($data->agama == "Protestan")
-                                {{ "selected" }}
+                            >Khatolik</option>
+                            <option value="Protestan"
+                            @if(!empty($data))
+                                @if($data->agama == "Protestan")
+                                    {{ "selected" }}
+                                        @endif
                                     @endif
-                                @endif
-                                >Protestan</option>
-                        <option value="Kong Hu Cu"
-                        @if(!empty($data))
-                            @if($data->agama == "Kong Hu Cu")
-                                {{ "selected" }}
+                            >Protestan</option>
+                            <option value="Kong Hu Cu"
+                            @if(!empty($data))
+                                @if($data->agama == "Kong Hu Cu")
+                                    {{ "selected" }}
+                                        @endif
                                     @endif
-                                @endif
-                                >Kong Hu Cu</option>
-                        <option value="Buddha"
-                        @if(!empty($data))
-                            @if($data->agama == "Buddha")
-                                {{ "selected" }}
+                            >Kong Hu Cu</option>
+                            <option value="Buddha"
+                            @if(!empty($data))
+                                @if($data->agama == "Buddha")
+                                    {{ "selected" }}
+                                        @endif
                                     @endif
-                                @endif
-                                >Buddha</option>
-                        <option value="Hindu"
-                        @if(!empty($data))
-                            @if($data->agama == "Hindu")
-                                {{ "selected" }}
+                            >Buddha</option>
+                            <option value="Hindu"
+                            @if(!empty($data))
+                                @if($data->agama == "Hindu")
+                                    {{ "selected" }}
+                                        @endif
                                     @endif
-                                @endif
-                                >Hindu</option>
-                        <option value="Islam"
-                        @if(!empty($data))
-                            @if($data->agama == "Islam")
-                                {{ "selected" }}
+                            >Hindu</option>
+                            <option value="Islam"
+                            @if(!empty($data))
+                                @if($data->agama == "Islam")
+                                    {{ "selected" }}
+                                        @endif
                                     @endif
-                                @endif
-                                >Islam</option>
-                    </select>
+                            >Islam</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="form-group">
-                    <h4>Alamat</h4>
-                    {{ Form::textarea('content',null,array('class' => 'form-control','rows' => '3')) }}
+                    <h4>Status Pernikahan</h4>
+                    <div class="input-group">
+                        <div class="input-group-addon"><i class="fa fa-list"></i></div>
+                        <select class="form-control" name="status">
+                            <option selected disabled>Silahkan pilih jenis status</option>
+                            <option value="Menikah"
+                            @if(!empty($data))
+                                @if($data->status == "Menikah")
+                                    {{ "selected" }}
+                                        @endif
+                                    @endif
+                            >Menikah</option>
+                            <option value="Belum Menikah"
+                            @if(!empty($data))
+                                @if($data->status == "Belum Menikah")
+                                    {{ "selected" }}
+                                        @endif
+                                    @endif
+                            >Belum Menikah</option>
+                        </select>
+                    </div>
                 </div>
             </div>
             <!--/nama-->
@@ -171,31 +220,26 @@ $file_max = intval($file_max);
                         </div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <h4>Status Pernikahan</h4>
-                    <select class="form-control" name="status">
-                        <option selected disabled>Silahkan pilih jenis status</option>
-                        <option value="Menikah"
-                        @if(!empty($data))
-                            @if($data->status == "Menikah")
-                                {{ "selected" }}
-                                    @endif
-                                @endif
-                                >Menikah</option>
-                        <option value="Belum Menikah"
-                        @if(!empty($data))
-                            @if($data->status == "Belum Menikah")
-                                {{ "selected" }}
-                                    @endif
-                                @endif
-                                >Belum Menikah</option>
-                    </select>
-                </div>
+
                 <div class="form-group">
                     <h4>Kontak</h4>
                     {{ Form::textarea('kontak',null,array('class' => 'form-control','rows' => '3')) }}
                 </div>
+                <div class="form-group">
+                    <h4>Alamat</h4>
+                    {{ Form::textarea('content',null,array('class' => 'form-control','rows' => '3')) }}
+                </div>
             </div>
+        </div>
+    </div>
+    <div class="box-footer with-border">
+        <div class="form-group">
+            <button type="submit" name="simpan" accesskey="s" class="btn btn-primary">
+                <i class="fa fa-save"></i> <u>S</u>impan</button>
+            <button type="submit" name="simpan2" accesskey="m" class="btn btn-primary">
+                <i class="fa fa-save fa-fw"></i><i class="fa fa-plus"></i> Si<u>m</u>pan dan buat baru</button>
+            <a href="{{ route('admins.'.$kelas.'.index') }}" name="batal" accesskey="b" class="btn btn-danger">
+                <i class="fa fa-times"></i> <u>B</u>atal</a>
         </div>
     </div>
 </div>

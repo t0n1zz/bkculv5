@@ -4,6 +4,10 @@ $kelas = "saran"
 ?>
 @extends('admins._layouts.layout')
 
+@section('css')
+    @include('admins._components.datatable_CSS')
+@stop
+
 @section('content')
 <!-- header -->
 <section class="content-header">
@@ -27,17 +31,16 @@ $kelas = "saran"
             <table class="table table-striped table-bordered table-hover" id="dataTables-example">
                 <thead>
                 <tr>
-                    <th></th>
+                    <th hidden></th>
                     <th>Nama </th>
                     <th>Saran dan Kritik</th>
                     <th>Tanggal</th>
-                    <th>Hapus</th>
                 </tr>
                 </thead>
                 <tbody>
                 @foreach($datas as $data)
                     <tr>
-                        <td></td>
+                        <td hidden>{{ $data->id }}</td>
                         @if(!empty($data->name))
                             <td>{{ $data->name }}</td>
                         @else
@@ -45,7 +48,7 @@ $kelas = "saran"
                         @endif
 
                         @if(!empty($data->content))
-                            <td>{{{ $data->content }}}</td>
+                            <td style="warptext">{{{ $data->content }}}</td>
                         @else
                             <td>-</td>
                         @endif
@@ -56,9 +59,6 @@ $kelas = "saran"
                         @else
                             <td>-</td>
                         @endif
-
-                        <td><button class="btn btn-danger modal1" name="{{ $data->id }}">
-                                <i class="fa fa-trash"></i></button></td>
                     </tr>
                 @endforeach
 
@@ -80,7 +80,7 @@ $kelas = "saran"
                 <h4 class="modal-title"><i class="fa fa-trash"></i> Hapus Saran</h4>
             </div>
             <div class="modal-body">
-                <strong>Menghapus saran ini ?</strong>
+                <h4>Menghapus saran ini ?</h4>
                 <input type="text" name="id" value="" id="modal1id" hidden>
             </div>
             <div class="modal-footer">
@@ -92,4 +92,34 @@ $kelas = "saran"
     {{ Form::close() }}
 </div>
 <!-- /Hapus -->
+@stop
+
+@section('js')
+    @include('admins._components.datatable_JS')
+    <script type="text/javascript" src="{{ URL::asset('admin/datatable.js') }}"></script>
+    <script>
+        new $.fn.dataTable.Buttons(table,{
+            buttons: [
+                {
+                    text: '<i class="fa fa-trash"></i> <u>H</u>apus',
+                    key: {
+                        altKey: true,
+                        key: 'h'
+                    },
+                    action: function(){
+                        var id = $.map(table.rows({ selected:true }).data(),function(item){
+                            return item[0];
+                        });
+                        if(id != ""){
+                            $('#modal1show').modal({show:true});
+                            $('#modal1id').attr('value',id);
+                        }
+                    }
+                }
+            ]
+        });
+        table.buttons( 0, null ).container().prependTo(
+                table.table().container()
+        );
+    </script>
 @stop

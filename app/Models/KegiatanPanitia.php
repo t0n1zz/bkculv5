@@ -11,5 +11,4 @@ class KegiatanPanitia extends Model {
         'id_kegiatan','id_panitia','tugas','status',
         'insentif'
     ];
-
 }

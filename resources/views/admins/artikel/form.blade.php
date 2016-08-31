@@ -8,28 +8,18 @@ $file_max_meassure_unit = $file_max_meassure_unit == 'K' ? 'kb' : ($file_max_mea
 $file_max = substr($file_max,0,$file_max_str_leng - 1);
 $file_max = intval($file_max);
 ?>
+@section('css')
+<link rel="stylesheet" type="text/css" href="{{asset('plugins/summernote/summernote.css')}}" >
+@stop
 <!-- Alert -->
 @include('admins._layouts.alert')
 <!-- /Alert -->
 <!-- content -->
 <div class="box box-primary">
-    <div class="box-header with-border">
-        <div class="form-group">
-            <button type="submit" name="simpan" accesskey="s" class="btn btn-primary" value="simpan">
-                <i class="fa fa-save"></i> <u>S</u>impan
-            </button>
-            <button type="submit" name="simpan2" accesskey="m" class="btn btn-primary" value="simpan">
-                <i class="fa fa-save fa-fw"></i><i class="fa fa-plus"></i> Si<u>m</u>pan dan buat baru
-            </button>
-            <a href="{{ route('admins.'.$kelas.'.index' )}}" name="batal" accesskey="b" class="btn btn-danger" value="batal">
-                <i class="fa fa-times"></i> <u>B</u>atal
-            </a>
-        </div>
-    </div>
     <div class="box-body">
         <div class="row">
             <!--judul-->
-            <div class="col-sm-8">
+            <div class="col-sm-6">
                 <div class="form-group">
                     <h4>Judul Artikel *</h4>
                     <div class="input-group">
@@ -43,7 +33,7 @@ $file_max = intval($file_max);
                 </div>
             </div>
             <!--/judul-->
-            <div class="col-sm-4">
+            <div class="col-sm-6">
                 <div class="form-group">
                     <h4>Penulis Artikel</h4>
                     <div class="input-group">
@@ -104,7 +94,7 @@ $file_max = intval($file_max);
             <!--/status-->
             <!--kategori baru-->
             <div class="row" id="pilihan" style="display: none;">
-                <div class="col-sm-6">
+                <div class="col-sm-12">
                     <div class="form-group">
                         <h4>Kategori Baru</h4>
                         <div class="input-group">
@@ -200,5 +190,23 @@ $file_max = intval($file_max);
             </div>
         </div>
     </div>
+    <div class="box-footer with-border">
+        <div class="form-group">
+            <button type="submit" name="simpan" accesskey="s" class="btn btn-primary" value="simpan">
+                <i class="fa fa-save"></i> <u>S</u>impan
+            </button>
+            <button type="submit" name="simpan2" accesskey="m" class="btn btn-primary" value="simpan">
+                <i class="fa fa-save fa-fw"></i><i class="fa fa-plus"></i> Si<u>m</u>pan dan buat baru
+            </button>
+            <a href="{{ route('admins.'.$kelas.'.index' )}}" name="batal" accesskey="b" class="btn btn-danger" value="batal">
+                <i class="fa fa-times"></i> <u>B</u>atal
+            </a>
+        </div>
+    </div>
 </div>
 <!-- content -->
+
+@section('js')
+<script type="text/javascript" src="{{ URL::asset('plugins/summernote/summernote.js') }}"></script>
+<script type="text/javascript" src="{{ URL::asset('admin/summernote.js') }}"></script>
+@stop

@@ -4,16 +4,20 @@ $kelas = "kategoriartikel";
 ?>
 @extends('admins._layouts.layout')
 
+@section('css')
+    @include('admins._components.datatable_CSS')
+@stop
+
 @section('content')
 <!-- header -->
 <section class="content-header">
     <h1>
-        <i class="fa fa-archive"></i> {!! $title !!}
+        <i class="fa fa-archive"></i> {{ $title }}
         <small>Mengelola Data Kategori Artikel</small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="{{ URL::to('admins') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active"><i class="fa fa-book"></i> {!! $title !!}</li>
+        <li class="active"><i class="fa fa-book"></i> {{ $title }}</li>
     </ol>
 </section>
 <!-- /header -->
@@ -23,49 +27,34 @@ $kelas = "kategoriartikel";
     <!-- /Alert -->
     <!--content-->
     <div class="box box-primary">
-        <div class="box-header with-border">
-            <div class="form-group">
-                <a type="button" accesskey="t" class="btn btn-primary modal2"
-                   href="#"><i class="fa fa-plus"></i> <u>T</u>ambah Kategori Artikel</a>
-            </div>
-        </div>
         <div class="box-body">
             <table class="table table-striped table-bordered table-hover" id="dataTables-example">
                 <thead>
                 <tr>
-                    <th></th>
+                    <th hidden></th>
                     <th>Nama Kategori </th>
                     <th>Jumlah Artikel</th>
-                    <th>Ubah</th>
-                    <th>Hapus</th>
                 </tr>
                 </thead>
                 <tbody>
                 @foreach($datas as $data)
                     <tr>
-                        <td></td>
+                        <td hidden>{{ $data->id }}</td>
                         @if(!empty($data->name))
                             @if($data->id > 1)
-                                <td>{!! $data->name !!}</td>
+                                <td>{{ $data->name }}</td>
                             @else
-                                <td>{!! $data->name !!}</td>
+                                <td>{{ $data->name }}</td>
                             @endif
                         @else
                             <td>-</td>
                         @endif
 
                         @if($data->hasartikel->count() > 0)
-                            <td><a class="btn btn-warning" href="{{route('admins.artikel.index_kategori', array($data->id))}}">
-                                    {!! $data->jumlah !!}</a></td>
+                            <td><a class="btn btn-default" disabled>{{ $data->jumlah }}</a></td>
                         @else
-                            <td><a href="#" class="btn btn-warning">{!! $data->hasartikel->count() !!}</a> </td>
+                            <td><a href="#" class="btn btn-default" disabled>{{ $data->hasartikel->count() }}</a> </td>
                         @endif
-
-                        <td><a class="btn btn-primary modal3" href="#" name={!! $data->id !!}>
-                                <i class="fa fa-pencil"></i></a></td>
-
-                        <td><button class="btn btn-danger modal1" name="{{ $data->id }}">
-                                <i class="fa fa-trash"></i></button></td>
                     </tr>
                 @endforeach
 
@@ -87,7 +76,7 @@ $kelas = "kategoriartikel";
                 <h4 class="modal-title"><i class="fa fa-trash"></i> Hapus Kategori Artikel</h4>
             </div>
             <div class="modal-body">
-                <strong>Menghapus kategori artikel ini ?</strong>
+                <h4>Menghapus kategori artikel ini ?</h4>
                 <input type="text" name="id" value="" id="modal1id" hidden>
             </div>
             <div class="modal-footer">
@@ -109,7 +98,7 @@ $kelas = "kategoriartikel";
           <h4 class="modal-title "><i class="fa fa-plus"></i> Tambah Kategori Artikel</h4>
         </div>
         <div class="modal-body">
-          <strong>Menambah Kategori Artikel</strong>
+          <h4>Menambah Kategori Artikel</h4>
           <input type="text" name="id" value="" id="modal2id" hidden>
             <div class="input-group">
                 <span class="input-group-addon"><i class="fa fa-font"></i></span>
@@ -136,7 +125,7 @@ $kelas = "kategoriartikel";
           <h4 class="modal-title "><i class="fa fa-pencil-square-o"></i> Ubah Kategori Artikel</h4>
         </div>
         <div class="modal-body">
-          <strong>Mengubah kategori artikel</strong>
+          <h4>Mengubah kategori artikel</h4>
           <input type="text" name="id" value="" id="modal3id" hidden>
             <div class="input-group">
                 <span class="input-group-addon"><i class="fa fa-font"></i></span>
@@ -154,4 +143,64 @@ $kelas = "kategoriartikel";
 </div>
 <!-- /ubah -->
 <!-- /.modal -->
+@stop
+
+@section('js')
+    @include('admins._components.datatable_JS')
+    <script type="text/javascript" src="{{ URL::asset('admin/datatable.js') }}"></script>
+    <script>
+        new $.fn.dataTable.Buttons(table,{
+            buttons: [
+                {
+                    text: '<i class="fa fa-plus"></i> <u>T</u>ambah',
+                    key: {
+                        altKey: true,
+                        key: 't'
+                    },
+                    action: function(){
+                        $('#modal2show').modal({show:true});
+                    }
+                },
+                {
+                    text: '<i class="fa fa-pencil"></i> <u>U</u>bah',
+                    key: {
+                        altKey: true,
+                        key: 'u'
+                    },
+                    action: function(){
+                        var id = $.map(table.rows({ selected: true }).data(),function(item){
+                            return item[0];
+                        });
+                        var id2 = $.map(table.rows({ selected: true }).data(),function(item){
+                            return item[1];
+                        });
+                        if(id != ""){
+                            $('#modal3show').modal({show:true});
+                            $('#modal3id').attr('value',id);
+                            $('#modal3id2').attr('value',id2);
+                        }
+                    }
+                },
+                {
+                    text: '<i class="fa fa-trash"></i> <u>H</u>apus',
+                    key: {
+                        altKey: true,
+                        key: 'h'
+                    },
+                    action: function(){
+                        var id = $.map(table.rows({ selected:true }).data(),function(item){
+                            return item[0];
+                        });
+                        if(id != ""){
+                            $('#modal1show').modal({show:true});
+                            $('#modal1id').attr('value',id);
+                        }
+                    }
+                }
+            ]
+        });
+        table.buttons( 0, null ).container().prependTo(
+                table.table().container()
+        );
+    </script>
 @stop

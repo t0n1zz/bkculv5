@@ -118,12 +118,12 @@ class PublicController extends Controller{
     public function agenda(){
         $kegiatans = Kegiatan::where('status','=','0')->orderBy('tanggal','asc')->get();
 
-        Flickering::handshake();
-        $gambar =  Flickering::callMethod('people.getPhotos', array('user_id' => '127271987@N07'));
-        $gambar->setPerPage(20);
-        $gambars = $gambar->getResults('photo');
+//        Flickering::handshake();
+//        $gambar =  Flickering::callMethod('people.getPhotos', array('user_id' => '127271987@N07'));
+//        $gambar->setPerPage(20);
+//        $gambars = $gambar->getResults('photo');
 
-        return view('agenda',compact('kegiatans','gambars'));
+        return view('agenda',compact('kegiatans'));
     }
 
     public function profil(){

@@ -4,6 +4,10 @@ $kelas = "wilayahcuprimer"
 ?>
 @extends('admins._layouts.layout')
 
+@section('css')
+    @include('admins._components.datatable_CSS')
+@stop
+
 @section('content')
 <!-- header -->
 <section class="content-header">
@@ -23,45 +27,30 @@ $kelas = "wilayahcuprimer"
     <!-- /Alert -->
     <!--content-->
     <div class="box box-primary">
-        <div class="box-header with-border"> 
-            <div class="form-group">
-                <a type="button" accesskey="t"
-                   class="btn btn-primary modal2" href="#"><i class="fa fa-plus"></i> <u>T</u>ambah Wilayah CU</a>
-            </div>
-        </div>
         <div class="box-body">
             <table class="table table-striped table-bordered table-hover table-fullwidth" id="dataTables-example" style="width:100%;">
                 <thead>
                 <tr>
-                    <th></th>
+                    <th hidden></th>
                     <th>Nama Wilayah </th>
                     <th>Jumlah CU</th>
-                    <th>Ubah</th>
-                    <th>Hapus</th>
                 </tr>
                 </thead>
                 <tbody>
                 @foreach($datas as $data)
                     <tr>
-                        <td></td>
-                        @if(!is_null($data->name))
+                        <td hidden>{{ $data->id }}</td>
+                        @if(!empty($data->name))
                             <td>{{ $data->name }}</td>
                         @else
                             <td>-</td>
                         @endif
 
                         @if($data && count($data->hascuprimer) > 0)
-                            <td><a class="btn btn-warning" href="{{route('admins.cuprimer.index_wilayah', array($data->id))}}"
-                                        >{{ $data->jumlah }}</a></td>
+                            <td><a class="btn btn-default" href="#" disabled="">{{ $data->jumlah }}</a></td>
                         @else
-                            <td>{{ $data->jumlah }}</td>
+                            <td><a class="btn btn-default" href="#" disabled="">{{ $data->jumlah }}</a></td>
                         @endif
-
-                        <td><a class="btn btn-primary modal3" href="#" name={{ $data->id }}>
-                                <i class="fa fa-pencil"></i></a></td>
-
-                        <td><button class="btn btn-danger modal1" name="{{ $data->id }}">
-                                <i class="fa fa-trash"></i></button></td>
                     </tr>
                 @endforeach
 
@@ -82,9 +71,10 @@ $kelas = "wilayahcuprimer"
           <h4 class="modal-title "><i class="fa fa-plus"></i> Tambah Wilayah CU</h4>
         </div>
         <div class="modal-body">
-          <strong>Menambah wilayah CU</strong>
+          <h4>Menambah wilayah CU</h4>
           <input type="text" name="id" value="" id="modal2id" hidden>
             <div class="input-group">
+                <span class="input-group-addon"><i class="fa fa-font"></i></span>
                 {{ Form::text('name',null,array('class' => 'form-control', 'placeholder' => 'Silahkan masukkan nama wilayah CU',
                     'autocomplete'=>'off'))}}
             </div>
@@ -108,7 +98,7 @@ $kelas = "wilayahcuprimer"
                 <h4 class="modal-title"><i class="fa fa-trash"></i> Hapus Wilayah CU Primer</h4>
             </div>
             <div class="modal-body">
-                <strong>Menghapus wilayah CU Primer ini ?</strong>
+                <h4>Menghapus wilayah CU Primer ini ?</h4>
                 <input type="text" name="id" value="" id="modal1id" hidden>
             </div>
             <div class="modal-footer">
@@ -130,11 +120,12 @@ $kelas = "wilayahcuprimer"
           <h4 class="modal-title ">Ubah Wilayah CU</h4>
         </div>
         <div class="modal-body">
-          <strong>Mengubah wilayah CU</strong>
+          <h4>Mengubah wilayah CU</h4>
           <input type="text" name="id" value="" id="modal3id" hidden>
             <div class="input-group">
-                {{ Form::text('name',null,array('class' => 'form-control', 'placeholder' => 'Silahkan masukkan nama wilayah CU',
-                 'autocomplete'=>'off'))}}
+                <span class="input-group-addon"><i class="fa fa-font"></i></span>
+                {{ Form::text('name',null,array('class' => 'form-control','id'=>'modal3id2',
+                'placeholder' => 'Silahkan masukkan wilayah','autocomplete'=>'off'))}}
             </div>
         </div>
         <div class="modal-footer">
@@ -147,4 +138,64 @@ $kelas = "wilayahcuprimer"
 </div>
 <!-- /ubah -->
 <!-- /.modal -->
+@stop
+
+@section('js')
+    @include('admins._components.datatable_JS')
+    <script type="text/javascript" src="{{ URL::asset('admin/datatable.js') }}"></script>
+    <script>
+        new $.fn.dataTable.Buttons(table,{
+            buttons: [
+                {
+                    text: '<i class="fa fa-plus"></i> <u>T</u>ambah',
+                    key: {
+                        altKey: true,
+                        key: 't'
+                    },
+                    action: function(){
+                        $('#modal2show').modal({show:true});
+                    }
+                },
+                {
+                    text: '<i class="fa fa-pencil"></i> <u>U</u>bah',
+                    key: {
+                        altKey: true,
+                        key: 'u'
+                    },
+                    action: function(){
+                        var id = $.map(table.rows({ selected: true }).data(),function(item){
+                            return item[0];
+                        });
+                        var id2 = $.map(table.rows({ selected: true }).data(),function(item){
+                            return item[1];
+                        });
+                        if(id != ""){
+                            $('#modal3show').modal({show:true});
+                            $('#modal3id').attr('value',id);
+                            $('#modal3id2').attr('value',id2);
+                        }
+                    }
+                },
+                {
+                    text: '<i class="fa fa-trash"></i> <u>H</u>apus',
+                    key: {
+                        altKey: true,
+                        key: 'h'
+                    },
+                    action: function(){
+                        var id = $.map(table.rows({ selected:true }).data(),function(item){
+                            return item[0];
+                        });
+                        if(id != ""){
+                            $('#modal1show').modal({show:true});
+                            $('#modal1id').attr('value',id);
+                        }
+                    }
+                }
+            ]
+        });
+        table.buttons( 0, null ).container().prependTo(
+                table.table().container()
+        );
+    </script>
 @stop

@@ -27,7 +27,7 @@ class ExcelController extends Controller
 		if(Input::hasFile('import_file')){
 			$path = Input::file('import_file')->getRealPath();
 			$data = Excel::load($path, function($reader) {
-			})->get();
+			})->take(45);
 
 			dd($data);
 

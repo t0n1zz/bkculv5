@@ -3,6 +3,18 @@
     cursor: hand;
 }
 
+td {
+    white-space: nowrap;
+}
+
+div.DTTT {
+    margin-bottom: 0.5em; float: right;
+}
+
+div.dataTables_wrapper {
+    clear: both;
+}
+
 .warptext {
     word-wrap: break-word;
     word-break: normal;
@@ -16,11 +28,23 @@ table.dataTable td.focus {
     color:#fff;
 }
 
-table.dataTable thead tr{
-	background-color:#3c8dbc;
-	color:#fff;
-	white-space: nowrap;
+.input-group .input-group-addon{
+    border-color: #ddd;
+    background-color:#f4f4f4;
+    color:#444;
 }
+
+/*table.dataTable thead tr{*/
+	/*background-color:#3c8dbc;*/
+	/*color:#fff;*/
+	/*white-space: nowrap;*/
+/*}*/
+
+/*table.dataTable tfoot tr{*/
+    /*background-color:limegreen;*/
+    /*color:#fff;*/
+    /*white-space: nowrap;*/
+/*}*/
 
 .lead{
     font-weight: 600;
@@ -29,4 +53,26 @@ table.dataTable thead tr{
 .progress-group .progress-text{
     font-size: small;
     font-weight: 600;
+}
+
+.dt-buttons{
+    margin-right: .5em;
+    margin-bottom: .5em;
+}
+
+.button-space{
+    margin-right: .5em;
+    margin-bottom: .5em;
+}
+
+.tabletools{
+    margin-bottom: .5em;
+}
+
+.highlight{
+    background-color:lightblue;
+}
+
+.modal.modal-wide .modal-dialog{
+    width: 60%;
 }

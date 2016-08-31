@@ -9,6 +9,8 @@ use Validator;
 use App\Models\Staf;
 use App\Models\StafRiwayat;
 use App\Models\Cuprimer;
+use App\Http\Requests;
+use Yajra\Datatables\Datatables;
 
 class AdminStafController extends Controller{
 
@@ -26,6 +28,10 @@ class AdminStafController extends Controller{
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
         }
+    }
+
+    public function allstaf(){
+        return Datatables::of($datas = Staf::with('cuprimer')->orderBy('cu','asc')->get())->make(true);
     }
 
     public function index_bkcu()
@@ -76,9 +82,9 @@ class AdminStafController extends Controller{
             $data = Staf::with('cuprimer')->find($id);
             $riwayats1 = StafRiwayat::where('id_staf','=',$id)->where('tipe','=',1)
                 ->orderBy('selesai','dsc')->get();
-            $riwayats2 = StafRiwayat::where('id_staf','=',$id)->where('tipe','=',2)
+            $riwayats2 = StafRiwayat::where('id_staf','=',$id)->where('tipe','=',3)
                 ->orderBy('selesai','dsc')->get();
-            $riwayats3 = StafRiwayat::where('id_staf','=',$id)->where('tipe','=',3)
+            $riwayats3 = StafRiwayat::where('id_staf','=',$id)->where('tipe','=',2)
                 ->orderBy('selesai','dsc')->get();
             return view('admins.'.$this->kelaspath.'.detail', compact('data','riwayats1',
                 'riwayats2','riwayats3'));
@@ -154,22 +160,37 @@ class AdminStafController extends Controller{
         }
     }
 
-    public function store_riwayat()
+    public function riwayat()
     {
         try{
-            $kelas = new StafRiwayat();
-            $kelas->id_staf = Input::get('id_staf');
-            $kelas->tipe = Input::get('tipe');
-            $kelas->name = Input::get('name');
+
+            $id = Input::get('id');
+            $tipe = Input::get('tipe');
             $date1 = Input::get('mulai');
+            $date2 = Input::get('selesai');
+
+            if($id == "")
+                $kelas = new StafRiwayat();
+            else
+                $kelas = StafRiwayat::findOrFail($id);
+
+            $kelas->id_staf = Input::get('id_staf');
+            $kelas->tipe = $tipe;
+            $kelas->name = Input::get('name');
+            $kelas->keterangan = Input::get('keterangan');
+            $kelas->sekarang = Input::get('sekarang');
+
+            if($tipe == '1')
+                $kelas->keterangan2 = Input::get('tipependidikan');
+
             if(!empty($date1)){
-                $timestamp = strtotime($date1);
+                $timestamp = strtotime(str_replace('/', '-',$date1));
                 $tanggal = date('Y-m-d',$timestamp);
                 $kelas->mulai = $tanggal;
             }
-            $date2 = Input::get('selesai');
+
             if(!empty($date2)){
-                $timestamp = strtotime($date2);
+                $timestamp = strtotime(str_replace('/', '-',$date2));
                 $tanggal = date('Y-m-d',$timestamp);
                 $kelas->selesai = $tanggal;
             }
@@ -238,15 +259,18 @@ class AdminStafController extends Controller{
             $kelas->id_staf = Input::get('id_staf');
             $kelas->tipe = Input::get('tipe');
             $kelas->name = Input::get('name');
+            $kelas->keterangan = Input::get('keterangan');
+            $kelas->keterangan2 = Input::get('keterangan2');
+            $kelas->sekarang = Input::get('sekarang');
             $date1 = Input::get('mulai');
             if(!empty($date1)){
-                $timestamp = strtotime($date1);
+                $timestamp = strtotime(str_replace('/', '-',$date1));
                 $tanggal = date('Y-m-d',$timestamp);
                 $kelas->mulai = $tanggal;
             }
             $date2 = Input::get('selesai');
             if(!empty($date2)){
-                $timestamp = strtotime($date2);
+                $timestamp = strtotime(str_replace('/', '-',$date2));
                 $tanggal = date('Y-m-d',$timestamp);
                 $kelas->selesai = $tanggal;
             }

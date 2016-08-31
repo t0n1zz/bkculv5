@@ -8,9 +8,9 @@
     <!-- header navbar -->
     <nav class="navbar navbar-static-top" role="navigation">
         <!-- toggle -->
-        {{--<a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">--}}
-            {{--<span class="sr-only">Toggle Navigation</span>--}}
-        {{--</a>--}}
+        <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+            <span class="sr-only">Toggle Navigation</span>
+        </a>
         <!-- /toggle -->
         <!-- navbar right menu -->
         <div class="navbar-custom-menu">

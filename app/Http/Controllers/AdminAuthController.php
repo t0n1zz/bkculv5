@@ -27,7 +27,7 @@ class AdminAuthController extends controller{
         try{
             if(Auth::check()){
                 if(Auth::user()->hasRole('cu'))
-                    return Redirect::route('admins');
+                    return Redirect::route('cu');
             }
 
             return view('cu.login')->with('errormessage','Maaf, anda harus login terlebih dahulu.');

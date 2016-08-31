@@ -1,4 +1,6 @@
-
+<?php
+$cusidebars = App\Models\Cuprimer::orderBy('name','asc')->get();
+?>
 <aside class="main-sidebar">
     <section class="sidebar">
         <ul class="sidebar-menu">
@@ -41,31 +43,31 @@
             <!-- /dashboard -->
             <!-- pengumuman -->
             @if(Entrust::can('pengumuman'))
-                <li @if($title == "Kelola Pengumuman"){!! "class='active'" !!}@endif>
+                <li {!! Request::is('admins/pengumuman') ? 'class="active"' : '' !!}>
                     <a href="{!! route('admins.pengumuman.index') !!}"><i class="fa fa-comments-o fa-fw"></i> <span>Pengumuman</span></a>
                 </li>
             @endif
             <!-- /pengumuman -->
             <!-- saran -->
             @if(Entrust::can('saran'))
-                <li @if($title == "Kelola Saran atau Kritik"){!! "class='active'" !!}@endif>
+                <li {!! Request::is('admins/saran') ? 'class="active"' : '' !!}>
                     <a href="{!! route('admins.saran.index') !!}"><i class="fa fa-paper-plane-o fa-fw"></i> <span>Saran atau Kritik</span></a>
                 </li>
             @endif
             <!-- /saran -->
             <!-- artikel -->
             @if(Entrust::can('artikel'))
-                <li {{ Request::is('admins/artikel') ? 'class=treeview active' : 'class=treeview' }}>
-                    <a href="#"><i class="fa fa-book fa-fw"></i> <span>Artikel</span> <i class="fa fa-angle-left pull-right"></i></a>
+                <li {!! Request::is('admins/artikel') || Request::is('admins/artikel*') || Request::is('admins/kategoriartikel') ? 'class="treeview active"' : 'class=treeview' !!} >
+                    <a href="#"><i class="fa fa-book fa-fw"></i> <span>Artikel</span> <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>
                     <ul {{ Request::is('admins/artikel*') ? 'class=treeview-menu menu open style=display:block;' : 'class=treeview-menu' }}>
-                        <li @if($title == "Tambah Artikel" ){!! "class='treeview active'" !!}@endif>
+                        <li {!! Request::is('admins/artikel/create') ? 'class="treeview active"' : '' !!} >
                             <a  href="{!! route('admins.artikel.create') !!}"><i class="fa fa-plus"></i> Tambah Artikel</a>
                         </li>
-                        <li @if($title == "Kelola Artikel" ){!! "class='treeview active'" !!}@endif>
+                        <li {!! Request::is('admins/artikel') ? 'class="treeview active"' : '' !!} >
                             <a  href="{!! route('admins.artikel.index') !!}"><i class="fa fa-archive"></i> Kelola Artikel</a>
                         </li>
                         @if(Entrust::can('kategoriartikel'))
-                            <li @if($title == "Kelola Kateogri Artikel" ){!! "class='treeview active'" !!}@endif>
+                            <li {!! Request::is('admins/kategoriartikel') ? 'class="treeview active"' : '' !!} >
                                 <a  href="{!! route('admins.kategoriartikel.index') !!}"><i class="fa fa-archive"></i> Kelola Kategori Artikel</a>
                             </li>
                         @endif
@@ -73,138 +75,75 @@
                 </li>
             @endif
             <!-- /artikel -->
-            <!-- diklat -->
+            <!-- kegiatan -->
             @if(Entrust::can('kegiatan'))
-                <li @if($title == "Kelola Kegiatan" || $title == "Tambah Kegiatan" || $title == "Ubah Kegiatan" )
-                        {!! "class='treeview active'" !!}
-                    @else
-                        {!! "class='treeview'" !!}
-                    @endif>
-                    <a href="#"><i class="fa fa-calendar fa-fw"></i> <span>Kegiatan</span> <i class="fa fa-angle-left pull-right"></i></a>
-                    <ul @if($title == "Kelola Kegiatan" || $title == "Tambah Kegiatan" || $title == "Ubah Kegiatan" )
-                            {!! "class='treeview-menu menu-open' style='display:block;'" !!}
-                        @else
-                            {!! "class='treeview-menu'" !!}
-                        @endif>
-                        <li @if($title == "Tambah Kegiatan" ){!! "class='treeview active'" !!}@endif>
+                <li {!! Request::is('admins/kegiatan') || Request::is('admins/kegiatan*') ? 'class="treeview active"' : 'class=treeview' !!} >
+                    <a href="#"><i class="fa fa-calendar fa-fw"></i> <span>Kegiatan</span> <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>
+                    <ul {{ Request::is('admins/kegiatan*') ? 'class=treeview-menu menu open style=display:block;' : 'class=treeview-menu' }}>
+                        <li {!! Request::is('admins/kegiatan/create') ? 'class="treeview active"' : '' !!} >
                             <a href="{!! route('admins.kegiatan.create') !!}"><span class="fa fa-plus"></span> Tambah Kegiatan</a>
                         </li>
-                        <li @if($title == "Kelola Kegiatan" ){!! "class='treeview active'" !!}@endif>
+                        <li {!! Request::is('admins/kegiatan') ? 'class="treeview active"' : '' !!} >
                             <a href="{!! route('admins.kegiatan.index') !!}"><span class="fa fa-archive"></span> Kelola Kegiatan</a>
                         </li>
                     </ul>
                 </li>
             @endif
-            <!-- /diklat -->
+            <!-- /kegiatan -->
             <!-- cuprimer -->
             @if(Entrust::can('cuprimer'))
-                <li @if($title == "Kelola CU" || $title == "Tambah CU" || $title == "Ubah CU" || $title == "Kelola Wilayah CU" ||
-                    $title == "Kelola Staff CU" || $title == "Tambah Staff CU" || $title == "Ubah Staff CU")
-                        {!! "class='treeview active'" !!}
-                    @else
-                        {!! "class='treeview'" !!}
-                    @endif>
-                    <a href="#"><i class="fa fa-building-o fa-fw"></i> <span>CU</span> <i class="fa fa-angle-left pull-right"></i></a>
-                    <ul @if($title == "Kelola CU" || $title == "Tambah CU" || $title == "Ubah CU" || $title == "Kelola Wilayah CU" ||
-                        $title == "Kelola Staff CU" || $title == "Tambah Staff CU" || $title == "Ubah Staff CU")
-                            {!! "class='treeview-menu menu-open' style='display:block;'" !!}
-                        @else
-                            {!! "class='treeview-menu'" !!}
-                        @endif>
-                        <li @if($title == "Tambah CU" ){!! "class='treeview active'" !!}@endif>
+                <li {!! Request::is('admins/cuprimer') || Request::is('admins/cuprimer*') || Request::is('admins/wilayahcuprimer')
+                    || Request::is('admins/perkembangancu')|| Request::is('admins/perkembangancu*') || Request::is('admins/tpcu*') ? 'class="treeview active"' : 'class=treeview' !!} >
+                    <a href="#"><i class="fa fa-building-o fa-fw"></i> <span>CU</span> <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>
+                    <ul {{ Request::is('admins/cuprimer*') ? 'class=treeview-menu menu open style=display:block;' : 'class=treeview-menu' }}>
+                        <li {!! Request::is('admins/cuprimer/create') ? 'class="treeview active"' : '' !!} >
                             <a href="{!! route('admins.cuprimer.create') !!}"><span class="fa fa-plus"></span> Tambah CU</a>
                         </li>
-                        <li @if($title == "Kelola CU" ){!! "class='treeview active'" !!}@endif>
+                        <li {!! Request::is('admins/tpcu/create') ? 'class="treeview active"' : '' !!} >
+                            <a  href="{!! route('admins.tpcu.create') !!}"><i class="fa fa-plus"></i> Tambah TP CU</a>
+                        </li>
+                        <li {!! Request::is('admins/perkembangancu/create') ? 'class="treeview active"' : '' !!} >
+                            <a  href="{!! route('admins.perkembangancu.create') !!}"><i class="fa fa-plus"></i> Tambah Perkembangan CU</a>
+                        </li>
+                        <li {!! Request::is('admins/cuprimer') ? 'class="treeview active"' : '' !!} >
                             <a href="{!! route('admins.cuprimer.index') !!}"><span class="fa fa-archive"></span> Kelola CU</a>
                         </li>
+                        <li {!! Request::is('admins/tpcu') ? 'class="treeview active"' : '' !!} >
+                            <a href="{!! route('admins.tpcu.index') !!}"><i class="fa fa-archive"></i> Kelola TP CU</a></li>
                         @if(Entrust::can('wilayahcuprimer'))
-                            <li @if($title == "Kelola Wilayah CU" ){!! "class='treeview active'" !!}@endif>
+                            <li {!! Request::is('admins/wilayahcuprimer') ? 'class="treeview active"' : '' !!} >
                                 <a href="{!! route('admins.wilayahcuprimer.index') !!}"><span class="fa fa-archive"></span> Kelola Wilayah CU</a>
                             </li>
                         @endif
+                        <li {!! Request::is('admins/perkembangancu') || Request::is('admins/perkembangancu*') ? 'class="treeview active"' : '' !!} >
+                            <a href="{!! route('admins.perkembangancu.index') !!}"><i class="fa fa-archive"></i> Kelola Perkembangan CU</a></li>
                     </ul>
                 </li>
             @endif
             <!-- /cuprimer -->
-            <!-- perkembangan cu -->
-            @if(Entrust::can('infogerakan'))
-                <li @if($title == "Kelola Perkembangan CU" || $title == "Tambah Perkembangan CU" || $title == "Ubah Perkembangan CU")
-                        {!! "class='treeview active'" !!}
-                        @else
-                        {!! "class='treeview'" !!}
-                    @endif>
-                    <a href="#"><i class="fa fa-line-chart fa-fw"></i> <span>Perkembangan CU</span> <i class="fa fa-angle-left pull-right"></i></a>
-                    <ul @if($title == "Kelola Perkembangan CU" || $title == "Tambah Perkembangan CU" || $title == "Ubah Perkembangan CU")
-                            {!! "class='treeview-menu menu-open' style='display:block;'" !!}
-                        @else
-                            {!! "class='treeview-menu'" !!}
-                        @endiF>
-                        <li @if($title == "Tambah Perkembangan CU" ){!! "class='treeview active'" !!}@endif>
-                            <a  href="{!! route('admins.perkembangancu.create') !!}"><i class="fa fa-plus"></i> Tambah Perkembangan CU</a>
-                        </li>
-                        <li @if($title == "Kelola Perkembangan CU" ){!! "class='treeview active'" !!}@endif>
-                            <a  href="{!! route('admins.perkembangancu.index') !!}"><i class="fa fa-archive"></i> Kelola Perkembangan CU</a>
-                        </li>
-                    </ul>
-                </li>
-            @endif
-            <!-- perkembangan cu -->
-            <!-- staff -->
+            <!-- staf -->
             @if(Entrust::can('staff'))
-                <li @if($title == "Kelola Staf" || $title == "Tambah Staf" || $title == "Ubah Staf" || $title == "Detail Staf"  )
-                        {!! "class='treeview active'" !!}
-                    @endif>
-                    <a href="#"><i class="fa fa-sitemap fa-fw"></i> <span>Staf</span> <i class="fa fa-angle-left pull-right"></i></a>
-                    <ul
-                    @if($title == "Kelola Staf" || $title == "Tambah Staf" || $title == "Ubah Staf" )
-                        {!! "class='treeview-menu menu-open' style='display:block;'" !!}
-                    @else
-                        {!! "class='treeview-menu'" !!}
-                    @endif>
-                        <li @if($title == "Tambah Staf" ){!! "class='treeview active'" !!}@endif>
+                <li {!! Request::is('admins/staf') || Request::is('admins/staf*') ? 'class="treeview active"' : 'class=treeview' !!} >
+                    <a href="#"><i class="fa fa-sitemap fa-fw"></i> <span>Staf</span> <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>
+                    <ul {{ Request::is('admins/staf*') ? 'class=treeview-menu menu open style=display:block;' : 'class=treeview-menu' }}>
+                        <li {!! Request::is('admins/staf/create') ? 'class="treeview active"' : '' !!} >
                             <a href="{!! route('admins.staf.create') !!}"><span class="fa fa-plus"></span> Tambah Staf</a>
                         </li>
-                        <li @if($title == "Kelola Staf"){!! "class='treeview active'" !!}@endif>
-                            <a href="#"><i class="fa fa-archive"></i> Kelola staf <i class="fa fa-angle-left pull-right"></i></a>
-                            <ul @if($title == "Kelola Staf")
-                                {!! "class='treeview-menu menu-open' style='display:block;'" !!}
-                                    @else
-                                {!! "class='treeview-menu'" !!}
-                                @endif>
-                                <li @if(!empty($title2) && $title2 == "Semua CU"){!! "class='treeview active'" !!}@endif
-                                ><a href="{!! route('admins.staf.index') !!}"><i class="fa fa-circle-o"></i> Semua</a></li>
-                                <li @if(!empty($title2) && $title2 == "Puskopdit BKCU Kalimantan"){!! "class='treeview active'" !!}@endif
-                                ><a href="{!! route('admins.staf.index_bkcu') !!}"><i class="fa fa-circle-o"></i> BKCU</a></li>
-                            <?php
-                                $cusidebars = App\Models\Cuprimer::orderBy('name','asc')->get();
-                            ?>
-                                @foreach($cusidebars as $cusidebar)
-                                    <li @if(!empty($title2) && $title2 == "CU " . $cusidebar->name){!! "class='treeview active'" !!}@endif
-                                            ><a href="{!! route('admins.staf.index_cu',array($cusidebar->id)) !!}"><i class="fa fa-circle-o"></i> {!! $cusidebar->name !!}</a></li>
-                                @endforeach
-                            </ul>
-                        </li>
+                        <li {!! Request::is('admins/staf') ? 'class="treeview active"' : '' !!} >
+                            <a href="{!! route('admins.staf.index') !!}"><i class="fa fa-archive"></i> Kelola staf</a></li>
                     </ul>
                 </li>
             @endif
-            <!-- /staff -->
+            <!-- /staf -->
             <!-- download -->
             @if(Entrust::can('download'))
-                <li @if($title == "Kelola File" || $title == "Tambah File" || $title == "Ubah File" )
-                        {!! "class='treeview active'" !!}
-                    @else
-                        {!! "class='treeview'" !!}
-                    @endif>
-                    <a href="#"><i class="fa fa-download fa-fw"></i> <span>Download</span> <i class="fa fa-angle-left pull-right"></i></a>
-                    <ul @if($title == "Kelola File" || $title == "Tambah File" || $title == "Ubah File" )
-                            {!! "class='treeview-menu menu-open' style='display:block;'" !!}
-                        @else
-                            {!! "class='treeview-menu'" !!}
-                        @endif>
-                        <li @if($title == "Tambah File" ){!! "class='treeview active'" !!}@endif>
+                <li {!! Request::is('admins/download') || Request::is('admins/download*') ? 'class="treeview active"' : 'class=treeview' !!} >
+                    <a href="#"><i class="fa fa-download fa-fw"></i> <span>Download</span> <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>
+                    <ul {{ Request::is('admins/download*') ? 'class=treeview-menu menu open style=display:block;' : 'class=treeview-menu' }}>
+                        <li {!! Request::is('admins/download/create') ? 'class="treeview active"' : '' !!} >
                             <a href="{!! route('admins.download.create') !!}"><span class="fa fa-plus"></span> Tambah File</a>
                         </li>
-                        <li @if($title == "Kelola File" ){!! "class='treeview active'" !!}@endif>
+                        <li {!! Request::is('admins/download') ? 'class="treeview active"' : '' !!} >
                             <a href="{!! route('admins.download.index') !!}"><span class="fa fa-archive"></span> Kelola File</a>
                         </li>
                     </ul>
@@ -213,21 +152,13 @@
             <!-- /download -->
             <!-- admin -->
             @if(Entrust::can('admin'))
-                <li @if($title == "Kelola Admin" || $title == "Tambah Admin" || $title == "Ubah Admin" )
-                        {!! "class='treeview active'" !!}
-                    @else
-                        {!! "class='treeview'" !!}
-                    @endif>
-                <a href="#"><i class="fa fa-user fa-fw"></i> <span>Admin</span> <i class="fa fa-angle-left pull-right"></i></a>
-                <ul @if($title == "Kelola Admin" || $title == "Tambah Admin" || $title == "Ubah Admin" )
-                        {!! "class='treeview-menu menu-open' style='display:block;'" !!}
-                    @else
-                        {!! "class='treeview-menu'" !!}
-                    @endif>
-                    <li @if($title == "Tambah Admin" ){!! "class='treeview active'" !!}@endif>
+                <li {!! Request::is('admins/admin') || Request::is('admins/admin*') ? 'class="treeview active"' : 'class=treeview' !!} >
+                <a href="#"><i class="fa fa-user fa-fw"></i> <span>Admin</span> <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>
+                    <ul {{ Request::is('admins/admin*') ? 'class=treeview-menu menu open style=display:block;' : 'class=treeview-menu' }}>
+                        <li {!! Request::is('admins/admin/create') ? 'class="treeview active"' : '' !!} >
                         <a href="{!! route('admins.admin.create') !!}"><span class="fa fa-plus"></span> Tambah Admin</a>
                     </li>
-                    <li @if($title == "Kelola Admin" ){!! "class='treeview active'" !!}@endif>
+                        <li {!! Request::is('admins/admin') ? 'class="treeview active"' : '' !!} >
                         <a href="{!! route('admins.admin.index') !!}"><span class="fa fa-archive"></span> Kelola Admin</a>
                     </li>
                 </ul>

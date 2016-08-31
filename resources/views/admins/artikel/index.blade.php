@@ -6,6 +6,10 @@ $imagepath = 'images_artikel/';
 
 @extends('admins._layouts.layout')
 
+@section('css')
+    @include('admins._components.datatable_CSS')
+@stop
+
 @section('content')
 <!-- header -->
 <section class="content-header">
@@ -86,24 +90,24 @@ $imagepath = 'images_artikel/';
                         @endif
 
                         @if($data->status == 0)
-                            <td><a href="{{route('admins.artikel.update_status', array($data->id))}}" class="btn btn-default">
+                            <td><a href="#" class="btn btn-default" disabled>
                                     <i hidden="true">tidak</i><i class="fa fa-ban"></i></a></td>
                         @elseif($data->status == 1)
-                            <td><a href="{{route('admins.artikel.update_status', array($data->id))}}" class="btn btn-warning" name={{ $data->id }}>
+                            <td><a href="#" class="btn btn-warning" disabled>
                                     <i hidden="true">iya</i><i class="fa fa-check"></i></a></td>
                         @else
-                            <td><a href="{{route('admins.artikel.update_status', array($data->id))}}" class="btn btn-default" name={{ $data->id }}>
+                            <td><a href="#" class="btn btn-default" disabled>
                                     <i hidden="true">-</i><i class="fa fa-minus"></i></a></td>
                         @endif
 
                         @if($data->pilihan == 0)
-                            <td><a href="{{route('admins.artikel.update_pilihan', array($data->id))}}" class="btn btn-default" name={{ $data->id }}>
+                            <td><a href="#" class="btn btn-default" disabled>
                                     <i hidden="true">tidak</i><i class="fa fa-ban"></i></a></td>
                         @elseif($data->pilihan == 1)
-                            <td><a href="{{route('admins.artikel.update_pilihan', array($data->id))}}" class="btn btn-warning" name={{ $data->id }}>
+                            <td><a href="#" class="btn btn-warning" disabled>
                                     <i hidden="true">iya</i><i class="fa fa-check"></i></a></td>
                         @else
-                            <td><a href="{{route('admins.artikel.update_pilihan', array($data->id))}}" class="btn btn-default" name={{ $data->id }}>
+                            <td><a href="#" class="btn btn-default" disabled>
                                     <i hidden="true">-</i><i class="fa fa-minus"></i></a></td>
                         @endif
                     </tr>
@@ -125,7 +129,7 @@ $imagepath = 'images_artikel/';
           <h4 class="modal-title"><i class="fa fa-trash"></i> Hapus Artikel</h4>
         </div>
         <div class="modal-body">
-          <strong>Menghapus artikel ini ?</strong>
+          <h4>Menghapus artikel ini ?</h4>
           <input type="text" name="id" value="" id="modal1id" hidden>
         </div>
         <div class="modal-footer">
@@ -139,4 +143,99 @@ $imagepath = 'images_artikel/';
 <!-- /Hapus -->
 <!-- /.modal -->
 
+@stop
+
+@section('js')
+    @include('admins._components.datatable_JS')
+    <script type="text/javascript" src="{{ URL::asset('admin/datatable.js') }}"></script>
+    <script>
+        new $.fn.dataTable.Buttons(table,{
+            buttons: [
+                {
+                    text: '<i class="fa fa-plus"></i> <u>T</u>ambah',
+                    key: {
+                        altKey: true,
+                        key: 't'
+                    },
+                    action: function(){
+                        window.location.href = "{{URL::to('admins/'.$kelas.'/create')}}";
+                    }
+                },
+                {
+                    text: '<i class="fa fa-pencil"></i> <u>U</u>bah',
+                    key: {
+                        altKey: true,
+                        key: 'u'
+                    },
+                    action: function(){
+                        var id = $.map(table.rows({ selected: true }).data(),function(item){
+                            return item[0];
+                        });
+                        var kelas = "{{ $kelas }}";
+                        if(id != ""){
+                            window.location.href =  kelas + "/" + id + "/edit";
+                        }
+                    }
+                },
+                {
+                    text: '<i class="fa fa-trash"></i> <u>H</u>apus',
+                    key: {
+                        altKey: true,
+                        key: 'h'
+                    },
+                    action: function(){
+                        var id = $.map(table.rows({ selected:true }).data(),function(item){
+                            return item[0];
+                        });
+                        if(id != ""){
+                            $('#modal1show').modal({show:true});
+                            $('#modal1id').attr('value',id);
+                        }
+                    }
+                }
+            ]
+        });
+        table.buttons( 0, null ).container().prependTo(
+                table.table().container()
+        );
+        new $.fn.dataTable.Buttons(table,{
+            buttons: [
+                {
+                    text: 'Ubah Status Publikasi',
+                    key: {
+                        altKey: true,
+                        key: 'u'
+                    },
+                    action: function(){
+                        var id = $.map(table.rows({ selected: true }).data(),function(item){
+                            return item[0];
+                        });
+                        var kelas = "{{ $kelas }}";
+                        if(id != ""){
+                            window.location.href =  kelas + "/update_status/" + id;
+                        }
+                    }
+                },
+                {
+                    text: 'Ubah Status Artikel Pilihan',
+                    key: {
+                        altKey: true,
+                        key: 'u'
+                    },
+                    action: function(){
+                        var id = $.map(table.rows({ selected: true }).data(),function(item){
+                            return item[0];
+                        });
+                        var kelas = "{{ $kelas }}";
+                        if(id != ""){
+                            window.location.href =  kelas + "/update_pilihan/" + id;
+                        }
+                    }
+                }
+            ]
+        });
+        table.buttons( 0, null ).container().prependTo(
+                table.table().container()
+        );
+    </script>
 @stop

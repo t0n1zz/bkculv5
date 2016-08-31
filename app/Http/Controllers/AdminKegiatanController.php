@@ -1,6 +1,9 @@
 <?php
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
+use App\Models\Cuprimer;
+use App\Models\Staf;
 use DB;
 use Auth;
 use Input;
@@ -8,6 +11,8 @@ use Redirect;
 use Validator;
 use App\Models\Admin;
 use App\Models\Kegiatan;
+use App\Models\KegiatanPanitia;
+use App\Models\KegiatanPeserta;
 
 class AdminKegiatanController extends Controller{
 
@@ -32,7 +37,8 @@ class AdminKegiatanController extends Controller{
             $datas = Kegiatan::with('Admin')
                 ->orderBy('status', 'asc')
                 ->orderBy('name','asc')
-                ->get();;
+                ->get();
+
             return view('cu.kelola_kegiatan', compact('datas'));
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
@@ -44,16 +50,37 @@ class AdminKegiatanController extends Controller{
         try{
             $data = Kegiatan::find($id);
             $datas = Staf::with('cuprimer')->where('cu','=',Auth::user()->cuprimer->id)
-                ->orderBy('cu','asc')->get();;
+                ->orderBy('cu','asc')->get();
             return view('cu.daftar_kegiatan', compact('data','datas'));
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
         }
     }
 
-    public function detail()
+    public function detail($id)
     {
-        return view('admins.'.$this->kelaspath.'.detail');
+        try{
+            $data = Kegiatan::find($id);
+            $datapanitia = KegiatanPanitia::with('staf')->where('id_kegiatan','=',$id)->get();
+            $datapeserta = KegiatanPeserta::with('staf')->where('id_kegiatan','=',$id)->get();
+            $datastafs = Cuprimer::with('staf')->get();
+            
+            return view('admins.'.$this->kelaspath.'.detail',compact('data','datapanitia','datapeserta','datastafs'));
+        }catch (Exception $e){
+            return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
+        }
+    }
+
+    public function getselect2()
+    {
+        try{
+            $q = Input::get('q');
+            $repo = Staf::with('cuprimer')->where('name','LIKE','%'.$q.'%')->get();
+
+            return \Response::json($repo);
+        }catch (Exception $e){
+            return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
+        }
     }
 
     public function create()
@@ -89,6 +116,11 @@ class AdminKegiatanController extends Controller{
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
         }
+    }
+
+    public function store_fasilitator()
+    {
+
     }
 
     public function edit($id)
@@ -160,6 +192,26 @@ class AdminKegiatanController extends Controller{
 
             return Redirect::route('admins.'.$this->kelaspath.'.index')->with('sucessmessage', 'Tanggal selesai kegiatan <b><i>' .$name. '</i></b> Telah berhasil di ubah.');
 
+        }catch (Exception $e){
+            return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
+        }
+    }
+
+    public function update_tujuan(Request $request){
+        try{
+            $kelas = Kegiatan::find($request->id);
+            $kelas->tujuan = $request->markup;
+            $kelas->save();
+        }catch (Exception $e){
+            return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
+        }
+    }
+
+    public function update_pokok(Request $request){
+        try{
+            $kelas = Kegiatan::find($request->id);
+            $kelas->pokok = $request->markup;
+            $kelas->save();
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
         }

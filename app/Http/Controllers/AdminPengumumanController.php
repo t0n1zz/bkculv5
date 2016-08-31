@@ -68,7 +68,6 @@ class AdminPengumumanController extends Controller{
             {
                 return Redirect::back()->withErrors($validator)->withInput();
             }
-
             $name = Input::get('name');
             $id = Input::get('id');
             $kelas = Pengumuman::findOrFail($id);

@@ -5,6 +5,10 @@ $kelas ='download';
 
 @extends('admins._layouts.layout')
 
+@section('css')
+    @include('admins._components.datatable_CSS')
+@stop
+
 @section('content')
 <!-- header -->
 <section class="content-header">
@@ -24,27 +28,21 @@ $kelas ='download';
     <!-- /Alert -->
     <!--content-->
     <div class="box box-primary">
-        <div class="box-header with-border">
-            <div class="form-group">
-                <a accesskey="t" class="btn btn-primary" href="{{ route('admins.'.$kelas.'.create') }}">
-                    <i class="fa fa-plus"></i> <u>T</u>ambah File</a>
-            </div>
-        </div>
         <div class="box-body">
             <table class="table table-striped table-bordered table-hover" id="dataTables-example">
                 <thead>
                 <tr>
-                    <th></th>
+                    <th hidden></th>
                     <th>Nama </th>
                     <th>Tanggal</th>
-                    <th>Ubah</th>
-                    <th>Hapus</th>
+                    <th>Tipe File</th>
+                    <th>Ukuran File</th>
                 </tr>
                 </thead>
                 <tbody>
                 @foreach($datas as $data)
                     <tr>
-                        <td></td>
+                        <td hidden>{{ $data->id }}</td>
                         @if(!empty($data->name))
                             <td>{{ $data->name }}</td>
                         @else
@@ -57,12 +55,8 @@ $kelas ='download';
                         @else
                             <td>-</td>
                         @endif
-
-                        <td><a class="btn btn-primary modal3" href="#" name={{ $data->id }}>
-                                <i class="fa fa-pencil"></i></a></td>
-
-                        <td><button class="btn btn-danger modal1" name="{{ $data->id }}">
-                                <i class="fa fa-trash"></i></button></td>
+                        <td>-</td>
+                        <td>-</td>
                     </tr>
                 @endforeach
 
@@ -83,9 +77,13 @@ $kelas ='download';
           <h4 class="modal-title "><i class="fa fa-pencil"></i> Ubah Nama File</h4>
         </div>
         <div class="modal-body">
-          <strong>Mengubah nama file ?</strong>
+          <h4>Mengubah nama file ?</h4>
           <input type="text" name="id" value="" id="modal3id" hidden>
-                {{ Form::text('name',null,array('class' => 'form-control', 'placeholder' => 'Silahkan masukkan informasi pengumuman baru'))}}
+            <div class="input-group">
+                <span class="input-group-addon"><i class="fa fa-font"></i></span>
+                {{ Form::text('name',null,array('class' => 'form-control','id'=>'modal3id2',
+                'placeholder' => 'Silahkan masukkan nama file','autocomplete'=>'off'))}}
+            </div>
         </div>
         <div class="modal-footer">
               <button type="submit" class="btn btn-primary" id="modalbutton"><i class="fa fa-check"></i> Ok</button>
@@ -106,7 +104,7 @@ $kelas ='download';
                 <h4 class="modal-title"><i class="fa fa-trash"></i> Hapus File</h4>
             </div>
             <div class="modal-body">
-                <strong>Menghapus file ini ?</strong>
+                <h4>Menghapus file ini ?</h4>
                 <input type="text" name="id" value="" id="modal1id" hidden>
             </div>
             <div class="modal-footer">
@@ -119,4 +117,64 @@ $kelas ='download';
 </div>
 <!-- /Hapus -->
 <!-- /.modal -->
+@stop
+
+@section('js')
+    @include('admins._components.datatable_JS')
+    <script type="text/javascript" src="{{ URL::asset('admin/datatable.js') }}"></script>
+    <script>
+        new $.fn.dataTable.Buttons(table,{
+            buttons: [
+                {
+                    text: '<i class="fa fa-plus"></i> <u>T</u>ambah',
+                    key: {
+                        altKey: true,
+                        key: 't'
+                    },
+                    action: function(){
+                        window.location.href = "{{URL::to('admins/'.$kelas.'/create')}}";
+                    }
+                },
+                {
+                    text: '<i class="fa fa-pencil"></i> <u>U</u>bah',
+                    key: {
+                        altKey: true,
+                        key: 'u'
+                    },
+                    action: function(){
+                        var id = $.map(table.rows({ selected: true }).data(),function(item){
+                            return item[0];
+                        });
+                        var id2 = $.map(table.rows({ selected: true }).data(),function(item){
+                            return item[1];
+                        });
+                        if(id != ""){
+                            $('#modal3show').modal({show:true});
+                            $('#modal3id').attr('value',id);
+                            $('#modal3id2').attr('value',id2);
+                        }
+                    }
+                },
+                {
+                    text: '<i class="fa fa-trash"></i> <u>H</u>apus',
+                    key: {
+                        altKey: true,
+                        key: 'h'
+                    },
+                    action: function(){
+                        var id = $.map(table.rows({ selected:true }).data(),function(item){
+                            return item[0];
+                        });
+                        if(id != ""){
+                            $('#modal1show').modal({show:true});
+                            $('#modal1id').attr('value',id);
+                        }
+                    }
+                }
+            ]
+        });
+        table.buttons( 0, null ).container().prependTo(
+                table.table().container()
+        );
+    </script>
 @stop

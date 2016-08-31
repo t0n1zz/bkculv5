@@ -42,7 +42,7 @@ $.extend( true, DataTable.Buttons.defaults, {
 			className: 'dt-buttons btn-group'
 		},
 		button: {
-			className: 'btn btn-primary'
+			className: 'btn btn-default'
 		},
 		collection: {
 			tag: 'ul',

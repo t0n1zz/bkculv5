@@ -17,7 +17,7 @@ class Kegiatan extends Model {
     ];
     
     protected $fillable = [
-        'name','penulis','tanggal','tanggal2','wilayah','tempat','sasaran','fasilitator'
+        'name','penulis','tanggal','tanggal2','wilayah','tempat','sasaran','fasilitator','tujuan','pokok'
     ];
 
     public function Admin(){

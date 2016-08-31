@@ -9,7 +9,8 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Puskopdit BKCU Kalimantan Admin Site </title>
+    <title>Puskopdit BKCU Kalimantan </title>
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
     <link rel="shortcut icon" href="{{asset('images/logo.png')}}">
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" type="text/css" href="{{asset('plugins/bootstrap/css/bootstrap.min.css')}}" >
@@ -20,25 +21,6 @@
 
     <!-- Custom Fonts -->
     <link rel="stylesheet" type="text/css" href="{{asset('plugins/font-awesome/css/font-awesome.min.css')}}" >
-
-    <!-- Datatables -->
-    <link rel="stylesheet" type="text/css" href="{{asset('plugins/dataTables/dataTables.bootstrap.min.css')}}" >
-    <link rel="stylesheet" type="text/css" href="{{asset('plugins/dataTables/extension/KeyTable/css/keyTable.bootstrap.min.css')}}" >
-    <link rel="stylesheet" type="text/css" href="{{asset('plugins/dataTables/extension/Select/css/select.dataTables.min.css')}}" >
-    <link rel="stylesheet" type="text/css" href="{{asset('plugins/dataTables/extension/Select/css/select.bootstrap.min.css')}}" >
-    <link rel="stylesheet" type="text/css" href="{{asset('plugins/dataTables/extension/Buttons/css/buttons.dataTables.min.css')}}" >
-    <link rel="stylesheet" type="text/css" href="{{asset('plugins/dataTables/extension/Buttons/css/buttons.bootstrap.min.css')}}" >
- 
-
-    <!-- Bootstrap extended form CSS -->
-    <!-- <link rel="stylesheet" type="text/css" href="{{asset('plugins/BootstrapFormHelper/css/bootstrap-formhelpers.min.css')}}" > -->
-    <link rel="stylesheet" type="text/css" href="{{asset('plugins/summernote/summernote.css')}}" >
-
-    <style>
-        td { white-space: nowrap; }
-        div.DTTT { margin-bottom: 0.5em; float: right; }
-        div.dataTables_wrapper { clear: both; }
-    </style>
 
     @yield('css')
 
@@ -51,7 +33,7 @@
     <![endif]-->
 </head>
 
-<body class="hold-transition skin-blue sidebar-collapse sidebar-mini">
+<body class="sidebar-collapse hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
     <!-- Header -->
     @include('admins._layouts.header')
@@ -93,8 +75,8 @@
         </div>
     </div>
 </div>
-<!--/modal photos-->
-<script type="text/javascript" src="{{ URL::asset('admin/jQuery/jQuery-2.1.3.min.js') }}"></script>
+
+<script type="text/javascript" src="{{ URL::asset('admin/jQuery/jQuery-1.9.1.min.js') }}"></script>
 
 <!-- Bootstrap Core JavaScript -->
 <script type="text/javascript" src="{{ URL::asset('plugins/bootstrap/js/bootstrap.min.js') }}"></script>
@@ -112,133 +94,15 @@
 <!-- fastclick for touch browser -->
 <script type="text/javascript" src="{{ URL::asset('plugins/fastclick/fastclick.min.js') }}"></script>
 
-<!-- InputMask JavaScript -->
-<script type="text/javascript" src="{{ URL::asset('plugins/inputmask/jquery.inputmask.bundle.min.js') }}"></script>
-<script type="text/javascript" src="{{ URL::asset('plugins/BootstrapFormHelper/js/bootstrap-formhelpers.min.js') }}"></script>
-<script type="text/javascript" src="{{ URL::asset('js/validator.min.js') }}"></script>
-<script type="text/javascript" src="{{ URL::asset('plugins/summernote/summernote.js') }}"></script>
-
-<!-- datatables -->
-<script type="text/javascript" src="{{ URL::asset('plugins/dataTables/jquery.dataTables.min.js') }}"></script>
-<script type="text/javascript" src="{{ URL::asset('plugins/dataTables/dataTables.bootstrap.min.js') }}"></script>
-<script type="text/javascript" src="{{ URL::asset('plugins/dataTables/extension/KeyTable/js/dataTables.keyTable.min.js') }}"></script>
-<script type="text/javascript" src="{{ URL::asset('plugins/dataTables/extension/Select/js/dataTables.select.min.js') }}"></script>
-<script type="text/javascript" src="{{ URL::asset('plugins/dataTables/extension/Buttons/js/dataTables.buttons.min.js') }}"></script>
-<script type="text/javascript" src="{{ URL::asset('plugins/dataTables/extension/Buttons/js/buttons.bootstrap.js') }}"></script>
-<script type="text/javascript" src="{{ URL::asset('plugins/dataTables/extension/Buttons/js/buttons.colVis.min.js') }}"></script>
-
 <!-- form helper -->
 <script type="text/javascript" src="{{ URL::asset('plugins/inputmask/jquery.inputmask.bundle.min.js') }}"></script>
 <script type="text/javascript" src="{{ URL::asset('js/validator.min.js') }}"></script>
-<script type="text/javascript" src="{{ URL::asset('plugins/summernote/summernote.js') }}"></script>
 
-@yield('scripts')
 
+@yield('js')
 <script>
 $(document).ready(function() {
-    var table = $('#dataTables-example').DataTable({
-        dom: 'Bftip',
-        select: true,
-        scrollY: '80vh',
-        scrollX: true,
-        "autoWidth": false,
-        scrollCollapse : true,
-        paging : false,
-        stateSave : true,
-        order : [[ 0, "asc" ]],
-        buttons: [
-            {
-                text: '<i class="fa fa-plus"></i> <u>T</u>ambah',
-                key: {
-                    altKey: true,
-                    key: 't'
-                },
-                action: function(){
-                    window.location.href = "{{URL::to('admins/'.$kelas.'/create')}}";
-                }
-            },
-            {
-                text: '<i class="fa fa-pencil"></i> <u>U</u>bah',
-                key: {
-                    altKey: true,
-                    key: 'u'
-                },
-                action: function(){
-                    var id = $.map(table.rows({ selected: true }).data(),function(item){
-                        return item[0];
-                    });
-                    var kelas = "{{ $kelas }}";
-                    if(id != ""){
-                        window.location.href =  kelas + "/" + id + "/edit";
-                    }
-                }
-            },
-            {
-                text: '<i class="fa fa-trash"></i> <u>H</u>apus',
-                key: {
-                    altKey: true,
-                    key: 'h'
-                },
-                action: function(){
-                    var id = $.map(table.rows({ selected:true }).data(),function(item){
-                       return item[0];
-                    });
-                    if(id != ""){
-                        $('#modal1show').modal({show:true});
-                        $('#modal1id').attr('value',id);
-                    }
-                }
-            },
-            {
-                extend: 'colvis'
-            }
-        ],
-        language: {
-            buttons : {
-                colvis: "<i class='fa fa-columns'></i> Kolom",
-                pageLength: "<i class='fa fa-bars'></i> Baris"
-            },
-            select:{
-              rows:{
-                  _: "",
-                  0: "",
-                  1: ""
-              }
-            },
-            "emptyTable": "Tidak terdapat data di tabel",
-            "info": "",
-            "infoEmpty": "",
-            "infoFiltered":   "",
-            "search": "<i class='fa fa-search'></i> Cari:",
-            "paginate": {
-                "next":       ">",
-                "previous":   "<"
-            },
-            "zeroRecords": "Tidak ditemukan data yang sesuai",
-        }
-    });
-
     $(":input").inputmask();
-
-    $('#editor').summernote({
-        minHeight: 300,
-        maximumImageFileSize: 1242880,
-        placeholder: 'Silahkan isi disini...',
-        toolbar: [
-            ['para',['style']],
-            ['style', ['bold', 'italic', 'underline', 'hr']],
-            ['font', ['strikethrough', 'superscript', 'subscript','clear']],
-            ['fontsize', ['fontsize']],
-            ['color', ['color']],
-            ['para', ['ul', 'ol']],
-            ['paragraph',['paragraph']],
-            ['table',['table']],
-            ['height', ['height']],
-            ['insert',['link','picture','video']] ,
-            ['misc',['fullscreen','codeview']],
-            ['misc2',['undo','redo']]
-        ]
-    });
 });
 </script>
 

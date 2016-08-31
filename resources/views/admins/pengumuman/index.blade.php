@@ -4,6 +4,10 @@ $kelas = "pengumuman";
 ?>
 @extends('admins._layouts.layout')
 
+@section('css')
+    @include('admins._components.datatable_CSS')
+@stop
+
 @section('content')
 <!-- header -->
 <section class="content-header">
@@ -23,30 +27,22 @@ $kelas = "pengumuman";
     <!-- /Alert -->
     <!--content-->
     <div class="box box-primary">
-        <div class="box-header with-border">
-            <div class="form-group">
-                <a type="button" accesskey="t" class="btn btn-primary modal2"
-                   href="#"><i class="fa fa-plus"></i> <u>T</u>ambah Pengumuman</a>
-            </div>
-        </div>
         <div class="box-body">
             <table class="table table-striped table-bordered table-hover" id="dataTables-example">
                 <thead>
                 <tr>
-                    <th></th>
+                    <th hidden></th>
                     <th>Pengumuman</th>
                     <th>Tanggal</th>
                     <th>Urutan</th>
-                    <th>Ubah</th>
-                    <th>Hapus</th>
                 </tr>
                 </thead>
                 <tbody>
                 @foreach($datas as $data)
                     <tr>
-                        <td></td>
+                        <td hidden>{{ $data->id }}</td>
                         @if(!empty($data->name))
-                            <td>{{ $data->name }}</td>
+                            <td class="warptext">{{ $data->name }}</td>
                         @else
                             <td>-</td>
                         @endif
@@ -59,18 +55,10 @@ $kelas = "pengumuman";
                         @endif
 
                         @if(!empty($data->urutan))
-                            <td><a href="#" class="btn btn-warning modal4" name="{{ $data->id }}"
-                                        >{{ $data->urutan }}</a></td>
+                            <td><a href="#" class="btn btn-default" disabled>{{ $data->urutan }}</a></td>
                         @else
-                            <td><a href="#" class="btn btn-warning modal4" name="{{ $data->id }}"
-                                        >-</a></td>
+                            <td><a href="#" class="btn btn-default" disabled>-</a></td>
                         @endif
-
-                        <td><a class="btn btn-primary modal3" href="#" name={{ $data->id }}>
-                                <i class="fa fa-pencil"></i></a></td>
-
-                        <td><button class="btn btn-danger modal1" name="{{ $data->id }}">
-                                <i class="fa fa-trash"></i></button></td>
                     </tr>
                 @endforeach
 
@@ -89,7 +77,7 @@ $kelas = "pengumuman";
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title"><i class="fa fa-trash"></i> Hapus Kategori Artikel</h4>
+                <h4 clasas="modal-title"><i class="fa fa-trash"></i> Hapus Kategori Artikel</h4>
             </div>
             <div class="modal-body">
                 <strong>Menghapus pengumuman ini ?</strong>
@@ -114,7 +102,7 @@ $kelas = "pengumuman";
                 <h4 class="modal-title "><i class="fa fa-plus"></i> Tambah Pengumuman</h4>
             </div>
             <div class="modal-body">
-                <strong>Menambah pengumuman baru</strong>
+                <h4>Menambah pengumuman baru</h4>
                 <?php
                 if(Auth::check()) { $id = Auth::user()->getId();}
                 $urutan = App\Models\Pengumuman::count();
@@ -125,7 +113,7 @@ $kelas = "pengumuman";
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-font"></i></span>
                     {{ Form::text('name',null,array('class' => 'form-control',
-                      'placeholder' => 'Silahkan masukkan nama kategori artikel','autocomplete'=>'off'))}}
+                      'placeholder' => 'Silahkan masukkan pengumuman','autocomplete'=>'off'))}}
                 </div>
             </div>
             <div class="modal-footer">
@@ -147,12 +135,12 @@ $kelas = "pengumuman";
                 <h4 class="modal-title "><i class="fa fa-pencil-square-o"></i> Ubah Pengumuman</h4>
             </div>
             <div class="modal-body">
-                <strong>Mengubah pengumuman</strong>
+                <h4>Mengubah pengumuman</h4>
                 <input type="text" name="id" value="" id="modal3id" hidden>
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-font"></i></span>
                     {{ Form::text('name',null,array('class' => 'form-control','id'=>'modal3id2',
-                    'placeholder' => 'Silahkan masukkan nama kategori artikel baru','autocomplete'=>'off'))}}
+                    'placeholder' => 'Silahkan masukkan pengumuman','autocomplete'=>'off'))}}
                 </div>
             </div>
             <div class="modal-footer">
@@ -174,7 +162,7 @@ $kelas = "pengumuman";
           <h4 class="modal-title "><i class="fa fa-pencil-square-o"></i> Ubah Urutan Pengumuman</h4>
         </div>
         <div class="modal-body">
-          <strong>Mengubah urutan pengumuman?</strong>
+          <h4>Mengubah urutan pengumuman?</h4>
           <input type="text" name="id" value="" id="modal4id" hidden>
             <div class="input-group">
                 <div class="input-group-addon"><i class="fa fa-list"></i></div>
@@ -198,4 +186,93 @@ $kelas = "pengumuman";
 </div>
 <!-- /ubah urutan -->
 <!-- /.modal -->
+@stop
+
+@section('js')
+    @include('admins._components.datatable_JS')
+    <script type="text/javascript" src="{{ URL::asset('admin/datatable.js') }}"></script>
+    <script>
+        new $.fn.dataTable.Buttons(table,{
+            buttons: [
+                {
+                    text: '<i class="fa fa-plus"></i> <u>T</u>ambah',
+                    key: {
+                        altKey: true,
+                        key: 't'
+                    },
+                    action: function(){
+                        var id = $.map(table.rows({ selected:true }).data(),function(item){
+                            return item[0];
+                        });
+                        if(id != ""){
+                            $('#modal2show').modal({show:true});
+                            $('#modal2id').attr('value',id);
+                        }
+                    }
+                },
+                {
+                    text: '<i class="fa fa-pencil"></i> <u>U</u>bah',
+                    key: {
+                        altKey: true,
+                        key: 'u'
+                    },
+                    action: function(){
+                        var id = $.map(table.rows({ selected: true }).data(),function(item){
+                            return item[0];
+                        });
+                        var id2 = $.map(table.rows({ selected: true }).data(),function(item){
+                            return item[1];
+                        });
+                        if(id != ""){
+                            $('#modal3show').modal({show:true});
+                            $('#modal3id').attr('value',id);
+                            $('#modal3id2').attr('value',id2);
+                        }
+                    }
+                },
+                {
+                    text: '<i class="fa fa-trash"></i> <u>H</u>apus',
+                    key: {
+                        altKey: true,
+                        key: 'h'
+                    },
+                    action: function(){
+                        var id = $.map(table.rows({ selected:true }).data(),function(item){
+                            return item[0];
+                        });
+                        if(id != ""){
+                            $('#modal1show').modal({show:true});
+                            $('#modal1id').attr('value',id);
+                        }
+                    }
+                }
+            ]
+        });
+        table.buttons( 0, null ).container().prependTo(
+                table.table().container()
+        );
+        new $.fn.dataTable.Buttons(table,{
+            buttons: [
+                {
+                    text: '<i class="fa fa-ellipsis-v"></i> Ubah Urutan',
+                    key: {
+                        altKey: true,
+                        key: 'u'
+                    },
+                    action: function(){
+                        var id = $.map(table.rows({ selected: true }).data(),function(item){
+                            return item[0];
+                        });
+                        if(id != ""){
+                            $('#modal4show').modal({show:true});
+                            $('#modal4id').attr('value',id);
+                        }
+                    }
+                },
+            ]
+        });
+        table.buttons( 0, null ).container().prependTo(
+                table.table().container()
+        );
+    </script>
 @stop
