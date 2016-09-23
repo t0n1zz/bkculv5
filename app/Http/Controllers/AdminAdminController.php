@@ -3,9 +3,14 @@
 namespace App\Http\Controllers;
 
 use DB;
-
+use Auth;
+use Input;
+use Redirect;
+use Validator;
 use App\Models\Cuprimer;
 use App\Models\Admin;
+use App\Models\Role;
+use App\Models\Permission;
 
 class AdminAdminController extends controller{
 
@@ -119,17 +124,24 @@ class AdminAdminController extends controller{
     public function edit_akses($id)
     {
         try{
-            $data = Admin::find($id);
+            $roles = Role::with('perms')->find($id);
 
-            return view('admins.'.$this->kelaspath.'.edit_akses', compact('data'));
+            if(!empty($roles)){
+                foreach ($roles->perms as $role){
+                    $data[] = $role->name;
+                }
+
+                return \Response::json($data);
+            }
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
         }
     }
 
-    public function update_password($id)
+    public function update_password()
     {
         try{
+            $id = Input::get('id');
             $kelas = Admin::findOrFail($id);
 
             $validator = Validator::make($data = Input::all(), Admin::$rules);
@@ -203,12 +215,59 @@ class AdminAdminController extends controller{
         }
     }
 
-    public function update_akses($id){
+    public function update_akses(){
         try{
+            $id = Input::get('id');
             $kelas = Admin::findOrFail($id);
             $name = $kelas->name;
             $adminrole = Role::where('name', '=', $kelas->username)->first();
-            $this->hak_akses($adminrole, $kelas);
+            $this->hak_akses('pengumuman','index',$adminrole, $kelas);
+            $this->hak_akses('pengumuman','create',$adminrole, $kelas);
+            $this->hak_akses('pengumuman','update',$adminrole, $kelas);
+            $this->hak_akses('pengumuman','destroy',$adminrole, $kelas);
+            $this->hak_akses('saran','index',$adminrole, $kelas);
+            $this->hak_akses('saran','destroy',$adminrole, $kelas);
+            $this->hak_akses('artikel','index',$adminrole, $kelas);
+            $this->hak_akses('artikel','create',$adminrole, $kelas);
+            $this->hak_akses('artikel','update',$adminrole, $kelas);
+            $this->hak_akses('artikel','destroy',$adminrole, $kelas);
+            $this->hak_akses('kategoriartikel','index',$adminrole, $kelas);
+            $this->hak_akses('kategoriartikel','create',$adminrole, $kelas);
+            $this->hak_akses('kategoriartikel','update',$adminrole, $kelas);
+            $this->hak_akses('kategoriartikel','destroy',$adminrole, $kelas);
+            $this->hak_akses('kegiatan','index',$adminrole, $kelas);
+            $this->hak_akses('kegiatan','create',$adminrole, $kelas);
+            $this->hak_akses('kegiatan','update',$adminrole, $kelas);
+            $this->hak_akses('kegiatan','detail',$adminrole, $kelas);
+            $this->hak_akses('kegiatan','destroy',$adminrole, $kelas);
+            $this->hak_akses('cu','index',$adminrole, $kelas);
+            $this->hak_akses('cu','create',$adminrole, $kelas);
+            $this->hak_akses('cu','update',$adminrole, $kelas);
+            $this->hak_akses('cu','detail',$adminrole, $kelas);
+            $this->hak_akses('cu','destroy',$adminrole, $kelas);
+            $this->hak_akses('wilayahcu','index',$adminrole, $kelas);
+            $this->hak_akses('wilayahcu','create',$adminrole, $kelas);
+            $this->hak_akses('wilayahcu','update',$adminrole, $kelas);
+            $this->hak_akses('wilayahcu','destroy',$adminrole, $kelas);
+            $this->hak_akses('tpcu','index',$adminrole, $kelas);
+            $this->hak_akses('tpcu','create',$adminrole, $kelas);
+            $this->hak_akses('tpcu','update',$adminrole, $kelas);
+            $this->hak_akses('tpcu','destroy',$adminrole, $kelas);
+            $this->hak_akses('perkembangancu','index',$adminrole, $kelas);
+            $this->hak_akses('perkembangancu','create',$adminrole, $kelas);
+            $this->hak_akses('perkembangancu','update',$adminrole, $kelas);
+            $this->hak_akses('perkembangancu','detail',$adminrole, $kelas);
+            $this->hak_akses('perkembangancu','destroy',$adminrole, $kelas);
+            $this->hak_akses('staf','index',$adminrole, $kelas);
+            $this->hak_akses('staf','create',$adminrole, $kelas);
+            $this->hak_akses('staf','update',$adminrole, $kelas);
+            $this->hak_akses('staf','detail',$adminrole, $kelas);
+            $this->hak_akses('staf','destroy',$adminrole, $kelas);
+            $this->hak_akses('download','index',$adminrole, $kelas);
+            $this->hak_akses('download','create',$adminrole, $kelas);
+            $this->hak_akses('download','update',$adminrole, $kelas);
+            $this->hak_akses('download','destroy',$adminrole, $kelas);
+
 
             return Redirect::route('admins.'.$this->kelaspath.'.index')->with('sucessmessage', 'Hak akses <b><i>' . $name . '</i></b> telah berhasil diubah.');
         }catch (Exception $e){
@@ -216,150 +275,17 @@ class AdminAdminController extends controller{
         }
     }
 
-    public function hak_akses($adminrole,$admin2){
-        if(Input::get('admin') == 1) {
-            if (!$admin2->can('admin')){
-                $akses = Permission::where('name', '=', 'admin')->first();
-                $adminrole->attachPermission($akses);
+    public function hak_akses($namaakses,$tipe,$adminrole,$kelas){
+        if(Input::get($namaakses.'_'.$tipe) == 1) {
+            if (!$kelas->can($namaakses.'_'.$tipe)){
+                $permission = Permission::where('name', '=', $namaakses.'_'.$tipe)->first();
+                $adminrole->attachPermission($permission);
             }
         }else{
-            if($admin2->can('admin')){
-                $akses = Permission::where('name','=','admin')->first();
-                $adminrole->detachPermission($akses);
-            }
-        }
-
-        if(Input::get('artikel') == 1){
-            if (!$admin2->can('artikel')){
-                $akses = Permission::where('name', '=', 'artikel')->first();
-                $adminrole->attachPermission($akses);
-            }
-        }else{
-            if($admin2->can('artikel')){
-                $akses = Permission::where('name','=','artikel')->first();
-                $adminrole->detachPermission($akses);
-            }
-        }
-
-        if(Input::get('cuprimer') == 1){
-            if (!$admin2->can('cuprimer')){
-                $akses = Permission::where('name', '=', 'cuprimer')->first();
-                $adminrole->attachPermission($akses);
-            }
-        }else{
-            if($admin2->can('cuprimer')){
-                $akses = Permission::where('name','=','cuprimer')->first();
-                $adminrole->detachPermission($akses);
-            }
-        }
-
-        if(Input::get('gambarkegiatan') == 1){
-            if (!$admin2->can('gambarkegiatan')){
-                $akses = Permission::where('name', '=', 'gambarkegiatan')->first();
-                $adminrole->attachPermission($akses);
-            }
-        }else{
-            if($admin2->can('gambarkegiatan')){
-                $akses = Permission::where('name','=','gambarkegiatan')->first();
-                $adminrole->detachPermission($akses);
-            }
-        }
-
-        if(Input::get('infogerakan') == 1){
-            if (!$admin2->can('infogerakan')){
-                $akses = Permission::where('name', '=', 'infogerakan')->first();
-                $adminrole->attachPermission($akses);
-            }
-        }else{
-            if($admin2->can('infogerakan')){
-                $akses = Permission::where('name','=','infogerakan')->first();
-                $adminrole->detachPermission($akses);
-            }
-        }
-
-        if(Input::get('kategoriartikel') == 1){
-            if (!$admin2->can('kategoriartikel')){
-                $akses = Permission::where('name', '=', 'kategoriartikel')->first();
-                $adminrole->attachPermission($akses);
-            }
-        }else{
-            if($admin2->can('kategoriartikel')){
-                $akses = Permission::where('name','=','kategoriartikel')->first();
-                $adminrole->detachPermission($akses);
-            }
-        }
-
-        if(Input::get('kegiatan') == 1){
-            if (!$admin2->can('kegiatan')){
-                $akses = Permission::where('name', '=', 'kegiatan')->first();
-                $adminrole->attachPermission($akses);
-            }
-        }else{
-            if($admin2->can('kegiatan')){
-                $akses = Permission::where('name','=','kegiatan')->first();
-                $adminrole->detachPermission($akses);
-            }
-        }
-
-        if(Input::get('pengumuman') == 1){
-            if (!$admin2->can('pengumuman')){
-                $akses = Permission::where('name', '=', 'pengumuman')->first();
-                $adminrole->attachPermission($akses);
-            }
-        }else{
-            if($admin2->can('pengumuman')){
-                $akses = Permission::where('name','=','pengumuman')->first();
-                $adminrole->detachPermission($akses);
-            }
-        }
-
-        if(Input::get('staff') == 1){
-            if (!$admin2->can('staff')){
-                $akses = Permission::where('name', '=', 'staff')->first();
-                $adminrole->attachPermission($akses);
-            }
-        }else{
-            if($admin2->can('staff')){
-                $akses = Permission::where('name','=','staff')->first();
-                $adminrole->detachPermission($akses);
-            }
-        }
-
-        if(Input::get('wilayahcuprimer') == 1){
-            if (!$admin2->can('wilayahcuprimer')){
-                $akses = Permission::where('name', '=', 'wilayahcuprimer')->first();
-                $adminrole->attachPermission($akses);
-            }
-        }else{
-            if($admin2->can('wilayahcuprimer')){
-                $akses = Permission::where('name','=','wilayahcuprimer')->first();
-                $adminrole->detachPermission($akses);
-            }
-        }
-
-        if(Input::get('download') == 1){
-            if (!$admin2->can('download')){
-                $akses = Permission::where('name', '=', 'download')->first();
-                $adminrole->attachPermission($akses);
-            }
-        }else{
-            if($admin2->can('download')){
-                $akses = Permission::where('name','=','download')->first();
-                $adminrole->detachPermission($akses);
-            }
-        }
-
-        if(Input::get('saran') == 1){
-            if (!$admin2->can('saran')){
-                $akses = Permission::where('name', '=', 'saran')->first();
-                $adminrole->attachPermission($akses);
-            }
-        }else{
-            if($admin2->can('saran')){
-                $akses = Permission::where('name','=','saran')->first();
-                $adminrole->detachPermission($akses);
+            if($kelas->can($namaakses.'_'.$tipe)){
+                $permission = Permission::where('name','=',$namaakses.'_'.$tipe)->first();
+                $adminrole->detachPermission($permission);
             }
         }
     }
-
 }

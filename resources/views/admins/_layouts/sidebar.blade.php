@@ -42,21 +42,21 @@ $cusidebars = App\Models\Cuprimer::orderBy('name','asc')->get();
             </li>
             <!-- /dashboard -->
             <!-- pengumuman -->
-            @if(Entrust::can('pengumuman'))
+            @if(Entrust::can('pengumuman_index'))
                 <li {!! Request::is('admins/pengumuman') ? 'class="active"' : '' !!}>
                     <a href="{!! route('admins.pengumuman.index') !!}"><i class="fa fa-comments-o fa-fw"></i> <span>Pengumuman</span></a>
                 </li>
             @endif
             <!-- /pengumuman -->
             <!-- saran -->
-            @if(Entrust::can('saran'))
+            @if(Entrust::can('saran_index'))
                 <li {!! Request::is('admins/saran') ? 'class="active"' : '' !!}>
                     <a href="{!! route('admins.saran.index') !!}"><i class="fa fa-paper-plane-o fa-fw"></i> <span>Saran atau Kritik</span></a>
                 </li>
             @endif
             <!-- /saran -->
             <!-- artikel -->
-            @if(Entrust::can('artikel'))
+            @if(Entrust::can('artikel_index'))
                 <li {!! Request::is('admins/artikel') || Request::is('admins/artikel*') || Request::is('admins/kategoriartikel') ? 'class="treeview active"' : 'class=treeview' !!} >
                     <a href="#"><i class="fa fa-book fa-fw"></i> <span>Artikel</span> <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>
                     <ul {{ Request::is('admins/artikel*') ? 'class=treeview-menu menu open style=display:block;' : 'class=treeview-menu' }}>
@@ -66,7 +66,7 @@ $cusidebars = App\Models\Cuprimer::orderBy('name','asc')->get();
                         <li {!! Request::is('admins/artikel') ? 'class="treeview active"' : '' !!} >
                             <a  href="{!! route('admins.artikel.index') !!}"><i class="fa fa-archive"></i> Kelola Artikel</a>
                         </li>
-                        @if(Entrust::can('kategoriartikel'))
+                        @if(Entrust::can('kategoriartikel_index'))
                             <li {!! Request::is('admins/kategoriartikel') ? 'class="treeview active"' : '' !!} >
                                 <a  href="{!! route('admins.kategoriartikel.index') !!}"><i class="fa fa-archive"></i> Kelola Kategori Artikel</a>
                             </li>
@@ -76,7 +76,7 @@ $cusidebars = App\Models\Cuprimer::orderBy('name','asc')->get();
             @endif
             <!-- /artikel -->
             <!-- kegiatan -->
-            @if(Entrust::can('kegiatan'))
+            @if(Entrust::can('kegiatan_index'))
                 <li {!! Request::is('admins/kegiatan') || Request::is('admins/kegiatan*') ? 'class="treeview active"' : 'class=treeview' !!} >
                     <a href="#"><i class="fa fa-calendar fa-fw"></i> <span>Kegiatan</span> <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>
                     <ul {{ Request::is('admins/kegiatan*') ? 'class=treeview-menu menu open style=display:block;' : 'class=treeview-menu' }}>
@@ -91,7 +91,7 @@ $cusidebars = App\Models\Cuprimer::orderBy('name','asc')->get();
             @endif
             <!-- /kegiatan -->
             <!-- cuprimer -->
-            @if(Entrust::can('cuprimer'))
+            @if(Entrust::can('cu_index'))
                 <li {!! Request::is('admins/cuprimer') || Request::is('admins/cuprimer*') || Request::is('admins/wilayahcuprimer')
                     || Request::is('admins/perkembangancu')|| Request::is('admins/perkembangancu*') || Request::is('admins/tpcu*') ? 'class="treeview active"' : 'class=treeview' !!} >
                     <a href="#"><i class="fa fa-building-o fa-fw"></i> <span>CU</span> <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>
@@ -110,7 +110,7 @@ $cusidebars = App\Models\Cuprimer::orderBy('name','asc')->get();
                         </li>
                         <li {!! Request::is('admins/tpcu') ? 'class="treeview active"' : '' !!} >
                             <a href="{!! route('admins.tpcu.index') !!}"><i class="fa fa-archive"></i> Kelola TP CU</a></li>
-                        @if(Entrust::can('wilayahcuprimer'))
+                        @if(Entrust::can('wilayahcuprimer_index'))
                             <li {!! Request::is('admins/wilayahcuprimer') ? 'class="treeview active"' : '' !!} >
                                 <a href="{!! route('admins.wilayahcuprimer.index') !!}"><span class="fa fa-archive"></span> Kelola Wilayah CU</a>
                             </li>
@@ -122,7 +122,7 @@ $cusidebars = App\Models\Cuprimer::orderBy('name','asc')->get();
             @endif
             <!-- /cuprimer -->
             <!-- staf -->
-            @if(Entrust::can('staff'))
+            @if(Entrust::can('staf_index'))
                 <li {!! Request::is('admins/staf') || Request::is('admins/staf*') ? 'class="treeview active"' : 'class=treeview' !!} >
                     <a href="#"><i class="fa fa-sitemap fa-fw"></i> <span>Staf</span> <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>
                     <ul {{ Request::is('admins/staf*') ? 'class=treeview-menu menu open style=display:block;' : 'class=treeview-menu' }}>
@@ -136,7 +136,7 @@ $cusidebars = App\Models\Cuprimer::orderBy('name','asc')->get();
             @endif
             <!-- /staf -->
             <!-- download -->
-            @if(Entrust::can('download'))
+            @if(Entrust::can('download_index'))
                 <li {!! Request::is('admins/download') || Request::is('admins/download*') ? 'class="treeview active"' : 'class=treeview' !!} >
                     <a href="#"><i class="fa fa-download fa-fw"></i> <span>Download</span> <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>
                     <ul {{ Request::is('admins/download*') ? 'class=treeview-menu menu open style=display:block;' : 'class=treeview-menu' }}>
@@ -151,7 +151,6 @@ $cusidebars = App\Models\Cuprimer::orderBy('name','asc')->get();
             @endif
             <!-- /download -->
             <!-- admin -->
-            @if(Entrust::can('admin'))
                 <li {!! Request::is('admins/admin') || Request::is('admins/admin*') ? 'class="treeview active"' : 'class=treeview' !!} >
                 <a href="#"><i class="fa fa-user fa-fw"></i> <span>Admin</span> <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>
                     <ul {{ Request::is('admins/admin*') ? 'class=treeview-menu menu open style=display:block;' : 'class=treeview-menu' }}>
@@ -163,7 +162,6 @@ $cusidebars = App\Models\Cuprimer::orderBy('name','asc')->get();
                     </li>
                 </ul>
                 </li>
-            @endif
             <!-- /admin -->
             {{--<li class="header"><b>&nbsp;</b></li>--}}
             <!-- foto kegiatan -->

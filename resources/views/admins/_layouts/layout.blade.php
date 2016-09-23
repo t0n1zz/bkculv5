@@ -75,6 +75,48 @@
         </div>
     </div>
 </div>
+<!--modal photos-->
+<!-- Hapus -->
+<div class="modal fade" id="modalhapus" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    {{ Form::model($datas, array('route' => array('admins.'.$kelas.'.destroy',$kelas), 'method' => 'delete')) }}
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-red-active color-palette">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title"><i class="fa fa-trash"></i> <span id="modalhapus_judul"></span></h4>
+            </div>
+            <div class="modal-body">
+                <h4 style="font-size: 16px" id="modalhapus_detail"></h4>
+                <input type="text" name="id" value="" id="modalhapus_id" hidden>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-danger" id="modalbutton"><i class="fa fa-trash"></i> Hapus</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Batal</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+    {{ Form::close() }}
+</div>
+<!-- /Hapus -->
+
+<!-- warning -->
+<div class="modal fade" id="modalwarning" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-yellow-active color-palette">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title"><i class="fa fa-warning"></i> Oopss</h4>
+            </div>
+            <div class="modal-body">
+                <h4>Silahkan pilih data terlebih dahulu di tabel</h4>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-check"></i> ok</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+<!-- /warning -->
 
 <script type="text/javascript" src="{{ URL::asset('admin/jQuery/jQuery-1.9.1.min.js') }}"></script>
 

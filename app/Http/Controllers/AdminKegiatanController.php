@@ -118,7 +118,7 @@ class AdminKegiatanController extends Controller{
         }
     }
 
-    public function store_fasilitator()
+    public function fasilitator()
     {
 
     }

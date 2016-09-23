@@ -101,13 +101,13 @@ $kelas = "kegiatan";
         <div class="col-md-9">
             <div class="nav-tabs-custom">
                 <ul class="nav nav-tabs">
-                    <li class="active"><a href="#tujuan" data-toggle="tab">Tujuan & Pokok Bahasan</a></li>
-                    <li><a href="#peserta" data-toggle="tab">Peserta, Fasilitator & Panitia</a></li>
-                    <li><a href="#biaya" data-toggle="tab">Biaya</a></li>
-                    <li><a href="#evaluasi" data-toggle="tab">Evaluasi & Saran</a></li>
+                    <li class="active"><a href="#1" data-toggle="tab">Tujuan & Pokok Bahasan</a></li>
+                    <li><a href="#2" data-toggle="tab">Peserta, Fasilitator & Panitia</a></li>
+                    <li><a href="#3" data-toggle="tab">Biaya</a></li>
+                    <li><a href="#4" data-toggle="tab">Evaluasi & Saran</a></li>
                 </ul>
                 <div class="tab-content">
-                    <div class="fade in active tab-pane" id="tujuan">
+                    <div class="fade in active tab-pane" id="1">
                         <div class="post">
                             <h3>Tujuan
                                 <small>
@@ -158,7 +158,7 @@ $kelas = "kegiatan";
                         </div>
                     </div>
                     <!-- /.tab-pane -->
-                    <div class="fade tab-pane" id="peserta">
+                    <div class="fade tab-pane" id="2">
                         <div class="post">
                             <h3>Fasilitator & Panitia</h3>
                             <table class="table  table-hover" id="datatablepanitia">
@@ -167,7 +167,6 @@ $kelas = "kegiatan";
                                     <th hidden></th>
                                     <th>Nama</th>
                                     <th>Jenis Kelamin</th>
-                                    <th>Asal</th>
                                     <th>Tugas</th>
                                 </tr>
                                 </thead>
@@ -177,7 +176,6 @@ $kelas = "kegiatan";
                                         <td hidden>{{ $data->id }}</td>
                                         @if(!empty($data->staf->nama))<td>{{ $data->staf->nama }}</td>@else<td>-</td>@endif
                                         @if(!empty($data->staf->kelamin))<td>{{ $data->staf->kelamin }}</td>@else<td>-</td>@endif
-                                        @if(!empty($data->staf->cu))<td>{{ $data->staf->cu }}</td>@else<td>-</td>@endif
                                         @if(!empty($data->tugas))<td>{{ $data->tugas }}</td>@else<td>-</td>@endif
                                     </tr>
                                 @endforeach
@@ -186,7 +184,7 @@ $kelas = "kegiatan";
                         </div>
                         <div class="post">
                             <h3>Peserta</h3>
-                            <table class="table table-hover" id="datatablepeserta">
+                            <table class="table table-hover dataTables" >
                                 <thead>
                                 <tr class="bg-light-blue-active color-palette">
                                     <th hidden></th>
@@ -209,10 +207,10 @@ $kelas = "kegiatan";
                         </div>
                     </div>
                     <!-- /.tab-pane -->
-                    <div class="fade tab-pane" id="biaya">
+                    <div class="fade tab-pane" id="3">
                     </div>
                     <!-- /.tab-pane -->
-                    <div class="fade tab-pane" id="evaluasi">
+                    <div class="fade tab-pane" id="4">
                     </div>
                     <!-- /.tab-pane -->
                 </div>
@@ -224,9 +222,9 @@ $kelas = "kegiatan";
     </div>
 </section>
 <div class="clearfix"></div>
-<div class="modal  fade" id="modal2show"  role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal modal-wide fade" id="modal2show"  role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <form id="pokok" action="#">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog">
         <div class="modal-content large">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -240,7 +238,6 @@ $kelas = "kegiatan";
                 </select>
                 <h4>Tugas</h4>
                 <select class="form-control" name="tugas">
-                    <option value="0" hidden>Silahkan pilih tugas</option>
                     <option value="1">Fasilitator</option>
                     <option value="2">Co-Fasilitator</option>
                     <option value="3">Trainee</option>
@@ -586,47 +583,37 @@ $kelas = "kegiatan";
     function formatTemplate(data) {
         if(data.loading) return data.text;
 
-        var markup = "<div class='select2-result-repository clearfix'>";
-            markup += "<div class='select2-result-repository__avatar'>";
-                if(data.gambar) {
-                   markup += "<img class='media-object' id='imagesearch'  width='50px'  src=/images_staf/'" + data.gambar + "' />";
-                }else{
-                   if(data.kelamin == "Pria"){
-                       markup += "<img class='media-object' width='50px' src='/images/no_image_man.jpg' />";
-                   }else{
-                       markup += "<img class='media-object' width='50px'   src='/images/no_image_woman.jpg' />";
-                   }
-                }
-            markup += "</div>";
-            markup += "<div class='select2-result-repository__meta'>"
-                markup += "<div class='select2-result-repository__title'>" + data.name + "</div>";
-                markup += "<div class='select2-result-repository__description'>";
-                    if(data.cu == '0'){
-                        markup += "<i class='fa fa-building'></i> PUSKOPDIT BKCU KALIMANTAN" ;
-                    }else{
-                        markup += "<i class='fa fa-building'></i> CU " + data.cuprimer.name;
-                    }
-                markup +="</div>";
-                markup +="<div class='select2-result-repository__statistics'>";
-                    markup +="<div class='select2-result-repository__forks'>";
-                        if(data.kelamin == "Pria")
-                            markup += "<i class='fa fa-male'></i> " + data.kelamin;
-                        else
-                            markup += "<i class='fa fa-female'></i> " + data.kelamin;
-                    markup +="</div>";
-                markup +="</div>";    
-            markup += "</div>";
-        markup += "</div>";   
+        var markup = "<div class='media'>";
+
+        if(data.gambar) {
+            markup += "<div class='media-left'><img class='media-object'  width='50px'  src=/images_staf/'" + data.gambar + "' /></div>";
+        }else{
+            if(data.kelamin = "Pria"){
+                markup += "<div class='media-left'><img class='media-object' width='50px' src='/images/no_image_man.jpg' /></div>";
+            }else{
+                markup += "<div class='media-left'><img class='media-object' width='50px'   src='/images/no_image_woman.jpg' /></div>";
+            }
+        }
+        markup += "<div class='media-body'><b style='font-size: medium'>" + data.name + "</b> <br/>";
+
+        if(data.cu == '0'){
+            markup += "<small ><i class='fa fa-building'></i> PUSKOPDIT BKCU KALIMANTAN</small>" ;
+        }else{
+            markup += "<small ><i class='fa fa-building'></i> CU " + data.cuprimer.name + "</small>";
+        }
+
+        markup += "</div></div>";
 
         console.log(data);
         return markup;
+
     }
 
     function selectionTemplate(data) {
         return data.name || data.text; // I think its either text or label, not sure.
     }
     //table fasiliator dan panitia
-    var tablepanitia = $('#datatablepanitia').DataTable({
+    var table = $('#datatablepanitia').DataTable({
         dom: 'Bf',
         select: true,
         scrollY: '50vh',
@@ -646,7 +633,7 @@ $kelas = "kegiatan";
             {
                 text: '<i class="fa fa-pencil"></i> Ubah',
                 action: function () {
-                    var id = $.map(tablepanitia.rows({ selected: true }).data(),function(item){
+                    var id = $.map(table.rows({ selected: true }).data(),function(item){
                         return item[0];
                     });
                     if(id != ""){
@@ -658,7 +645,7 @@ $kelas = "kegiatan";
             {
                 text: '<i class="fa fa-trash"></i> Hapus',
                 action: function () {
-                    var id = $.map(tablepanitia.rows({ selected: true }).data(),function(item){
+                    var id = $.map(table.rows({ selected: true }).data(),function(item){
                         return item[0];
                     });
                     if(id != ""){
@@ -691,71 +678,6 @@ $kelas = "kegiatan";
             "zeroRecords": "Tidak ditemukan data yang sesuai",
         }
     });
-    //table peserta
-    var tablepeserta = $('#datatablepeserta').DataTable({
-        dom: 'Bf',
-        select: true,
-        scrollY: '50vh',
-        "autoWidth": false,
-        scrollCollapse : true,
-        paging : false,
-        stateSave : true,
-        order : [[ 1, "asc" ]],
-        buttons: [
-            {
-                text: '<i class="fa fa-plus"></i> Tambah',
-                action: function () {
-                    $('#modal2show').modal({show:true});
-                    $('#modal2id').attr('value',"{{ $data->id }}");
-                }
-            },
-            {
-                text: '<i class="fa fa-pencil"></i> Ubah',
-                action: function () {
-                    var id = $.map(tablepeserta.rows({ selected: true }).data(),function(item){
-                        return item[0];
-                    });
-                    if(id != ""){
-                        $('#modal2show').modal({show:true});
-                        $('#modal2id').attr('value',id);
-                    }
-                }
-            },
-            {
-                text: '<i class="fa fa-trash"></i> Hapus',
-                action: function () {
-                    var id = $.map(tablepeserta.rows({ selected: true }).data(),function(item){
-                        return item[0];
-                    });
-                    if(id != ""){
-                        $('#modal1show').modal({show:true});
-                        $('#modal1id').attr('value',id);
-                    }
-                }
-            }
-        ],
-        language: {
-            buttons : {
-                colvis: "<i class='fa fa-columns'></i> Kolom",
-            },
-            select:{
-                rows:{
-                    _: "",
-                    0: "",
-                    1: ""
-                }
-            },
-            "emptyTable": "Tidak terdapat data di tabel",
-            "info": "",
-            "infoEmpty": "",
-            "infoFiltered":   "",
-            "search": "<i class='fa fa-search'></i> Cari:",
-            "paginate": {
-                "next":       ">",
-                "previous":   "<"
-            },
-            "zeroRecords": "Tidak ditemukan data yang sesuai",
-        }
-    });
+
 </script>
 @stop

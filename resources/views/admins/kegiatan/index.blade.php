@@ -37,9 +37,9 @@ $kelas = "kegiatan";
             </div>
         </div>
         <div class="box-body">
-            <table class="table table-striped table-bordered table-hover" id="dataTables-example" width="100%">
+            <table class="table table-striped table-hover" id="dataTables-example" width="100%">
                 <thead>
-                <tr>
+                <tr class="bg-light-blue-active color-palette">
                     <th hidden></th>
                     <th>Nama </th>
                     <th>Wilayah</th>

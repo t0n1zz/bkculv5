@@ -181,15 +181,15 @@ Route::group(array('prefix' => 'admins','middleware' => 'auth'), function(){
         'as' => 'admins.admin.edit_akses',
         'uses' => 'AdminAdminController@edit_akses'
     ));
-    Route::post('admin/update_akses/{id}',array(
+    Route::post('admin/update_akses',array(
         'as' => 'admins.admin.update_akses',
         'uses' => 'AdminAdminController@update_akses'
     ));
-    Route::get('admin/update_status/{id}',array(
+    Route::get('admin/update_status',array(
         'as' => 'admins.admin.update_status',
         'uses' => 'AdminAdminController@update_status'
     ));
-    Route::post('admin/update_password/{id}',array(
+    Route::post('admin/update_password',array(
         'as' => 'admins.admin.update_password',
         'uses' => 'AdminAdminController@update_password'
     ));
@@ -273,3 +273,38 @@ Route::post('/register',function (){
 //echo '<pre>';
 //echo var_dump($datacu->staf);
 //echo '<pre>';
+
+Route::get('/getrole',function(){
+    $role = App\Models\Role::with('perms')->findOrFail('2');
+
+});
+
+Route::get('/addrole',function(){
+
+    $text = 'admin';
+
+    $a = new App\Models\Permission();
+    $a->name = $text.'_index';
+    $a->display_name = 'Melihat '.$text;
+    $a->save();
+
+    $a = new App\Models\Permission();
+    $a->name = $text.'_create';
+    $a->display_name = 'Menambah '.$text;
+    $a->save();
+
+    $a = new App\Models\Permission();
+    $a->name = $text.'_update';
+    $a->display_name = 'Mengubah '.$text;
+    $a->save();
+
+    // $a = new App\Models\Permission();
+    // $a->name = $text.'_detail';
+    // $a->display_name = 'Detail '.$text;
+    // $a->save();
+
+    $a = new App\Models\Permission();
+    $a->name = $text.'_hapus';
+    $a->display_name = 'Menghapus '.$text;
+    $a->save();
+});

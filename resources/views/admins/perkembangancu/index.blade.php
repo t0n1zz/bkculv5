@@ -97,7 +97,7 @@ if(!Request::is('admins/perkembangancu/index_cu/*')){
 
                 <table class="table table-hover" id="dataTables-example">
                     <thead>
-                    <tr>
+                    <tr class="bg-light-blue-active color-palette">
                         <th>#</th>
                         <th hidden></th>
                         @if(!Request::is('admins/perkembangancu/index_cu/*'))<th>Nama Credit Union</th>@endif
@@ -363,7 +363,7 @@ if(!Request::is('admins/perkembangancu/index_cu/*')){
                     @endforeach
                     </tbody>
                     <tfoot>
-                    <tr>
+                    <tr class="bg-lime-active color-palette">
                         <th>TOTAL</th>
                         <th hidden></th>
                         @if(!Request::is('admins/perkembangancu/index_cu/*'))<th></th>@endif
@@ -401,7 +401,7 @@ if(!Request::is('admins/perkembangancu/index_cu/*')){
                 <div class="tab-pane fade" id="tab_provinsi">
                     <table class="table table-hover" id="dataTables-example3">
                         <thead>
-                        <tr>
+                        <tr class="bg-light-blue-active color-palette">
                             <th>Provinsi</th>
                             <th>Anggota <br/> Lelaki Biasa</th>
                             <th>Anggota <br/> Lelaki L.Biasa</th>
@@ -568,7 +568,7 @@ if(!Request::is('admins/perkembangancu/index_cu/*')){
                         @endforeach
                         </tbody>
                         <tfoot>
-                        <tr>
+                        <tr class="bg-lime-active color-palette">
                             <th>TOTAL</th>
                             <th>{{ number_format($tot_l_biasa,"0",",",".") }}</th>
                             <th>{{ number_format($tot_l_lbiasa,"0",",",".") }}</th>
@@ -599,7 +599,7 @@ if(!Request::is('admins/perkembangancu/index_cu/*')){
                 <div class="tab-pane fade" id="tab_do">
                     <table class="table table-hover" id="dataTables-example2">
                         <thead>
-                        <tr>
+                        <tr class="bg-light-blue-active color-palette">
                             <th>District Office</th>
                             <th>Anggota <br/> Lelaki Biasa</th>
                             <th>Anggota <br/> Lelaki L.Biasa</th>
@@ -818,7 +818,7 @@ if(!Request::is('admins/perkembangancu/index_cu/*')){
                         @endforeach
                         </tbody>
                         <tfoot>
-                        <tr>
+                        <tr class="bg-lime-active color-palette">
                             <th>TOTAL</th>
                             <th>{{ number_format($tot_l_biasa,"0",",",".") }}</th>
                             <th>{{ number_format($tot_l_lbiasa,"0",",",".") }}</th>

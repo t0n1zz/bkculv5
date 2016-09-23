@@ -104,11 +104,11 @@ function changeFunc2($i) {
 
 function changeFuncUser($i) {
     if($i == "2"){
-        document.getElementById('pilihan').style.display='inline';
-        document.getElementById('pilihan2').style.display='none';
+        $('#pilihan').show();
+        $('#pilihan2').hide();
     }else{
-        document.getElementById('pilihan').style.display='none';
-        document.getElementById('pilihan2').style.display='inline';
+        $('#pilihan').hide();
+        $('#pilihan2').show();
     }
 }
 

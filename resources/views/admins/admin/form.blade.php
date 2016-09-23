@@ -70,7 +70,7 @@ $kelas ='admin';
             </div>
             @if(empty($data))
             <!--password 1-->
-            <div class="col-lg-6">
+            <div class="col-lg-6 form-group">
                 <h4>Password</h4>
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-font"></i></span>
@@ -81,7 +81,7 @@ $kelas ='admin';
             <br/>
             <!--/password 1-->
             <!--password 2-->
-            <div class="col-lg-6">
+            <div class="col-lg-6 form-group">
                 <h4>Konfirmasi Password</h4>
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-font"></i></span>
@@ -93,24 +93,24 @@ $kelas ='admin';
             @endif
             @if(!empty($data))
                 @if($data->cu == 0)
-                    <div class="col-lg-12" id="pilihan2" style="display:inline;">
+                    <div class="col-lg-12 form-group" id="pilihan2">
                 @else
-                    <div class="col-lg-12" id="pilihan2" style="display:none;">
+                    <div class="col-lg-12 form-group" id="pilihan2" hidden>
                 @endif
             @else
-                <div class="col-lg-12" id="pilihan2" style="display:none;">
+                <div class="col-lg-12 form-group" id="pilihan2" hidden>
             @endif
                 <h4>Hak Akses</h4>
                 @include('admins.'.$kelas.'.hak_akses')
             </div>
             @if(!empty($data))
                 @if($data->cu > 0)
-                    <div class="col-lg-12" id="pilihan" style="display:inline;">
+                    <div class="col-lg-12" id="pilihan">
                 @else
-                    <div class="col-lg-12" id="pilihan" style="display:none;">
+                    <div class="col-lg-12" id="pilihan" hidden>
                 @endif
             @else
-                <div class="col-lg-12" id="pilihan" style="display:none;">
+                <div class="col-lg-12" id="pilihan" hidden>
             @endif
                 <div class="form-group">
                     <h4>CU</h4>

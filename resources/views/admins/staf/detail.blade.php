@@ -51,17 +51,6 @@ $imagepath = "images_staf/";
                         @endif
                     @endif
                     <h3 class="profile-username text-center">{{ $data->name }}</h3>
-                    <p class="text-muted text-center">
-                        @foreach($riwayats2 as $riwayat2)
-                                @if($riwayat2->sekarang == '1')
-                                    <?php $date = new Date($riwayat2->mulai); $date2 = new Date($riwayat2->mulai); ?>
-                                    {!! $riwayat2->keterangan. " ( " .$date->format('Y'). "- sekarang )<br/>"  !!}
-                                @else
-                                    <?php $date = new Date($riwayat2->mulai); $date2 = new Date($riwayat2->mulai); ?>
-                                    {!! $riwayat2->keterangan. " ( " .$date->format('Y'). " - " .$date2->format('Y'). " )<br/>"  !!}
-                                @endif
-                        @endforeach
-                    </p>
                     <ul class="list-group list-group-unbordered">
                         <li class="list-group-item">
                             <p class="text-center">
@@ -81,17 +70,6 @@ $imagepath = "images_staf/";
                     <a href="#" class="btn btn-warning btn-block"><i class="fa fa-check"></i> <b>Aktif</b></a>
                 </div><!-- /.box-body -->
             </div><!-- /.box -->
-
-            <div class="small-box bg-aqua">
-                <div class="inner">
-                    <h3>0</h3>
-                    <p>Kegiatan</p>
-                </div>
-                <div class="icon">
-                    <i class="fa fa-calendar"></i>
-                </div>
-                <a href="#" class="small-box-footer">Total Kegiatan yang telah diikuti</a>
-            </div>
             <div class="small-box bg-yellow">
                 <div class="inner">
                     <h3>0</h3>
@@ -100,7 +78,7 @@ $imagepath = "images_staf/";
                 <div class="icon">
                     <i class="fa fa-calendar-check-o"></i>
                 </div>
-                <a href="#" class="small-box-footer">Kegiatan yang telah diikuti tahun 2016 </a>
+                <a href="#" class="small-box-footer">Kegiatan yang telah diikuti</a>
             </div>
             <div class="small-box bg-red">
                 <div class="inner">
@@ -110,7 +88,7 @@ $imagepath = "images_staf/";
                 <div class="icon">
                     <i class="fa fa-calendar-minus-o"></i>
                 </div>
-                <a href="#" class="small-box-footer">Kegiatan yang belum diikuti tahun 2016</a>
+                <a href="#" class="small-box-footer">Kegiatan yang belum diikuti</a>
             </div>
         </div><!-- /.col -->
         <div class="col-md-9">
@@ -180,7 +158,7 @@ $imagepath = "images_staf/";
                         <section id="jabatan">
                             <br/>
                             <h4 class="page-header">Riwayat Pekerjaan</h4>
-                            <table class="table table-hover table-bordered" id="dataTables-pekerjaan">
+                            <table class="table table-hover " id="dataTables-pekerjaan">
                                 <thead>
                                 <tr class="bg-light-blue-active color-palette">
                                     <th hidden></th>
@@ -235,7 +213,7 @@ $imagepath = "images_staf/";
                         <section id="pendidikan">
                             <br/>
                             <h4 class="page-header">Riwayat Pendidikan</h4>
-                            <table class="table table-hover table-bordered" id="dataTables-pendidikan">
+                            <table class="table table-hover " id="dataTables-pendidikan">
                                 <thead>
                                 <tr class="bg-light-blue-active color-palette">
                                     <th hidden></th>
@@ -290,7 +268,7 @@ $imagepath = "images_staf/";
                         <section id="organisasi">
                             <br/>
                             <h4 class="page-header">Riwayat Berorganisasi</h4>
-                            <table class="table table-hover table-bordered" id="dataTables-organisasi">
+                            <table class="table table-hover " id="dataTables-organisasi">
                                 <thead>
                                 <tr class="bg-light-blue-active color-palette">
                                     <th hidden></th>
@@ -350,7 +328,7 @@ $imagepath = "images_staf/";
 
 </section><!-- /.content -->
 
-<!-- tambah -->
+<!-- modalriwayat -->
 <div class="modal fade" id="modalriwayat" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     {{ Form::open(array('route' => array('admins.'.$kelas.'.riwayat'))) }}
     <div class="modal-dialog">
@@ -366,10 +344,10 @@ $imagepath = "images_staf/";
                 <input type="text" name="sekarang" id="sekarang" value="" hidden>
 
                 <div class="form-group">
-                    <h4>Nama </h4>
+                    <h4 id="judulnama"></h4>
                     <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-font"></i></span>
-                        {{ Form::text('name',null,array('class' => 'form-control','id'=>'name',
+                        {{ Form::text('name',null,array('class' => 'form-control','id'=>'textnama',
                           'placeholder' => 'Silahkan masukkan nama','autocomplete'=>'off'))}}
                     </div>
                 </div>
@@ -407,8 +385,8 @@ $imagepath = "images_staf/";
                     <h4>Tingkatan</h4>
                     <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-list"></i></span>
-                        <select class="form-control placeholder" name="selecttingkat">
-                            <option>Silahkan pilih tingkat</option>
+                        <select class="form-control placeholder" name="tingkatpekerjaan" id="selecttingkat">
+                            <option value="0" hidden>Silahkan pilih tingkat</option>
                             <option value="Manajemen">Manajemen</option>
                             <option value="Pengurus">Pengurus</option>
                             <option value="Pengawas">Pengawas</option>
@@ -474,131 +452,7 @@ $imagepath = "images_staf/";
     </div><!-- /.modal-dialog -->
     {{ Form::close() }}
 </div>
-<!-- /tambah -->
-<!-- edit -->
-<div class="modal fade" id="modalubah" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    {{ Form::open(array('route' => array('admins.'.$kelas.'.update_riwayat'))) }}
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header bg-light-blue-active color-palette">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title "><i class="fa fa-pencil"></i> Ubah <span id="ubah-modal"></span></h4>
-            </div>
-            <div class="modal-body">
-                <input type="text" name="tipe" id="ubah-idtipe" value="" hidden>
-                <input type="text" name="id"  id="ubah-id" value="" hidden>
-                <input type="text" name="id_staf" value="{{ $data->id }}" hidden>
-                <input type="text" name="sekarang" id="ubah-sekarang" value="" hidden>
-
-                <div class="form-group">
-                    <h4>Nama </h4>
-                    <div class="input-group">
-                        <span class="input-group-addon"><i class="fa fa-font"></i></span>
-                        {{ Form::text('name',null,array('class' => 'form-control','id'=>'ubah-name',
-                          'placeholder' => 'Silahkan masukkan nama','autocomplete'=>'off'))}}
-                    </div>
-                </div>
-
-                <div class="form-group" id="ubah-tempat">
-                    <h4>Tempat</h4>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="input-group">
-                        <span class="input-group-addon">
-                            <input type="radio" name="tempat" id="ubah-radiocu" onclick="ubahradiocu()">
-                        </span>
-                                <?php $culists = App\Models\Cuprimer::orderBy('name','asc')->get(); ?>
-                                <select class="form-control" name="cu" id="ubah-cu" disabled>
-                                    <option disabled>Credit Union</option>
-                                    <option value="0">BKCU</option>
-                                    @foreach($culists as $culist)
-                                        <option value="{{ $culist->id }}">{{ $culist->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="input-group">
-                        <span class="input-group-addon">
-                            <input type="radio" name="tempat" id="ubah-radiolembaga" onclick="ubahradiolembaga()">
-                        </span>
-                                <input type="text" class="form-control" name="lembaga" id="ubah-lembaga" placeholder="Bukan Credit Union" disabled>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-group" id="ubah-tingkat">
-                    <h4>Tingkatan</h4>
-                    <div class="input-group">
-                        <span class="input-group-addon"><i class="fa fa-list"></i></span>
-                        <select class="form-control" name="ubah-selecttingkat">
-                            <option disabled>Silahkan pilih tingkat</option>
-                            <option value="Manajemen">Manajemen</option>
-                            <option value="Pengurus">Pengurus</option>
-                            <option value="Pengawas">Pengawas</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-group" id="ubah-keterangan">
-                    <h4 id="ubah-judulketerangan"></h4>
-                    <div class="input-group">
-                        <span class="input-group-addon"><i class="fa fa-font"></i></span>
-                        {{ Form::text('keterangan',null,array('class' => 'form-control','id'=>'ubah-textketerangan',
-                            'autocomplete'=>'off'))}}
-                    </div>
-                </div>
-
-                <div class="form-group" id="ubah-tipe">
-                    <h4>Tipe</h4>
-                    <div class="input-group">
-                        <span class="input-group-addon"><i class="fa fa-list"></i></span>
-                        <select class="form-control" name="ubah-selecttipe">
-                            <option disabled>Silahkan pilih tipe pendidikan</option>
-                            <option value="Utama">Utama</option>
-                            <option value="Tambahan">Tambahan</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <h4>Tanggal Mulai</h4>
-                    <div class="input-group">
-                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                        <input type="text" name="mulai"  value="" class="form-control"
-                               data-inputmask="'alias': 'date'" placeholder="dd/mm/yyyy" />
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <h4>Tanggal Selesai</h4>
-                    <div class="input-group" id="ubah-groupselesai">
-                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                        <input type="text" name="selesai" id="ubah-selesai" value="" class="form-control"
-                               data-inputmask="'alias': 'date'" placeholder="dd/mm/yyyy" />
-                        <div class="input-group-btn">
-                            <button type="button" class="btn btn-default" onclick="ubahsekarang()" >Masih Aktif</button>
-                        </div>
-                    </div>
-                    <div class="input-group" id="ubah-masihbekerja" style="display: none;">
-                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                        <input type="text" value="Masih Aktif" readonly class="form-control" />
-                        <div class="input-group-btn">
-                            <button type="button" class="btn btn-default" onclick="ubahcancel()" ><i class="fa fa-times"></i></button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-primary" id="modalbutton"><i class="fa fa-save"></i> Simpan</button>
-                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i> Batal</button>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-    {{ Form::close() }}
-</div>
-<!-- /edit -->
+<!-- /modalriwayat -->
 <!-- Hapus -->
 <div class="modal fade" id="modalhapus" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     {{ Form::open(array('route' => array('admins.'.$kelas.'.destroy_riwayat'))) }}
@@ -623,24 +477,6 @@ $imagepath = "images_staf/";
     {{ Form::close() }}
 </div>
 <!-- /Hapus -->
-<!-- warning -->
-<div class="modal fade" id="modalwarning" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header bg-yellow-active color-palette">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title"><i class="fa fa-warning"></i> Oopss</h4>
-            </div>
-            <div class="modal-body">
-                <h4>Silahkan pilih data terlebih dahulu di tabel</h4>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-check"></i> ok</button>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div>
-<!-- /warning -->
 @stop
 
 @section('js')
@@ -711,22 +547,36 @@ $imagepath = "images_staf/";
             "sInfoPostFix":  "",
         }
     });
-    var namatipe_pekerjaan = 'Pekerjaan';
     var tipeid_pekerjaan = '3';
     new $.fn.dataTable.Buttons(tablepekerjaan,{
         buttons: [
             {
                 text: '<i class="fa fa-plus"></i> Tambah',
                 action: function(){
-                    $('#modaltambah').modal({show:true});
+                    $('#modalriwayat').modal({show:true});
 
-                    $('#tambah-groupmasihbekerja').hide();
-                    $('#tambah-groupselesai').show();
+                    $('#groupmasihbekerja').hide();
+                    $('#groupselesai').show();
+                    $('#tempat').hide();
+                    $('#tingkat').show();
+                    $('#tipependidikan').hide();
+                    $('#keterangan').show();
+                    $('#masihbekerja').hide();
+                    $('#groupselesai').show();
 
-                    $('#tambah-tipe').text(namatipe_pekerjaan);
-                    $('#tambah-nama').text(namatipe_pekerjaan);
-                    $('#tambah-idtipe').attr('value',tipeid_pekerjaan);
-                    $('#tambah-sekarang').attr('value','0');
+                    $('#modaljudul').text('Tambah Pekerjaan');
+                    $('#judulketerangan').text('Tempat');
+                    $('#judulnama').text('Nama Jabatan');
+                    $('#textketerangan').attr('placeholder','Silahkan masukkan tempat bekerja');
+                    $('#textnama').attr('placeholder','Silahkan masukkan nama jabatan');
+                    $('#idtipe').val(tipeid_pekerjaan);
+                    $('#sekarang').val('0');
+                    $('#id').val('');
+                    $('#textnama').val('');
+                    $('#textketerangan').val('');
+                    $('#selecttipe').val('0');
+                    $('#mulai').val('');
+                    $('#selesai').val('');
                 }
             },
             {
@@ -738,10 +588,10 @@ $imagepath = "images_staf/";
                     var nama = $.map(tablepekerjaan.rows({ selected: true }).data(),function(item){
                         return item[1];
                     });
-                    var tingkat = $.map(tablepekerjaan.rows({ selected: true }).data(),function(item){
+                    var keterangan = $.map(tablepekerjaan.rows({ selected: true }).data(),function(item){
                         return item[2];
                     });
-                    var jabatan = $.map(tablepekerjaan.rows({ selected: true }).data(),function(item){
+                    var tingkat = $.map(tablepekerjaan.rows({ selected: true }).data(),function(item){
                         return item[3];
                     });
                     var mulai = $.map(tablepekerjaan.rows({ selected: true }).data(),function(item){
@@ -751,28 +601,34 @@ $imagepath = "images_staf/";
                         return item[5].display;
                     });
                     if(id != ""){
-                        $('#modalubah').modal({show:true});
+                        $('#modalriwayat').modal({show:true});
 
-                        $('#ubah-tipe').text(namatipe_pekerjaan);
-                        $('#ubah-nama').text(namatipe_pekerjaan);
-                        $('#ubah-keterangan').text(jabatan);
-                        $('#ubah-judulketerangan').text('Jabatan');
-                        $('#ubah-keterangan').attr('placeholder','Silahkan masukkan jabatan');
-                        $('#ubah-id').attr('value',id);
-                        $('#ubah-idtipe').attr('value',tipeid_pekerjaan);
-                        $('#ubah-nama2').attr('value',nama);
-                        $('#ubah-keterangan2').attr('value',tingkat);
-                        $('#ubah-mulai').val(mulai);
+                        $('#tempat').hide();
+                        $('#tingkat').show();
+                        $('#tipependidikan').hide();
+                        $('#keterangan').show();
+
+                        $('#modaljudul').text('Ubah Pekerjaan');
+                        $('#judulketerangan').text('Tempat');
+                        $('#judulnama').text('Nama Jabatan');
+                        $('#textketerangan').attr('placeholder','Silahkan masukkan tempat bekerja');
+                        $('#textnama').attr('placeholder','Silahkan masukkan nama jabatan');
+                        $('#idtipe').val(tipeid_pendidikan);
+                        $('#mulai').val(mulai);
+                        $('#id').val(id);
+                        $('#textnama').val(nama);
+                        $('#textketerangan').val(keterangan);
+                        $('#selecttingkat').val(tingkat);
 
                         if(selesai == "Masih Aktif"){
-                            $('#ubah-sekarang').attr('value','1');
-                            $('#ubah-masihbekerja').show();
-                            $('#ubah-groupselesai').hide();
+                            $('#sekarang').val('1');
+                            $('#masihbekerja').show();
+                            $('#groupselesai').hide();
                         }else{
-                            $('#ubah-sekarang').attr('value','0');
-                            $('#ubah-masihbekerja').hide();
-                            $('#ubah-groupselesai').show();
-                            $('#ubah-selesai').val(selesai);
+                            $('#sekarang').val('0');
+                            $('#masihbekerja').hide();
+                            $('#groupselesai').show();
+                            $('#selesai').val(selesai);
                         }
                     }else{
                         $('#modalwarning').modal({show:true});
@@ -787,8 +643,8 @@ $imagepath = "images_staf/";
                     });
                     if(id != ""){
                         $('#modalhapus').modal({show:true});
-                        $('#hapus-tipe').text(namatipe_pekerjaan);
-                        $('#hapus-nama').text(namatipe_pekerjaan);
+                        $('#hapus-tipe').text('Hapus Pekerjaan');
+                        $('#hapus-nama').text('Hapus Pekerjaan');
                         $('#hapus-id').attr('value',id);
                         $('#hapus-idtipe').attr('value',tipeid_pekerjaan);
                     }else{
@@ -859,11 +715,13 @@ $imagepath = "images_staf/";
 
                     $('#modaljudul').text('Tambah Pendidikan');
                     $('#judulketerangan').text('Tempat');
-                    $('#textketerangan').attr('placeholder','Silahkan masukkan tempat');
+                    $('#judulnama').text('Nama Tingkat Pendidikan');
+                    $('#textketerangan').attr('placeholder','Silahkan masukkan tempat bekerja');
+                    $('#textnama').attr('placeholder','Silahkan masukkan nama tingkat pendidikan');
                     $('#idtipe').val(tipeid_pendidikan);
                     $('#sekarang').val('0');
                     $('#id').val('');
-                    $('#name').val('');
+                    $('#textnama').val('');
                     $('#textketerangan').val('');
                     $('#selecttipe').val('0');
                     $('#mulai').val('');
@@ -901,11 +759,13 @@ $imagepath = "images_staf/";
 
                         $('#modaljudul').text('Ubah Pendidikan');
                         $('#judulketerangan').text('Tempat');
-                        $('#textketerangan').attr('placeholder','Silahkan masukkan tempat');
+                        $('#judulnama').text('Nama Jabatan');
+                        $('#textketerangan').attr('placeholder','Silahkan masukkan tempat bekerja');
+                        $('#textnama').attr('placeholder','Silahkan masukkan nama jabatan');
                         $('#idtipe').val(tipeid_pendidikan);
                         $('#mulai').val(mulai);
                         $('#id').val(id);
-                        $('#name').val(nama);
+                        $('#textnama').val(nama);
                         $('#textketerangan').val(keterangan);
                         $('#selecttipe').val(tipe);
 
@@ -985,23 +845,36 @@ $imagepath = "images_staf/";
         }
     });
 
-    var namatipe_organisasi = 'Organisasi';
     var tipeid_organisasi = '2';
     new $.fn.dataTable.Buttons(tableorganisasi,{
         buttons: [
             {
                 text: '<i class="fa fa-plus"></i> Tambah',
                 action: function(){
-                    $('#modaltambah').modal({show:true});
+                    $('#modalriwayat').modal({show:true});
 
-                    $('#tambah-tipe').text(namatipe_organisasi);
-                    $('#tambah-nama').text(namatipe_organisasi);
+                    $('#groupmasihbekerja').hide();
+                    $('#groupselesai').show();
+                    $('#tempat').hide();
+                    $('#tingkat').hide();
+                    $('#tipependidikan').hide();
+                    $('#keterangan').show();
+                    $('#masihbekerja').hide();
+                    $('#groupselesai').show();
 
-                    $('#tambah-sekarang').attr('value','0');
-                    $('#tambah-idtipe').attr('value',tipeid_organisasi);
-
-                    $('#tambah-groupmasihbekerja').hide();
-                    $('#tambah-groupselesai').show();
+                    $('#modaljudul').text('Tambah Organisasi');
+                    $('#judulketerangan').text('Keternagan');
+                    $('#judulnama').text('Nama Jabatan');
+                    $('#textketerangan').attr('placeholder','Silahkan masukkan keterangan');
+                    $('#textnama').attr('placeholder','Silahkan masukkan nama organisasi');
+                    $('#idtipe').val(tipeid_organisasi);
+                    $('#sekarang').val('0');
+                    $('#id').val('');
+                    $('#textnama').val('');
+                    $('#textketerangan').val('');
+                    $('#selecttipe').val('0');
+                    $('#mulai').val('');
+                    $('#selesai').val('');
                 }
             },
             {
@@ -1023,27 +896,33 @@ $imagepath = "images_staf/";
                         return item[4].display;
                     });
                     if(id != ""){
-                        $('#modalubah').modal({show:true});
+                        $('#modalriwayat').modal({show:true});
 
-                        $('#ubah-tipe').text(namatipe_organisasi);
-                        $('#ubah-nama').text(namatipe_organisasi);
-                        $('#ubah-judulketerangan').text('Keterangan');
-                        $('#ubah-keterangan').attr('placeholder','Silahkan masukkan keterangan');
-                        $('#ubah-id').attr('value',id);
-                        $('#ubah-idtipe').attr('value',tipeid_organisasi);
-                        $('#ubah-nama2').attr('value',nama);
-                        $('#ubah-keterangan').text(keterangan);
-                        $('#ubah-mulai').val(mulai);
+                        $('#tempat').hide();
+                        $('#tingkat').hide();
+                        $('#tipependidikan').hide();
+                        $('#keterangan').show();
+
+                        $('#modaljudul').text('Ubah Organisasi');
+                        $('#judulketerangan').text('Keterangan');
+                        $('#judulnama').text('Nama Organisasi');
+                        $('#textketerangan').attr('placeholder','Silahkan masukkan keterangan');
+                        $('#textnama').attr('placeholder','Silahkan masukkan nama organisasi');
+                        $('#idtipe').val(tipeid_organisasi);
+                        $('#mulai').val(mulai);
+                        $('#id').val(id);
+                        $('#textnama').val(nama);
+                        $('#textketerangan').val(keterangan);
 
                         if(selesai == "Masih Aktif"){
-                            $('#ubah-sekarang').attr('value','1');
-                            $('#ubah-masihbekerja').show();
-                            $('#ubah-groupselesai').hide();
+                            $('#sekarang').val('1');
+                            $('#masihbekerja').show();
+                            $('#groupselesai').hide();
                         }else{
-                            $('#ubah-sekarang').attr('value','0');
-                            $('#ubah-masihbekerja').hide();
-                            $('#ubah-groupselesai').show();
-                            $('#ubah-selesai').val(selesai);
+                            $('#sekarang').val('0');
+                            $('#masihbekerja').hide();
+                            $('#groupselesai').show();
+                            $('#selesai').val(selesai);
                         }
                     }else{
                         $('#modalwarning').modal({show:true});
@@ -1058,8 +937,8 @@ $imagepath = "images_staf/";
                     });
                     if(id != ""){
                         $('#modalhapus').modal({show:true});
-                        $('#hapus-tipe').text(namatipe_organisasi);
-                        $('#hapus-nama').text(namatipe_organisasi);
+                        $('#hapus-tipe').text('Hapus Organisasi');
+                        $('#hapus-nama').text('Hapus Organisasi');
                         $('#hapus-id').attr('value',id);
                         $('#hapus-idtipe').attr('value',tipeid_organisasi);
                     }else{

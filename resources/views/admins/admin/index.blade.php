@@ -28,14 +28,10 @@ $kelas = "admin";
     <!-- /Alert -->
     <!--content-->
     <div class="box box-primary">
-        <div class="box-header with-border">
-            <a accesskey="t" class="btn btn-primary" href="{{ route('admins.'.$kelas.'.create') }}">
-                <i class="fa fa-plus"></i> <u>T</u>ambah Admin</a>
-        </div>
         <div class="box-body">
-            <table class="table table-striped table-bordered table-hover" id="dataTables-example">
+            <table class="table table-hover" id="dataTables-example">
                 <thead>
-                <tr>
+                <tr class="bg-light-blue-active color-palette">
                     <th hidden></th>
                     <th>Username</th>
                     <th>Nama</th>
@@ -82,15 +78,13 @@ $kelas = "admin";
                         @else
                             <td>-</td>
                         @endif
-
                         @if($data->status == 0)
-                            <td><a href="#" class="btn btn-default" disabled>Tidak Aktif</a</td>
+                            <td><a href="#" class="btn btn-default" disabled>Tidak Aktif</a></td>
                         @elseif($data->status == 1)
                             <td><a href="#" class="btn btn-warning" disabled>Aktif</a></td>
                         @else
-                            <td><a href="#" class="btn btn-default" disabled>-</a></td>";
+                            <td><a href="#" class="btn btn-default" disabled>Tidak Aktif</a></td>";
                         @endif
-
                     </tr>
                 @endforeach
 
@@ -100,28 +94,82 @@ $kelas = "admin";
     </div>
 </section>
 <!-- modal -->
-<!-- Hapus -->
-<div class="modal fade" id="modal1show" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    {{ Form::model($datas, array('route' => array('admins.'.$kelas.'.destroy',$kelas), 'method' => 'delete')) }}
+<div class="modal fade" id="modalpassword" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    {{ Form::open(array('route' => array('admins.'.$kelas.'.update_password'))) }}
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header bg-light-blue-active color-palette">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title"><i class="fa fa-trash"></i> Hapus Admin</h4>
+                <h4 class="modal-title "><i class="fa fa-key"></i> Ubah Password</h4>
             </div>
             <div class="modal-body">
-                <h4 style="font-size: 16px">Menghapus admin ini?</h4>
-                <input type="text" name="id" value="" id="modal1id" hidden>
+                <input type="text" name="id" id="modalpassword_id" value="" hidden>
+                <div class="form-group">
+                    <h4>Password Baru</h4>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-font"></i></span>
+                        <input type="password" name="password" class="form-control" id="password"
+                               placeholder="Silahkan masukkan password baru" autocomplete="off">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <h4>Ulangi Password</h4>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-font"></i></span>
+                        <input type="password" name="password2" class="form-control" id="password2"
+                               placeholder="Silahkan ulangi password baru" autocomplete="off">
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-warning" id="modalbutton"><i class="fa fa-check"></i> Iya</button>
-                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i> Batal</button>
+                <button type="submit" class="btn btn-primary" id="modalbutton"><i class="fa fa-save"></i> Simpan</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Batal</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
     {{ Form::close() }}
 </div>
-<!-- /Hapus -->
+<div class="modal fade" id="modalhakakses" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    {{ Form::open(array('route' => array('admins.'.$kelas.'.update_akses'))) }}
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content ">
+            <div class="modal-header bg-light-blue-active color-palette">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title "><i class="fa fa-key"></i> Ubah Hak Akses</h4>
+            </div>
+            <div class="modal-body">
+                <input type="text" name="id" id="modalhakakses_id" value="" hidden>
+                @include('admins.'.$kelas.'.hak_akses')
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" id="modalbutton"><i class="fa fa-save"></i> Simpan</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Batal</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+    {{ Form::close() }}
+</div>
+<div class="modal fade" id="modalstatus" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    {{ Form::model($datas, array('route' => array('admins.'.$kelas.'.update_status'))) }}
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-light-blue-active color-palette">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title"><i class="fa fa-trash"></i> Ubah Status</h4>
+            </div>
+            <div class="modal-body">
+                <h4 style="font-size: 16px">Mengubah status admin ini?</h4>
+                <input type="text" name="id" value="" id="modalhapus_id" hidden>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-warning" id="modalbutton"><i class="fa fa-check"></i> Aktif</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Batal</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+    {{ Form::close() }}
+</div>
+
 <!-- /.modal -->
 @stop
 
@@ -142,6 +190,69 @@ $kelas = "admin";
                     }
                 },
                 {
+                    text: '<i class="fa fa-key"></i> Ubah Password',
+                    action: function(){
+                        var id = $.map(table.rows({ selected:true }).data(),function(item){
+                            return item[0];
+                        });
+                        if(id != ""){
+                            $('#modalpassword').modal({show:true});
+                            $('#modalpassword_id').attr('value',id);
+                        }else{
+                            $('#modalwarning').modal({show:true});
+                        }
+                    }
+                },
+                {
+                    text: '<i class="fa fa-pencil"></i> Ubah Hak Akses',
+                    action: function(){
+                        var id = $.map(table.rows({ selected:true }).data(),function(item){
+                            return item[0];
+                        });
+                        if(id != ""){
+                            $('input:checkbox').removeAttr('checked');
+                            $('#modalhakakses').modal({show:true});
+                            $('#modalhakakses_id').attr('value',id);
+
+                            $.ajaxSetup({
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                }
+                            });
+
+                            $.ajax({
+                               type: 'GET',
+                                url: '/admins/admin/edit_akses/'+id,
+                                success: function(data){
+                                    $.each(data,function(index,value){
+                                       $('#'+value).prop('checked',true);
+                                    });
+                                    console.log(data);
+                                },
+                                error: function(xhr, textstatus,errorThrown){
+                                }
+                            });
+
+                        }else{
+                            $('#modalwarning').modal({show:true});
+                        }
+                    }
+                },
+                {
+                    text: '<i class="fa fa-pencil"></i> Ubah Status',
+                    action: function(){
+                        var id = $.map(table.rows({ selected:true }).data(),function(item){
+                            return item[0];
+                        });
+                        var kelas = "{{ $kelas }}";
+                        if(id != ""){
+                            window.location.href =  kelas + "/" + id + "/edit";
+                        }else{
+                            $('#modalwarning').modal({show:true});
+                        }
+                    }
+                },
+                {
                     text: '<i class="fa fa-trash"></i> <u>H</u>apus',
                     key: {
                         altKey: true,
@@ -151,61 +262,18 @@ $kelas = "admin";
                         var id = $.map(table.rows({ selected:true }).data(),function(item){
                             return item[0];
                         });
+                        var username = $.map(table.rows({ selected:true }).data(),function(item){
+                            return item[1];
+                        });
                         if(id != ""){
                             if(id != "1"){
-                                $('#modal1show').modal({show:true});
-                                $('#modal1id').attr('value',id);
+                                $('#modalhapus').modal({show:true});
+                                $('#modalhapus_id').attr('value',id);
+                                $('#modalhapus_judul').text('Hapus Admin');
+                                $('#modalhapus_detail').text('Yakin menghapus admin ' + username + "?");
                             }
-                        }
-                    }
-                }
-            ]
-        });
-        table.buttons( 0, null ).container().prependTo(
-                table.table().container()
-        );
-
-        new $.fn.dataTable.Buttons(table,{
-            buttons: [
-                {
-                    text: 'Ubah Status',
-                    action: function(){
-                        var id = $.map(table.rows({ selected: true }).data(),function(item){
-                            return item[0];
-                        });
-                        var kelas = "{{ $kelas }}";
-                        if(id != ""){
-                            if(id != 1){
-                                window.location.href =  kelas + "/update_status/" + id;
-                            }
-                        }
-                    }
-                },
-                {
-                    text: 'Ubah Password',
-                    action: function(){
-                        var id = $.map(table.rows({ selected: true }).data(),function(item){
-                            return item[0];
-                        });
-                        var kelas = "{{ $kelas }}";
-                        if(id != ""){
-                            if(id != "1"){
-                                window.location.href =  kelas + "/edit_password/" + id;
-                            }
-                        }
-                    }
-                },
-                {
-                    text: 'Ubah Hak Akses',
-                    action: function(){
-                        var id = $.map(table.rows({ selected: true }).data(),function(item){
-                            return item[0];
-                        });
-                        var kelas = "{{ $kelas }}";
-                        if(id != ""){
-                            if(id != "1"){
-                                window.location.href =  kelas + "/edit_akses/" + id;
-                            }
+                        }else{
+                            $('#modalwarning').modal({show:true});
                         }
                     }
                 }
