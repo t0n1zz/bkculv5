@@ -27,18 +27,20 @@ class ExcelController extends Controller
 		if(Input::hasFile('import_file')){
 			$path = Input::file('import_file')->getRealPath();
 			$data = Excel::load($path, function($reader) {
-			})->take(45);
-
-			dd($data);
-
-			if(!empty($data) && $data->count()){
+			})->get();
+			if(!empty($data)){
 				foreach ($data as $key => $value) {
-					$insert[] = ['title' => $value->title, 'description' => $value->description];
+					if ($value->title == 'Dana Cadangan Resiko'){
+						$title = $value->title;
+						$description = $value->description;
+
+						$insert[] = [
+								'title' => $title, 
+								'description' => $description
+						];
+					}					
 				}
-				if(!empty($insert)){
-					DB::table('excelitems')->insert($insert);
-					dd('Insert Record successfully.');
-				}
+				dd($insert);
 			}
 		}
 		return back();

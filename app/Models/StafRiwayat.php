@@ -11,4 +11,7 @@ class StafRiwayat extends Model {
         'id_staf','tipe','name','keterangan','keterangan2','mulai','selesai','sekarang'
     ];
 
+     public function cuprimer(){
+        return $this->belongsTo('App\Models\Cuprimer','keterangan','id');
+    }
 }

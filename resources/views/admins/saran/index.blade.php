@@ -12,7 +12,7 @@ $kelas = "saran"
 <!-- header -->
 <section class="content-header">
     <h1>
-        <i class="fa fa-archive"></i> {{ $title }}
+        <i class="fa fa-paper-plane-o"></i> {{ $title }}
         <small>Mengelola Data Saran atau Kritik</small>
     </h1>
     <ol class="breadcrumb">
@@ -26,72 +26,58 @@ $kelas = "saran"
     @include('admins._layouts.alert')
     <!-- /Alert -->
     <!--content-->
-    <div class="box box-primary">
-        <div class="box-body">
-            <table class="table table-striped table-bordered table-hover" id="dataTables-example">
-                <thead>
-                <tr>
-                    <th hidden></th>
-                    <th>Nama </th>
-                    <th>Saran dan Kritik</th>
-                    <th>Tanggal</th>
-                </tr>
-                </thead>
-                <tbody>
-                @foreach($datas as $data)
-                    <tr>
-                        <td hidden>{{ $data->id }}</td>
-                        @if(!empty($data->name))
-                            <td>{{ $data->name }}</td>
-                        @else
-                            <td>-</td>
-                        @endif
-
-                        @if(!empty($data->content))
-                            <td style="warptext">{{{ $data->content }}}</td>
-                        @else
-                            <td>-</td>
-                        @endif
-
-                        @if(!empty($data->created_at ))
-                            <?php $date = new Date($data->created_at); ?>
-                            <td><i hidden="true">{{$data->created_at}}</i> {{  $date->format('d-n-Y') }}</td>
-                        @else
-                            <td>-</td>
-                        @endif
+    <div class="nav-tabs-custom">
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#tab_saran" data-toggle="tab">Saran Atau Kritik</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane fade in active" id="tab_saran">
+                <div class="input-group tabletools">
+                    <div class="input-group-addon"><i class="fa fa-search"></i></div>
+                    <input type="text" id="searchtext" class="form-control" placeholder="Kata kunci pencarian..." autofocus>
+                </div>
+                <table class="table table-hover" id="dataTables-example" width="100%">
+                    <thead class="bg-light-blue-active color-palette">
+                    <tr >
+                        <th data-sortable="false">#</th>
+                        <th hidden></th>
+                        <th>Nama </th>
+                        <th>Saran dan Kritik</th>
+                        <th>Tanggal</th>
                     </tr>
-                @endforeach
+                    </thead>
+                    <tbody>
+                    @foreach($datas as $data)
+                        <tr>
+                            <td class="bg-aqua disabled color-palette"></td>
+                            <td hidden>{{ $data->id }}</td>
+                            @if(!empty($data->name))
+                                <td class="warptext">{{ $data->name }}</td>
+                            @else
+                                <td>-</td>
+                            @endif
+                            @if(!empty($data->content))
+                                <td class="warptext">{{{ $data->content }}}</td>
+                            @else
+                                <td>-</td>
+                            @endif
 
-                </tbody>
-            </table>
+                            @if(!empty($data->created_at ))
+                                <?php $date = new Date($data->created_at); ?>
+                                <td><i hidden="true">{{$data->created_at}}</i> {{  $date->format('d/n/Y') }}</td>
+                            @else
+                                <td>-</td>
+                            @endif
+                        </tr>
+                    @endforeach
+
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
     <!--content-->
 </section>
-
-
-<!-- Hapus -->
-<div class="modal fade" id="modal1show" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    {{ Form::open(array('route' => array('admins.'.$kelas.'.destroy',$kelas), 'method' => 'delete')) }}
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title"><i class="fa fa-trash"></i> Hapus Saran</h4>
-            </div>
-            <div class="modal-body">
-                <h4>Menghapus saran ini ?</h4>
-                <input type="text" name="id" value="" id="modal1id" hidden>
-            </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-warning" id="modalbutton"><i class="fa fa-check"></i> Iya</button>
-                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i> Batal</button>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-    {{ Form::close() }}
-</div>
-<!-- /Hapus -->
 @stop
 
 @section('js')
@@ -100,6 +86,7 @@ $kelas = "saran"
     <script>
         new $.fn.dataTable.Buttons(table,{
             buttons: [
+                @permission('destroy.'.$kelas.'_destroy')
                 {
                     text: '<i class="fa fa-trash"></i> <u>H</u>apus',
                     key: {
@@ -108,14 +95,21 @@ $kelas = "saran"
                     },
                     action: function(){
                         var id = $.map(table.rows({ selected:true }).data(),function(item){
-                            return item[0];
+                            return item[1];
                         });
                         if(id != ""){
-                            $('#modal1show').modal({show:true});
-                            $('#modal1id').attr('value',id);
+                            if(id != "1"){
+                                $('#modalhapus').modal({show:true});
+                                $('#modalhapus_id').attr('value',id);
+                                $('#modalhapus_judul').text('Hapus Admin');
+                                $('#modalhapus_detail').text('Yakin menghapus saran ini?');
+                            }
+                        }else{
+                            $('#modalwarning').modal({show:true});
                         }
                     }
                 }
+                @endpermission
             ]
         });
         table.buttons( 0, null ).container().prependTo(

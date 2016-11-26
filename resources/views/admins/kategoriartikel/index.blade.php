@@ -26,122 +26,59 @@ $kelas = "kategoriartikel";
     @include('admins._layouts.alert')
     <!-- /Alert -->
     <!--content-->
-    <div class="box box-primary">
-        <div class="box-body">
-            <table class="table table-striped table-bordered table-hover" id="dataTables-example">
-                <thead>
-                <tr>
-                    <th hidden></th>
-                    <th>Nama Kategori </th>
-                    <th>Jumlah Artikel</th>
-                </tr>
-                </thead>
-                <tbody>
-                @foreach($datas as $data)
+    <div class="nav-tabs-custom">
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#tab_kategoriartikel" data-toggle="tab">Kategori Artikel</a></li>
+        </ul>
+        <div class="tab-content"> 
+            <div class="tab-pane fade in active" id="tab_kategoriartikel">
+                <div class="input-group tabletools">
+                    <div class="input-group-addon"><i class="fa fa-search"></i></div>
+                    <input type="text" id="searchtext" class="form-control" placeholder="Kata kunci pencarian..." autofocus>
+                </div>
+
+                <table class="table table-hover" id="dataTables-example" width="100%">
+                    <thead class="bg-light-blue-active color-palette">
                     <tr>
-                        <td hidden>{{ $data->id }}</td>
-                        @if(!empty($data->name))
-                            @if($data->id > 1)
-                                <td>{{ $data->name }}</td>
-                            @else
-                                <td>{{ $data->name }}</td>
-                            @endif
-                        @else
-                            <td>-</td>
-                        @endif
-
-                        @if($data->hasartikel->count() > 0)
-                            <td><a class="btn btn-default" disabled>{{ $data->jumlah }}</a></td>
-                        @else
-                            <td><a href="#" class="btn btn-default" disabled>{{ $data->hasartikel->count() }}</a> </td>
-                        @endif
+                        <th data-sortable="false">#</th>
+                        <th hidden></th>
+                        <th>Nama Kategori </th>
+                        <th>Jumlah Artikel</th>
                     </tr>
-                @endforeach
+                    </thead>
+                    <tbody>
+                    @foreach($datas as $data)
+                        <tr>
+                            <td class="bg-aqua disabled color-palette"></td>
+                            <td hidden>{{ $data->id }}</td>
+                            @if(!empty($data->name))
+                                @if($data->id > 1)
+                                    <td>{{ $data->name }}</td>
+                                @else
+                                    <td>{{ $data->name }}</td>
+                                @endif
+                            @else
+                                <td>-</td>
+                            @endif
 
-                </tbody>
-            </table>
+                            @if($data->hasartikel->count() > 0)
+                                <td><a class="btn btn-default" disabled>{{ $data->jumlah }}</a></td>
+                            @else
+                                <td><a href="#" class="btn btn-default" disabled>{{ $data->hasartikel->count() }}</a> </td>
+                            @endif
+                        </tr>
+                    @endforeach
+
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
     <!--content-->
 </section>
 
 <!-- modal -->
-<!-- Hapus -->
-<div class="modal fade" id="modal1show" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    {{ Form::open(array('route' => array('admins.'.$kelas.'.destroy',$kelas), 'method' => 'delete')) }}
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title"><i class="fa fa-trash"></i> Hapus Kategori Artikel</h4>
-            </div>
-            <div class="modal-body">
-                <h4>Menghapus kategori artikel ini ?</h4>
-                <input type="text" name="id" value="" id="modal1id" hidden>
-            </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-warning" id="modalbutton"><i class="fa fa-check"></i> Iya</button>
-                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i> Batal</button>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-    {{ Form::close() }}
-</div>
-<!-- /Hapus -->
-<!-- tambah -->
-<div class="modal fade" id="modal2show" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-   {{ Form::open(array('route' => array('admins.'.$kelas.'.store'))) }}
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title "><i class="fa fa-plus"></i> Tambah Kategori Artikel</h4>
-        </div>
-        <div class="modal-body">
-          <h4>Menambah Kategori Artikel</h4>
-          <input type="text" name="id" value="" id="modal2id" hidden>
-            <div class="input-group">
-                <span class="input-group-addon"><i class="fa fa-font"></i></span>
-                {{ Form::text('name',null,array('class' => 'form-control',
-                  'placeholder' => 'Silahkan masukkan nama kategori artikel','autocomplete'=>'off'))}}
-            </div>
-        </div>
-        <div class="modal-footer">
-              <button type="submit" class="btn btn-warning" id="modalbutton"><i class="fa fa-check"></i> Ok</button>
-              <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i> Batal</button>
-        </div>
-      </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-   {{ Form::close() }}
-</div>
-<!-- /tambah -->
-<!-- ubah -->
-<div class="modal fade" id="modal3show" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-{{ Form::open(array('route' => array('admins.'.$kelas.'.update',$kelas), 'method' => 'put')) }}
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title "><i class="fa fa-pencil-square-o"></i> Ubah Kategori Artikel</h4>
-        </div>
-        <div class="modal-body">
-          <h4>Mengubah kategori artikel</h4>
-          <input type="text" name="id" value="" id="modal3id" hidden>
-            <div class="input-group">
-                <span class="input-group-addon"><i class="fa fa-font"></i></span>
-                {{ Form::text('name',null,array('class' => 'form-control','id'=>'modal3id2',
-                'placeholder' => 'Silahkan masukkan nama kategori artikel baru','autocomplete'=>'off'))}}
-           </div>
-        </div>
-        <div class="modal-footer">
-              <button type="submit" class="btn btn-warning" id="modalbutton"><i class="fa fa-check"></i> Ok</button>
-              <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i> Batal</button>
-        </div>
-      </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-   {{ Form::close() }}
-</div>
-<!-- /ubah -->
+
 <!-- /.modal -->
 @stop
 
@@ -151,6 +88,7 @@ $kelas = "kategoriartikel";
     <script>
         new $.fn.dataTable.Buttons(table,{
             buttons: [
+                @permission('create.'.$kelas.'_create')
                 {
                     text: '<i class="fa fa-plus"></i> <u>T</u>ambah',
                     key: {
@@ -158,9 +96,11 @@ $kelas = "kategoriartikel";
                         key: 't'
                     },
                     action: function(){
-                        $('#modal2show').modal({show:true});
+                        $('#modaltambahkategori').modal({show:true});
                     }
                 },
+                @endpermission
+                @permission('update.'.$kelas.'_update')
                 {
                     text: '<i class="fa fa-pencil"></i> <u>U</u>bah',
                     key: {
@@ -169,18 +109,22 @@ $kelas = "kategoriartikel";
                     },
                     action: function(){
                         var id = $.map(table.rows({ selected: true }).data(),function(item){
-                            return item[0];
-                        });
-                        var id2 = $.map(table.rows({ selected: true }).data(),function(item){
                             return item[1];
                         });
+                        var id2 = $.map(table.rows({ selected: true }).data(),function(item){
+                            return item[2];
+                        });
                         if(id != ""){
-                            $('#modal3show').modal({show:true});
-                            $('#modal3id').attr('value',id);
-                            $('#modal3id2').attr('value',id2);
+                            $('#modalubahkategori').modal({show:true});
+                            $('#modalubahkategori_id').attr('value',id);
+                            $('#modalubahkategori_text').attr('value',id2);
+                        }else{
+                            $('#modalwarning').modal({show:true});
                         }
                     }
                 },
+                @endpermission
+                @permission('destroy.'.$kelas.'_destroy')
                 {
                     text: '<i class="fa fa-trash"></i> <u>H</u>apus',
                     key: {
@@ -189,14 +133,19 @@ $kelas = "kategoriartikel";
                     },
                     action: function(){
                         var id = $.map(table.rows({ selected:true }).data(),function(item){
-                            return item[0];
+                            return item[1];
                         });
                         if(id != ""){
-                            $('#modal1show').modal({show:true});
-                            $('#modal1id').attr('value',id);
+                            $('#modalhapus').modal({show:true});
+                                $('#modalhapus_id').attr('value',id);
+                                $('#modalhapus_judul').text('Hapus Kategori Artikel');
+                                $('#modalhapus_detail').text('Yakin menghapus kategori artikel ini ?');
+                        }else{
+                            $('#modalwarning').modal({show:true});
                         }
                     }
                 }
+                @endpermission
             ]
         });
         table.buttons( 0, null ).container().prependTo(

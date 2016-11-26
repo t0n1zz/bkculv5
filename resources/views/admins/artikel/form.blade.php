@@ -20,37 +20,37 @@ $file_max = intval($file_max);
         <div class="row">
             <!--judul-->
             <div class="col-sm-6">
-                <div class="form-group">
-                    <h4>Judul Artikel *</h4>
+                <div class="form-group has-feedback">
+                    <h4>Judul</h4>
                     <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-font"></i></span>
                         {{ Form::text('judul',null,array('class' => 'form-control', 'placeholder' => 'Silahkan masukkan judul artikel',
-                            'required','min-length' => '5','data-error' => 'Judul wajib diisi dan minimal 5 karakter',
-                            'autocomplete'=>'off')) }}
+                            'autocomplete'=>'off','required','data-minlength' => '5')) }}
+                        <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                     </div>
-                    <div class="help-block with-errors"></div>
-                    {!! $errors->first('judul', '<p class="text-warning">:message</p>') !!}
+                    <div class="help-block">Judul artikel harus diisi dan minimal 5 karakter.</div>
                 </div>
             </div>
             <!--/judul-->
             <div class="col-sm-6">
-                <div class="form-group">
-                    <h4>Penulis Artikel</h4>
+                <div class="form-group has-feedback">
+                    <h4>Penulis</h4>
                     <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-font"></i></span>
-                        {{ Form::text('penulis',null,array('class' => 'form-control', 'placeholder' => 'Silahkan masukkan nama penulis artikel','autocomplete'=>'off')) }}
+                        {{ Form::text('penulis',null,array('class' => 'form-control', 'placeholder' => 'Silahkan masukkan nama penulis artikel','autocomplete'=>'off','required')) }}
+                        <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                     </div>
-                    <div class="help-block with-errors"></div>
+                    <div class="help-block">Penulis artikel harus diisi.</div>
                 </div>
             </div>
             <!--kategori-->
             <div class="col-sm-6">
                 <div class="form-group">
-                    <h4>Kategori Artikel *</h4>
+                    <h4>Kategori</h4>
                     <div class="input-group">
                         <div class="input-group-addon"><i class="fa fa-list"></i></div>
-                        <select class="form-control" onChange="changeFunc(value);" name="kategori">
-                            <option value="" selected disabled>Silahkan pilih kategori artikel</option>
+                        <select class="form-control" onChange="changeFunc(value);" name="kategori" required>
+                            <option hidden>Silahkan pilih kategori artikel</option>
                             @foreach($datas2 as $data2)
                                 <option value="{{ $data2->id }}"
                                 @if(!empty($data))
@@ -60,16 +60,20 @@ $file_max = intval($file_max);
                                         @endif
                                         >{!! $data2->name !!}</option>
                             @endforeach
-                            <option value="tambah" >Tambah Kategori Baru</option>
+                            @permission('create.kategoriartikel_create')
+                                <option disabled>--------------</option> 
+                                <option value="tambah" >Tambah Kategori Baru</option>
+                            @endpermission    
                         </select>
                     </div>
+                    <div class="help-block">Kategori artikel harus dipilih.</div>
                 </div>
             </div>
             <!--/kategori-->
             <!--status-->
             <div class="col-sm-6">
                 <div class="form-group">
-                    <h4>Terbitkan Artikel</h4>
+                    <h4>Terbitkan</h4>
                     <div class="input-group">
                         <span class="input-group-addon">
                             @if(!empty($data->pilihan))
@@ -89,11 +93,12 @@ $file_max = intval($file_max);
                             {!! Form::text('null','Tidak',array('class' => 'form-control', 'id' => 'statustext' ,'disabled' => 'true')) !!}
                         @endif
                     </div>
+                    <div class="help-block">Silahkan pilih apabila ingin menerbitkan artikel.</div>
                 </div>
             </div>
             <!--/status-->
             <!--kategori baru-->
-            <div class="row" id="pilihan" style="display: none;">
+            <div id="pilihan" style="display: none;">
                 <div class="col-sm-12">
                     <div class="form-group">
                         <h4>Kategori Baru</h4>
@@ -126,6 +131,7 @@ $file_max = intval($file_max);
                             {!! Form::text('null','Tidak',array('class' => 'form-control', 'id' => 'gambartext' ,'disabled' => 'true')) !!}
                         @endif
                     </div>
+                    <div class="help-block">Silahkan pilih apabila ingin menampilkan gambar utama pada artikel.</div>
                 </div>
                 <div id="inputgambar"
                     @if(empty($data->gambar))
@@ -141,10 +147,7 @@ $file_max = intval($file_max);
                             {!! Form::file('gambar', array('onChange' => 'readURL(this)','accept' => 'image/*')) !!}
                         </div>
                     </div>
-                    <div class="well well-sm">
-                        Ukuran maksimum file gambar adalah {!! $file_max. ' ' .$file_max_meassure_unit !!}
-                    </div>
-                    {!! $errors->first('gambar', '<p class="text-warning">:message</p>') !!}
+                    <div class="help-block">Ukuran maksimum file gambar adalah {!! $file_max. ' ' .$file_max_meassure_unit !!}.</div>
                 </div>
             </div>
             <!--/gambar utama-->
@@ -171,23 +174,18 @@ $file_max = intval($file_max);
                             {!! Form::text('null','Tidak',array('class' => 'form-control', 'id' => 'artikeltext' ,'disabled' => 'true')) !!}
                         @endif
                     </div>
+                    <div class="help-block">Silahkan pilih apabila ingin menampilkan artikel pada slideshow.</div>
                 </div>
             </div>
             <!--/artikel pilihan-->
             <!--content-->
             <div class="col-sm-12">
                 <h4>Isi Artikel *</h4>
-                <textarea id="editor" name="content"
+                <textarea id="summernote" name="content"
                     >@if(!empty($data->content)){{ $data->content }}@endif</textarea>
                 {!! $errors->first('content', '<p class="text-warning">:message</p>') !!}
             </div>
             <!--/content-->
-            <div class="col-lg-12">
-                <hr />
-                <div class="well well-sm">
-                    * : Wajib untuk diisi.
-                </div>
-            </div>
         </div>
     </div>
     <div class="box-footer with-border">
@@ -208,5 +206,55 @@ $file_max = intval($file_max);
 
 @section('js')
 <script type="text/javascript" src="{{ URL::asset('plugins/summernote/summernote.js') }}"></script>
-<script type="text/javascript" src="{{ URL::asset('admin/summernote.js') }}"></script>
+<script type="text/javascript" src="{{ URL::asset('plugins/summernote/plugins/summernote-ext-addclass.js') }}"></script>
+<script type="text/javascript" src="{{ URL::asset('plugins/summernote/plugins/summernote-cleaner.js') }}"></script>
+<script type="text/javascript" src="{{ URL::asset('plugins/summernote/plugins/summernote-floats-bs.js') }}"></script>
+<script type="text/javascript" src="{{ URL::asset('plugins/summernote/plugins/summernote-image-attributes.js') }}"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#summernote').summernote({
+            minHeight: 300,
+            maximumImageFileSize: 1242880,
+            dialogsFade: true,
+            placeholder: 'Silahkan isi disini...',
+            addclass: {
+                debug: false,
+                classTags: [{title:"Button",value:"btn btn-success"},"jumbotron", "lead","img-rounded","img-circle", "img-responsive","btn", "btn btn-success","btn btn-danger","text-muted", "text-primary", "text-warning", "text-danger", "text-success", "table-bordered", "table-responsive", "alert", "alert alert-success", "alert alert-info", "alert alert-warning", "alert alert-danger", "visible-sm", "hidden-xs", "hidden-md", "hidden-lg", "hidden-print"]
+            },
+            cleaner:{
+                notTime:2400, // Time to display Notifications.
+                action:'paste', // both|button|paste 'button' only cleans via toolbar button, 'paste' only clean when pasting content, both does both options.
+                newline:'<br>', // Summernote's default is to use '<p><br></p>'
+                notStyle:'position:absolute;bottom:0;left:2px', // Position of Notification
+                icon:'<i class="note-icon">Clean Word Format</i>'
+            },
+            popover: {
+                image: [
+                    ['imagesize', ['imageSize100', 'imageSize50', 'imageSize25']],
+                    /* ['float', ['floatLeft', 'floatRight', 'floatNone']], */
+                    /* Those are the old regular float buttons */
+                    ['floatBS', ['floatBSLeft', 'floatBSNone', 'floatBSRight']],
+                    /* Those come from the BS plugin, in any order, you can even keep both! */
+                    ['custom', ['imageAttributes', 'imageShape']],
+                    ['remove', ['removeMedia']],
+                ],
+            },
+            toolbar: [
+                ['cleaner',['cleaner']],
+                ['para',['style']],
+                ['style', ['addclass','bold', 'italic', 'underline', 'hr']],
+                ['font', ['strikethrough', 'superscript', 'subscript','clear']],
+                ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol']],
+                ['paragraph',['paragraph']],
+                ['table',['table']],
+                ['height', ['height']],
+                ['insert',['link','picture','video']] ,
+                ['misc',['fullscreen','codeview']],
+                ['misc2',['undo','redo']]
+            ]
+        });
+    });    
+</script>
 @stop

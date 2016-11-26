@@ -8,7 +8,8 @@ class Cuprimer extends Model {
     protected $table = 'cuprimer';
     
     public static $rules = [
-        'name' => 'required|min:5'
+        'name' => 'required|min:5',
+        'no_ba' => 'requreid'
     ];
     
     protected $fillable = ['no_ba','name','badan_hukum','alamat','pos'

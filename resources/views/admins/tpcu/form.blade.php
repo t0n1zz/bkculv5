@@ -9,13 +9,13 @@ $kelas ='tpcu';
     <div class="box-body">
         <div class="row">
             <!--nama credit union-->
-            <div class="col-sm-6">
+            <div class="col-sm-12">
                 <div class="form-group">
-                    <h4>Nama Credit Union *</h4>
+                    <h4>Credit Union</h4>
                     <div class="input-group">
                         <div class="input-group-addon"><i class="fa fa-list"></i></div>
-                        <select class="form-control" name="cu" required data-error="Nama Credit Union wajib dipilih">
-                            <option selected disabled>Silahkan pilih Credit Union</option>
+                        <select class="form-control" name="cu" required>
+                            <option hidden="">Silahkan pilih Credit Union</option>
                             @foreach($datas2 as $data2)
                                 <option value="{{ $data2->id }}"
                                 @if(!empty($data))
@@ -27,21 +27,21 @@ $kelas ='tpcu';
                             @endforeach
                         </select>
                     </div>
+                    <div class="help-block">Credit Union harus dipilih.</div>
                 </div>
             </div>
             <!--/nama credit union-->
             <!--nama tp-->
             <div class="col-sm-6">
-                <div class="form-group">
-                    <h4>Nama TP *</h4>
+                <div class="form-group has-feedback">
+                    <h4>Nama </h4>
                     <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-font"></i></span>
                         {{ Form::text('name',null,array('class' => 'form-control', 'placeholder' => 'Silahkan masukkan nama TP',
-                            'required','min-length' => '5','data-error' => 'Nama TP wajib diisi dan minimal 5 karakter',
-                            'autocomplete'=>'off')) }}
+                            'required','min-length' => '5','autocomplete'=>'off')) }}
+                        <span class="glyphicon form-control-feedback" aria-hidden="true"></span>    
                     </div>
-                    <div class="help-block with-errors"></div>
-                    {!! $errors->first('judul', '<p class="text-warning">:message</p>') !!}
+                    <div class="help-block">Nama TP harus diisi dan minimal 5 karakter.</div>
                 </div>
             </div>
             <!--/nama tp-->
@@ -58,88 +58,46 @@ $kelas ='tpcu';
                         }
                         ?>
                         <input type="text" name="ultah" value="@if(!empty($ultah)){{$ultah}}@endif" class="form-control"
-                               data-inputmask="'alias': 'date'" placeholder="dd/mm/yyyy" />
+                               data-inputmask="'alias': 'date'" placeholder="dd/mm/yyyy" required />
                     </div>
-                </div>
-            </div>
-            <!-- /ultah-->
-            <div class="col-sm-12">
-                <hr/>
-            </div>
-            <!--jumlah anggota-->
-            <div class="col-sm-6">
-                <div class="form-group">
-                    <h4>Anggota Lelaki Biasa</h4>
-                    <div class="input-group">
-                        <span class="input-group-addon">0-9</span>
-                        {{ Form::text('l_biasa',null,array('class' => 'form-control', 'placeholder' => '0',
-                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ','")) }}
-                    </div>
+                    <div class="help-block">Tanggal berdiri TP harus diisi.</div>
                 </div>
             </div>
             <div class="col-sm-6">
                 <div class="form-group">
-                    <h4>Anggota Lelaki Luar Biasa</h4>
+                    <h4>No. Telepon</h4>
                     <div class="input-group">
                         <span class="input-group-addon">0-9</span>
-                        {{ Form::text('l_lbiasa',null,array('class' => 'form-control', 'placeholder' => '0',
-                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ','")) }}
+                        {{ Form::number('telp',null,array('class' => 'form-control', 'placeholder' => 'Silahkan masukkan nomor telepon','autocomplete'=>'off'))}}
                     </div>
+                    <div class="help-block">Silahkan masukkan nomor telepon.</div>
                 </div>
             </div>
             <div class="col-sm-6">
                 <div class="form-group">
-                    <h4>Anggota Perempuan Biasa</h4>
+                    <h4>No. Handphone</h4>
                     <div class="input-group">
                         <span class="input-group-addon">0-9</span>
-                        {{ Form::text('p_biasa',null,array('class' => 'form-control', 'placeholder' => '0',
-                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ','")) }}
+                        {{ Form::number('hp',null,array('class' => 'form-control', 'placeholder' => 'Silahkan masukkan nomor handphone','autocomplete'=>'off'))}}
                     </div>
+                    <div class="help-block">Silahkan masukkan nomor handphone.</div>
                 </div>
             </div>
             <div class="col-sm-6">
                 <div class="form-group">
-                    <h4>Anggota Perempuan Luar Biasa</h4>
+                    <h4>Kode Pos</h4>
                     <div class="input-group">
                         <span class="input-group-addon">0-9</span>
-                        {{ Form::text('p_lbiasa',null,array('class' => 'form-control', 'placeholder' => '0',
-                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ','")) }}
+                        {{ Form::number('pos',null,array('class' => 'form-control', 'placeholder' => 'Silahkan masukkan kode pos'))}}
                     </div>
+                    <div class="help-block">Silahkan masukkan kode pos.</div>
                 </div>
-            </div>
-            <!--/jumlah anggota-->
-            <div class="col-sm-12">
-                <hr/>
-            </div>
-            <!-- staf -->
-            <div class="col-sm-6">
-                <div class="form-group">
-                    <h4>Staf Lelaki</h4>
-                    <div class="input-group">
-                        <span class="input-group-addon">0-9</span>
-                        {{ Form::text('l_staf',null,array('class' => 'form-control', 'placeholder' => '0',
-                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ','")) }}
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-6">
-                <div class="form-group">
-                    <h4>Staf Perempuam</h4>
-                    <div class="input-group">
-                        <span class="input-group-addon">0-9</span>
-                        {{ Form::text('p_staf',null,array('class' => 'form-control', 'placeholder' => '0',
-                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ','")) }}
-                    </div>
-                </div>
-            </div>
-            <!-- /staf -->
-            <div class="col-sm-12">
-                <hr/>
             </div>
             <div class="col-sm-12">
                 <div class="form-group">
                     <h4>Alamat</h4>
                     {{ Form::textarea('alamat',null,array('class' => 'form-control','rows' => '3','placeholder'=>'Silahkan masukkan alamat')) }}
+                    <div class="help-block">Silahkan masukkan alamat.</div>
                 </div>
             </div>
         </div>

@@ -16,8 +16,8 @@
     <link rel="stylesheet" type="text/css" href="{{asset('plugins/bootstrap/css/bootstrap.min.css')}}" >
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" type="text/css" href="{{asset('admin/AdminLTE.min.css')}}" >
-    <link rel="stylesheet" type="text/css" href="{{asset('admin/skin-blue.min.css')}}" >
+    <link rel="stylesheet" type="text/css" href="{{asset('admin/AdminLTE.css')}}" >
+    <link rel="stylesheet" type="text/css" href="{{asset('admin/skin-blue.css')}}" >
 
     <!-- Custom Fonts -->
     <link rel="stylesheet" type="text/css" href="{{asset('plugins/font-awesome/css/font-awesome.min.css')}}" >
@@ -51,26 +51,26 @@
                 <b>PUSKOPDIT BKCU KALIMANTAN ADMIN SITE</b>
             </p>
 
-            {{ Form::open(array('route' => array('admins.login.post'), 'files' => true)) }}
+            {{ Form::open(array('route' => array('admins.login.post'), 'data-toggle'=>'validator','role'=>'form')) }}
             {!! csrf_field() !!}
             <fieldset>
                 <div class="form-group has-feedback">
-                    {{ Form::text('username',null,array('class' => 'form-control', 'placeholder' => 'Username', 'autofocus'))}}
-                    <span class="fa fa-user form-control-feedback"></span>
-                    {{ $errors->first('username', '<p class="text-warning"><i>:message</i></p>') }}
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                        {{ Form::text('username',null,array('class' => 'form-control', 'placeholder' => 'Username', 'autofocus','required','data-minlength'=>'5'))}}
+                        <span class="glyphicon form-control-feedback"></span>
+                    </div> 
                 </div>
                 <div class="form-group has-feedback">
-                    {{ Form::password('password',array('class' => 'form-control', 'placeholder' => 'Password'))}}
-                    <span class="fa fa-lock form-control-feedback"></span>
-                    {{ $errors->first('password', '<p class="text-warning"><i>:message</i></p>') }}
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-lock"></i></span>
+                        {{ Form::password('password',array('class' => 'form-control', 'placeholder' => 'Password','required','data-minlength'=>'5'))}}
+                        <span class="glyphicon form-control-feedback"></span>
+                    </div>
                 </div>
                 <!-- Change this to a button or input when using this as a form -->
                 <div class="row">
-                    <div class="col-xs-6">
-                        <a href="http://www.puskopditbkcukalimantan.org" class="btn btn-warning btn-block btn-flat"
-                           target="_blank"><i class="fa fa-globe"></i> Public Site</a>
-                    </div><!-- /.col -->
-                    <div class="col-xs-6">
+                    <div class="col-xs-12">
                         <button type="submit" class="btn btn-primary btn-block btn-flat">
                             <i class="fa fa-sign-in"></i> Login</button>
                     </div><!-- /.col -->
@@ -79,20 +79,22 @@
             {{ Form::close() }}
         </div>
     </div>
-
-    <script type="text/javascript" src="{{ URL::asset('admin/jQuery/jQuery-2.1.3.min.js') }}"></script>
+    <!-- jquery -->
+    <script type="text/javascript" src="{{ URL::asset('plugins/jQuery/jquery-1.9.1.min.js') }}"></script>
+    <script type="text/javascript" src="{{ URL::asset('plugins/BootstrapFormHelper/js/bootstrap-formhelpers.min.js') }}"></script>
+    <script type="text/javascript" src="{{ URL::asset('js/myscript.js') }}"></script>
 
     <!-- Bootstrap Core JavaScript -->
     <script type="text/javascript" src="{{ URL::asset('plugins/bootstrap/js/bootstrap.min.js') }}"></script>
-
-    <!-- Custom Theme JavaScript -->
-    <script type="text/javascript" src="{{ URL::asset('admin/app.min.js') }}"></script>
-
     <!-- fastclick for touch browser -->
     <script type="text/javascript" src="{{ URL::asset('plugins/fastclick/fastclick.min.js') }}"></script>
-
-    <script type="text/javascript" src="{{ URL::asset('plugins/BootstrapFormHelper/js/bootstrap-formhelpers.min.js') }}"></script>
-    <script type="text/javascript" src="{{ URL::asset('js/validator.min.js') }}"></script>
-    <script type="text/javascript" src="{{ URL::asset('js/myscript.js') }}"></script>
+    <!-- perfect scroll -->
+    <script type="text/javascript" src="{{ URL::asset('plugins/perfect-scrollbar/js/perfect-scrollbar.jquery.min.js') }}"></script>
+    <!-- nice scroll -->
+    <script type="text/javascript" src="{{ URL::asset('plugins/nicescroll/jquery.nicescroll.min.js') }}"></script>
+    <!-- APP -->
+    <script type="text/javascript" src="{{ URL::asset('admin/app.js') }}"></script>
+    <!-- form helper -->
+    <script type="text/javascript" src="{{ URL::asset('plugins/validator/validator.min.js') }}"></script>
 
 </Html>

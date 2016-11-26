@@ -31,35 +31,31 @@ $file_max = intval($file_max);
                             {{ Form::file('gambar', array('onChange' => 'readURL(this)')) }}
                         </div>
                     </div>
-                    <div class="well well-sm">
-                        Ukuran maksimum file gambar adalah {!! $file_max. ' ' .$file_max_meassure_unit !!}
-                    </div>
+                    <div class="help-block">Ukuran maksimum file gambar adalah {!! $file_max. ' ' .$file_max_meassure_unit !!}.</div>
                 </div>
-                {{ $errors->first('gambar', '<p class="text-warning">:message</p>') }}
             </div>
             <div class="col-sm-6">
-                <div class="form-group">
+                <div class="form-group has-feedback">
                     <h4>Nama</h4>
                     <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-font"></i></span>
                         {{ Form::text('name',null,array('class' => 'form-control', 'placeholder' => 'Silahkan masukkan nama cu',
-                            'required','min-length' => '5','data-error' => 'Nama wajib diisi dan minimal 5 karakter','autocomplete'=>'off'))}}
-                        <div class="help-block with-errors"></div>
-                        {!! $errors->first('name', '<p class="text-warning">:message</p>') !!}
+                            'required','min-length' => '5','autocomplete'=>'off'))}}
+                        <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                     </div>
+                    <div class="help-block">Nama CU harus diisi dan minimal 5 karakter.</div>
                 </div>
             </div>
             <div class="col-sm-6">
-                <div class="form-group">
+                <div class="form-group has-feedback">
                     <h4>No. BA</h4>
                     <div class="input-group">
                         <span class="input-group-addon">0-9</span>
-                        {{ Form::text('no_ba',null,array('class' => 'form-control', 'placeholder' => 'Silahkan masukkan nomor anggota',
-                            'onKeyPress' => 'return isNumberKey(event)','data-error' => 'No. Anggota wajib diisi',
-                            'autocomplete'=>'off'))}}
-                        <div class="help-block with-errors"></div>
-                        {!! $errors->first('no_ba', '<p class="text-warning">:message</p>') !!}
+                        {{ Form::number('no_ba',null,array('class' => 'form-control', 'placeholder' => 'Silahkan masukkan nomor anggota',
+                            'onKeyPress' => 'return isNumberKey(event)','required','autocomplete'=>'off'))}}
+                        <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                     </div>
+                    <div class="help-block">No. BA harus diisi.</div>
                 </div>
             </div>
             <div class="col-sm-6">
@@ -67,8 +63,8 @@ $file_max = intval($file_max);
                     <h4>Wilayah</h4>
                     <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-list"></i></span>
-                        <select class="form-control" onChange="changeFunc(value);" name="wilayah">
-                            <option value="" selected disabled>Silahkan pilih Wilayah</option>
+                        <select class="form-control" onChange="changeFunc(value);" name="wilayah" required>
+                            <option hidden>Silahkan pilih Wilayah</option>
                             @foreach($datas2 as $data2)
                                 <option value="{{ $data2->id }}"
                                 @if(!empty($data->wilayah))
@@ -78,23 +74,30 @@ $file_max = intval($file_max);
                                         @endif
                                 >{{ $data2->name }}</option>
                             @endforeach
-                            <option value="tambah" >Tambah Wilayah Baru</option>
+                            
+                            @permission('create.wilayahcuprimer_create')
+                                <option disabled>--------------</option> 
+                                <option value="tambah">Tambah Wilayah Baru</option>
+                            @endpermission 
                         </select>
                     </div>
+                    <div class="help-block">Wilayah harus dipilih.</div>
                 </div>
             </div>
+            @permission('create.wilayahcuprimer_create')
             <div class="row" id="pilihan" style="display:none;">
                 <div class="col-sm-12" >
                     <div class="form-group">
                         <h4>Wilayah Baru</h4>
                         <div class="input-group">
-                            <span class="input-group-addon"><i class="fa fa-list"></i></span>
+                            <span class="input-group-addon"><i class="fa fa-font"></i></span>
                             {{ Form::text('wilayah_baru',null,array('class' => 'form-control', 'placeholder' => 'Silahkan masukkan wilayah baru',
                                 'autocomplete'=>'off'))}}
                         </div>
                     </div>
                 </div>
             </div>
+            @endpermission 
             <div class="col-sm-6">
                 <div class="form-group">
                     <h4>No. Badan Hukum</h4>
@@ -103,17 +106,17 @@ $file_max = intval($file_max);
                         {{ Form::text('badan_hukum',null,array('class' => 'form-control', 'placeholder' => 'Silahkan masukkan nomor badan hukum',
                             'autocomplete'=>'off'))}}
                     </div>
+                    <div class="help-block">Silahkan masukkan nomor badan hukum.</div>
                 </div>
-
             </div>
             <div class="col-sm-6">
                 <div class="form-group">
                     <h4>No. Telepon</h4>
                     <div class="input-group">
                         <span class="input-group-addon">0-9</span>
-                        {{ Form::text('telp',null,array('class' => 'form-control', 'placeholder' => 'Silahkan masukkan nomor telepon',
-                                'onKeyPress' => 'return isNumberKey(event)','autocomplete'=>'off'))}}
+                        {{ Form::number('telp',null,array('class' => 'form-control', 'placeholder' => 'Silahkan masukkan nomor telepon','autocomplete'=>'off'))}}
                     </div>
+                    <div class="help-block">Silahkan masukkan nomor telepon.</div>
                 </div>
             </div>
             <div class="col-sm-6">
@@ -121,9 +124,9 @@ $file_max = intval($file_max);
                     <h4>No. Handphone</h4>
                     <div class="input-group">
                         <span class="input-group-addon">0-9</span>
-                        {{ Form::text('hp',null,array('class' => 'form-control', 'placeholder' => 'Silahkan masukkan nomor handphone',
-                                'onKeyPress' => 'return isNumberKey(event)','autocomplete'=>'off'))}}
+                        {{ Form::number('hp',null,array('class' => 'form-control', 'placeholder' => 'Silahkan masukkan nomor handphone','autocomplete'=>'off'))}}
                     </div>
+                    <div class="help-block">Silahkan masukkan nomor handphone.</div>
                 </div>
             </div>
             <div class="col-sm-6">
@@ -131,9 +134,9 @@ $file_max = intval($file_max);
                     <h4>Kode Pos</h4>
                     <div class="input-group">
                         <span class="input-group-addon">0-9</span>
-                        {{ Form::text('pos',null,array('class' => 'form-control', 'placeholder' => 'Silahkan masukkan kode pos',
-                                'onKeyPress' => 'return isNumberKey(event)'))}}
+                        {{ Form::number('pos',null,array('class' => 'form-control', 'placeholder' => 'Silahkan masukkan kode pos'))}}
                     </div>
+                    <div class="help-block">Silahkan masukkan kode pos.</div>
                 </div>
             </div>
             <div class="col-sm-6">
@@ -150,6 +153,7 @@ $file_max = intval($file_max);
                         <input type="text" name="ultah" value="@if(!empty($tanggal)){{$tanggal}}@endif" class="form-control"
                                data-inputmask="'alias': 'date'" placeholder="dd/mm/yyyy" />
                     </div>
+                    <div class="help-block">Tanggal berdiri CU harud diisi.</div>
                 </div>
             </div>
             <div class="col-sm-6">
@@ -166,6 +170,7 @@ $file_max = intval($file_max);
                         <input type="text" name="bergabung" value="@if(!empty($tanggal)){{$tanggal}}@endif" class="form-control"
                                data-inputmask="'alias': 'date'" placeholder="dd/mm/yyyy" />
                     </div>
+                    <div class="help-block">Tanggal bergabung CU harud diisi.</div>
                 </div>
             </div>
             <div class="col-sm-6">
@@ -173,20 +178,20 @@ $file_max = intval($file_max);
                     <h4>Website</h4>
                     <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-font"></i></span>
-                        {{ Form::text('website',null,array('class' => 'form-control', 'placeholder' => 'Silahkan masukkan alamat website',
-                            'autocomplete'=>'off'))}}
+                        {{ Form::text('website',null,array('class' => 'form-control', 'placeholder' => 'Silahkan masukkan alamat website'))}}
                     </div>
+                    <div class="help-block">Silahkan masukkan alamat website.</div>
                 </div>
             </div>
             <div class="col-sm-6">
-                <div class="form-group">
+                <div class="form-group has-feedback">
                     <h4>E-mail</h4>
                     <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-font"></i></span>
-                        {{ Form::email('email',null,array('class' => 'form-control', 'placeholder' => 'Silahkan masukkan alamat email',
-                            'data-error' => 'Alamat email anda salah','autocomplete'=>'off'))}}
-                        <div class="help-block with-errors"></div>
+                        {{ Form::email('email',null,array('class' => 'form-control', 'placeholder' => 'Silahkan masukkan alamat email','autocomplete'=>'off'))}}
+                        <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                     </div>
+                    <div class="help-block">Silahkan masukkan alamat email.</div>
                 </div>
             </div>
             <div class="col-sm-6">
@@ -194,15 +199,17 @@ $file_max = intval($file_max);
                     <h4>Aplikasi Komputerisasi</h4>
                     <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-font"></i></span>
-                        {{ Form::text('app',null,array('class' => 'form-control', 'placeholder' => 'Silahkan masukkan nama aplikasi komputerisasi',
+                        {{ Form::text('app',null,array('class' => 'form-control', 'placeholder' => 'Silahkan masukkan nama aplikasi komputerisasi keuangan',
                             'autocomplete'=>'off'))}}
                     </div>
+                    <div class="help-block">Silahkan masukkan nama aplikasi komputerisasi keuangan.</div>
                 </div>
             </div>
             <div class="col-sm-12">
                 <div class="form-group">
                     <h4>Alamat Kantor Pusat</h4>
                     {{ Form::textarea('alamat',null,array('class' => 'form-control','rows' => '3','placeholder'=>'Silahkan masukkan alamat')) }}
+                    <div class="help-block">Silahkan masukkan alamat.</div>
                 </div>
             </div>
         </div>

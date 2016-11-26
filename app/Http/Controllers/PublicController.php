@@ -13,6 +13,7 @@ use App\Models\KantorPelayanan;
 use App\Models\Staf;
 use App\Models\WilayahCuprimer;
 use App\Models\Download;
+use App\Models\Pelayanan;
 
 
 class PublicController extends Controller{
@@ -112,7 +113,7 @@ class PublicController extends Controller{
     public function pelayanan(){
         $pelayanans = Pelayanan::select('id','name','gambar','content')->get();
 
-        return View::make('pelayanan',compact('pelayanans'));
+        return view('pelayanan',compact('pelayanans'));
     }
 
     public function agenda(){

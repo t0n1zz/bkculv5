@@ -63,6 +63,17 @@ return [
             'prefix'    => '',
         ],
 
+        // 'mysql' => [
+        //     'driver'    => 'mysql',
+        //     'host'      => 'localhost',
+        //     'database'  => 'puskopdi_bkcu',
+        //     'username'  => 'puskopdi_bkcu',
+        //     'password'  => 'hhjds786jds',
+        //     'charset'   => 'utf8',
+        //     'collation' => 'utf8_unicode_ci',
+        //     'prefix'    => '',
+        // ],
+
         'pgsql' => [
             'driver' => 'pgsql',
             'host' => env('DB_HOST', 'localhost'),

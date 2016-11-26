@@ -1,13 +1,118 @@
 <?php 
-$title="Dashboard"; 
+$title="Dashboard";
+$data = App\Models\LaporanCu::orderBy('periode','ASC')->groupBy('periode')->get(['periode']);
+$periodeiode = $data->groupBy('periode');
+$cu = Auth::user()->getCU();
+
+if(Auth::user()->can('view.laporanbkcu_view') && $cu == '0'){
+    $periodeiode1 = collect([]);
+    foreach ($periodeiode as $data){
+        $periodeiode1->push($data->first());
+    }
+
+    $periodes = array_column($periodeiode1->toArray(),'periode');
+
+    foreach ($periodes as $periode) {
+        $datacu = App\Models\LaporanCu::where('periode','<=',$periode)->orderBy('periode','DESC')->get();
+        $datacu1= $datacu->groupBy('no_ba');
+
+        $datascu = collect([]);
+        foreach ($datacu1 as $data2){
+            $datascu->push($data2->first());
+        }
+
+        $tot_l_biasa = 0;
+        $tot_l_lbiasa = 0;
+        $tot_p_biasa = 0;
+        $tot_p_lbiasa = 0;
+        $tot_simpanansaham = 0;
+        $tot_nonsaham_unggulan = 0;
+        $tot_nonsaham_harian = 0;
+        $tot_piutangberedar = 0;
+        $tot_piutanglalai_1bulan = 0;
+        $tot_piutanglalai_12bulan = 0;
+        $tot_aset = 0;
+        $tot_aktivalancar = 0;
+        $tot_dcr = 0;
+        $tot_dcu = 0;
+        $tot_totalpendapatan = 0;
+        $tot_totalbiaya = 0;
+        $tot_shu = 0;
+
+        foreach($datascu as $data){
+            $tot_l_biasa += $data->l_biasa;
+            $tot_l_lbiasa += $data->l_lbiasa;
+            $tot_p_biasa += $data->p_biasa;
+            $tot_p_lbiasa += $data->p_lbiasa;
+            $tot_aset += $data->aset;
+             $tot_aktivalancar += $data->aktivalancar;
+            $tot_simpanansaham += $data->simpanansaham;
+            $tot_nonsaham_unggulan += $data->nonsaham_unggulan;
+            $tot_nonsaham_harian += $data->nonsaham_harian;
+            $tot_piutangberedar += $data->piutangberedar;
+            $tot_piutanglalai_1bulan += $data->piutanglalai_1bulan;
+            $tot_piutanglalai_12bulan += $data->piutanglalai_12bulan;
+            $tot_dcr += $data->dcr;
+            $tot_dcu += $data->dcu;
+            $tot_totalpendapatan += $data->totalpendapatan;
+            $tot_totalbiaya += $data->totalbiaya;
+            $tot_shu += $data->shu;
+        } 
+        $date = new Date($periode);
+        $gperiode[] = $date->format('F Y');
+
+        $infogerakans[$periode] = array(
+                'periode' => $date->format('F Y'),
+                'l_biasa' => $tot_l_biasa,
+                'l_lbiasa' => $tot_l_lbiasa,
+                'p_biasa' => $tot_p_biasa,
+                'p_lbiasa' => $tot_p_lbiasa,
+                'aset' => $tot_aset,
+                'aktivalancar' => $tot_aktivalancar,
+                'simpanansaham' => $tot_simpanansaham,
+                'nonsaham_unggulan' => $tot_nonsaham_unggulan,
+                'nonsaham_harian' => $tot_nonsaham_harian,
+                'piutangberedar' => $tot_piutangberedar,
+                'piutanglalai_1bulan' => $tot_piutanglalai_1bulan,
+                'piutanglalai_12bulan' => $tot_piutanglalai_12bulan,
+                'dcr' => $tot_dcr,
+                'dcu' => $tot_dcu,
+                'totalpendapatan' => $tot_totalpendapatan,
+                'totalbiaya' => $tot_totalbiaya,
+                'shu' => $tot_shu
+        );
+    };
+
+    $dataarray = $infogerakans;
+    $dataarrayfirst = array_last($infogerakans);
+    $gvalue = array_column($dataarray,'aset');
+}elseif(Auth::user()->can('view.laporancudetail_view') && $cu != '0'){
+    $cuprimer = App\Models\Cuprimer::where('id','=',$cu)->select('no_ba')->first();
+    $no_ba = $cuprimer->no_ba;
+
+    $datas = App\Models\LaporanCu::where('no_ba','=',$no_ba)->orderBy('periode','desc')->get();
+
+    $dataarray = $datas->sortBy('periode')->toArray();
+    $periode = array_column($dataarray,'periode');
+
+    foreach ($periode as $a){
+        $gperiode[] = date('F Y', strtotime($a));
+    }
+    $dataarrayfirst = array_last($dataarray);
+    $gvalue = array_column($dataarray,'aset');
+}   
 ?>
 @extends('admins._layouts.layout')
+
+@section('css')
+    @include('admins._components.datatable_CSS')
+@stop
 
 @section('content')
 <section class="content-header">
     <h1>
         <i class="fa fa-dashboard"></i> <b>Dashboard</b>
-        <small>Panel Informasi Dasar</small>
+        <small>Panel Informasi</small>
     </h1>
     <ol class="breadcrumb">
         <li class="active"><i class="fa fa-dashboard"></i> Dashboard</li>
@@ -22,154 +127,411 @@ $title="Dashboard";
     <!-- Small boxes (Stat box) -->
     <div class="row">
         <!-- pengumuman -->
-        @if(Entrust::can('pengumuman'))
-            <div class="col-lg-3 col-xs-6">
+        @permission('view.pengumuman_view')
+            <div class="col-xs-6 col-sm-3 col-md-2">
                 <div class="small-box bg-aqua">
-                    <?php
-                    $total_pengumuman = App\Models\Pengumuman::count();
-                    ?>
+                    <?php $total_pengumuman = App\Models\Pengumuman::count(); $route = route('admins.pengumuman.index'); ?>
                     <div class="inner">
-                        <h3>{{ $total_pengumuman }}</h3>
-                        <p>Pengumuman</p>
+                        <a href="{{ $route }}" style="color:white"> 
+                            <h3>{{ $total_pengumuman }}</h3>
+                            <p>Pengumuman</p>
+                        </a>
                     </div>
                     <div class="icon">
-                        <i class="fa fa-comments-o"></i>
+                       <a href="{{ $route }}" style="color: rgba(0, 0, 0, 0.15)"> 
+                            <i class="fa fa-comments-o"></i>
+                       </a>
                     </div>
-                    <a href="{{ route('admins.pengumuman.index') }}"
-                       class="small-box-footer">Detail <i class="fa fa-arrow-circle-right"></i></a>
+                    <a href="{{ $route }}"
+                       class="small-box-footer">Lihat <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
             </div>
-        @endif
+        @endpermission
         <!-- /pengumuman -->
-        <!-- artikel -->
-        @if(Entrust::can('artikel'))
-            <div class="col-lg-3 col-xs-6">
-                <div class="small-box bg-green">
-                    <?php
-                    $total_artikel = App\Models\Artikel::count();
-                    ?>
+        <!-- saran -->
+        @permission('view.saran_view')
+            <div class="col-xs-6 col-sm-3 col-md-2">
+                <div class="small-box bg-yellow">
+                    <?php $total_saran = App\Models\Saran::count(); $route = route('admins.saran.index');?>
                     <div class="inner">
-                        <h3>{{ $total_artikel }}</h3>
-                        <p>Artikel</p>
+                         <a href="{{ $route }}" style="color:white"> 
+                            <h3>{{ $total_saran }}</h3>
+                            <p>Saran & Kritik</p>
+                        </a>    
                     </div>
                     <div class="icon">
-                        <i class="fa fa-book"></i>
+                        <a href="{{ $route }}" style="color: rgba(0, 0, 0, 0.15)"> 
+                            <i class="fa fa-paper-plane-o"></i>
+                        </a>
                     </div>
-                    <a href="{{ route('admins.artikel.index') }}"
-                       class="small-box-footer">Detail <i class="fa fa-arrow-circle-right"></i></a>
+                     <a href="{{ $route }}"
+                       class="small-box-footer">Lihat <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
             </div>
-        @endif
+        @endpermission
+        <!-- /saran -->
+        <!-- artikel -->
+        @permission('view.artikel_view')
+            <div class="col-xs-6 col-sm-3 col-md-2">
+                <div class="small-box bg-green">
+                    <?php $total_artikel = App\Models\Artikel::count(); $route = route('admins.artikel.index');?>
+                    <div class="inner">
+                        <a href="{{ $route }}" style="color:white"> 
+                            <h3>{{ $total_artikel }}</h3>
+                            <p>Artikel</p>
+                        </a>    
+                    </div>
+                    <div class="icon">
+                        <a href="{{ $route }}" style="color: rgba(0, 0, 0, 0.15)"> 
+                            <i class="fa fa-book"></i>
+                        </a>    
+                    </div>
+                    <a href="{{ $route }}"
+                       class="small-box-footer">Lihat <i class="fa fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+        @endpermission
         <!-- /artikel -->
         <!-- kegiatan -->
-        @if(Entrust::can('kegiatan'))
-            <div class="col-lg-3 col-xs-6">
+        @permission('view.kegiatan_view')
+            <div class="col-xs-6 col-sm-3 col-md-2">
                 <div class="small-box bg-red">
-                    <?php
-                    $total_kegiatan = App\Models\Kegiatan::count();
-                    ?>
+                    <?php $total_kegiatan = App\Models\Kegiatan::count();$route = route('admins.kegiatan.index'); ?>
                     <div class="inner">
-                        <h3>{{ $total_kegiatan }}</h3>
-                        <p>Kegiatan</p>
+                        <a href="{{ $route }}" style="color:white"> 
+                            <h3>{{ $total_kegiatan }}</h3>
+                            <p>Kegiatan</p>
+                        </a>
                     </div>
                     <div class="icon">
-                        <i class="fa fa-calendar"></i>
+                        <a href="{{ $route }}" style="color: rgba(0, 0, 0, 0.15)"> 
+                            <i class="fa fa-suitcase"></i>  
+                        </a>
                     </div>
-                    <a href="{{ route('admins.kegiatan.index') }}"
-                       class="small-box-footer">Detail <i class="fa fa-arrow-circle-right"></i></a>
+                    <a href="{{ $route }}"
+                       class="small-box-footer">Lihat <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
             </div>
-        @endif
+        @endpermission
         <!-- /kegiatan -->
         <!-- cuprimer -->
-        @if(Entrust::can('cuprimer'))
-            <div class="col-lg-3 col-xs-6">
+        @permission('view.cuprimer_view')
+            <div class="col-xs-6 col-sm-3 col-md-2">
                 <div class="small-box bg-yellow">
-                    <?php
-                    $total_cuprimer = App\Models\Cuprimer::count();
-                    ?>
+                    <?php $total_cuprimer = App\Models\Cuprimer::count();$route = route('admins.cuprimer.index');  ?>
                     <div class="inner">
-                        <h3>{{ $total_cuprimer }}</h3>
-                        <p>CU</p>
+                        <a href="{{ $route }}" style="color:white"> 
+                            <h3>{{ $total_cuprimer }}</h3>
+                            <p>CU</p>
+                        </a>    
                     </div>
                     <div class="icon">
-                        <i class="fa fa-building"></i>
+                        <a href="{{ $route }}" style="color: rgba(0, 0, 0, 0.15)"> 
+                            <i class="fa fa-building"></i>
+                        </a>    
                     </div>
-                    <a href="{{ route('admins.cuprimer.index') }}"
-                       class="small-box-footer">Detail <i class="fa fa-arrow-circle-right"></i></a>
+                    <a href="{{ $route }}"
+                       class="small-box-footer">Lihat <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
             </div>
-        @endif
+        @endpermission
         <!-- /cuprimer -->
-        <!-- staf -->
-        @if(Entrust::can('staff'))
-            <div class="col-lg-3 col-xs-6">
-                <div class="small-box bg-red">
-                    <?php
-                    $total_staff = App\Models\Staf::count();
-                    ?>
-                    <div class="inner">
-                        <h3>{{ $total_staff }}</h3>
-                        <p>Staf</p>
-                    </div>
-                    <div class="icon">
-                        <i class="fa fa-sitemap"></i>
-                    </div>
-                    <a href="{{ route('admins.staf.index') }}"
-                       class="small-box-footer">Detail <i class="fa fa-arrow-circle-right"></i></a>
-                </div>
-            </div>
-        @endif
-        <!-- /staf -->
-        <!-- download -->
-        @if(Entrust::can('download'))
-            <div class="col-lg-3 col-xs-6">
+        <!-- laporancu -->
+        @permission('view.laporancu_view|view.laporancudetail_view')
+            <div class="col-xs-6 col-sm-3 col-md-2">
                 <div class="small-box bg-green">
                     <?php
-                    $total_download = App\Models\Download::count();
-                    ?>
+                        if($cu != 0)
+                            $total_laporan = App\Models\LaporanCu::where('no_ba','=',$no_ba)->count(); 
+                        else
+                            $total_laporan = App\Models\LaporanCu::count(); 
+
+                        if(Auth::user()->can('view.laporancu_view') && $cu == '0'){ 
+                            $route = route('admins.laporancu.index');
+                        }elseif(Auth::user()->can('view.laporancudetail_view') && $cu != '0'){
+                            $cuprimer = App\Models\Cuprimer::where('id','=',$cu)->select('no_ba')->first();
+                            $no_ba = $cuprimer->no_ba;
+                            $route = route('admins.laporancu.index_cu',array($no_ba));
+                        }
+                        ?>
                     <div class="inner">
-                        <h3>{{ $total_download }}</h3>
-                        <p>Download</p>
+                         <a href="{{ $route }}" style="color:white">
+                            <h3>{{ $total_laporan }}</h3>
+                            <p>Laporan CU</p>
+                        </a>
                     </div>
                     <div class="icon">
-                        <i class="fa fa-download"></i>
-                    </div>
-                    <a href="{{ route('admins.download.index') }}"
-                       class="small-box-footer">Detail <i class="fa fa-arrow-circle-right"></i></a>
+                        <a href="{{ $route }}" style="color: rgba(0, 0, 0, 0.15)"> 
+                            <i class="fa fa-line-chart"></i>
+                        </a>
+                    </div>   
+                        <a href="{{ $route }}"
+                           class="small-box-footer">Lihat <i class="fa fa-arrow-circle-right"></i></a> 
                 </div>
             </div>
-        @endif
+        @endpermission
+        <!-- /laporancu -->
+        <!-- staf -->
+        @permission('view.staf_view')
+            <div class="col-xs-6 col-sm-3 col-md-2">
+                <div class="small-box bg-red">
+                    <?php 
+                        if($cu != 0)
+                            $total_staff = App\Models\Staf::with('cuprimer')->where('cu','=',$cu)->count(); 
+                        else
+                            $total_staff = App\Models\Staf::count(); 
+                        
+                        $route = route('admins.staf.index');
+                        ?>
+                    <div class="inner">
+                        <a href="{{ $route }}" style="color:white"> 
+                            <h3>{{ $total_staff }}</h3>
+                            <p>Staf</p>
+                        </a>   
+                    </div>
+                    <div class="icon">
+                        <a href="{{ $route }}" style="color: rgba(0, 0, 0, 0.15)">
+                            <i class="fa fa-sitemap"></i>
+                        </a>
+                    </div>
+                    <a href="{{ $route }}"
+                       class="small-box-footer">Lihat <i class="fa fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+        @endpermission
+        <!-- /staf -->
+        <!-- download -->
+        @permission('view.download_view')
+            <div class="col-xs-6 col-sm-3 col-md-2">
+                <div class="small-box bg-green">
+                    <?php $total_download = App\Models\Download::count(); $route = route('admins.download.index');?>
+                    <div class="inner">
+                        <a href="{{ $route }}" style="color:white"> 
+                            <h3>{{ $total_download }}</h3>
+                            <p>Download</p>
+                        </a>
+                    </div>
+                    <div class="icon">
+                        <a href="{{ $route }}" style="color: rgba(0, 0, 0, 0.15)">
+                            <i class="fa fa-download"></i>
+                        </a>    
+                    </div>
+                    <a href="{{ $route }}"
+                       class="small-box-footer">Lihat <i class="fa fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+        @endpermission
         <!-- /download -->
         <!-- admin -->
-        @if(Entrust::can('admin'))
-            <div class="col-lg-3 col-xs-6">
+        @permission('view.admin_view')
+            <div class="col-xs-6 col-sm-3 col-md-2">
                 <div class="small-box bg-aqua">
-                    <?php
-                    $total_admin = App\Models\Admin::count();
-                    ?>
+                    <?php $total_admin = App\Models\User::count(); $route = route('admins.admin.index'); ?>
                     <div class="inner">
-                        <h3>{{ $total_admin }}</h3>
-                        <p>Admin</p>
+                        <a href="{{ $route }}" style="color:white">
+                            <h3>{{ $total_admin }}</h3>
+                            <p>Admin</p>
+                        </a>    
                     </div>
                     <div class="icon">
-                        <i class="fa fa-user"></i>
+                        <a href="{{ $route }}" style="color: rgba(0, 0, 0, 0.15)">
+                            <i class="fa fa-user-circle-o"></i>
+                        </a>
                     </div>
                     <a href="{{ route('admins.admin.index') }}"
-                       class="small-box-footer">Detail <i class="fa fa-arrow-circle-right"></i></a>
+                       class="small-box-footer">Lihat <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
             </div>
-        @endif
+        @endpermission
         <!-- /admin -->
     </div>
     <!-- /Small boxes (Stat box) -->
-    <!-- main -->
+    <!-- Main content -->
     <div class="row">
+        @if(Auth::user()->can('view.laporanbkcu_view') || Auth::user()->can('view.laporancudetail_view'))
+            <div class="col-md-12">
+              <div class="box box-primary">
+                <div class="box-header with-border">
+                  <h3 class="box-title"> Perkembangan CU</h3>
+                  <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                    </button>
+                  </div>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                  <div class="row">
+                    <div class="col-md-10">
+                      <p class="text-center">
+                        <strong>ASET</strong>
+                      </p>
+
+                      <div class="chart">
+                        <!-- Sales Chart Canvas -->
+                        <canvas id="chart" height="100em"></canvas>
+                        <br/>
+                      </div>
+                      <!-- /.chart-responsive -->
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-md-2">
+                      <p class="text-center">
+                        <strong>ANGGOTA</strong>
+                      </p>
+                      <div class="pad box-pane-right bg-aqua" style="min-height: 280px">
+                        <div class="description-block margin-bottom" style="margin-bottom: .5em;">
+                          <span><i class="fa fa-male"></i> Laki-laki</span>
+                          <h5 class="description-header" style="margin-top:.5em;"> {{ number_format($dataarrayfirst['l_biasa'],"0",",",".") }}</h5>
+                        </div>
+                        <hr style="padding: 0;margin:0;" />
+                        <!-- /.description-block -->
+                        <div class="description-block margin-bottom" style="margin-bottom: .5em;">
+                          <span><i class="fa fa-female"></i> Perempuan</span>
+                          <h5 class="description-header" style="margin-top:.5em;"> {{ number_format($dataarrayfirst['p_biasa'],"0",",",".") }}</h5>
+                        </div>
+                        <hr style="padding: 0;margin:0;" />
+                        <!-- /.description-block -->
+                        <div class="description-block margin-bottom" style="margin-bottom: .5em;">
+                          <span><i class="fa fa-child"></i> Laki-laki Luar Biasa</span>
+                          <h5 class="description-header" style="margin-top:.5em;"> {{ number_format($dataarrayfirst['l_lbiasa'],"0",",",".") }}</h5>
+                        </div>
+                        <hr style="padding: 0;margin:0;" />
+                        <!-- /.description-block -->
+                        <div class="description-block margin-bottom" style="margin-bottom: .5em;">
+                          <span><i class="fa fa-child"></i> Perempuan Luar Biasa</span>
+                          <h5 class="description-header" style="margin-top:.5em;"> {{ number_format($dataarrayfirst['p_lbiasa'],"0",",",".") }}</h5>
+                        </div>
+                        <hr style="padding: 0;margin:0;" />
+                        <!-- /.description-block -->
+                        <div class="description-block margin-bottom" style="margin-bottom: .5em;">
+                          <span><i class="fa fa-male"></i><i class="fa fa-child"></i><i class="fa fa-female"></i> Total</span>
+                          <?php $tot_anggota =  $dataarrayfirst['l_biasa'] + $dataarrayfirst['p_biasa'] + $dataarrayfirst['l_lbiasa'] + $dataarrayfirst['p_lbiasa'];?>
+                          <h5 class="description-header" style="margin-top:.5em;"> {{ number_format($tot_anggota,"0",",",".") }}</h5>
+                        </div>
+                        <!-- /.description-block -->
+                      </div>
+                    </div>
+                    <!-- /.col -->
+                  </div>
+                  <!-- /.row -->
+                </div>
+                <!-- ./box-body -->
+                <div class="box-footer">
+                    <div class="row">
+                        <div class="col-sm-2 col-xs-6">
+                          <div class="description-block border-right">
+                            <h5 class="description-header">{{ number_format($dataarrayfirst['aktivalancar'],"0",",",".") }}</h5>
+                            <span class="description-text">Aktiva Lancar</span>
+                          </div>
+                          <!-- /.description-block -->
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-sm-2 col-xs-6">
+                          <div class="description-block border-right">
+                            <h5 class="description-header">{{ number_format($dataarrayfirst['dcr'],"0",",",".") }}</h5>
+                            <span class="description-text">DCR</span>
+                          </div>
+                          <!-- /.description-block -->
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-sm-2 col-xs-6">
+                          <div class="description-block border-right">
+                            <h5 class="description-header">{{ number_format($dataarrayfirst['dcu'],"0",",",".") }}</h5>
+                            <span class="description-text">DCU</span>
+                          </div>
+                          <!-- /.description-block -->
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-sm-2 col-xs-6">
+                          <div class="description-block border-right">
+                            <h5 class="description-header">{{ number_format($dataarrayfirst['totalbiaya'],"0",",",".") }}</h5>
+                            <span class="description-text">Biaya</span>
+                          </div>
+                          <!-- /.description-block -->
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-sm-2 col-xs-6">
+                          <div class="description-block border-right">
+                            <h5 class="description-header">{{ number_format($dataarrayfirst['totalpendapatan'],"0",",",".") }}</h5>
+                            <span class="description-text">Pendapatan</span>
+                          </div>
+                          <!-- /.description-block -->
+                        </div>
+                        <!-- /.col -->  
+                        <div class="col-sm-2 col-xs-6">
+                          <div class="description-block">
+                            <h5 class="description-header">{{ number_format($dataarrayfirst['shu'],"0",",",".") }}</h5>
+                            <span class="description-text">SHU</span>
+                          </div>
+                          <!-- /.description-block -->
+                        </div>
+                    </div>
+                  <div class="row">
+                      <div class="col-sm-12"><hr/></div>
+                  </div>
+                    <div class="row">
+                        <div class="col-sm-2 col-xs-6">
+                          <div class="description-block border-right">
+                            <h5 class="description-header">{{ number_format($dataarrayfirst['piutangberedar'],"0",",",".") }}</h5>
+                            <span class="description-text">Piutang Beredar</span>
+                          </div>
+                          <!-- /.description-block -->
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-sm-2 col-xs-6">
+                          <div class="description-block border-right">
+                            <?php  ?>
+                            <h5 class="description-header">{{ number_format($dataarrayfirst['piutangberedar'] - ($dataarrayfirst['piutanglalai_1bulan'] + $dataarrayfirst['piutanglalai_12bulan']),"0",",",".") }}</h5>
+                            <span class="description-text">Piutang Bersih</span>
+                          </div>
+                          <!-- /.description-block -->
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-sm-2 col-xs-6">
+                          <div class="description-block border-right">
+                            <h5 class="description-header">{{ number_format($dataarrayfirst['piutanglalai_1bulan'],"0",",",".") }}</h5>
+                            <span class="description-text">Piutang Lalai 1-12 Bulan</span>
+                          </div>
+                          <!-- /.description-block -->
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-sm-2 col-xs-6">
+                          <div class="description-block border-right">
+                            <h5 class="description-header">{{ number_format($dataarrayfirst['piutanglalai_12bulan'],"0",",",".") }}</h5>
+                            <span class="description-text">Piutang Lalai > 12 Bulan</span>
+                          </div>
+                          <!-- /.description-block -->
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-sm-2 col-xs-6">
+                          <div class="description-block border-right">
+                            <h5 class="description-header">{{ number_format($dataarrayfirst['simpanansaham'],"0",",",".") }}</h5>
+                            <span class="description-text">Simpanan Saham</span>
+                          </div>
+                          <!-- /.description-block -->
+                        </div>
+                        <!-- /.col -->  
+                        <div class="col-sm-2 col-xs-6">
+                          <div class="description-block">
+                            <h5 class="description-header">{{ number_format($dataarrayfirst['nonsaham_harian'] + $dataarrayfirst['nonsaham_unggulan'],"0",",",".") }}</h5>
+                            <span class="description-text">Simpanan Non Saham</span>
+                          </div>
+                          <!-- /.description-block -->
+                        </div>
+                    </div>
+                  <!-- /.row -->
+                </div>
+                <!-- /.box-footer -->
+              </div>
+              <!-- /.box -->
+            </div>
+        @endif
+
         <div class="col-lg-5">
+            @permission('view.statistikweb_view')
             <!--statistik website-->
             <div class="box box-primary">
                 <div class="box-header with-border">
-                    <i class="fa fa-road"></i>
                     <h3 class="box-title">Statistik Pengunjung Website</h3>
                     <div class="box-tools pull-right">
                         <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
@@ -179,21 +541,16 @@ $title="Dashboard";
                     <?php
                     $tabel = "stat_pengunjung";
                     $tanggal = date("Ymd");
-
                     $pengunjung = DB::table($tabel)
                             ->where('tanggal',$tanggal)
                             ->groupBy('ip')
                             ->count();
-
                     $totalpengunjung = DB::table($tabel)
                             ->count();
-
                     $bataswaktu       = time() - 300;
-
                     $pengunjungonline = DB::table($tabel)
                             ->where('online','>',$bataswaktu)
                             ->count();
-
                     $tanggal_hariini  = date('d-m-Y');
                     ?>
                     <h4 style="text-align: center;" ><b>Pengunjung Hari Ini</b></h4>
@@ -220,117 +577,54 @@ $title="Dashboard";
                 </div>
             </div>
             <!--/statistik website-->
-            <!--info gerakan-->
-            <div class="box box-primary">
-                <div class="box-header with-border">
-                    <i class="fa fa-university"></i>
-                    <h3 class="box-title"> Informasi Gerakan</h3>
-                    <div class="box-tools pull-right">
-                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                    </div>
-                </div>
-                <div class="box-body">
-                    <?php $infogerakan = App\Models\InfoGerakan::find(1); ?>
-                    @if(!empty($infogerakan->tanggal))
-                        <?php $date = new Date($infogerakan->tanggal) ?>
-                        <b>Per tanggal :</b> {{ $date->format('j F Y ')}}
-                        <br/>
-                    @endif
-                    @if(!empty($infogerakan->jumlah_anggota))
-                        <b>Jumlah Anggota :</b> {{ number_format($infogerakan->jumlah_anggota,0,",",".") }} orang
-                        <br/>
-                    @endif
-                    @if(!empty($infogerakan->jumlah_cu))
-                        <b>Jumlah CU Primer :</b> {{ number_format($infogerakan->jumlah_cu,0,",",".")}}
-                        <br/>
-                    @endif
-                    @if(!empty($infogerakan->jumlah_staff_cu))
-                        <b>Jumlah Staff CU Primer :</b> {{ number_format($infogerakan->jumlah_staff_cu,0,",",".") }} orang
-                        <br/>
-                    @endif
-                    @if(!empty($infogerakan->asset))
-                        <b>Jumlah Asset :</b> Rp. {{ number_format($infogerakan->asset,0,",",".") }}
-                        <br/>
-                    @endif
-                    @if(!empty($infogerakan->piutang_beredar))
-                        <b>Jumlah Piutang Beredar :</b> Rp. {{ number_format($infogerakan->piutang_beredar,0,",",".") }}
-                        <br/>
-                    @endif
-                    @if(!empty($infogerakan->piutang_lalai_1))
-                        <b>Jumlah Piutang Lalai 1 s.d. 12 Bulan  :</b> Rp. {{ number_format($infogerakan->piutang_lalai_1,0,",",".") }}
-                        <br/>
-                    @endif
-                    @if(!empty($infogerakan->piutang_lalai_2))
-                        <b>Jumlah Piutang > 12 Bulan  :</b> Rp. {{ number_format($infogerakan->piutang_lalai_2,0,",",".") }}
-                        <br/>
-                    @endif
-                    @if(!empty($infogerakan->piutang_bersih))
-                        <b>Jumlah Piutang Bersih  :</b> Rp. {{ number_format($infogerakan->piutang_bersih,0,",",".") }}
-                        <br/>
-                    @endif
-                    @if(!empty($infogerakan->shu))
-                        <b>SHU  :</b> Rp. {{ number_format($infogerakan->shu,0,",",".") }}
-                        <br/>
-                    @endif
-                </div>
-                <div class="box-footer clearfix">
-                    @if(Entrust::can('infogerakan'))
-                        <a href="{{ route('admins.infogerakan.edit',array(1)) }}" class="btn btn-primary btn-block">
-                            <div>
-                                <span class="pull-left"><b>Detail</b></span>
-                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                <div class="clearfix"></div>
-                            </div>
-                        </a>
-                    @endif
-                </div>
-            </div>
-            <!--/info gerakan-->
+            @endpermission
         </div>
         <div class="col-lg-7">
+            @permission('view.saran_view')
             <!-- saran -->
-            <div class="box box-primary direct-chat direct-chat-primary">
+            <div class="box box-primary ">
                 <div class="box-header with-border">
-                    <h3 class="box-title"><i class="fa fa-paper-plane-o fa-fw"></i> Saran Atau Kritik</h3>
+                    <h3 class="box-title">Saran Atau Kritik</h3>
                     <div class="box-tools pull-right">
                         <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                     </div>
                 </div><!-- /.box-header -->
                 <div class="box-body">
-                    <!-- Conversations are loaded here -->
-                    <div class="direct-chat-messages">
-                        <!-- Message. Default to the left -->
-                        <?php
-                        $sarans = App\Models\Saran::orderBy('created_at','desc')->take(10)->get();
-                        ?>
-                        @foreach($sarans as $saran )
-                            <div class="direct-chat-msg">
-                                <div class='direct-chat-info clearfix'>
-                                    @if(!empty($saran->name))
-                                        <span class='direct-chat-name pull-left'>{{ $saran->name }}</span>
+                    <?php $sarans = App\Models\Saran::orderBy('created_at','desc')->take(10)->get(); ?>
+                    <table class="table table-hover" id="dataTables-saran" width="100%">
+                        <thead class="bg-light-blue-active color-palette">
+                            <tr >
+                                <th hidden></th>
+                                <th>Nama </th>
+                                <th>Saran dan Kritik</th>
+                                <th>Tanggal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($sarans as $data)
+                                <tr>
+                                    <td hidden></td>
+                                    @if(!empty($data->name))
+                                        <td class="warptext">{{ $data->name }}</td>
                                     @else
-                                        <span class='direct-chat-name pull-left'>-</span>
+                                        <td>-</td>
                                     @endif
-                                    @if(!empty($saran->created_at ))
-                                        <?php $date = new Date($saran->created_at); ?>
-                                        <span class='direct-chat-timestamp pull-right'>{{  $date->format('d/n/Y') }}</span>
+                                    @if(!empty($data->content))
+                                        <td class="warptext">{{{ $data->content }}}</td>
                                     @else
-                                        <span class='direct-chat-timestamp pull-right'>-</span>
+                                        <td>-</td>
                                     @endif
-                                </div><!-- /.direct-chat-info -->
-                                <img class="direct-chat-img" src="{{ asset('images/user.png')}}" alt="message user image" /><!-- /.direct-chat-img -->
-                                @if(!empty($saran->content))
-                                    <div class="direct-chat-text">
-                                        {{{ $saran->content }}}
-                                    </div><!-- /.direct-chat-text -->
-                                @else
-                                    <div class="direct-chat-text">
-                                        -
-                                    </div><!-- /.direct-chat-text -->
-                                @endif
-                            </div><!-- /.direct-chat-msg -->
-                        @endforeach
-                    </div><!--/.direct-chat-messages-->
+
+                                    @if(!empty($data->created_at ))
+                                        <?php $date = new Date($data->created_at); ?>
+                                        <td><i hidden="true">{{$data->created_at}}</i> {{  $date->format('d/n/Y') }}</td>
+                                    @else
+                                        <td>-</td>
+                                    @endif
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div><!-- /.box-body -->
                 <div class="box-footer clearfix">
                     <a href="{{ route('admins.saran.index') }}" class="btn btn-primary btn-block">
@@ -344,88 +638,124 @@ $title="Dashboard";
                 <!-- /saran -->
             </div>
             <!-- /saran -->
-            <!-- admin login -->
-            <div class="box box-primary">
-                <div class="box-header with-border">
-                    <i class="fa fa-user"></i>
-                    <h3 class="box-title"> Admin</h3>
-                    <div class="box-tools pull-right">
-                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                    </div>
-                </div>
-                <div class="box-body">
-                    <?php
-                    $logins = App\Models\Admin::select('name','username','login')
-                            ->orderBy('login','desc')
-                            ->take(6)->get();
-                    ?>
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                            <tr>
-                                <th>Nama </th>
-                                <th>Username </th>
-                                <th><i class="fa fa-calendar"></i></th>
-                                <th><i class="fa fa-clock-o"></i></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <?php $i=0; ?>
-                            @foreach($logins as $login)
-                                <?php $i++; ?>
-                                <tr>
-                                    @if(!empty($login->name))
-                                        <td>{{ $login->name }}</td>
-                                    @else
-                                        <td>-</td>
-                                    @endif
-
-                                    @if(!empty($login->username))
-                                        <td>{{ $login->username }}</td>
-                                    @else
-                                        <td>-</td>
-                                    @endif
-
-                                    @if(!empty($login->login))
-                                        @if($login->login != "0000-00-00 00:00:00")
-                                            <?php $datelogin = new Date($login->login); ?>
-                                            <td>{{ $datelogin->format('l, j F Y') }}</td>
-                                        @else
-                                            <td>-</td>
-                                        @endif
-                                    @else
-                                        <td>-</td>
-                                    @endif
-
-                                    @if(!empty($login->login))
-                                        @if($login->login != "0000-00-00 00:00:00")
-                                            <?php $datelogin = new Date($login->login); ?>
-                                            <td>{{ $datelogin->format('H:i:s') }}</td>
-                                        @else
-                                            <td>-</td>
-                                        @endif
-                                    @else
-                                        <td>-</td>
-                                    @endif
-                                </tr>
-                            @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="box-footer clearfix">
-                    <a href="{{ route('admins.admin.index') }}" class="btn btn-primary btn-block">
-                        <div>
-                            <span class="pull-left"><b>Detail</b></span>
-                            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                            <div class="clearfix"></div>
-                        </div>
-                    </a>
-                </div>
-            </div>
-            <!-- /admin login -->
-    </div>
-    <!-- /main -->
+            @endpermission
+        </div>
+    </div>    
 </section>
-<!-- Main content -->
+
+@stop
+
+@section('js')
+    @include('admins._components.datatable_JS')
+    <script type="text/javascript" src="{{ URL::asset('plugins/chartJS/Chart.bundle.js') }}"></script>
+    <script type="text/javascript">
+        var table = $('#dataTables-saran').DataTable({
+            dom: 't',
+            select: true,
+            scrollY: '40vh',
+            scrollX: true,
+            autoWidth: true,
+            scrollCollapse : true,
+            paging : false,
+            stateSave : false,
+            order : [],
+            buttons: [],
+            language: {
+                buttons : {},
+                select:{
+                    rows:{
+                        _: "",
+                        0: "",
+                        1: ""
+                    }
+                },
+                "sProcessing":   "Sedang proses...",
+                "sLengthMenu":   "Tampilan _MENU_ entri",
+                "sZeroRecords":  "Tidak ditemukan data yang sesuai",
+                "sInfo":         "Tampilan _START_ sampai _END_ dari _TOTAL_ entri",
+                "sInfoEmpty":    "Tampilan 0 hingga 0 dari 0 entri",
+                "sInfoFiltered": "(disaring dari _MAX_ entri keseluruhan)",
+                "sInfoPostFix":  "",
+            },
+            fnInitComplete:function(){
+                $('.dataTables_scrollBody').perfectScrollbar();
+            },
+            fnDrawCallback: function( oSettings ) {
+                $('.dataTables_scrollBody').perfectScrollbar('destroy').perfectScrollbar();
+            }
+        });
+
+        table.on( 'order.dt search.dt', function () {
+            table.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+                cell.innerHTML = i+1;
+            } );
+        } ).draw();
+    </script>
+    <script>
+    var randomColorFactor = function() {
+        return Math.round(Math.random() * 255);
+    };
+    var randomColor = function(opacity) {
+        return 'rgba(' + randomColorFactor() + ',' + randomColorFactor() + ',' + randomColorFactor() + ',' + (opacity || '.3') + ')';
+    };
+    var data = {
+        labels: {!! json_encode($gperiode,JSON_NUMERIC_CHECK) !!},
+        datasets: [
+            {
+                label: "Aset",
+                data: {!! json_encode($gvalue,JSON_NUMERIC_CHECK) !!},
+                fill: false
+            }
+        ]
+    };
+    var config = {
+        type: 'line',
+        data: data,
+        options:{
+            responsive: true,
+            legend: {
+                position: 'false'
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true,
+                        callback: function(value, index, values) {
+                            if(parseInt(value) > 1000){
+                                return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                            } else {
+                                return value;
+                            }
+                        }
+                    }
+                }]
+            },
+            tooltips: {
+                callbacks: {
+                    label: function(tooltipItem, data) {
+                        return Number(tooltipItem.yLabel).toFixed(0).replace(/./g, function(c, i, a) {
+                            return i > 0 && c !== "," && (a.length - i) % 3 === 0 ? "." + c : c;
+                        });
+                    }
+                }
+            }
+        },
+    };
+    $.each(config.data.datasets, function(i, dataset) {
+        dataset.borderColor = "#9fe3f4";
+        dataset.backgroundColor = "#00c0ef";
+        dataset.pointBorderColor = "#0483a2";
+        dataset.pointBackgroundColor = "#fff";
+        dataset.pointBorderWidth = 1;
+        dataset.pointHoverBackgroundColor = "#00c0ef";
+        dataset.pointHoverBorderColor = "#0483a2";
+        dataset.pointHoverBorderWidth = 2;
+        dataset.pointRadius = 5;
+        dataset.pointHitRadios = 10;
+    });
+    window.onload = function() {
+        var ctx = document.getElementById("chart").getContext("2d");
+        window.chart = new Chart(ctx, config);
+    };
+</script>
 @stop

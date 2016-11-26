@@ -1,6 +1,7 @@
 <?php
 $title = "Kelola Artikel";
 $kelas ='artikel';
+$kelas2 = 'kategoriartikel';
 $imagepath = 'images_artikel/';
 ?>
 
@@ -12,9 +13,10 @@ $imagepath = 'images_artikel/';
 
 @section('content')
 <!-- header -->
+
 <section class="content-header">
     <h1>
-        <i class="fa fa-archive"></i> {{ $title }}
+        <i class="fa fa-book"></i> {{ $title }}
         <small>Mengelola Data Artikel</small>
     </h1>
     <ol class="breadcrumb">
@@ -28,129 +30,302 @@ $imagepath = 'images_artikel/';
     @include('admins._layouts.alert')
     <!-- /Alert -->
     <!--content-->
-    <div class="box box-primary">
-        <div class="box-body">
-            <table class="table table-striped table-hover" id="dataTables-example">
-                <thead>
-                <tr>
-                    <th hidden></th>
-                    <th>Judul</th>
-                    <th>Kategori</th>
-                    <th>Penulis</th>
-                    <th>Tanggal</th>
-                    <th>Gambar</th>
-                    <th>Terbit</th>
-                    <th>Pilihan</th>
-                </tr>
-                </thead>
-                <tbody>
-                @foreach($datas as $data)
+    @permission('view.'.$kelas.'_view')
+    <div class="nav-tabs-custom">
+        <ul class="nav nav-tabs">
+            @permission('view.'.$kelas.'_view')
+                <li class="active"><a href="#tab_artikel" data-toggle="tab">Artikel</a></li>
+            @endpermission
+            @permission('view.'.$kelas2.'_view')    
+                <li ><a href="#tab_kategoriartikel" data-toggle="tab">Kategori Artikel</a></li>
+            @endpermission    
+        </ul>
+        <div class="tab-content"> 
+            @permission('view.'.$kelas.'_view')
+            <div class="tab-pane fade in active" id="tab_artikel">
+                <div class="input-group tabletools">
+                    <div class="input-group-addon"><i class="fa fa-search"></i></div>
+                    <input type="text" id="searchtext" class="form-control" placeholder="Kata kunci pencarian..." autofocus>
+                </div>
+
+                <table class="table table-hover" id="dataTables-example" width="100%">
+                    <thead class="bg-light-blue-active color-palette">
                     <tr>
-                        <td hidden>{{ $data->id }}</td>
-                        @if(!empty($data->judul))
-                            <td class="warptext">{{ $data->judul }}</td>
-                        @else
-                            <td>-</td>
-                        @endif
-
-                        @if(!empty($data->kategoriartikel))
-                            <td>{{ $data->kategoriartikel->name }}</td>
-                        @else
-                            <td>Tak Terkategori</td>
-                        @endif
-
-                        @if(!empty($data->penulis))
-                            <td>{{ $data->penulis }}</td>
-                        @else
-                            <td>-</td>
-                        @endif
-
-                        @if(!empty($data->created_at ))
-                            <?php $date = new Date($data->created_at); ?>
-                            <td><i hidden="true">{{$data->created_at}}</i> {{ $date->format('d-n-Y') }}</td>
-                        @else
-                            <td>-</td>
-                        @endif
-
-                        @if(!empty($data->gambar) && is_file($imagepath.$data->gambar."n.jpg"))
-                            <td style="white-space: nowrap"><div class="modalphotos" >
-                                    {{ Html::image($imagepath.$data->gambar.'n.jpg',asset($imagepath.$data->gambar."jpg"),
-                                        array('class' => 'img-responsive ',
-                                        'id' => 'tampilgambar', 'width' => '50')) }}
-                                </div></td>
-                        @elseif(!empty($data->gambar) && is_file($imagepath.$data->gambar))
-                            <td style="white-space: nowrap"><div class="modalphotos" >
-                                {{ Html::image($imagepath.$data->gambar,asset($imagepath.$data->gambar),
-                                    array('class' => 'img-responsive ',
-                                    'id' => 'tampilgambar', 'width' => '50')) }}
-                            </div></td>
-                        @else
-                            <td>{{ Html::image('images/no_image.jpg', 'a picture', array('class' => 'img-responsive',
-			        	                    'id' => 'tampilgambar', 'width' => '50')) }}</td>
-                        @endif
-
-                        @if($data->status == 0)
-                            <td><a href="#" class="btn btn-default" disabled>
-                                    <i hidden="true">tidak</i><i class="fa fa-ban"></i></a></td>
-                        @elseif($data->status == 1)
-                            <td><a href="#" class="btn btn-warning" disabled>
-                                    <i hidden="true">iya</i><i class="fa fa-check"></i></a></td>
-                        @else
-                            <td><a href="#" class="btn btn-default" disabled>
-                                    <i hidden="true">-</i><i class="fa fa-minus"></i></a></td>
-                        @endif
-
-                        @if($data->pilihan == 0)
-                            <td><a href="#" class="btn btn-default" disabled>
-                                    <i hidden="true">tidak</i><i class="fa fa-ban"></i></a></td>
-                        @elseif($data->pilihan == 1)
-                            <td><a href="#" class="btn btn-warning" disabled>
-                                    <i hidden="true">iya</i><i class="fa fa-check"></i></a></td>
-                        @else
-                            <td><a href="#" class="btn btn-default" disabled>
-                                    <i hidden="true">-</i><i class="fa fa-minus"></i></a></td>
-                        @endif
+                        <th data-sortable="false">#</th>
+                        <th hidden></th>
+                        <th>Judul</th>
+                        <th>Kategori</th>
+                        <th>Penulis</th>
+                        <th>Tanggal Tulis</th>
+                        <th>Tanggal Ubah</th>
+                        <th>Terbit</th>
+                        <th>Pilihan</th>
+                        <th>Gambar</th>
                     </tr>
-                @endforeach
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                    @foreach($datas as $data)
+                        <tr>
+                            <td class="bg-aqua disabled color-palette"></td>
+                            <td hidden>{{ $data->id }}</td>
+                            @if(!empty($data->judul))
+                                <td class="warptext">{{ $data->judul }}</td>
+                            @else
+                                <td>-</td>
+                            @endif
+
+                            @if(!empty($data->kategoriartikel))
+                                <td>{{ $data->kategoriartikel->name }}</td>
+                            @else
+                                <td>Tak Terkategori</td>
+                            @endif
+
+                            @if(!empty($data->penulis))
+                                <td>{{ $data->penulis }}</td>
+                            @else
+                                <td>-</td>
+                            @endif
+
+                            @if(!empty($data->created_at ))
+                                <?php $date = new Date($data->created_at); ?>
+                                <td><i hidden="true">{{$data->created_at}}</i> {{ $date->format('d/n/Y') }}</td>
+                            @else
+                                <td>-</td>
+                            @endif
+
+                            @if(!empty($data->updated_at ))
+                                <?php $date = new Date($data->updated_at); ?>
+                                <td><i hidden="true">{{$data->updated_at}}</i> {{ $date->format('d/n/Y') }}</td>
+                            @else
+                                <td>-</td>
+                            @endif
+
+                            @if($data->status == 0)
+                                <td>Tidak</td>
+                            @elseif($data->status == 1)
+                                <td>Ya</td>
+                            @else
+                                 <td>Tidak</td>
+                            @endif
+
+                            @if($data->pilihan == 0)
+                                <td>Tidak</td>
+                            @elseif($data->pilihan == 1)
+                                <td>Ya</td>
+                            @else
+                                <td>Tidak</td>
+                            @endif
+
+                             @if(!empty($data->gambar) && is_file($imagepath.$data->gambar."n.jpg"))
+                                <td style="white-space: nowrap"><div class="modalphotos" >
+                                        {{ Html::image($imagepath.$data->gambar.'n.jpg',asset($imagepath.$data->gambar."jpg"),
+                                            array('class' => 'img-responsive ',
+                                            'id' => 'tampilgambar', 'width' => '50')) }}
+                                    </div></td>
+                            @elseif(!empty($data->gambar) && is_file($imagepath.$data->gambar))
+                                <td style="white-space: nowrap"><div class="modalphotos" >
+                                        {{ Html::image($imagepath.$data->gambar,asset($imagepath.$data->gambar),
+                                            array('class' => 'img-responsive ',
+                                            'id' => 'tampilgambar', 'width' => '50')) }}
+                                    </div></td>
+                            @else
+                                <td>{{ Html::image('images/no_image.jpg', 'a picture', array('class' => 'img-responsive',
+                                                'id' => 'tampilgambar', 'width' => '50')) }}</td>
+                            @endif
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
+            @endpermission
+            @permission('view.'.$kelas2.'_view')
+            <div class="tab-pane fade" id="tab_kategoriartikel">
+                <div class="input-group tabletools">
+                    <div class="input-group-addon"><i class="fa fa-search"></i></div>
+                    <input type="text" id="searchtext2" class="form-control" placeholder="Kata kunci pencarian..." autofocus>
+                </div>
+
+                <table class="table table-hover" id="dataTables-example2" width="100%">
+                    <thead class="bg-light-blue-active color-palette">
+                    <tr>
+                        <th data-sortable="false">#</th>
+                        <th hidden></th>
+                        <th>Nama Kategori </th>
+                        <th>Jumlah Artikel</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach($datas2 as $data)
+                        <tr>
+                            <td class="bg-aqua disabled color-palette"></td>
+                            <td hidden>{{ $data->id }}</td>
+                            @if(!empty($data->name))
+                                @if($data->id > 1)
+                                    <td>{{ $data->name }}</td>
+                                @else
+                                    <td>{{ $data->name }}</td>
+                                @endif
+                            @else
+                                <td>-</td>
+                            @endif
+
+                            @if($data->hasartikel->count() > 0)
+                                <td><a class="btn btn-default" disabled>{{ $data->jumlah }}</a></td>
+                            @else
+                                <td><a href="#" class="btn btn-default" disabled>{{ $data->hasartikel->count() }}</a> </td>
+                            @endif
+                        </tr>
+                    @endforeach
+
+                    </tbody>
+                </table>
+            </div>
+            @endpermission
         </div>
     </div>
+    @endpermission
+    <!--content-->
+
 </section>
 
-<!-- modal -->
-<!-- Hapus -->
-<div class="modal fade" id="modal1show" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-   {{ Form::model($datas, array('route' => array('admins.'.$kelas.'.destroy',$kelas), 'method' => 'delete')) }}
+{{-- modal --}}
+@permission('view.'.$kelas.'_view')
+<div class="modal fade" id="modalstatus" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    {{ Form::model($datas, array('route' => array('admins.'.$kelas.'.update_status'))) }}
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-light-blue-active color-palette">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title"><i class="fa fa-check-square"></i> Terbit Artikel</h4>
+            </div>
+            <div class="modal-body">
+                <input type="text" name="id" value="" id="modalstatus_id" hidden>
+                <h4 id="judulterbit"></h4>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-warning" id="modalbutton"><i class="fa fa-check"></i> Ya</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Batal</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+    {{ Form::close() }}
+</div>
+<div class="modal fade" id="modalpilihan" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    {{ Form::model($datas, array('route' => array('admins.'.$kelas.'.update_pilihan'))) }}
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-light-blue-active color-palette">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title"><i class="fa fa-check-square"></i> Artikel Pilihan</h4>
+            </div>
+            <div class="modal-body">
+                <input type="text" name="id" value="" id="modalpilihan_id" hidden>
+                <h4 id="judulpilihan"></h4>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-warning" id="modalbutton"><i class="fa fa-check"></i> Ya</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Batal</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+    {{ Form::close() }}
+</div>
+@endpermission
+@permission('view.'.$kelas2.'_view')
+<!-- tambah -->
+<div class="modal fade" id="modaltambahkategori" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+   {{ Form::open(array('route' => array('admins.'.$kelas2.'.store_kategori'),'data-toggle' => 'validator','role' => 'form')) }}
     <div class="modal-dialog">
       <div class="modal-content">
-        <div class="modal-header">
+        <div class="modal-header bg-light-blue-active color-palette">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title"><i class="fa fa-trash"></i> Hapus Artikel</h4>
+          <h4 class="modal-title "><i class="fa fa-plus"></i> Tambah Kategori Artikel</h4>
         </div>
         <div class="modal-body">
-          <h4>Menghapus artikel ini ?</h4>
-          <input type="text" name="id" value="" id="modal1id" hidden>
+          <h4>Menambah Kategori Artikel</h4>
+          <input type="text" name="id" value="" id="modaltambahkategori_id" hidden>
+            <div class="input-group">
+                <span class="input-group-addon"><i class="fa fa-font"></i></span>
+                {{ Form::text('name',null,array('class' => 'form-control',
+                  'placeholder' => 'Silahkan masukkan nama kategori artikel','autocomplete'=>'off','required'))}}
+            </div>
         </div>
         <div class="modal-footer">
-          <button type="submit" class="btn btn-warning" id="modalbutton"><i class="fa fa-check"></i> Iya</button>
-          <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i> Batal</button>
+              <button type="submit" class="btn btn-primary" id="modalbutton"><i class="fa fa-save"></i> Simpan</button>
+              <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Batal</button>
         </div>
       </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
    {{ Form::close() }}
 </div>
-<!-- /Hapus -->
-<!-- /.modal -->
-
+<!-- /tambah -->
+<!-- ubah -->
+<div class="modal fade" id="modalubahkategori" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+{{ Form::open(array('route' => array('admins.'.$kelas2.'.update_kategori',$kelas2), 'method' => 'put','data-toggle' => 'validator','role' => 'form')) }}
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header bg-light-blue-active color-palette">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title "><i class="fa fa-pencil-square-o"></i> Ubah Kategori Artikel</h4>
+        </div>
+        <div class="modal-body">
+          <h4>Mengubah kategori artikel</h4>
+          <input type="text" name="id" value="" id="modalubahkategori_id" hidden>
+            <div class="input-group">
+                <span class="input-group-addon"><i class="fa fa-font"></i></span>
+                {{ Form::text('name',null,array('class' => 'form-control','id'=>'modalubahkategori_text',
+                'placeholder' => 'Silahkan masukkan nama kategori artikel baru','autocomplete'=>'off','required'))}}
+           </div>
+        </div>
+        <div class="modal-footer">
+              <button type="submit" class="btn btn-primary" id="modalbutton"><i class="fa fa-save"></i> Simpan</button>
+              <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Batal</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+   {{ Form::close() }}
+</div>
+<!-- /ubah -->
+{{-- hapus --}}
+<div class="modal fade" id="modalhapus2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    {{ Form::model($datas2,array('route' => array('admins.'.$kelas2.'.destroy_kategori',$kelas2), 'method' => 'delete')) }}
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-red-active color-palette">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title"><i class="fa fa-trash fa-fw"></i> <span id="modalhapus_judul2"></span></h4>
+            </div>
+            <div class="modal-body">
+                <h4 style="font-size: 16px" id="modalhapus_detail2"></h4>
+                <input type="text" name="id" value="" id="modalhapus_id2" hidden>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-danger" id="modalbutton"><i class="fa fa-trash fa-fw"></i> Hapus</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times fa-fw"></i> Batal</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+    {{ Form::close() }}
+</div>
+@endpermission
+{{-- /modal --}}
 @stop
 
 @section('js')
     @include('admins._components.datatable_JS')
+    <script>
+        $(document).ready(function(){
+            $('a[data-toggle="tab"]').on( 'shown.bs.tab', function (e) {
+                $.fn.dataTable.tables( {visible: true, api: true} ).columns.adjust();
+            } );
+        });
+    </script>
+    @permission('view.'.$kelas.'_view')
     <script type="text/javascript" src="{{ URL::asset('admin/datatable.js') }}"></script>
     <script>
         new $.fn.dataTable.Buttons(table,{
             buttons: [
+                @permission('create.'.$kelas.'_create')
                 {
                     text: '<i class="fa fa-plus"></i> <u>T</u>ambah',
                     key: {
@@ -161,6 +336,8 @@ $imagepath = 'images_artikel/';
                         window.location.href = "{{URL::to('admins/'.$kelas.'/create')}}";
                     }
                 },
+                @endpermission
+                @permission('update.'.$kelas.'_update')
                 {
                     text: '<i class="fa fa-pencil"></i> <u>U</u>bah',
                     key: {
@@ -169,14 +346,18 @@ $imagepath = 'images_artikel/';
                     },
                     action: function(){
                         var id = $.map(table.rows({ selected: true }).data(),function(item){
-                            return item[0];
+                            return item[1];
                         });
                         var kelas = "{{ $kelas }}";
                         if(id != ""){
                             window.location.href =  kelas + "/" + id + "/edit";
+                        }else{
+                            $('#modalwarning').modal({show:true});
                         }
                     }
                 },
+                @endpermission
+                @permission('destroy.'.$kelas.'_destroy')
                 {
                     text: '<i class="fa fa-trash"></i> <u>H</u>apus',
                     key: {
@@ -185,14 +366,22 @@ $imagepath = 'images_artikel/';
                     },
                     action: function(){
                         var id = $.map(table.rows({ selected:true }).data(),function(item){
-                            return item[0];
+                            return item[1];
+                        });
+                        var judul = $.map(table.rows({ selected:true }).data(),function(item){
+                            return item[2];
                         });
                         if(id != ""){
-                            $('#modal1show').modal({show:true});
-                            $('#modal1id').attr('value',id);
+                            $('#modalhapus').modal({show:true});
+                                $('#modalhapus_id').attr('value',id);
+                                $('#modalhapus_judul').text('Hapus Artikel');
+                                $('#modalhapus_detail').text('Yakin menghapus artikel "' + judul + '" ?');
+                        }else{
+                            $('#modalwarning').modal({show:true});
                         }
                     }
                 }
+                @endpermission
             ]
         });
         table.buttons( 0, null ).container().prependTo(
@@ -200,42 +389,143 @@ $imagepath = 'images_artikel/';
         );
         new $.fn.dataTable.Buttons(table,{
             buttons: [
+                @permission('update_status.'.$kelas.'_update_status')
                 {
-                    text: 'Ubah Status Publikasi',
+                    text: '<i class="fa fa-check-square"></i> Penerbitan Artikel',
                     key: {
                         altKey: true,
                         key: 'u'
                     },
                     action: function(){
                         var id = $.map(table.rows({ selected: true }).data(),function(item){
-                            return item[0];
+                            return item[1];
                         });
-                        var kelas = "{{ $kelas }}";
+                        var judul = $.map(table.rows({ selected:true }).data(),function(item){
+                            return item[2];
+                        });
+                        var status = $.map(table.rows({ selected:true }).data(),function(item){
+                            return item[7];
+                        });
                         if(id != ""){
-                            window.location.href =  kelas + "/update_status/" + id;
+                            $('#modalstatus').modal({show:true});
+                            if(status !="Ya"){
+                                $('#judulterbit').text('Terbitkan artikel "' + judul + '"" ini?');
+                            }else{
+                                $('#judulterbit').text('Tidak menerbitkan artikel "' + judul + '"" ini?');
+                            }
+                            $('#modalstatus_id').attr('value',id);
+                        }else{
+                            $('#modalwarning').modal({show:true});
                         }
                     }
                 },
+                @endpermission
+                @permission('update_pilihan.'.$kelas.'_update_pilihan')
                 {
-                    text: 'Ubah Status Artikel Pilihan',
+                    text: '<i class="fa fa-dot-circle-o"></i> Artikel Pilihan',
                     key: {
                         altKey: true,
                         key: 'u'
                     },
                     action: function(){
                         var id = $.map(table.rows({ selected: true }).data(),function(item){
-                            return item[0];
+                            return item[1];
                         });
-                        var kelas = "{{ $kelas }}";
+                        var judul = $.map(table.rows({ selected:true }).data(),function(item){
+                            return item[2];
+                        });
+                        var status = $.map(table.rows({ selected:true }).data(),function(item){
+                            return item[8];
+                        });
                         if(id != ""){
-                            window.location.href =  kelas + "/update_pilihan/" + id;
+                            $('#modalpilihan').modal({show:true});
+                            if(status !="Ya"){
+                                $('#judulpilihan').text('Jadikan artikel "' + judul + '"" sebagai artikel pilihan?');
+                            }else{
+                                $('#judulpilihan').text('Tidak Jadikan artikel "' + judul + '"" sebagai artikel pilihan?');
+                            }
+                            $('#modalpilihan_id').attr('value',id);
+                        }else{
+                            $('#modalwarning').modal({show:true});
                         }
                     }
                 }
+                @endpermission
             ]
         });
         table.buttons( 0, null ).container().prependTo(
                 table.table().container()
         );
     </script>
+    @endpermission
+    @permission('view.'.$kelas2.'_view')
+    <script type="text/javascript" src="{{ URL::asset('admin/datatable2.js') }}"></script>
+    <script>
+        new $.fn.dataTable.Buttons(table2,{
+            buttons: [
+                @permission('create.'.$kelas2.'_create')
+                {
+                    text: '<i class="fa fa-plus"></i> <u>T</u>ambah',
+                    key: {
+                        altKey: true,
+                        key: 't'
+                    },
+                    action: function(){
+                        $('#modaltambahkategori').modal({show:true});
+                    }
+                },
+                @endpermission
+                @permission('update.'.$kelas2.'_update')
+                {
+                    text: '<i class="fa fa-pencil"></i> <u>U</u>bah',
+                    key: {
+                        altKey: true,
+                        key: 'u'
+                    },
+                    action: function(){
+                        var id = $.map(table2.rows({ selected: true }).data(),function(item){
+                            return item[1];
+                        });
+                        var id2 = $.map(table2.rows({ selected: true }).data(),function(item){
+                            return item[2];
+                        });
+                        if(id != ""){
+                            $('#modalubahkategori').modal({show:true});
+                            $('#modalubahkategori_id').attr('value',id);
+                            $('#modalubahkategori_text').attr('value',id2);
+                        }else{
+                            $('#modalwarning').modal({show:true});
+                        }
+                    }
+                },
+                @endpermission
+                @permission('destroy.'.$kelas2.'_destroy')
+                {
+                    text: '<i class="fa fa-trash"></i> <u>H</u>apus',
+                    key: {
+                        altKey: true,
+                        key: 'h'
+                    },
+                    action: function(){
+                        var id = $.map(table2.rows({ selected:true }).data(),function(item){
+                            return item[1];
+                        });
+                        if(id != ""){
+                            $('#modalhapus2').modal({show:true});
+                                $('#modalhapus_id2').attr('value',id);
+                                $('#modalhapus_judul2').text('Hapus Kategori Artikel');
+                                $('#modalhapus_detail2').text('Yakin menghapus kategori artikel ini ?');
+                        }else{
+                            $('#modalwarning').modal({show:true});
+                        }
+                    }
+                }
+                @endpermission
+            ]
+        });
+        table2.buttons( 0, null ).container().prependTo(
+                table2.table().container()
+        );
+    </script>
+    @endpermission
 @stop

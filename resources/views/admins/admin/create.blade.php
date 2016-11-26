@@ -13,7 +13,7 @@ $kelas="admin";
     </h1>
     <ol class="breadcrumb">
         <li><a href="{{ URL::to('admins')  }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li><a href="{{ route('admins.'.$kelas.'.index') }}"><i class="fa fa-user"></i> Kelola Admin</a></li>
+        <li><a href="{{ route('admins.'.$kelas.'.index') }}"><i class="fa fa-user-circle-o"></i> Kelola Admin</a></li>
         <li class="active"><i class="fa fa-plus"></i> {{ $title }}</li>
     </ol>
 </section>

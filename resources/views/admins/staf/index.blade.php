@@ -1,19 +1,16 @@
 <?php
 $title = "Kelola Staf";
-if($isall){
-    $title2 ="Semua CU";
-}else{
-    if(!empty($datas->first()->cuprimer))
-        $title2 ="CU " . $datas->first()->cuprimer->name;
-    else
-        $title2 ="Puskopdit BKCU Kalimantan";
-}
+
+if(!empty($datas->first()->cuprimer))
+    $title2 ="CU " . $datas->first()->cuprimer->name;
+else
+    $title2 ="Puskopdit BKCU Kalimantan";
+
 
 $kelas = "staf";
 $imagepath = "images_staf/";
 ?>
 @extends('admins._layouts.layout')
-
 
 @section('css')
     @include('admins._components.datatable_CSS')
@@ -23,7 +20,7 @@ $imagepath = "images_staf/";
     <!-- header -->
     <section class="content-header">
         <h1>
-            <i class="fa fa-archive"></i> {{ $title }}
+            <i class="fa fa-sitemap"></i> {{ $title }}
             <small>Mengelola Data Staf {!! $title2 !!}</small>
         </h1>
         <ol class="breadcrumb">
@@ -38,197 +35,188 @@ $imagepath = "images_staf/";
     @include('admins._layouts.alert')
     <!-- /Alert -->
         <!--content-->
-        <div class="box box-primary">
-            <div class="box-body">
-                <div class="row">
-                    <div class="col-sm-8 tabletools">
-                        <div class="input-group">
+        <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#tab_staf" data-toggle="tab">Staf</a></li>
+            </ul>
+            <div class="tab-content"> 
+                <div class="tab-pane fade in active" id="tab_staf">
+                    @if(Auth::user()->getCU() == '0')
+                        <div class="col-sm-8" style="padding: .2em ;">
+                    @else
+                        <div class="col-sm-12" style="padding: .2em ;">
+                    @endif
+                        <div class="input-group tabletools">
                             <div class="input-group-addon"><i class="fa fa-search"></i></div>
                             <input type="text" id="searchtext" class="form-control" placeholder="Kata kunci pencarian..." autofocus>
                         </div>
                     </div>
-                    <div class="col-sm-4 tabletools" >
-                        <?php $culists = App\Models\Cuprimer::orderBy('name','asc')->get(); ?>
-                        <div class="input-group">
-                            <div class="input-group-addon primary-color"><i class="fa fa-list"></i></div>
-                            <select class="form-control"  id="dynamic_select">
-                                <option {{ Request::is('admins/staf') ? 'selected' : '' }}
-                                        value="/admins/staf">SEMUA STAF</option>
-                                <option {{ Request::is('admins/staf/index_bkcu') ? 'selected' : '' }}
-                                        value="/admins/staf/index_bkcu">BKCU</option>
-                                @foreach($culists as $culist)
-                                    <option {{ Request::is('admins/staf/index_cu/'.$culist->id) ? 'selected' : '' }}
-                                            value="/admins/staf/index_cu/{{$culist->id}}">{{ $culist->name }}</option>
-                                @endforeach
-                            </select>
+                    @if(Auth::user()->getCU() == '0')
+                        <div class="col-sm-4" style="padding: .2em ;">
+                            <?php $culists = App\Models\Cuprimer::orderBy('name','asc')->get(); ?>
+                            <div class="input-group tabletools">
+                                <div class="input-group-addon primary-color"><i class="fa fa-users"></i> Staf CU</div>
+                                <select class="form-control"  id="dynamic_select">
+                                    <option {{ Request::is('admins/staf/') ? 'selected' : '' }}
+                                            value="/admins/staf/"><b>PUSKOPDIT BKCU Kalimantan</b></option>
+                                    @foreach($culists as $culist)
+                                        <option {{ Request::is('admins/staf/index_cu/'.$culist->id) ? 'selected' : '' }}
+                                                value="/admins/staf/index_cu/{{$culist->id}}"><b>{{ $culist->name }}</b></option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <table class="table table-bordered table-hover" id="dataTables-example">
-                    <thead>
-                    <tr class="bg-light-blue-active color-palette">
-                        <th hidden></th>
-                        <th></th>
-                        <th>Foto</th>
-                        <th>Nama </th>
-                        <th>Pekerjaan</th>
-                        <th>Tingkat</th>
-                        <th>Jenis Kelamin</th>
-                        @if(Request::is('admins/staf'))<th>Credit Union</th>@endif
-                        <th>Status</th>
-                        <th>Agama</th>
-                        <th>Pendidikan</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @foreach($datas as $data)
-                        <?php
-                            $telp = '-';
-                            $handphone = '-';
-                            $email = '-';
-                            $kota = '-';
-                            $alamat = '-';
-                            $pekerjaan = '-';
-                            $tingkat = '-';
-                            $pendidikan = '-';
-                            $organisasi = '-';
+                    @endif
+                    <table class="table table-hover" id="dataTables-example"  width="100%">
+                        <thead class="bg-light-blue-active color-palette">
+                            <tr>
+                                <th data-sortable="false">#</th>
+                                <th hidden></th>
+                                <th data-sortable="false">Foto</th>
+                                <th>Nama </th>
+                                <th>Jabatan</th>
+                                <th>Jenis Kelamin</th>
+                                <th>Status</th>
+                                <th>Agama</th>
+                                <th>Pendidikan</th>
+                                <th data-sortable="false"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($datas as $data)
+                            <?php
+                                $telp = '-';
+                                $handphone = '-';
+                                $email = '-';
+                                $kota = '-';
+                                $alamat = '-';
+                                $tingkat = '-';
+                                $pendidikan = '-';
+                                $organisasi = '-';
 
-                            if(!empty($data->telp)){
-                                $telp = $data->telp;
-                            }
-                            if(!empty($data->handphone)){
-                                $handphone = $data->handphone;
-                            }
-                            if(!empty($data->email)){
-                                $email = $data->email;
-                            }
-                            if(!empty($data->kota)){
-                                $kota = $data->kota;
-                            }
-                            if(!empty($data->alamat)){
-                                $newarr = explode("\n",$data->alamat);
-                                foreach($newarr as $str){
-                                    $status = $str;
+                                if(!empty($data->telp)){
+                                    $telp = $data->telp;
                                 }
-                            }
+                                if(!empty($data->handphone)){
+                                    $handphone = $data->handphone;
+                                }
+                                if(!empty($data->email)){
+                                    $email = $data->email;
+                                }
+                                if(!empty($data->kota)){
+                                    $kota = $data->kota;
+                                }
+                                if(!empty($data->alamat)){
+                                    $newarr = explode("\n",$data->alamat);
+                                    foreach($newarr as $str){
+                                        $status = $str;
+                                    }
+                                }
 
-                            $jabatans = \App\Models\StafRiwayat::where('id_staf','=',$data->id)
-                                            ->where('tipe','=',3)->get();
-                            $i = 0;
-                            foreach ($jabatans as $j){
-                                if($j->sekarang == "1"){
-                                    $pekerjaan += $j->name;
-                                    $i++;
-                                }
-                                if($j->keternagan2 != "Manajemen"){
-                                    $dateselesai = new Date($j->selesai);
-                                    $selesai = $dateselesai->format('Y');
-                                    if($selesai <= date("Y")){
-                                        if($i > 0){
-                                            $pekerjaan += $j->name;
-                                        }else{
-                                            $pekerjaan += $j->name;
+                                $jabatans = \App\Models\StafRiwayat::where('id_staf','=',$data->id)
+                                                ->where('tipe','=',3)->get();
+                                
+                                $pekerjaan = array();
+                                $i = 0;
+                                foreach ($jabatans as $j){
+                                    if($i < 1){
+                                        if($j->keterangan == $id){
+                                            if($j->keterangan2 == 'Manajemen'){
+                                                if($j->sekarang == "1"){
+                                                    $pekerjaan[] = $j->name;
+                                                    $i++;
+                                                }
+                                            }else{
+                                                $mulai = \Carbon\Carbon::createFromFormat('Y-m-d', $j->mulai)->format('Y');
+                                                $selesai = \Carbon\Carbon::createFromFormat('Y-m-d', $j->selesai)->format('Y');
+                                                $now =   \Carbon\Carbon::now()->format('Y');
+                                                if($selesai >= $now){
+                                                    $pekerjaan[] = $j->name.' periode '.$mulai.' - '.$selesai;
+                                                    $i++;
+                                                }
+                                            }
                                         }
                                     }
-                                    $i++;
                                 }
-                            }
-                        ?>
-                        <tr data-key-telp="{{ $telp }}"
-                            data-key-handphone="{{ $handphone }}"
-                            data-key-email="{{ $email }}"
-                            data-key-kota="{{ $kota }}"
-                            data-key-alamat="{{ $alamat }}"
-                        >
-                            <td hidden>{{$data->id}}</td>
-                            <td class="details-control" style="cursor: pointer"><i class="fa fa-bars"></i></td>
-                            @if(!empty($data->gambar) && is_file($imagepath.$data->gambar."n.jpg"))
-                                <td style="white-space: nowrap"><div class="modalphotos" >
-                                        {{ Html::image($imagepath.$data->gambar.'n.jpg',asset($imagepath.$data->gambar."jpg"),
-                                         array('class' => 'img-responsive',
-                                        'id' => 'tampilgambar', 'width' => '50')) }}
-                                    </div></td>
-                            @elseif(!empty($data->gambar) && is_file($imagepath.$data->gambar))
-                                <td style="white-space: nowrap"><div class="modalphotos" >
-                                        {{ Html::image($imagepath.$data->gambar,asset($imagepath.$data->gambar),
-                                            array('class' => 'img-responsive ',
+                            ?>
+                            <tr data-key-telp="{{ $telp }}"
+                                data-key-handphone="{{ $handphone }}"
+                                data-key-email="{{ $email }}"
+                                data-key-kota="{{ $kota }}"
+                                data-key-alamat="{{ $alamat }}"
+                            >
+                                <td class="bg-aqua disabled color-palette"></td>    
+                                <td hidden>{{$data->id}}</td>
+                                @if(!empty($data->gambar) && is_file($imagepath.$data->gambar."n.jpg"))
+                                    <td style="white-space: nowrap"><div class="modalphotos" >
+                                            {{ Html::image($imagepath.$data->gambar.'n.jpg',asset($imagepath.$data->gambar."jpg"),
+                                             array('class' => 'img-responsive',
                                             'id' => 'tampilgambar', 'width' => '50')) }}
-                                    </div></td>
-                            @else
-                                @if($data->kelamin == "Wanita")
-                                    <td>{{ Html::image('images/no_image_woman.jpg', 'a picture', array('class' => 'img-responsive',
-                                                        'id' => 'tampilgambar', 'width' => '50')) }}</td>
+                                        </div></td>
+                                @elseif(!empty($data->gambar) && is_file($imagepath.$data->gambar))
+                                    <td style="white-space: nowrap"><div class="modalphotos" >
+                                            {{ Html::image($imagepath.$data->gambar,asset($imagepath.$data->gambar),
+                                                array('class' => 'img-responsive ',
+                                                'id' => 'tampilgambar', 'width' => '50')) }}
+                                        </div></td>
                                 @else
-                                    <td>{{ Html::image('images/no_image_man.jpg', 'a picture', array('class' => 'img-responsive',
-                                                        'id' => 'tampilgambar', 'width' => '50')) }}</td>
-                                @endif
-                            @endif
-
-                            @if(!empty($data->name))
-                                <td>{!! $data->name !!}</td>
-                            @else
-                                <td>-</td>
-                            @endif
-
-                            @if(!empty($pekerjaan))
-                                <td>{!! $pekerjaan !!}</td>
-                            @else
-                                <td>-</td>
-                            @endif
-
-                            @if(!empty($data->tingkat))
-                                @if($data->tingkat == 1 )
-                                    <td>Pengurus Periode {!! $data->periode1 !!} - {!! $data->periode2 !!}</td>
-                                @elseif($data->tingkat == 2)
-                                    <td>Pengawas Periode {!! $data->periode1 !!} - {!! $data->periode2 !!}</td>
-                                @elseif($data->tingkat == 3)
-                                    <td>Manajemen</td>
-                                @endif
-                            @else
-                                <td>-</td>
-                            @endif
-
-                            @if(!empty($data->kelamin))
-                                <td>{!! $data->kelamin !!}</td>
-                            @else
-                                <td>-</td>
-                            @endif
-
-                            @if(Request::is('admins/staf'))
-                                @if(!empty($data->cuprimer))
-                                    <td>{!! $data->cuprimer->name !!}</td>
-                                @else
-                                    @if($data->cu == 0)
-                                        <td>Puskopdit BKCU Kalimantan</td>
+                                    @if($data->kelamin == "Wanita")
+                                        <td>{{ Html::image('images/no_image_woman.jpg', 'a picture', array('class' => 'img-responsive',
+                                                            'id' => 'tampilgambar', 'width' => '50')) }}</td>
                                     @else
-                                        <td>-</td>
+                                        <td>{{ Html::image('images/no_image_man.jpg', 'a picture', array('class' => 'img-responsive',
+                                                            'id' => 'tampilgambar', 'width' => '50')) }}</td>
                                     @endif
                                 @endif
-                            @endif
 
-                            @if(!empty($data->status))
-                                <td>{!! $data->status !!}</td>
-                            @else
-                                <td>-</td>
-                            @endif
+                                @if(!empty($data->name))
+                                    <td>{!! $data->name !!}</td>
+                                @else
+                                    <td>-</td>
+                                @endif
 
-                            @if(!empty($data->agama))
-                                <td>{!! $data->agama !!}</td>
-                            @else
-                                <td>-</td>
-                            @endif
+                                @if(!empty($pekerjaan))
+                                    <td>
+                                    @foreach($pekerjaan as $p)
+                                        {!! $p  !!}<br/>
+                                    @endforeach
+                                    </td>
+                                @else
+                                    <td>-</td>
+                                @endif
 
-                            @if(!empty($data->pendidikan))
-                                <td>{!! $data->pendidikan !!}</td>
-                            @else
-                                <td>-</td>
-                            @endif
-                        </tr>
-                    @endforeach
+                                @if(!empty($data->kelamin))
+                                    <td>{!! $data->kelamin !!}</td>
+                                @else
+                                    <td>-</td>
+                                @endif
 
-                    </tbody>
-                </table>
-            </div>
+                                @if(!empty($data->status))
+                                    <td>{!! $data->status !!}</td>
+                                @else
+                                    <td>-</td>
+                                @endif
+
+                                @if(!empty($data->agama))
+                                    <td>{!! $data->agama !!}</td>
+                                @else
+                                    <td>-</td>
+                                @endif
+
+                                @if(!empty($data->pendidikan))
+                                    <td>{!! $data->pendidikan !!}</td>
+                                @else
+                                    <td>-</td>
+                                @endif
+
+                                <td class="details-control" style="cursor: pointer"><i class="fa fa-bars"></i></td>
+                            </tr>
+                        @endforeach
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>    
         </div>
     </section>
     <!-- modal -->
@@ -274,6 +262,7 @@ $imagepath = "images_staf/";
 
         new $.fn.dataTable.Buttons(table,{
             buttons: [
+                @permission('create.'.$kelas.'_create')
                 {
                     text: '<i class="fa fa-plus"></i> <u>T</u>ambah',
                     key: {
@@ -284,6 +273,8 @@ $imagepath = "images_staf/";
                         window.location.href = "{{URL::to('admins/'.$kelas.'/create')}}";
                     }
                 },
+                @endpermission
+                @permission('update.'.$kelas.'_update')
                 {
                     text: '<i class="fa fa-pencil"></i> <u>U</u>bah',
                     key: {
@@ -292,14 +283,19 @@ $imagepath = "images_staf/";
                     },
                     action: function(){
                         var id = $.map(table.rows({ selected: true }).data(),function(item){
-                            return item[0];
+                            return item[1];
                         });
                         var kelas = "{{ $kelas }}";
                         if(id != ""){
                             window.location.href = "/admins/" + kelas + "/" + id + "/edit";
+                        }else{
+                            $('#modalwarning').modal({show:true});
                         }
+
                     }
                 },
+                @endpermission
+                @permission('destroy.'.$kelas.'_destroy')
                 {
                     text: '<i class="fa fa-trash"></i> <u>H</u>apus',
                     key: {
@@ -308,14 +304,19 @@ $imagepath = "images_staf/";
                     },
                     action: function(){
                         var id = $.map(table.rows({ selected:true }).data(),function(item){
-                            return item[0];
+                            return item[1];
                         });
                         if(id != ""){
-                            $('#modal1show').modal({show:true});
-                            $('#modal1id').attr('value',id);
+                            $('#modalhapus').modal({show:true});
+                                $('#modalhapus_id').attr('value',id);
+                                $('#modalhapus_judul').text('Hapus Staf');
+                                $('#modalhapus_detail').text('Yakin menghapus staf ini ?');
+                        }else{
+                            $('#modalwarning').modal({show:true});
                         }
                     }
                 }
+                @endpermission
             ]
         });
         table.buttons( 0, null ).container().prependTo(
@@ -323,18 +324,23 @@ $imagepath = "images_staf/";
         );
         new $.fn.dataTable.Buttons(table,{
             buttons: [
+                @permission('view.stafdetail_view')
                 {
                     text: '<i class="fa fa-database"></i> Detail',
                     action: function(){
                         var id = $.map(table.rows({ selected: true }).data(),function(item){
-                            return item[0];
+                            return item[1];
                         });
                         var kelas = "{{ $kelas }}";
                         if(id != ""){
                             window.location.href = "/admins/" + kelas + "/" + id + "/detail";
+                        }else{
+                            $('#modalwarning').modal({show:true});
                         }
+
                     }
                 }
+                @endpermission
             ]
         });
         table.buttons( 0, null ).container().prependTo(
@@ -372,9 +378,6 @@ $imagepath = "images_staf/";
                 }
             });
         });
-
-
-
 
     </script>
 @stop

@@ -13,15 +13,15 @@ $kelas ='kegiatan';
     <div class="box-body">
         <div class="row">
             <div class="col-sm-6">
-                <div class="form-group">
-                    <h4>Nama Kegiatan</h4>
+                <div class="form-group has-feedback">
+                    <h4>Nama</h4>
                     <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-font"></i></span>
                         {{ Form::text('name',null,array('class' => 'form-control', 'placeholder' => 'Silahkan masukkan nama kegiatan',
-                          'required','min-length' => '5','data-error' => 'Nama kegiatan wajib diisi dan minimal 5 karakter'))}}
+                          'required','min-length' => '5'))}}
+                        <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                     </div>
-                    <div class="help-block with-errors"></div>
-                    {!! $errors->first('name', '<p class="text-warning">:message</p>') !!}
+                    <div class="help-block">Nama kegiatan harus diisi dan minimal 5 karakter.</div>
                 </div>
             </div>
             <div class="col-sm-6">
@@ -29,7 +29,7 @@ $kelas ='kegiatan';
                     <h4>Wilayah / District Office</h4>
                     <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-list"></i></span>
-                        <select class="form-control" name="wilayah" required data-error="Wilayah wajib dipilih">
+                        <select class="form-control" name="wilayah" required>
                             <option value="" selected disabled>Silahkan pilih wilayah pelatihan</option>
                             <option value="Barat"
                             @if(!empty($data))
@@ -61,8 +61,7 @@ $kelas ='kegiatan';
                             >Bersama</option>
                         </select>
                     </div>
-                    <div class="help-block with-errors"></div>
-                    {!! $errors->first('wilayah', '<p class="text-warning">:message</p>') !!}
+                    <div class="help-block">Wilayah / Disrtict Office kegiatan harus dipilih.</div>
                 </div>
             </div>
             <div class="col-sm-6">
@@ -77,9 +76,9 @@ $kelas ='kegiatan';
                         }
                         ?>
                         <input type="text" name="tanggal" value="@if(!empty($tanggal)){{$tanggal}}@endif" class="form-control"
-                               data-inputmask="'alias': 'date'" placeholder="dd/mm/yyyy" />
+                               data-inputmask="'alias': 'date'" placeholder="dd/mm/yyyy" required />
                     </div>
-                    {!! $errors->first('tanggal', '<p class="text-warning">:message</p>') !!}
+                    <div class="help-block">Tanggal kegiatan dimulai harus diisi.</div>
                 </div>
             </div>
             <div class="col-sm-6">
@@ -94,46 +93,44 @@ $kelas ='kegiatan';
                         }
                         ?>
                         <input type="text" name="tanggal2" value="@if(!empty($tanggal)){{$tanggal}}@endif" class="form-control"
-                               data-inputmask="'alias': 'date'" placeholder="dd/mm/yyyy" />
+                               data-inputmask="'alias': 'date'" placeholder="dd/mm/yyyy" required />
                     </div>
-                    {!! $errors->first('tanggal2', '<p class="text-warning">:message</p>') !!}
+                    <div class="help-block">Tanggal kegiatan selesai harus diisi.</div>
                 </div>
             </div>
             <div class="col-sm-6">
-                <div class="form-group">
+                <div class="form-group has-feedback">
                     <h4>Tempat</h4>
                     <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-font"></i></span>
                         {{ Form::text('tempat',null,array('class' => 'form-control', 'placeholder' => 'Silahkan masukkan tempat kegiatan',
-                          'required','data-error' => 'Tempat wajib diisi','autocomplete'=>'off'))}}
+                          'required','autocomplete'=>'off'))}}
+                        <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                     </div>
-                    <div class="help-block with-errors"></div>
-                    {!! $errors->first('tempat', '<p class="text-warning">:message</p>') !!}
+                    <div class="help-block">Tempat kegiatan harus diisi.</div>
                 </div>
             </div>
             <div class="col-sm-6">
-                <div class="form-group">
+                <div class="form-group has-feedback">
                     <h4>Sasaran</h4>
                     <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-font"></i></span>
                         {{ Form::text('sasaran',null,array('class' => 'form-control','placeholder' => 'Silahkan masukkan sasaran kegiatan',
-                          'required','data-error' => 'Sasaran wajib diisi','autocomplete'=>'off'))}}
+                          'required','autocomplete'=>'off'))}}
+                        <span class="glyphicon form-control-feedback" aria-hidden="true"></span>  
                     </div>
-                    <div class="help-block with-errors"></div>
-                    {!! $errors->first('sasaran', '<p class="text-warning">:message</p>') !!}
+                    <div class="help-block">Sasaran kegiatan harus diisi.</div>
                 </div>
             </div>
             <div class="col-sm-6">
                 <h4>Tujuan</h4>
-                <div class="texttujuan">
-                    @if(!empty($data->tujuan)){!! $data->tujuan !!}@endif
-                </div>
+                <textarea id="texttujuan" name="tujuan" 
+                    >@if(!empty($data->tujuan)){{ $data->tujuan }}@endif</textarea>
             </div>
             <div class="col-sm-6">
                 <h4>Pokok Bahasan</h4>
-                <div class="textpokok">
-                    @if(!empty($data->pokok)){!! $data->pokok !!}@endif
-                </div>
+                <textarea id="textpokok" name="pokok"
+                    >@if(!empty($data->pokok)){{ $data->pokok }}@endif</textarea>  
             </div>
         </div>
     </div>
@@ -147,35 +144,36 @@ $kelas ='kegiatan';
 
 @section('js')
     <script type="text/javascript" src="{{ URL::asset('plugins/summernote/summernote.js') }}"></script>
+    <script type="text/javascript" src="{{ URL::asset('plugins/summernote/plugins/summernote-cleaner.js') }}"></script>
     <script>
-        $('.texttujuan').summernote({
+        $('#texttujuan').summernote({
             placeholder:'Silahkan paparkan tujuan dilaksanakannya kegiatan ini...',
             minHeight: 100,
             toolbar:[
                 ['style', ['bold', 'italic', 'underline', 'clear']],
                 ['para', ['ul', 'ol']]
             ],
-            callbacks: {
-                onPaste: function (e) {
-                    var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
-                    e.preventDefault();
-                    document.execCommand('insertText', false, bufferText);
-                }
+            cleaner:{
+                notTime:2400, // Time to display Notifications.
+                action:'paste', // both|button|paste 'button' only cleans via toolbar button, 'paste' only clean when pasting content, both does both options.
+                newline:'<br>', // Summernote's default is to use '<p><br></p>'
+                notStyle:'position:absolute;bottom:0;left:2px', // Position of Notification
+                icon:'<i class="note-icon">Clean Word Format</i>'
             }
         });
-        $('.textpokok').summernote({
+        $('#textpokok').summernote({
             placeholder:'Silahkan paparkan pokok pembahasan kegiatan ini...',
             minHeight: 100,
             toolbar:[
                 ['style', ['bold', 'italic', 'underline', 'clear']],
                 ['para', ['ul', 'ol']]
             ],
-            callbacks: {
-                onPaste: function (e) {
-                    var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
-                    e.preventDefault();
-                    document.execCommand('insertText', false, bufferText);
-                }
+            cleaner:{
+                notTime:2400, // Time to display Notifications.
+                action:'paste', // both|button|paste 'button' only cleans via toolbar button, 'paste' only clean when pasting content, both does both options.
+                newline:'<br>', // Summernote's default is to use '<p><br></p>'
+                notStyle:'position:absolute;bottom:0;left:2px', // Position of Notification
+                icon:'<i class="note-icon">Clean Word Format</i>'
             }
         });
     </script>

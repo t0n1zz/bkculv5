@@ -34,10 +34,10 @@ Route::get('attribution',array('as' => 'attribution','uses' => 'PublicController
 Route::get('sitemap',array('as' => 'sitemap','uses' => 'PublicController@sitemap'));
 Route::post('saran',array('as' => 'saran', 'uses' => 'PublicController@saran'));
 
-Route::group(array('prefix' => 'cu'), function(){ 
-    Route::get('login',array('as' => 'cu.login','uses' => 'AdminAuthController@getLogin_public'));
-    Route::post('login',array('as' =>'cu.login.post','uses' => 'AdminAuthController@postLogin_public'));
-    Route::get('logout',array('as' => 'cu.logout','uses' => 'AdminAuthController@getLogout_public'));
+Route::group(array('prefix' => 'cu'), function(){
+    Route::get('login',array('as' => 'cu.login','uses' => 'AuthController@getLogin_public'));
+    Route::post('login',array('as' =>'cu.login.post','uses' => 'AuthController@postLogin_public'));
+    Route::get('logout',array('as' => 'cu.logout','uses' => 'AuthController@getLogout_public'));
 });
 
 Route::get('cu',array('as' => 'cu','middleware' => 'auth.public', function()
@@ -46,23 +46,23 @@ Route::get('cu',array('as' => 'cu','middleware' => 'auth.public', function()
 }));
 
 Route::group(array('prefix'=>'cu','middleware' => 'auth.public'),function(){
-    Route::get('edit_info',array('as' => 'cu.edit_info','uses' => 'AdminCuprimerController@edit_info_public'));
-    Route::get('edit_deskripsi',array('as' => 'cu.edit_deskripsi','uses' => 'AdminCuprimerController@edit_deskripsi_public'));
-    Route::post('update_info',array('as' => 'cu.update_info','uses' => 'AdminCuprimerController@update_info_public'));
-    Route::post('update_deskripsi',array('as' => 'cu.update_deskripsi','uses' => 'AdminCuprimerController@update_deskripsi_public'));
-    Route::get('kelola_kegiatan',array('as' => 'cu.kelola_kegiatan','uses' => 'AdminKegiatanController@index_public'));
-    Route::get('daftar_kegiatan/{id}',array('as' => 'cu.daftar_kegiatan','uses' => 'AdminKegiatanController@daftar_kegiatan'));
-    Route::get('kelola_staf',array('as' => 'cu.kelola_staf','uses' => 'AdminStafController@index_public'));
-    Route::get('create_staf',array('as' => 'cu.create_staf','uses' => 'AdminStafController@create_public'));
-    Route::get('detail_staf/{id}',array('as' => 'cu.detail_staf','uses' => 'AdminStafController@detail_public'));
-    Route::get('edit_staf/{id}',array('as' => 'cu.edit_staf','uses' => 'AdminStafController@edit_public'));
-    Route::delete('destroy_staf',array('as' => 'cu.destroy_staf','uses' => 'AdminStafController@destroy_public'));
+    Route::get('edit_info',array('as' => 'cu.edit_info','uses' => 'CuprimerController@edit_info_public'));
+    Route::get('edit_deskripsi',array('as' => 'cu.edit_deskripsi','uses' => 'CuprimerController@edit_deskripsi_public'));
+    Route::post('update_info',array('as' => 'cu.update_info','uses' => 'CuprimerController@update_info_public'));
+    Route::post('update_deskripsi',array('as' => 'cu.update_deskripsi','uses' => 'CuprimerController@update_deskripsi_public'));
+    Route::get('kelola_kegiatan',array('as' => 'cu.kelola_kegiatan','uses' => 'KegiatanController@index_public'));
+    Route::get('daftar_kegiatan/{id}',array('as' => 'cu.daftar_kegiatan','uses' => 'KegiatanController@daftar_kegiatan'));
+    Route::get('kelola_staf',array('as' => 'cu.kelola_staf','uses' => 'StafController@index_public'));
+    Route::get('create_staf',array('as' => 'cu.create_staf','uses' => 'StafController@create_public'));
+    Route::get('detail_staf/{id}',array('as' => 'cu.detail_staf','uses' => 'StafController@detail_public'));
+    Route::get('edit_staf/{id}',array('as' => 'cu.edit_staf','uses' => 'StafController@edit_public'));
+    Route::delete('destroy_staf',array('as' => 'cu.destroy_staf','uses' => 'StafController@destroy_public'));
 });
 
 Route::group(array('prefix' => 'admins'), function(){
-    Route::get('login',array('as' => 'admins.login','uses' => 'AdminAuthController@getLogin'));
-    Route::post('login',array('as' =>'admins.login.post','uses' => 'AdminAuthController@postLogin'));
-    Route::get('logout',array('as' => 'admins.logout','uses' => 'AdminAuthController@getLogout'));
+    Route::get('login',array('as' => 'admins.login','uses' => 'AuthController@getLogin'));
+    Route::post('login',array('as' =>'admins.login.post','uses' => 'AuthController@postLogin'));
+    Route::get('logout',array('as' => 'admins.logout','uses' => 'AuthController@getLogout'));
 });
 
 Route::get('admins',array('as' => 'admins','middleware' => 'auth', function()
@@ -72,152 +72,357 @@ Route::get('admins',array('as' => 'admins','middleware' => 'auth', function()
 
 Route::group(array('prefix' => 'admins','middleware' => 'auth'), function(){
 // artikel
-    Route::resource('artikel','AdminArtikelController',array('except' => array('show')));
-    Route::get('artikel/index_kategori/{id}',array(
-        'as' => 'admins.artikel.index_kategori',
-        'uses' => 'AdminArtikelController@index_kategori'
-    ));
-    Route::post('artikel/update_kategori',array(
-        'as' => 'admins.artikel.update_kategori',
-        'uses' => 'AdminArtikelController@update_kategori'
-    ));
-    Route::get('artikel/update_status/{id}',array(
-        'as' => 'admins.artikel.update_status',
-        'uses' => 'AdminArtikelController@update_status'
-    ));
-    Route::get('artikel/update_pilihan/{id}',array(
-        'as' => 'admins.artikel.update_pilihan',
-        'uses' => 'AdminArtikelController@update_pilihan'
-    ));
-// curpimer       
-    Route::resource('cuprimer','AdminCuprimerController',array('except' => array('show')));
-    Route::get('cuprimer/index_wilayah/{id}',array(
-        'as' => 'admins.cuprimer.index_wilayah',
-        'uses' => 'AdminCuprimerController@index_wilayah'
-    ));
-    Route::post('cuprimer/update_wilayah',array(
-        'as' => 'admins.cuprimer.update_wilayah',
-        'uses' => 'AdminCuprimerController@update_wilayah'
-    ));
-    Route::post('cuprimer/update_berdiri',array(
-        'as' => 'admins.cuprimer.update_berdiri',
-        'uses' => 'AdminCuprimerController@update_berdiri'
-    ));
-    Route::post('cuprimer/update_bergabung',array(
-        'as' => 'admins.cuprimer.update_bergabung',
-        'uses' => 'AdminCuprimerController@update_bergabung'
-    ));
-//perkembangan CU
-    Route::resource('perkembangancu','AdminPerkembangancuController',array('except' => array('show')));
-    Route::post('perkembangancu/importexcel',array(
-        'as' => 'admins.perkembangancu.importexcel',
-        'uses' => 'AdminPerkembangancuController@importexcel'
-    ));
-    Route::get('perkembangancu/index_cu/{id}',array(
-        'as' => 'admins.perkembangancu.index_cu',
-        'uses' => 'AdminPerkembangancuController@index_cu'));
-    Route::get('perkembangancu/index_periode/{periode}',array(
-        'as' => 'admins.perkembangancu.index_periode',
-        'uses' => 'AdminPerkembangancuController@index_periode'));
+    Route::get('artikel', [
+        'as'           => 'admins.artikel.index',           
+        'uses'         => 'ArtikelController@index',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'view.artikel_view']);
+    Route::get('artikel/create', [
+        'as'           => 'admins.artikel.create',
+        'uses'         => 'ArtikelController@create',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'create.artikel_create']);
+    Route::get('artikel/{artikel}/edit', [
+        'as'           => 'admins.artikel.edit',
+        'uses'         => 'ArtikelController@edit',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'update.artikel_update']);
+    Route::post('artikel', [
+        'as'           => 'admins.artikel.store',
+        'uses'         => 'ArtikelController@store',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'create.artikel_create']);
+    Route::put('artikel/{artikel}', [
+        'as'           => 'admins.artikel.update',
+        'uses'         => 'ArtikelController@update',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'update.artikel_update']);
+    Route::delete('artikel/{artikel}', [
+        'as'           => 'admins.artikel.destroy',
+        'uses'         => 'ArtikelController@destroy',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'destroy.artikel_destroy']);
+    Route::post('artikel/update_status', [
+        'as'           => 'admins.artikel.update_status',
+        'uses'         => 'ArtikelController@update_status',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'update_kategori.artikel_update_status']);
+    Route::post('artikel/update_pilihan', [
+        'as'           => 'admins.artikel.update_pilihan',
+        'uses'         => 'ArtikelController@update_pilihan',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'update_kategori.artikel_update_pilihan']);
+    Route::post('kategoriartikel', [
+        'as'           => 'admins.kategoriartikel.store_kategori',
+        'uses'         => 'ArtikelController@store_kategori',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'create.kategoriartikel_create']);
+    Route::put('kategoriartikel/update2', [
+        'as'           => 'admins.kategoriartikel.update_kategori',
+        'uses'         => 'ArtikelController@update_kategori',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'update.kategoriartikel_update']);
+    Route::delete('kategoriartikel/{kategoriartikel}', [
+        'as'           => 'admins.kategoriartikel.destroy_kategori',
+        'uses'         => 'ArtikelController@destroy_kategori',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'destroy.kategoriartikel_destroy']);
+// curpimer
+    Route::get('cuprimer', [
+        'as'           => 'admins.cuprimer.index',           
+        'uses'         => 'CuprimerController@index',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'view.cuprimer_view']);
+    Route::get('cuprimer/create', [
+        'as'           => 'admins.cuprimer.create',
+        'uses'         => 'CuprimerController@create',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'create.cuprimer_create']);
+    Route::get('cuprimer/{cuprimer}/edit', [
+        'as'           => 'admins.cuprimer.edit',
+        'uses'         => 'CuprimerController@edit',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'update.cuprimer_update']);
+    Route::post('cuprimer', [
+        'as'           => 'admins.cuprimer.store',
+        'uses'         => 'CuprimerController@store',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'create.cuprimer_create']);
+    Route::put('cuprimer/{cuprimer}', [
+        'as'           => 'admins.cuprimer.update',
+        'uses'         => 'CuprimerController@update',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'update.cuprimer_update']);
+    Route::delete('cuprimer/{cuprimer}', [
+        'as'           => 'admins.cuprimer.destroy',
+        'uses'         => 'CuprimerController@destroy',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'destroy.cuprimer_destroy']);
+    Route::post('wilayahcuprimer', [
+        'as'           => 'admins.wilayahcuprimer.store_wilayah',
+        'uses'         => 'CuprimerController@store_wilayah',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'create.wilayahcuprimer_create']);
+    Route::put('wilayahcuprimer/update2', [
+        'as'           => 'admins.wilayahcuprimer.update_wilayah',
+        'uses'         => 'CuprimerController@update_wilayah',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'update.wilayahcuprimer_update']);
+    Route::delete('wilayahcuprimer/{wilayahcuprimer}', [
+        'as'           => 'admins.wilayahcuprimer.destroy_wilayah',
+        'uses'         => 'CuprimerController@destroy_wilayah',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'destroy.wilayahcuprimer_destroy']);
+//laporan CU
+    Route::get('laporancu', [
+        'as'           => 'admins.laporancu.index',           
+        'uses'         => 'LaporanCuController@index',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'view.laporancu_view']);
+    Route::get('laporancu/create', [
+        'as'           => 'admins.laporancu.create',
+        'uses'         => 'LaporanCuController@create',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'create.laporancu_create|create.laporancudetail_create']);
+    Route::get('laporancu/{laporancu}/edit', [
+        'as'           => 'admins.laporancu.edit',
+        'uses'         => 'LaporanCuController@edit',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'update.laporancu_update|update.laporancudetail_update']);
+    Route::post('laporancu', [
+        'as'           => 'admins.laporancu.store',
+        'uses'         => 'LaporanCuController@store',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'create.laporancu_create|create.laporancudetail_create']);
+    Route::put('laporancu/{laporancu}', [
+        'as'           => 'admins.laporancu.update',
+        'uses'         => 'LaporanCuController@update',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'update.laporancu_update|update.laporancudetail_update']);
+    Route::delete('laporancu/{laporancu}', [
+        'as'           => 'admins.laporancu.destroy',
+        'uses'         => 'LaporanCuController@destroy',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'destroy.laporancu_destroy|destroy.laporancudetail_destroy']);
+    Route::post('laporancu/importexcel', [
+        'as'           => 'admins.laporancu.importexcel',
+        'uses'         => 'LaporanCuController@importexcel',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'create.laporancu_upload']);
+    Route::get('laporancu/index_periode/{periode}', [
+        'as'           => 'admins.laporancu.index_periode',
+        'uses'         => 'LaporanCuController@index_periode',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'create.laporancu_view']);
+    Route::get('laporancu/index_bkcu', [
+        'as'           => 'admins.laporancu.index_bkcu',
+        'uses'         => 'LaporanCuController@index_bkcu',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'view.laporanbkcu_view']);
+    Route::get('laporancu/index_cu/{id}', [
+        'as'           => 'admins.laporancu.index_cu',
+        'uses'         => 'LaporanCuController@index_cu',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'view.laporancudetail_view']);
 //tp CU
-    Route::resource('tpcu','AdminTpcuController',array('except' => array('show')));
-    Route::get('tpcu/index_cu/{id}',array(
-        'as' => 'admins.tpcu.index_cu',
-        'uses' => 'AdminTpcuController@index_cu'));
-// staf    
-    Route::resource('staf','AdminStafController',array('except' => array('show')));
-    Route::get('staf/index_bkcu',array(
-        'as' => 'admins.staf.index_bkcu',
-        'uses' => 'AdminStafController@index_bkcu'
-    ));
+    Route::get('tpcu', [
+        'as'           => 'admins.tpcu.index',           
+        'uses'         => 'TpcuController@index',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'view.tpcu_view']);
+    Route::get('tpcu/create', [
+        'as'           => 'admins.tpcu.create',
+        'uses'         => 'TpcuController@create',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'create.tpcu_create']);
+    Route::get('tpcu/{tpcu}/edit', [
+        'as'           => 'admins.tpcu.edit',
+        'uses'         => 'TpcuController@edit',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'update.tpcu_update']);
+    Route::post('tpcu', [
+        'as'           => 'admins.tpcu.store',
+        'uses'         => 'TpcuController@store',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'create.tpcu_create']);
+    Route::put('tpcu/{tpcu}', [
+        'as'           => 'admins.tpcu.update',
+        'uses'         => 'TpcuController@update',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'update.tpcu_update']);
+    Route::delete('tpcu/{tpcu}', [
+        'as'           => 'admins.tpcu.destroy',
+        'uses'         => 'TpcuController@destroy',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'destroy.tpcu_destroy']);
+     Route::get('tpcu/index_cu/{id}', [
+        'as'           => 'admins.tpcu.index_cu',           
+        'uses'         => 'TpcuController@index_cu',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'view.tpcu_view']);
+// staf
+    Route::get('staf', [
+        'as'           => 'admins.staf.index',           
+        'uses'         => 'StafController@index',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'view.staf_view']);
+    Route::get('staf/create', [
+        'as'           => 'admins.staf.create',
+        'uses'         => 'StafController@create',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'create.staf_create']);
+    Route::get('staf/{staf}/edit', [
+        'as'           => 'admins.staf.edit',
+        'uses'         => 'StafController@edit',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'update.staf_update']);
+    Route::post('staf', [
+        'as'           => 'admins.staf.store',
+        'uses'         => 'StafController@store',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'create.staf_create']);
+    Route::put('staf/{staf}', [
+        'as'           => 'admins.staf.update',
+        'uses'         => 'StafController@update',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'update.staf_update']);
+    Route::delete('staf/{staf}', [
+        'as'           => 'admins.staf.destroy',
+        'uses'         => 'StafController@destroy',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'destroy.staf_destroy']);
     Route::get('staf/allstaf',array(
         'as' => 'admins.staf.allstaf',
-        'uses' => 'AdminStafController@allstaf'
+        'uses' => 'StafController@allstaf'
     ));
+    Route::get('staf/index_cu/{$id}', [
+        'as'           => 'admins.staf.index_cu',
+        'uses'         => 'StafController@index_cu',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'view.staf_view']);
     Route::get('staf/index_cu/{id}',array(
         'as' => 'admins.staf.index_cu',
-        'uses' => 'AdminStafController@index_cu'));
+        'uses' => 'StafController@index_cu'));
     Route::get('staf/{id}/detail',array(
         'as' => 'admins.staf.detail',
-        'uses' => 'AdminStafController@detail'
+        'uses' => 'StafController@detail'
     ));
     Route::post('staf/riwayat',array(
         'as' => 'admins.staf.riwayat',
-        'uses' => 'AdminStafController@riwayat'
+        'uses' => 'StafController@riwayat'
     ));
     Route::post('staf/update_riwayat',array(
         'as' => 'admins.staf.update_riwayat',
-        'uses' => 'AdminStafController@update_riwayat'
+        'uses' => 'StafController@update_riwayat'
     ));
     Route::post('staf/destroy_riwayat',array(
         'as' => 'admins.staf.destroy_riwayat',
-        'uses' => 'AdminStafController@destroy_riwayat'
+        'uses' => 'StafController@destroy_riwayat'
     ));
     Route::post('staf/update_jabatan',array(
         'as' => 'admins.staf.update_jabatan',
-        'uses' => 'AdminStafController@update_jabatan'
+        'uses' => 'StafController@update_jabatan'
     ));
     Route::post('staf/update_tingkat',array(
         'as' => 'admins.staf.update_tingkat',
-        'uses' => 'AdminStafController@update_tingkat'
+        'uses' => 'StafController@update_tingkat'
     ));
     Route::post('staf/update_cu',array(
         'as' => 'admins.staf.update_cu',
-        'uses' => 'AdminStafController@update_cu'
+        'uses' => 'StafController@update_cu'
     ));
 // pengumuman
-    Route::resource('pengumuman','AdminPengumumanController',array('except' => array('show','create','edit')));
-    Route::post('pengumuman/update_urutan',array(
-        'as' => 'admins.pengumuman.update_urutan',
-        'uses' => 'AdminPengumumanController@update_urutan'
-    ));
-// admin
-    Route::resource('admin','AdminAdminController',array('except' => array('show')));
-    Route::get('admin/edit_password/{id}',array(
-        'as' => 'admins.admin.edit_password',
-        'uses' => 'AdminAdminController@edit_password'
-    ));
+    // Route::resource('pengumuman','PengumumanController',array('except' => array('show','create','edit')));
+    Route::get('pengumuman', [
+        'as'           => 'admins.pengumuman.index',           
+        'uses'         => 'PengumumanController@index',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'view.pengumuman_view']);
+    Route::post('pengumuman', [
+        'as'           => 'admins.pengumuman.store',
+        'uses'         => 'PengumumanController@store',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'create.pengumuman_create']);
+    Route::put('pengumuman/{pengumuman}', [
+        'as'           => 'admins.pengumuman.update',
+        'uses'         => 'PengumumanController@update',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'update.pengumuman_update']);
+    Route::delete('pengumuman/{pengumuman}', [
+        'as'           => 'admins.pengumuman.destroy',
+        'uses'         => 'PengumumanController@destroy',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'destroy.pengumuman_destroy']);
+    Route::post('pengumuman/update_urutan', [
+        'as'           => 'admins.pengumuman.update_urutan',
+        'uses'         => 'PengumumanController@update_urutan',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'update_urutan.pengumuman_update_urutan']);
+
+// user
+    Route::resource('admin','UserController',array('except' => array('show','edit')));    
     Route::get('admin/edit_akses/{id}',array(
         'as' => 'admins.admin.edit_akses',
-        'uses' => 'AdminAdminController@edit_akses'
+        'uses' => 'UserController@edit_akses'
     ));
     Route::post('admin/update_akses',array(
         'as' => 'admins.admin.update_akses',
-        'uses' => 'AdminAdminController@update_akses'
+        'uses' => 'UserController@update_akses'
     ));
-    Route::get('admin/update_status',array(
+    Route::post('admin/update_status',array(
         'as' => 'admins.admin.update_status',
-        'uses' => 'AdminAdminController@update_status'
+        'uses' => 'UserController@update_status'
     ));
     Route::post('admin/update_password',array(
         'as' => 'admins.admin.update_password',
-        'uses' => 'AdminAdminController@update_password'
+        'uses' => 'UserController@update_password'
     ));
 // kegiatan
-    Route::resource('kegiatan','AdminKegiatanController',array('except' => array('show')));
-    Route::post('kegiatan/update_mulai',array(
-        'as' => 'admins.kegiatan.update_mulai',
-        'uses' => 'AdminKegiatanController@update_mulai'
-    ));
-    Route::post('kegiatan/update_selesai',array(
-        'as' => 'admins.kegiatan.update_selesai',
-        'uses' => 'AdminKegiatanController@update_selesai'
-    ));
+     Route::get('kegiatan', [
+        'as'           => 'admins.kegiatan.index',           
+        'uses'         => 'KegiatanController@index',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'view.kegiatan_view']);
+    Route::get('kegiatan/create', [
+        'as'           => 'admins.kegiatan.create',
+        'uses'         => 'KegiatanController@create',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'create.kegiatan_create']);
+    Route::get('kegiatan/{kegiatan}/edit', [
+        'as'           => 'admins.kegiatan.edit',
+        'uses'         => 'KegiatanController@edit',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'update.kegiatan_update']);
+    Route::post('kegiatan', [
+        'as'           => 'admins.kegiatan.store',
+        'uses'         => 'KegiatanController@store',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'create.kegiatan_create']);
+    Route::put('kegiatan/{kegiatan}', [
+        'as'           => 'admins.kegiatan.update',
+        'uses'         => 'KegiatanController@update',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'update.kegiatan_update']);
+    Route::delete('kegiatan/{kegiatan}', [
+        'as'           => 'admins.kegiatan.destroy',
+        'uses'         => 'KegiatanController@destroy',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'destroy.kegiatan_destroy']);
     Route::get('kegiatan/{id}/detail',array(
         'as' => 'admins.kegiatan.detail',
-        'uses' => 'AdminKegiatanController@detail'
+        'uses' => 'KegiatanController@detail'
     ));
     Route::post('kegiatan/update_tujuan',array(
         'as' => 'admins.kegiatan.update_tujuan',
-        'uses' => 'AdminKegiatanController@update_tujuan'
+        'uses' => 'KegiatanController@update_tujuan'
     ));
     Route::post('kegiatan/update_pokok',array(
         'as' => 'admins.kegiatan.update_pokok',
-        'uses' => 'AdminKegiatanController@update_pokok'
+        'uses' => 'KegiatanController@update_pokok'
     ));
     Route::get('kegiatan/getselect2',array(
         'as' => 'admins.kegiatan.getselect2',
-        'uses' => 'AdminKegiatanController@getselect2'
+        'uses' => 'KegiatanController@getselect2'
     ));
 // statisitik
     Route::get('statistik',array('as' => 'statistik', function()
@@ -228,27 +433,19 @@ Route::group(array('prefix' => 'admins','middleware' => 'auth'), function(){
 
         return View::make('admins.statistik',compact('statistiks'));
     }));
-// infogerkaan
+// infogerakaan
     Route::resource('infogerakan','AdminInfoGerakanController',array('only' => array('edit','update')));
-    Route::post('infogerakan/index_litbang',array(
-        'as' => 'admins.infogerakan.index_litbang',
-        'uses' => 'AdminInfoGerakanController@index_litbang'
-    ));
-    Route::post('infogerakan/create_litbang',array(
-        'as' => 'admins.infogerakan.create_litbang',
-        'uses' => 'AdminInfoGerakanController@create_litbang'
-    ));
 //download, kategori artikel, wilayah cu primer, saran
-    Route::resource('download','AdminDownloadController',array('except' => array('show')));
-    Route::resource('kategoriartikel','AdminKategoriArtikelController',array('except' => array('show','create','edit')));
-    Route::resource('wilayahcuprimer','AdminWilayahCuprimerController',array('except' => array('show','create','edit')));
-    Route::resource('saran','AdminSaranController',array('except' => array('show','create','edit',)));
+    Route::resource('download','DownloadController',array('except' => array('show')));
+    Route::resource('saran','SaranController',array('except' => array('show','create','edit',)));
 //version
     Route::get('version',array('as' => 'admins.version', function()
     {
         return View::make('admins.about.version');
     }));
 });
+
+    
 
 
 Route::get('importexport', function()
@@ -270,41 +467,154 @@ Route::post('/register',function (){
     }
 });
 
+
+
 //echo '<pre>';
 //echo var_dump($datacu->staf);
 //echo '<pre>';
 
 Route::get('/getrole',function(){
     $role = App\Models\Role::with('perms')->findOrFail('2');
-
 });
 
 Route::get('/addrole',function(){
+    
+    // $roleAdmin = new Kodeine\Acl\Models\Eloquent\Role();
+    // $roleAdmin->name = 't0n1zz';
+    // $roleAdmin->slug = 't0n1zz';
+    // $roleAdmin->description = 'i am alpha and omega of this site';
+    // $roleAdmin->save();
 
-    $text = 'admin';
+    // $user = App\Models\User::find(1);
+    // $user->assignRole($roleAdmin);
 
-    $a = new App\Models\Permission();
-    $a->name = $text.'_index';
-    $a->display_name = 'Melihat '.$text;
-    $a->save();
+    // $permission = new Kodeine\Acl\Models\Eloquent\Permission();
+    // $permUser = $permission->create([ 
+    //     'name'        => 'artikel',
+    //     'slug'        => [          // pass an array of permissions.
+    //         'create'     => true,
+    //         'view'       => true,
+    //         'update'     => true,
+    //         'delete'     => true,
+    //         'update_status' => true,
+    //         'update_pilihan' => true,
+    //     ],
+    //     'description' => 'Mengatur akses artikel'
+    // ]);
 
-    $a = new App\Models\Permission();
-    $a->name = $text.'_create';
-    $a->display_name = 'Menambah '.$text;
-    $a->save();
+    // $permission = new Kodeine\Acl\Models\Eloquent\Permission();
+    // $permUser = $permission->create([ 
+    //     'name'        => 'artikel',
+    //     'slug'        => [          // pass an array of permissions.
+    //         'update_status'     => true,
+    //     ],
+    //     'description' => 'update status artikel'
+    // ]);
 
-    $a = new App\Models\Permission();
-    $a->name = $text.'_update';
-    $a->display_name = 'Mengubah '.$text;
-    $a->save();
+    // $class = 'tpcu';
 
-    // $a = new App\Models\Permission();
-    // $a->name = $text.'_detail';
-    // $a->display_name = 'Detail '.$text;
-    // $a->save();
+    // $permission = new Kodeine\Acl\Models\Eloquent\Permission();
+    // $permUser = $permission->create([ 
+    //     'name'        => $class.'_view',
+    //     'slug'        => [ 
+    //         'view' => true,
+    //     ],
+    //     'description' => 'View '.$class
+    // ]);
 
-    $a = new App\Models\Permission();
-    $a->name = $text.'_hapus';
-    $a->display_name = 'Menghapus '.$text;
-    $a->save();
+    // $permission = new Kodeine\Acl\Models\Eloquent\Permission();
+    // $permUser = $permission->create([ 
+    //     'name'        => $class.'_create',
+    //     'slug'        => [ 
+    //         'create' => true,
+    //     ],
+    //     'description' => 'Create '.$class
+    // ]);
+
+    // $permission = new Kodeine\Acl\Models\Eloquent\Permission();
+    // $permUser = $permission->create([ 
+    //     'name'        => $class.'_update',
+    //     'slug'        => [ 
+    //         'update' => true,
+    //     ],
+    //     'description' => 'Update '.$class
+    // ]);
+
+    // $permission = new Kodeine\Acl\Models\Eloquent\Permission();
+    // $permUser = $permission->create([ 
+    //     'name'        => $class.'_destroy',
+    //     'slug'        => [ 
+    //         'destroy' => true,
+    //     ],
+    //     'description' => 'Destroy '.$class
+    // ]);
+
+    // $permission = new Kodeine\Acl\Models\Eloquent\Permission();
+    // $permUser = $permission->create([ 
+    //     'name'        => $class.'_update_akses',
+    //     'slug'        => [ 
+    //         'update_akses' => true,
+    //     ],
+    //     'description' => 'Update akses '.$class
+    // ]);
+
+    // $permission = new Kodeine\Acl\Models\Eloquent\Permission();
+    // $permUser = $permission->create([ 
+    //     'name'        => $class.'_update_password',
+    //     'slug'        => [ 
+    //         'update_password' => true,
+    //     ],
+    //     'description' => 'Update password '.$class
+    // ]);
+
+    // $class = 'kegiatandetail';
+    // $permission = new Kodeine\Acl\Models\Eloquent\Permission();
+    // $permUser = $permission->create([ 
+    //     'name'        => $class.'_view',
+    //     'slug'        => [ 
+    //         'view' => true,
+    //     ],
+    //     'description' => 'View '.$class
+    // ]);
+
+    // $permission = new Kodeine\Acl\Models\Eloquent\Permission();
+    // $permUser = $permission->create([ 
+    //     'name'        => $class.'_peserta',
+    //     'slug'        => [ 
+    //         'peserta' => true,
+    //     ],
+    //     'description' => 'Peserta '.$class
+    // ]);
+
+
+    // $permission = new Kodeine\Acl\Models\Eloquent\Permission();
+    // $permUser = $permission->create([ 
+    //     'name'        => $class.'_update',
+    //     'description' => 'Mengubah data '.$class
+    // ]);
+
+    // $permission = new Kodeine\Acl\Models\Eloquent\Permission();
+    // $permUser = $permission->create([ 
+    //     'name'        => $class.'_destroy',
+    //     'description' => 'Menghapus data '.$class
+    // ]);
+
+    // $roleAdmin = Kodeine\Acl\Models\Eloquent\Role::where('name','=','user_1');
+    // $roleAdmin->assignPermission('article_view');   
+    // $roleAdmin->assignPermission(Kodeine\Acl\Models\Eloquent\Permission::all());
+
+    // $roleAdmin->revokePermission('pengumuman_view');
+
+    // $admin = Kodeine\Acl\Models\Eloquent\Role::first();
+    // if(!$admin->can('view.pengumuman_view'))
+    //     echo "yuhu";
+    // else
+    //     echo "oh no";
+
+    // $admin = App\Models\User::find(1);
+    // $admin->addPermission('update_artikel');
+    // $admin->removePermission('create_user');
+    // $kelas = App\Models\User::findOrFail('1');
+    // $adminrole = Kodeine\Acl\Models\Eloquent\Role::where('name', '=', $kelas->username)->first();
+    // $adminrole->revokePermission('artikel_update');
 });

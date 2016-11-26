@@ -38,11 +38,11 @@
                 </div>
                 <div class="row" id="{{ $pelayanan->id }}" data-animation="fadeInDown" data-animation-delay="01">
                     <div class="col-sm-6">
-                        {{ $pelayanan->content }}
+                        {!! $pelayanan->content !!}
                     </div>
                     <div class="col-sm-6">
                         @if(!empty($pelayanan->gambar) && is_file("images_artikel/{$pelayanan->gambar}"))
-                            {{ HTML::image('images_artikel/'.$pelayanan->gambar, $pelayanan->judul, array(
+                            {{ Html::image('images_artikel/'.$pelayanan->gambar, $pelayanan->judul, array(
                                 'class' => 'img-responsive img-thumbnail shadow','width' => '700px')) }}
                         @endif
                     </div>
@@ -56,12 +56,12 @@
                 <div class="row" id="{{$pelayanan->id}}" data-animation="fadeInDown" data-animation-delay="01">
                     <div class="col-sm-6">
                         @if(!empty($pelayanan->gambar) && is_file("images_artikel/{$pelayanan->gambar}"))
-                            {{ HTML::image('images_artikel/'.$pelayanan->gambar, $pelayanan->judul, array(
+                            {{ Html::image('images_artikel/'.$pelayanan->gambar, $pelayanan->judul, array(
                                 'class' => 'img-responsive img-thumbnail shadow','width' => '700px')) }}
                         @endif
                     </div>
                     <div class="col-sm-6">
-                        {{ $pelayanan->content }}
+                        {!! $pelayanan->content !!}
                     </div>
                 </div>
                     <div class="hr1" style="margin-bottom:40px;"></div>

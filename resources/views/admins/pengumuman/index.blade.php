@@ -26,99 +26,89 @@ $kelas = "pengumuman";
     @include('admins._layouts.alert')
     <!-- /Alert -->
     <!--content-->
-    <div class="box box-primary">
-        <div class="box-body">
-            <table class="table table-striped table-bordered table-hover" id="dataTables-example">
-                <thead>
-                <tr>
-                    <th hidden></th>
-                    <th>Pengumuman</th>
-                    <th>Tanggal</th>
-                    <th>Urutan</th>
-                </tr>
-                </thead>
-                <tbody>
-                @foreach($datas as $data)
+    <div class="nav-tabs-custom">
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#tab_pengumuman" data-toggle="tab">Pengumuman</a></li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane fade in active" id="tab_pengumuman">
+                <div class="input-group tabletools">
+                    <div class="input-group-addon"><i class="fa fa-search"></i></div>
+                    <input type="text" id="searchtext" class="form-control" placeholder="Kata kunci pencarian..." autofocus>
+                </div>
+                <table class="table table-hover" id="dataTables-example" width="100%">
+                    <thead class="bg-light-blue-active color-palette">
                     <tr>
-                        <td hidden>{{ $data->id }}</td>
-                        @if(!empty($data->name))
-                            <td class="warptext">{{ $data->name }}</td>
-                        @else
-                            <td>-</td>
-                        @endif
-
-                        @if(!empty($data->created_at ))
-                            <?php $date = new Date($data->created_at); ?>
-                            <td><i hidden="true">{{$data->created_at}}</i> {{  $date->format('d-n-Y') }}</td>
-                        @else
-                            <td>-</td>
-                        @endif
-
-                        @if(!empty($data->urutan))
-                            <td><a href="#" class="btn btn-default" disabled>{{ $data->urutan }}</a></td>
-                        @else
-                            <td><a href="#" class="btn btn-default" disabled>-</a></td>
-                        @endif
+                        <th>#</th>
+                        <th hidden></th>
+                        <th>Pengumuman</th>
+                        <th>Tanggal</th>
+                        <th>Urutan</th>
                     </tr>
-                @endforeach
+                    </thead>
+                    <tbody>
+                    @foreach($datas as $data)
+                        <tr>
+                            <td class="bg-aqua disabled color-palette"></td>
+                            <td hidden>{{ $data->id }}</td>
+                            @if(!empty($data->name))
+                                <td class="warptext">{{ $data->name }}</td>
+                            @else
+                                <td>-</td>
+                            @endif
 
-                </tbody>
-            </table>
+                            @if(!empty($data->created_at ))
+                                <?php $date = new Date($data->created_at); ?>
+                                <td><i hidden="true">{{$data->created_at}}</i> {{  $date->format('d-n-Y') }}</td>
+                            @else
+                                <td>-</td>
+                            @endif
+
+                            @if(!empty($data->urutan))
+                                <td><a href="#" class="btn btn-default" disabled>{{ $data->urutan }}</a></td>
+                            @else
+                                <td><a href="#" class="btn btn-default" disabled>-</a></td>
+                            @endif
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>  
         </div>
     </div>
     <!--content-->
 </section>
 
 <!-- modal -->
-<!-- Hapus -->
-<div class="modal fade" id="modal1show" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    {{ Form::open(array('route' => array('admins.'.$kelas.'.destroy',$kelas), 'method' => 'delete')) }}
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 clasas="modal-title"><i class="fa fa-trash"></i> Hapus Kategori Artikel</h4>
-            </div>
-            <div class="modal-body">
-                <strong>Menghapus pengumuman ini ?</strong>
-                <input type="text" name="id" value="" id="modal1id" hidden>
-            </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-warning" id="modalbutton"><i class="fa fa-check"></i> Iya</button>
-                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i> Batal</button>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-    {{ Form::close() }}
-</div>
-<!-- /Hapus -->
 <!-- tambah -->
-<div class="modal fade" id="modal2show" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    {{ Form::open(array('route' => array('admins.'.$kelas.'.store'))) }}
+<div class="modal fade" id="modaltambah" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    {{ Form::open(array('route' => array('admins.'.$kelas.'.store'),'data-toggle' => 'validator','role' => 'form')) }}
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header bg-light-blue-active color-palette">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h4 class="modal-title "><i class="fa fa-plus"></i> Tambah Pengumuman</h4>
             </div>
             <div class="modal-body">
-                <h4>Menambah pengumuman baru</h4>
                 <?php
-                if(Auth::check()) { $id = Auth::user()->getId();}
-                $urutan = App\Models\Pengumuman::count();
+                    if(Auth::check()) { $id = Auth::user()->getId();}
+                    $urutan = App\Models\Pengumuman::count();
                 ?>
                 <input type="text" name="penulis" value="{{ $id }}" hidden>
                 <input type="text" name="urutan" value="{{$urutan + 1}}"  hidden>
-                <input type="text" name="id" value="" id="modal2id" hidden>
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="fa fa-font"></i></span>
-                    {{ Form::text('name',null,array('class' => 'form-control',
-                      'placeholder' => 'Silahkan masukkan pengumuman','autocomplete'=>'off'))}}
+                <input type="text" name="id" value="" id="modaltambah_id" hidden>
+                <div class="form-group">
+                    <h4>Menambah pengumuman baru</h4>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-font"></i></span>
+                        {{ Form::text('name',null,array('class' => 'form-control','id'=>'modaltambah_name',
+                        'placeholder' => 'Silahkan masukkan pengumuman','autocomplete'=>'off','required'))}}
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-warning" id="modalbutton"><i class="fa fa-check"></i> Ok</button>
-                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i> Batal</button>
+                <button type="submit" class="btn btn-primary" id="modalbutton"><i class="fa fa-save"></i> Simpan</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Batal</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
@@ -126,26 +116,28 @@ $kelas = "pengumuman";
 </div>
 <!-- /tambah -->
 <!-- ubah -->
-<div class="modal fade" id="modal3show" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    {{ Form::open(array('route' => array('admins.'.$kelas.'.update',$kelas), 'method' => 'put')) }}
+<div class="modal fade" id="modalubah" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    {{ Form::open(array('route' => array('admins.'.$kelas.'.update',$kelas), 'method' => 'put','data-toggle' => 'validator','role' => 'form')) }}
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header bg-light-blue-active color-palette">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title "><i class="fa fa-pencil-square-o"></i> Ubah Pengumuman</h4>
+                <h4 class="modal-title "><i class="fa fa-pencil"></i> Ubah Pengumuman</h4>
             </div>
             <div class="modal-body">
-                <h4>Mengubah pengumuman</h4>
-                <input type="text" name="id" value="" id="modal3id" hidden>
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="fa fa-font"></i></span>
-                    {{ Form::text('name',null,array('class' => 'form-control','id'=>'modal3id2',
-                    'placeholder' => 'Silahkan masukkan pengumuman','autocomplete'=>'off'))}}
+                <input type="text" name="id" value="" id="modalubah_id" hidden>
+                <div class="form-group">
+                    <h4>Mengubah pengumuman</h4>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-font"></i></span>
+                        {{ Form::text('name',null,array('class' => 'form-control','id'=>'modalubah_name',
+                        'placeholder' => 'Silahkan masukkan pengumuman','autocomplete'=>'off','required'))}}
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-warning" id="modalbutton"><i class="fa fa-check"></i> Ok</button>
-                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i> Batal</button>
+                <button type="submit" class="btn btn-primary" id="modalbutton"><i class="fa fa-save"></i> Simpan</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Batal</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
@@ -153,32 +145,34 @@ $kelas = "pengumuman";
 </div>
 <!-- /ubah -->
 <!-- ubah urutan -->
-<div class="modal fade" id="modal4show" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-{{ Form::open(array('route' => array('admins.'.$kelas.'.update_urutan'))) }}
+<div class="modal fade" id="modalurutan" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+{{ Form::open(array('route' => array('admins.'.$kelas.'.update_urutan','data-toggle' => 'validator','role' => 'form'))) }}
     <div class="modal-dialog">
       <div class="modal-content">
-        <div class="modal-header">
+        <div class="modal-header bg-light-blue-active color-palette">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title "><i class="fa fa-pencil-square-o"></i> Ubah Urutan Pengumuman</h4>
+          <h4 class="modal-title "><i class="fa fa-ellipsis-v"></i> Urutan Pengumuman</h4>
         </div>
         <div class="modal-body">
-          <h4>Mengubah urutan pengumuman?</h4>
-          <input type="text" name="id" value="" id="modal4id" hidden>
-            <div class="input-group">
-                <div class="input-group-addon"><i class="fa fa-list"></i></div>
-                <select class="form-control" name="urutan">
-                    <option disabled selected>Silahkan pilih Urutan </option>
-                    <?php $i=0; ?>
-                    @foreach($datas as $data)
-                        <?php $i++; ?>
-                        <option value="{{ $i}}">{{ $i }}</option>
-                    @endforeach
-                </select>
-            </div>
+            <input type="text" name="id" value="" id="modalurutan_id" hidden>
+            <div class="form-group has-feedback">
+              <h4>Mengubah urutan pengumuman?</h4>
+                <div class="input-group">
+                    <div class="input-group-addon"><i class="fa fa-list"></i></div>
+                    <select class="form-control" name="urutan" required="">
+                        <option disabled selected>Silahkan pilih Urutan </option>
+                        <?php $i=0; ?>
+                        @foreach($datas as $data)
+                            <?php $i++; ?>
+                            <option value="{{ $i}}">{{ $i }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>    
         </div>
         <div class="modal-footer">
-              <button type="submit" class="btn btn-warning" id="modalbutton"><i class="fa fa-check"></i> Ok</button>
-              <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i> Batal</button>
+              <button type="submit" class="btn btn-primary" id="modalbutton"><i class="fa fa-save"></i> Simpan</button>
+              <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Batal</button>
         </div>
       </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
@@ -194,6 +188,7 @@ $kelas = "pengumuman";
     <script>
         new $.fn.dataTable.Buttons(table,{
             buttons: [
+                @permission('create.'.$kelas.'_create')
                 {
                     text: '<i class="fa fa-plus"></i> <u>T</u>ambah',
                     key: {
@@ -202,14 +197,15 @@ $kelas = "pengumuman";
                     },
                     action: function(){
                         var id = $.map(table.rows({ selected:true }).data(),function(item){
-                            return item[0];
+                            return item[1];
                         });
-                        if(id != ""){
-                            $('#modal2show').modal({show:true});
-                            $('#modal2id').attr('value',id);
-                        }
+                        $('#modaltambah').modal({show:true});
+                        $('#modaltambah_id').attr('value',id);
+                        
                     }
                 },
+                @endpermission
+                @permission('update.'.$kelas.'_update')
                 {
                     text: '<i class="fa fa-pencil"></i> <u>U</u>bah',
                     key: {
@@ -218,18 +214,22 @@ $kelas = "pengumuman";
                     },
                     action: function(){
                         var id = $.map(table.rows({ selected: true }).data(),function(item){
-                            return item[0];
-                        });
-                        var id2 = $.map(table.rows({ selected: true }).data(),function(item){
                             return item[1];
                         });
+                        var name = $.map(table.rows({ selected: true }).data(),function(item){
+                            return item[2];
+                        });
                         if(id != ""){
-                            $('#modal3show').modal({show:true});
-                            $('#modal3id').attr('value',id);
-                            $('#modal3id2').attr('value',id2);
+                            $('#modalubah').modal({show:true});
+                            $('#modalubah_id').attr('value',id);
+                            $('#modalubah_name').attr('value',name);
+                        }else{
+                            $('#modalwarning').modal({show:true});
                         }
                     }
                 },
+                @endpermission
+                @permission('destroy.'.$kelas.'_destroy')
                 {
                     text: '<i class="fa fa-trash"></i> <u>H</u>apus',
                     key: {
@@ -238,14 +238,19 @@ $kelas = "pengumuman";
                     },
                     action: function(){
                         var id = $.map(table.rows({ selected:true }).data(),function(item){
-                            return item[0];
+                            return item[1];
                         });
                         if(id != ""){
-                            $('#modal1show').modal({show:true});
-                            $('#modal1id').attr('value',id);
+                            $('#modalhapus').modal({show:true});
+                                $('#modalhapus_id').attr('value',id);
+                                $('#modalhapus_judul').text('Hapus Pengumuman');
+                                $('#modalhapus_detail').text('Yakin menghapus pengumuman ini ?');
+                        }else{
+                            $('#modalwarning').modal({show:true});
                         }
                     }
                 }
+                @endpermission
             ]
         });
         table.buttons( 0, null ).container().prependTo(
@@ -253,22 +258,24 @@ $kelas = "pengumuman";
         );
         new $.fn.dataTable.Buttons(table,{
             buttons: [
+                @permission('update_urutan.'.$kelas.'_update_urutan')
                 {
-                    text: '<i class="fa fa-ellipsis-v"></i> Ubah Urutan',
+                    text: '<i class="fa fa-ellipsis-v"></i> Urutan',
                     key: {
                         altKey: true,
                         key: 'u'
                     },
                     action: function(){
                         var id = $.map(table.rows({ selected: true }).data(),function(item){
-                            return item[0];
+                            return item[1];
                         });
                         if(id != ""){
-                            $('#modal4show').modal({show:true});
-                            $('#modal4id').attr('value',id);
+                            $('#modalurutan').modal({show:true});
+                            $('#modalurutan_id').attr('value',id);
                         }
                     }
-                },
+                }
+                @endpermission
             ]
         });
         table.buttons( 0, null ).container().prependTo(

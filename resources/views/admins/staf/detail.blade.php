@@ -52,18 +52,32 @@ $imagepath = "images_staf/";
                     @endif
                     <h3 class="profile-username text-center">{{ $data->name }}</h3>
                     <ul class="list-group list-group-unbordered">
-                        <li class="list-group-item">
-                            <p class="text-center">
-                            @if(empty($data->cu))
-                                {{ "Puskopdit BKCU Kalimantan" }}
-                            @else
-                                {{"CU " . $data->cuprimer->name}}
-                            @endif
-                            </p>
-                        </li>
-                        @if($data->tingkat == 1 || $data->tingkat == 2)
+                        <?php 
+                            $pekerjaan = array();
+                            foreach ($riwayats2 as $j){
+                                if($j->keterangan2 == 'Manajemen'){
+                                    if($j->sekarang == "1"){
+                                        $pekerjaan[] = '<b>'.$j->name.' '.$j->keterangan.'</b>';
+                                    }
+                                }else{
+                                    $mulai = \Carbon\Carbon::createFromFormat('Y-m-d', $j->mulai)->format('Y');
+                                    $selesai = \Carbon\Carbon::createFromFormat('Y-m-d', $j->selesai)->format('Y');
+                                    $now =   \Carbon\Carbon::now()->format('Y');
+                                    if($selesai >= $now){
+                                        $pekerjaan[] = '<b>'.$j->name.' '.$j->keterangan.'</b><br/> periode '.$mulai.' - '.$selesai;
+                                    }
+                                }
+                            }
+                        ?> 
+                        @if(!empty($pekerjaan))
+                            @foreach($pekerjaan as $p)
                             <li class="list-group-item">
-                                <b>Periode</b> <a class="pull-right">{{ $data->periode1 . "-" . $data->periode2 }}</a>
+                                <p class="text-center">{!! $p  !!}</p>
+                            </li>
+                            @endforeach
+                        @else
+                            <li class="list-group-item">
+                                <p class="text-center">-</p>
                             </li>
                         @endif
                     </ul>
@@ -91,6 +105,7 @@ $imagepath = "images_staf/";
                 <a href="#" class="small-box-footer">Kegiatan yang belum diikuti</a>
             </div>
         </div><!-- /.col -->
+
         <div class="col-md-9">
             <!-- Alert -->
             @include('admins._layouts.alert')
@@ -104,10 +119,10 @@ $imagepath = "images_staf/";
                 <div class="tab-content">
                     <div class="tab-pane fade in active" id="info">
                         <section id="informasi">
-                            <h4 class="page-header">Informasi Umum</h4>
+                            <h4 class="page-header color1">Biodata</h4>
                             <div class="row">
                                 <div class="col-lg-4">
-                                    <b>No Identitas</b>: @if(!empty($data->noid)){{ $data->noid }}@else{{ "-" }}@endif
+                                    <b>No. Identitas</b>: @if(!empty($data->noid)){{ $data->noid }}@else{{ "-" }}@endif
                                     <br/>
                                     <b>NIM</b>: @if(!empty($data->nim)){{ $data->nim }}@else{{ "-" }}@endif
                                     <br/><br/>
@@ -157,7 +172,7 @@ $imagepath = "images_staf/";
                         </section>
                         <section id="jabatan">
                             <br/>
-                            <h4 class="page-header">Riwayat Pekerjaan</h4>
+                            <h4 class="page-header color1">Riwayat Pekerjaan</h4>
                             <table class="table table-hover " id="dataTables-pekerjaan">
                                 <thead>
                                 <tr class="bg-light-blue-active color-palette">
@@ -171,7 +186,10 @@ $imagepath = "images_staf/";
                                 </thead>
                                 <tbody>
                                 @foreach($riwayats2 as $riwayat2)
-                                    <tr>
+                                    <tr
+                                    @if(!empty($riwayat2->sekarang) && $riwayat2->sekarang != '0')
+                                        {!! 'class="highlight"'  !!}
+                                    @endif>
                                         <td hidden>{{ $riwayat2->id }}</td>
                                         @if(!empty($riwayat2->name))
                                             <td>{{ $riwayat2->name }}</td>
@@ -179,7 +197,15 @@ $imagepath = "images_staf/";
                                             <td>-</td>
                                         @endif
                                         @if(!empty($riwayat2->keterangan))
-                                            <td>{{ $riwayat2->keterangan}}</td>
+                                            @if($riwayat2->keterangan == "bkcu")
+                                                <td>PUSKOPDIT BKCU Kalimantan</td>
+                                            @else
+                                                @if(!empty($riwayat2->cuprimer))
+                                                    <td>{{ $riwayat2->cuprimer->name}}</td>
+                                                @else
+                                                    <td>{{ $riwayat2->keterangan }}</td>
+                                                @endif
+                                            @endif
                                         @else
                                             <td>-</td>
                                         @endif
@@ -196,7 +222,7 @@ $imagepath = "images_staf/";
                                         @endif
                                         @if(!empty($riwayat2->selesai ))
                                             @if(!empty($riwayat2->sekarang) && $riwayat2->sekarang != '0')
-                                                <td>Masih Aktif</td>
+                                                <td data-order="Masih Aktif">Masih Aktif</td>
                                             @else
                                                 <?php $date2 = new Date($riwayat2->selesai);  ?>
                                                 <td data-order="{{$riwayat2->selesai}}"> {{ $date2->format('d/m/Y') }}</td>
@@ -212,7 +238,7 @@ $imagepath = "images_staf/";
                         </section>
                         <section id="pendidikan">
                             <br/>
-                            <h4 class="page-header">Riwayat Pendidikan</h4>
+                            <h4 class="page-header color1">Riwayat Pendidikan</h4>
                             <table class="table table-hover " id="dataTables-pendidikan">
                                 <thead>
                                 <tr class="bg-light-blue-active color-palette">
@@ -267,13 +293,13 @@ $imagepath = "images_staf/";
                         </section>
                         <section id="organisasi">
                             <br/>
-                            <h4 class="page-header">Riwayat Berorganisasi</h4>
+                            <h4 class="page-header color1">Riwayat Berorganisasi</h4>
                             <table class="table table-hover " id="dataTables-organisasi">
                                 <thead>
                                 <tr class="bg-light-blue-active color-palette">
                                     <th hidden></th>
                                     <th>Nama Organisasi</th>
-                                    <th>Keterangan</th>
+                                    <th>Jabatan</th>
                                     <th>Tanggal Mulai</th>
                                     <th>Tanggal Selesai</th>
                                 </tr>
@@ -330,8 +356,8 @@ $imagepath = "images_staf/";
 
 <!-- modalriwayat -->
 <div class="modal fade" id="modalriwayat" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    {{ Form::open(array('route' => array('admins.'.$kelas.'.riwayat'))) }}
-    <div class="modal-dialog">
+    {{ Form::open(array('route' => array('admins.'.$kelas.'.riwayat'),'data-toggle'=>'validator','role'=>'form')) }}
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header bg-light-blue-active color-palette">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -342,14 +368,17 @@ $imagepath = "images_staf/";
                 <input type="text" name="id_staf" value="{{ $data->id }}" hidden>
                 <input type="text" name="tipe" id="idtipe" value="" hidden>
                 <input type="text" name="sekarang" id="sekarang" value="" hidden>
+                <input type="text" name="tiperadio" id="tiperadio" value="" hidden>
 
                 <div class="form-group">
                     <h4 id="judulnama"></h4>
                     <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-font"></i></span>
                         {{ Form::text('name',null,array('class' => 'form-control','id'=>'textnama',
-                          'placeholder' => 'Silahkan masukkan nama','autocomplete'=>'off'))}}
+                          'placeholder' => 'Silahkan masukkan nama','autocomplete'=>'off', 'required'))}}
+                        <span class="glyphicon form-control-feedback" aria-hidden="true"></span>  
                     </div>
+                    <div class="help-block">Harus diisi.</div>
                 </div>
 
                 <div class="form-group" id="tempat">
@@ -358,12 +387,12 @@ $imagepath = "images_staf/";
                         <div class="col-sm-6">
                             <div class="input-group">
                         <span class="input-group-addon">
-                            <input type="radio" name="tempat" id="radiocu" onclick="radiocu()">
+                            <input type="radio" name="radiotempat" id="radiocu" onclick="func_radiocu()" value="true">
                         </span>
                                 <?php $culists = App\Models\Cuprimer::orderBy('name','asc')->get(); ?>
-                                <select class="form-control placeholder" name="cu" id="cu" disabled>
-                                    <option>Credit Union</option>
-                                    <option value="0">BKCU</option>
+                                <select class="form-control placeholder" name="selectcu" id="selectcu" disabled>
+                                    <option hidden>Credit Union</option>
+                                    <option value="PUSKOPDIT BKCU Kalimantan">PUSKOPDIT BKCU Kalimantan</option>
                                         @foreach($culists as $culist)
                                             <option value="{{ $culist->id }}">{{ $culist->name }}</option>
                                         @endforeach
@@ -372,20 +401,21 @@ $imagepath = "images_staf/";
                         </div>
                         <div class="col-sm-6">
                             <div class="input-group">
-                        <span class="input-group-addon">
-                            <input type="radio" name="tempat" id="radiolembaga" onclick="radiolembaga()">
-                        </span>
-                                <input type="text" class="form-control" name="lembaga" id="lembaga" placeholder="Bukan Credit Union" disabled>
+                                <span class="input-group-addon">
+                                    <input type="radio" name="radiotempat" id="radiolembaga" onclick="func_radiolembaga()" value="true">
+                                </span>
+                                {{ Form::text('textlembaga',null,array('class' => 'form-control','id'=>'textlembaga',
+                                    'placeholder' => 'Bukan Credit Union','autocomplete'=>'off','disabled'))}}
+                                <span class=""></span>    
                             </div>
                         </div>
                     </div>
                 </div>
-
                 <div class="form-group" id="tingkat">
                     <h4>Tingkatan</h4>
                     <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-list"></i></span>
-                        <select class="form-control placeholder" name="tingkatpekerjaan" id="selecttingkat">
+                        <select class="form-control placeholder" name="selecttingkat" id="selecttingkat">
                             <option value="0" hidden>Silahkan pilih tingkat</option>
                             <option value="Manajemen">Manajemen</option>
                             <option value="Pengurus">Pengurus</option>
@@ -419,8 +449,8 @@ $imagepath = "images_staf/";
                     <h4>Tanggal Mulai</h4>
                     <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                        <input type="text" name="mulai" id="mulai"  value="" class="form-control"
-                               data-inputmask="'alias': 'date'" placeholder="dd/mm/yyyy" />
+                        {{ Form::text('mulai',null,array('class' => 'form-control','id'=>'mulai',
+                            'autocomplete'=>'off', 'data-inputmask'=>"'alias':'date'",'placeholder'=>'dd/mm/yyyy'))}}
                     </div>
                 </div>
 
@@ -428,8 +458,8 @@ $imagepath = "images_staf/";
                     <h4>Tanggal Selesai</h4>
                     <div class="input-group" id="groupselesai">
                         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                        <input type="text" name="selesai" id="selesai" value="" class="form-control"
-                               data-inputmask="'alias': 'date'" placeholder="dd/mm/yyyy" />
+                        {{ Form::text('selesai',null,array('class' => 'form-control','id'=>'selesai',
+                            'autocomplete'=>'off', 'data-inputmask'=>"'alias':'date'",'placeholder'=>'dd/mm/yyyy'))}}
                         <div class="input-group-btn">
                             <button type="button" class="btn btn-default" onclick="masihaktif()" >Masih Aktif</button>
                         </div>
@@ -497,18 +527,20 @@ $imagepath = "images_staf/";
         $('#masihbekerja').hide();
         $('#groupselesai').show();
     }
-    function radiocu(){
-        $('#cu').prop('disabled',false);
-        $('#lembaga').prop('disabled',true);
-        $('#lembaga').val('');
+    function func_radiocu(){
+        $('#selectcu').prop('disabled',false);
+        $('#textlembaga').prop('disabled',true);
+        $('#textlembaga').val('');
         $('#tingkat').show();
+        $('#tiperadio').val('1');
     }
-    function radiolembaga(){
-        $('#cu').prop('disabled',true);
-        $('#cu').val($('#cu option:first').val());
-        $('#lembaga').prop('disabled',false);
-        $('#lembaga').focus();
+    function func_radiolembaga(){
+        $('#selectcu').prop('disabled',true);
+        $('#selectcu').val($('#selectcu option:first').val());
+        $('#textlembaga').prop('disabled',false);
+        $('#textlembaga').focus();
         $('#tingkat').hide();
+        $('#tiperadio').val('2');
     }
 </script>
 {{--table pekerjaan--}}
@@ -557,10 +589,10 @@ $imagepath = "images_staf/";
 
                     $('#groupmasihbekerja').hide();
                     $('#groupselesai').show();
-                    $('#tempat').hide();
-                    $('#tingkat').show();
+                    $('#tempat').show();
+                    $('#tingkat').hide();
                     $('#tipependidikan').hide();
-                    $('#keterangan').show();
+                    $('#keterangan').hide();
                     $('#masihbekerja').hide();
                     $('#groupselesai').show();
 
@@ -588,7 +620,7 @@ $imagepath = "images_staf/";
                     var nama = $.map(tablepekerjaan.rows({ selected: true }).data(),function(item){
                         return item[1];
                     });
-                    var keterangan = $.map(tablepekerjaan.rows({ selected: true }).data(),function(item){
+                    var tempat = $.map(tablepekerjaan.rows({ selected: true }).data(),function(item){
                         return item[2];
                     });
                     var tingkat = $.map(tablepekerjaan.rows({ selected: true }).data(),function(item){
@@ -603,22 +635,44 @@ $imagepath = "images_staf/";
                     if(id != ""){
                         $('#modalriwayat').modal({show:true});
 
-                        $('#tempat').hide();
-                        $('#tingkat').show();
                         $('#tipependidikan').hide();
-                        $('#keterangan').show();
+                        $('#keterangan').hide();
+                        $('#tempat').show();
 
                         $('#modaljudul').text('Ubah Pekerjaan');
-                        $('#judulketerangan').text('Tempat');
                         $('#judulnama').text('Nama Jabatan');
-                        $('#textketerangan').attr('placeholder','Silahkan masukkan tempat bekerja');
                         $('#textnama').attr('placeholder','Silahkan masukkan nama jabatan');
-                        $('#idtipe').val(tipeid_pendidikan);
+
+                        $('#idtipe').val(tipeid_pekerjaan);
                         $('#mulai').val(mulai);
                         $('#id').val(id);
                         $('#textnama').val(nama);
-                        $('#textketerangan').val(keterangan);
-                        $('#selecttingkat').val(tingkat);
+
+                        if(tingkat == "-"){
+                            $('#tingkat').hide();
+
+                            $("#radiolembaga").prop("checked", true);
+                            $("#radiocu").prop("checked", false);
+                            $('#selectcu').prop('disabled',true);
+                            $('#selectcu').val($('#selectcu option:first').val());
+                            $('#textlembaga').prop('disabled',false);
+                            $('#textlembaga').focus();
+                            
+                            $('#textlembaga').val(tempat);
+                            $('#tiperadio').val('2');
+                        }else{
+                            $('#tingkat').show();
+
+                            $("#radiolembaga").prop("checked", false);
+                            $("#radiocu").prop("checked", true);
+                            $('#selectcu').prop('disabled',false);
+                            $('#textlembaga').prop('disabled',true);
+                            $('#textlembaga').val('');
+
+                            $('#selectcu').val(tempat);
+                            $('#selecttingkat').val(tingkat);
+                            $('#tiperadio').val('1');
+                        }
 
                         if(selesai == "Masih Aktif"){
                             $('#sekarang').val('1');
@@ -760,7 +814,7 @@ $imagepath = "images_staf/";
                         $('#modaljudul').text('Ubah Pendidikan');
                         $('#judulketerangan').text('Tempat');
                         $('#judulnama').text('Nama Jabatan');
-                        $('#textketerangan').attr('placeholder','Silahkan masukkan tempat bekerja');
+                        $('#textketerangan').attr('placeholder','Silahkan masukkan tempat pendidikan');
                         $('#textnama').attr('placeholder','Silahkan masukkan nama jabatan');
                         $('#idtipe').val(tipeid_pendidikan);
                         $('#mulai').val(mulai);
@@ -863,8 +917,8 @@ $imagepath = "images_staf/";
                     $('#groupselesai').show();
 
                     $('#modaljudul').text('Tambah Organisasi');
-                    $('#judulketerangan').text('Keternagan');
-                    $('#judulnama').text('Nama Jabatan');
+                    $('#judulketerangan').text('Jabatan');
+                    $('#judulnama').text('Nama Organisasi');
                     $('#textketerangan').attr('placeholder','Silahkan masukkan keterangan');
                     $('#textnama').attr('placeholder','Silahkan masukkan nama organisasi');
                     $('#idtipe').val(tipeid_organisasi);
