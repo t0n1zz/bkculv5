@@ -67,64 +67,23 @@ $imagepath = 'images_artikel/';
                     @foreach($datas as $data)
                         <tr>
                             <td class="bg-aqua disabled color-palette"></td>
-                            <td hidden>{{ $data->id }}</td>
-                            @if(!empty($data->judul))
-                                <td class="warptext">{{ $data->judul }}</td>
-                            @else
-                                <td>-</td>
-                            @endif
-
-                            @if(!empty($data->kategoriartikel))
-                                <td>{{ $data->kategoriartikel->name }}</td>
-                            @else
-                                <td>Tak Terkategori</td>
-                            @endif
-
-                            @if(!empty($data->penulis))
-                                <td>{{ $data->penulis }}</td>
-                            @else
-                                <td>-</td>
-                            @endif
-
-                            @if(!empty($data->created_at ))
-                                <?php $date = new Date($data->created_at); ?>
-                                <td><i hidden="true">{{$data->created_at}}</i> {{ $date->format('d/n/Y') }}</td>
-                            @else
-                                <td>-</td>
-                            @endif
-
-                            @if(!empty($data->updated_at ))
-                                <?php $date = new Date($data->updated_at); ?>
-                                <td><i hidden="true">{{$data->updated_at}}</i> {{ $date->format('d/n/Y') }}</td>
-                            @else
-                                <td>-</td>
-                            @endif
-
-                            @if($data->status == 0)
-                                <td>Tidak</td>
-                            @elseif($data->status == 1)
-                                <td>Ya</td>
-                            @else
-                                 <td>Tidak</td>
-                            @endif
-
-                            @if($data->pilihan == 0)
-                                <td>Tidak</td>
-                            @elseif($data->pilihan == 1)
-                                <td>Ya</td>
-                            @else
-                                <td>Tidak</td>
-                            @endif
-
-                             @if(!empty($data->gambar) && is_file($imagepath.$data->gambar."n.jpg"))
+                            <td hidden>{{ $data['id'] }}</td>
+                            <td class="warptext">{{ $data['judul'] }}</td>    
+                            <td>{{ $data['kategori'] }}</td>
+                            <td>{{ $data['penulis'] }}</td>
+                            <td>{{ $data['created_at'] }}</td>
+                            <td>{{ $data['updated_at'] }}</td>
+                            <td>{{ $data['status'] }}</td>
+                            <td>{{ $data['pilihan'] }}</td>
+                            @if(!empty($data['gambar']) && is_file($imagepath.$data['gambar']."n.jpg"))
                                 <td style="white-space: nowrap"><div class="modalphotos" >
-                                        {{ Html::image($imagepath.$data->gambar.'n.jpg',asset($imagepath.$data->gambar."jpg"),
+                                        {{ Html::image(($imagepath.$data['gambar']).'n.jpg',asset(($imagepath.$data['gambar'])."jpg"),
                                             array('class' => 'img-responsive ',
                                             'id' => 'tampilgambar', 'width' => '50')) }}
                                     </div></td>
-                            @elseif(!empty($data->gambar) && is_file($imagepath.$data->gambar))
+                            @elseif(!empty($data['gambar']) && is_file($imagepath.$data['gambar'])))
                                 <td style="white-space: nowrap"><div class="modalphotos" >
-                                        {{ Html::image($imagepath.$data->gambar,asset($imagepath.$data->gambar),
+                                        {{ Html::image(($imagepath.$data['gambar']),asset($imagepath.$data['gambar']),
                                             array('class' => 'img-responsive ',
                                             'id' => 'tampilgambar', 'width' => '50')) }}
                                     </div></td>

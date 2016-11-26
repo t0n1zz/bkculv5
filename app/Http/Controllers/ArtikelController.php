@@ -12,6 +12,7 @@ use Validator;
 use App\Models\Artikel;
 use App\Models\KategoriArtikel;
 use \DOMDocument;
+use Jenssegers\Date\Date;
 
 class ArtikelController extends Controller{
 
@@ -25,11 +26,34 @@ class ArtikelController extends Controller{
     public function index()
     {
         try{
-            $datas = Artikel::with('kategoriartikel')
+            $datakelas = Artikel::with('kategoriartikel')
                 ->orderBy('judul','asc')
                 ->get();
             
             $datas2 = KategoriArtikel::orderBy('name','asc')->get();
+
+            $i = 0;
+            foreach ($datakelas as $data) {
+                $date = new Date($data->created_at);
+                $date2 = new Date($data->updated_at);
+                $status = $this->check_empty($data->status,'0');
+                $pilihan = $this->check_empty($data->pilihan,'0');
+                if($status == 0){ $status = 'Tidak'; }elseif($status == 1){ $status = 'Ya'; };
+                if($pilihan == 0){ $pilihan = 'Tidak'; }elseif($pilihan == 1){ $pilihan = 'Ya'; };
+
+                $datas[$i] = array(
+                    'id' => $this->check_empty($data->id,'-'),
+                    'judul' => $this->check_empty($data->judul,'-'),
+                    'kategori' => $this->check_empty($data->kategoriartikel->name,'Tak Terkategori'),
+                    'penulis' => $this->check_empty($data->penulis,'-'),
+                    'created_at' => $this->check_empty($date->format('d/n/Y'),'-'),
+                    'updated_at' => $this->check_empty($date2->format('d/n/Y'),'-'),
+                    'status' => $this->check_empty($status,'Tidak'),
+                    'pilihan' => $this->check_empty($pilihan,'Tidak'),
+                    'gambar' => $this->check_empty($data->gambar,''),
+                );
+                $i
+            }
 
             return view('admins.'.$this->kelaspath.'.index', compact('datas','datas2'));
         }catch (Exception $e){
@@ -423,5 +447,10 @@ class ArtikelController extends Controller{
         Image::make($img->getRealPath())->widen(848,function($constraint){
             $constraint->upsize();
         })->save($path . $filename);
+    }
+
+    function check_empty($value,$evalue){
+        $value_checked = !empty($value) ? $value : $evalue;
+        return $value_checked;
     }
 }

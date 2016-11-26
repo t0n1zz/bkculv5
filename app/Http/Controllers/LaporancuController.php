@@ -22,11 +22,6 @@ class LaporanCuController extends Controller{
     public function index()
     {
         try{
-//        	$datas = LaporanCu::with('cuprimer')
-//                ->select(DB::raw('*,max(periode) as periode'))
-//                ->orderby('periode','desc')
-//                ->get();
-            
             $data = LaporanCu::with('cuprimer')->orderBy('periode','DESC')->get();
             $data1 = $data->groupBy('no_ba');
 
@@ -37,15 +32,11 @@ class LaporanCuController extends Controller{
 
             $dataarray = $datas->toArray();
 
-            
-            foreach ($datas as $datacu){
-                if(!empty($datacu->cuprimer)){
-                    $gperiode[] = str_limit($datacu->cuprimer->name,7);
+            foreach ($datas as $data){
+                if(!empty($data->cuprimer)){
+                    $gperiode[] = str_limit($data->cuprimer->name,7);
                 }
             }
-
-
-            // dd($data1);
             return view('admins.'.$this->kelaspath.'.index', compact('datas','dataarray','gperiode'));
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
@@ -480,6 +471,9 @@ class LaporanCuController extends Controller{
       return back();
     }
 
+    public function laporan_loop(){
+        
+    }
 }
 
 

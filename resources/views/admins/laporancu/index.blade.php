@@ -152,7 +152,7 @@
                             @if(!Request::is('admins/laporancu/index_cu/*'))<th rowspan="2">Wilayah</th>@endif
                             <th rowspan="2">Periode Laporan</th>
                             <th colspan="5" class="text-center">Anggota</th>
-                            <th rowspan="2">Kekayaan (ASET)</th>
+                            <th rowspan="2">ASET</th>
                             <th rowspan="2">Aktiva LANCAR</th>
                             <th rowspan="2">Simpanan Saham(SP+SW)</th>
                             <th colspan="2" class="text-center">Simpanan Non Saham</th>
@@ -212,9 +212,7 @@
                             $tot_cu = 0;
                             ?>
                         @foreach($datas as $data)
-                            <?php 
-                                $periode = !empty($data->periode) ? $data->periode : ‘-’;
-                                $periode_pertama = !empty($data->first()->periode) ? $data->first()->periode : '-';
+                            <?php
                                 if(!Request::is('admins/laporancu/index_cu/*')){
                                     $cu_name = !empty($data->cuprimer->name) ? $data->cuprimer->name : ‘-’;
                                     $no_ba = !empty($data->cuprimer->no_ba) ? $data->cuprimer->no_ba : ‘-’;
@@ -240,6 +238,44 @@
                                     }else{
                                         $wilayah = '-';
                                     }
+                                }
+
+                                $periode_pertama = !empty($data->first()->periode) ? $data->first()->periode : '-';
+                                $l_biasa = !empty($data->l_biasa) ? $data->l_biasa : '0';
+                                $l_lbiasa = !empty($data->l_lbiasa) ? $data->l_lbiasa : '0';
+                                $p_biasa = !empty($data->p_biasa) ? $data->p_biasa : '0';
+                                $p_lbiasa = !empty($data->p_lbiasa) ? $data->p_lbiasa : '0';
+                                $aset = !empty($data->aset) ? $data->aset : '0';
+                                $aktivalancar = !empty($data->aktivalancar) ? $data->aktivalancar : '0';
+                                $simpanansaham = !empty($data->simpanansaham) ? $data->simpanansaham : '0';
+                                $nonsaham_unggulan = !empty($data->nonsaham_unggulan) ? $data->nonsaham_unggulan : '0';
+                                $nonsaham_harian = !empty($data->nonsaham_harian) ? $data->nonsaham_harian : '0';
+                                $hutangspd = !empty($data->hutangspd) ? $data->hutangspd : '0';
+                                $piutangberedar = !empty($data->piutangberedar) ? $data->piutangberedar : '0';
+                                $piutanglalai_1bulan = !empty($data->piutanglalai_1bulan) ? $data->piutanglalai_1bulan : '0';
+                                $piutanglalai_12bulan = !empty($data->piutanglalai_12bulan) ? $data->piutanglalai_12bulan : '0';
+                                $dcr = !empty($data->dcr) ? $data->dcr : '0';
+                                $dcu = !empty($data->dcu) ? $data->dcu : '0';
+                                $totalpendapatan = !empty($data->totalpendapatan) ? $data->totalpendapatan : '0';
+                                $totalbiaya = !empty($data->totalbiaya) ? $data->totalbiaya : '0';
+                                $shu = !empty($data->shu) ? $data->shu : '0';
+                                if(!empty($data->created_at)){
+                                    $date = new date($data->created_at);
+                                    $created_at = $date->format('d/n/Y');
+                                }else{
+                                    $create_at = '-';
+                                }
+                                if(!empty($data->updated_at)){
+                                    $date = new date($data->updated_at);
+                                    $updated_at = $date->format('d/n/Y');
+                                }else{
+                                    $updated_at = '-';
+                                }
+                                if(!empty($data->periode)){
+                                    $date = new date($data->periode);
+                                    $periode = $date->format('F Y');
+                                }else{
+                                    $periode = '-';
                                 }
                                 $tot_cu++;
                                 ?>
@@ -460,7 +496,7 @@
                             <th rowspan="2" data-sortable="false">#</th>
                             <th rowspan="2">Provinsi / Wilayah</th>
                             <th colspan="5" class="text-center">Anggota</th>
-                            <th rowspan="2">Kekayaan (ASET)</th>
+                            <th rowspan="2">ASET</th>
                             <th rowspan="2">Aktiva LANCAR</th>
                             <th rowspan="2">Simpanan Saham(SP+SW)</th>
                             <th colspan="2" class="text-center">Simpanan Non Saham</th>
@@ -630,7 +666,7 @@
                             <th rowspan="2" data-sortable="false">#</th>
                             <th rowspan="2">District Office</th>
                             <th colspan="5" class="text-center">Anggota</th>
-                            <th rowspan="2">Kekayaan (ASET)</th>
+                            <th rowspan="2">ASET</th>
                             <th rowspan="2">Aktiva LANCAR</th>
                             <th rowspan="2">Simpanan Saham(SP+SW)</th>
                             <th colspan="2" class="text-center">Simpanan Non Saham</th>
@@ -1092,7 +1128,7 @@
                         <tr class="bg-light-blue-active color-palette">
                             <th rowspan="2" data-sortable="false">&nbsp</th>
                             <th colspan="5" class="text-center">Anggota</th>
-                            <th rowspan="2">aset (ASET)</th>
+                            <th rowspan="2">ASET</th>
                             <th rowspan="2">Aktiva LANCAR</th>
                             <th rowspan="2">Simpanan Saham(SP+SW)</th>
                             <th colspan="2" class="text-center">Simpanan Non Saham</th>
@@ -1322,7 +1358,7 @@
                             <option value="nonsaham_unggulan">Simpanan Non Saham Unggulan</option>
                             <option value="nonsaham_harian">Simpanan Non Saham Harian & Deposito</option>
                             <option value="hutangspd">Hutang SPD</option>
-                            <option value="aset">aset (ASET)</option>
+                            <option value="aset">ASET</option>
                             <option value="piutangberedar">Piutang Beredar</option>
                             <option value="piutanglalai_1bulan">Piutang Lalai 1-12 Bulan</option>
                             <option value="piutanglalai_12bulan">Piutang Lalai > 12 Bulan</option>
@@ -1393,7 +1429,7 @@
                             <option value="nonsaham_unggulan">Simpanan Non Saham Unggulan</option>
                             <option value="nonsaham_harian">Simpanan Non Saham Harian & Deposito</option>
                             <option value="hutangspd">Hutang SPD</option>
-                            <option value="aset">aset (ASET)</option>
+                            <option value="aset">ASET</option>
                             <option value="piutangberedar">Piutang Beredar</option>
                             <option value="piutanglalai_1bulan">Piutang Lalai 1-12 Bulan</option>
                             <option value="piutanglalai_12bulan">Piutang Lalai > 12 Bulan</option>
