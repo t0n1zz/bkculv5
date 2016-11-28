@@ -13,6 +13,10 @@ class WilayahCuprimer extends Model {
     
     protected $fillable = ['name','jumlah'];
 
+    public function getNameAttribute($value){
+        return !empty($value) ? $value : '-';
+    }
+
     public function hascuprimer(){
         return $this->hasMany('App\Models\Cuprimer','wilayah','id');
     }

@@ -12,4 +12,8 @@ class KegiatanEvaluasi extends Model {
         'jumlah'
     ];
 
+    public function getNameAttribute($value){
+        return !empty($value) ? $value : '-';
+    }
+
 }

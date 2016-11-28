@@ -11,4 +11,8 @@ class KegiatanPeserta extends Model {
         'id_kegiatan','id_peserta','status'
     ];
 
+    public function getNameAttribute($value){
+        return !empty($value) ? $value : '-';
+    }
+
 }

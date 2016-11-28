@@ -11,7 +11,11 @@ class StafRiwayat extends Model {
         'id_staf','tipe','name','keterangan','keterangan2','mulai','selesai','sekarang'
     ];
 
-     public function cuprimer(){
+    public function getNameAttribute($value){
+        return !empty($value) ? $value : '-';
+    }
+
+    public function cuprimer(){
         return $this->belongsTo('App\Models\Cuprimer','keterangan','id');
     }
 }

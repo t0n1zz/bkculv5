@@ -16,6 +16,10 @@ class TpCU extends Model {
         'cu','name','ultah','telp','hp','pos','alamat'
     ];
 
+    public function getNameAttribute($value){
+        return !empty($value) ? $value : '-';
+    }
+
     public function cuprimer(){
         return $this->belongsTo('App\Models\Cuprimer','cu','id');
     }

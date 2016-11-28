@@ -7,9 +7,7 @@ class LaporanCu extends Model {
     
     protected $table = 'perkembangancu';
     
-     public static $rules = [
-        
-    ];
+    public static $rules = [];
 
     protected $fillable = [
         'no_ba','l_biasa','l_lbiasa','p_biasa','p_lbiasa','totalanggota_lalu','aset','aset_lalu',
@@ -19,6 +17,10 @@ class LaporanCu extends Model {
         'dcr','dcu','totalhutang_pihak3','iuran_gedung','donasi','bjs_saham','beban_operasional','investasi_likuid',
         'totalpendapatan','totalbiaya','shu','shu_lalu','lajuinflasi','hargapasar','periode'
     ];
+
+    public function getNameAttribute($value){
+        return !empty($value) ? $value : '0';
+    }
 
      public function cuprimer(){
         return $this->belongsTo('App\Models\Cuprimer','no_ba','no_ba');

@@ -20,6 +20,14 @@ class Kegiatan extends Model {
         'name','penulis','tanggal','tanggal2','wilayah','tempat','sasaran','fasilitator','tujuan','pokok'
     ];
 
+    public function getNameAttribute($value){
+        return !empty($value) ? $value : '-';
+    }
+
+    public function getNameAttribute($value){
+        return !empty($value) ? $value : '-';
+    }
+
     public function Admin(){
         return $this->belongsTo('App\Models\Admin','penulis','id');
     }

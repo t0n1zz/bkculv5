@@ -13,4 +13,8 @@ class Download extends Model{
     
     protected $fillable = ['name','filename','content'];
 
+    public function getNameAttribute($value){
+        return !empty($value) ? $value : '-';
+    }
+
 }

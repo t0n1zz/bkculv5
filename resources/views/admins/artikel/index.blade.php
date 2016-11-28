@@ -67,23 +67,23 @@ $imagepath = 'images_artikel/';
                     @foreach($datas as $data)
                         <tr>
                             <td class="bg-aqua disabled color-palette"></td>
-                            <td hidden>{{ $data['id'] }}</td>
-                            <td class="warptext">{{ $data['judul'] }}</td>    
-                            <td>{{ $data['kategori'] }}</td>
-                            <td>{{ $data['penulis'] }}</td>
-                            <td>{{ $data['created_at'] }}</td>
-                            <td>{{ $data['updated_at'] }}</td>
-                            <td>{{ $data['status'] }}</td>
-                            <td>{{ $data['pilihan'] }}</td>
-                            @if(!empty($data['gambar']) && is_file($imagepath.$data['gambar']."n.jpg"))
+                            <td hidden>{{ $data->id }}</td>
+                            <td class="warptext">{{ $data->judul }}</td>    
+                            <td>{{ $data->kategoriartikel->name }}</td>
+                            <td>{{ $data->penulis }}</td>
+                            <td>{{ $data->created_at->format('d/n/Y') }}</td>
+                            <td>{{ $data->updated_at->format('d/n/Y')  }}</td>
+                            @if($data->status)<td>Iya</td>@else<td>Tidak</td>@endif    
+                            @if($data->pilihan)<td>Iya</td>@else<td>Tidak</td>@endif 
+                            @if(!empty($data->gambar) && is_file($imagepath.$data->gambar."n.jpg"))
                                 <td style="white-space: nowrap"><div class="modalphotos" >
-                                        {{ Html::image(($imagepath.$data['gambar']).'n.jpg',asset(($imagepath.$data['gambar'])."jpg"),
+                                        {{ Html::image(($imagepath.$data->gambar).'n.jpg',asset(($imagepath.$data->gambar)."jpg"),
                                             array('class' => 'img-responsive ',
                                             'id' => 'tampilgambar', 'width' => '50')) }}
                                     </div></td>
-                            @elseif(!empty($data['gambar']) && is_file($imagepath.$data['gambar'])))
+                            @elseif(!empty($data->gambar) && is_file($imagepath.$data->gambar)))
                                 <td style="white-space: nowrap"><div class="modalphotos" >
-                                        {{ Html::image(($imagepath.$data['gambar']),asset($imagepath.$data['gambar']),
+                                        {{ Html::image(($imagepath.$data->gambar),asset($imagepath.$data),
                                             array('class' => 'img-responsive ',
                                             'id' => 'tampilgambar', 'width' => '50')) }}
                                     </div></td>
@@ -118,16 +118,7 @@ $imagepath = 'images_artikel/';
                         <tr>
                             <td class="bg-aqua disabled color-palette"></td>
                             <td hidden>{{ $data->id }}</td>
-                            @if(!empty($data->name))
-                                @if($data->id > 1)
-                                    <td>{{ $data->name }}</td>
-                                @else
-                                    <td>{{ $data->name }}</td>
-                                @endif
-                            @else
-                                <td>-</td>
-                            @endif
-
+                            <td>{{ $data->name }}</td>
                             @if($data->hasartikel->count() > 0)
                                 <td><a class="btn btn-default" disabled>{{ $data->jumlah }}</a></td>
                             @else

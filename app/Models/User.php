@@ -39,6 +39,10 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         'password', 'remember_token'
     ];
 
+    public function getNameAttribute($value){
+        return !empty($value) ? $value : '-';
+    }
+
     public function getId()
     {
         return $this->id;

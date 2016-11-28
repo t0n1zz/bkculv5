@@ -214,70 +214,52 @@
                         @foreach($datas as $data)
                             <?php
                                 if(!Request::is('admins/laporancu/index_cu/*')){
-                                    $cu_name = !empty($data->cuprimer->name) ? $data->cuprimer->name : ‘-’;
-                                    $no_ba = !empty($data->cuprimer->no_ba) ? $data->cuprimer->no_ba : ‘-’;
-                                    if(!empty($data->cuprimer->do)){
-                                        if($data->cuprimer->do == "1"){
-                                            $do ="BARAT";
-                                        }else if($data->cuprimer->do == "2"){
-                                            $do ="TENGAH";
-                                        }else if($data->cuprimer->do == "3"){
-                                            $do ="TIMUR";
-                                        }else{
-                                            $do ='-';
-                                        }
+                                    if($data->cuprimer->do == "1"){
+                                        $do ="BARAT";
+                                    }else if($data->cuprimer->do == "2"){
+                                        $do ="TENGAH";
+                                    }else if($data->cuprimer->do == "3"){
+                                        $do ="TIMUR";
                                     }else{
                                         $do ='-';
                                     }
-                                    if(!empty($data->cuprimer->wilayah)){
-                                        foreach($wilayahcuprimers as $wilayahcuprimer){
-                                            if($data->cuprimer->wilayah == $wilayahcuprimer->id){
-                                                $wilayah =$wilayahcuprimer->name;
-                                            }
+
+                                    foreach($wilayahcuprimers as $wilayahcuprimer){
+                                        if($data->cuprimer->wilayah == $wilayahcuprimer->id){
+                                            $wilayah =$wilayahcuprimer->name;
                                         }
-                                    }else{
-                                        $wilayah = '-';
                                     }
                                 }
 
-                                $periode_pertama = !empty($data->first()->periode) ? $data->first()->periode : '-';
-                                $l_biasa = !empty($data->l_biasa) ? $data->l_biasa : '0';
-                                $l_lbiasa = !empty($data->l_lbiasa) ? $data->l_lbiasa : '0';
-                                $p_biasa = !empty($data->p_biasa) ? $data->p_biasa : '0';
-                                $p_lbiasa = !empty($data->p_lbiasa) ? $data->p_lbiasa : '0';
-                                $aset = !empty($data->aset) ? $data->aset : '0';
-                                $aktivalancar = !empty($data->aktivalancar) ? $data->aktivalancar : '0';
-                                $simpanansaham = !empty($data->simpanansaham) ? $data->simpanansaham : '0';
-                                $nonsaham_unggulan = !empty($data->nonsaham_unggulan) ? $data->nonsaham_unggulan : '0';
-                                $nonsaham_harian = !empty($data->nonsaham_harian) ? $data->nonsaham_harian : '0';
-                                $hutangspd = !empty($data->hutangspd) ? $data->hutangspd : '0';
-                                $piutangberedar = !empty($data->piutangberedar) ? $data->piutangberedar : '0';
-                                $piutanglalai_1bulan = !empty($data->piutanglalai_1bulan) ? $data->piutanglalai_1bulan : '0';
-                                $piutanglalai_12bulan = !empty($data->piutanglalai_12bulan) ? $data->piutanglalai_12bulan : '0';
-                                $dcr = !empty($data->dcr) ? $data->dcr : '0';
-                                $dcu = !empty($data->dcu) ? $data->dcu : '0';
-                                $totalpendapatan = !empty($data->totalpendapatan) ? $data->totalpendapatan : '0';
-                                $totalbiaya = !empty($data->totalbiaya) ? $data->totalbiaya : '0';
-                                $shu = !empty($data->shu) ? $data->shu : '0';
-                                if(!empty($data->created_at)){
-                                    $date = new date($data->created_at);
-                                    $created_at = $date->format('d/n/Y');
-                                }else{
-                                    $create_at = '-';
-                                }
-                                if(!empty($data->updated_at)){
-                                    $date = new date($data->updated_at);
-                                    $updated_at = $date->format('d/n/Y');
-                                }else{
-                                    $updated_at = '-';
-                                }
-                                if(!empty($data->periode)){
-                                    $date = new date($data->periode);
-                                    $periode = $date->format('F Y');
-                                }else{
-                                    $periode = '-';
-                                }
                                 $tot_cu++;
+                                $date = new Date($data->periode);
+                                $periode = $date->format('F Y');
+                                $tot_l_biasa += $data->l_biasa;
+                                $tot_l_lbiasa += $data->l_lbiasa;
+                                $tot_p_biasa += $data->p_biasa;
+                                $tot_p_lbiasa += $data->p_lbiasa;
+                                $total = $data->l_biasa + $data->l_lbiasa + $data->p_biasa + $data->p_lbiasa;
+                                $tot_anggota += $total;
+                                $tot_aset += $data->aset;
+                                $tot_aktivalancar += $data->aktivalancar;
+                                $tot_simpanansaham += $data->simpanansaham;
+                                $tot_nonsaham_unggulan += $data->nonsaham_unggulan;
+                                $tot_nonsaham_harian += $data->nonsaham_harian;
+                                $tot_hutangspd += $data->hutangspd;
+                                $tot_piutangberedar += $data->piutangberedar;
+                                $piutangbersih = $data->piutangberedar - ($data->piutanglalai_1bulan + $data->piutanglalai_12bulan);
+                                $tot_piutangbersih += $piutangbersih;
+                                $tot_piutanglalai_1bulan += $data->piutanglalai_1bulan;
+                                $tot_piutanglalai_12bulan += $data->piutanglalai_12bulan;
+                                $rasio_beredar = number_format((($data->piutangberedar / $data->aset)*100),2); 
+                                $tot_beredar += $rasio_beredar;
+                                $rasio_lalai = number_format(((($data->piutanglalai_1bulan + $data->piutanglalai_12bulan) / $data->piutangberedar)*100),2);
+                                $tot_lalai += $rasio_lalai;
+                                $tot_dcr += $data->dcr;
+                                $tot_dcu += $data->dcu;
+                                $tot_totalpendapatan += $data->totalpendapatan;
+                                $tot_totalbiaya += $data->totalbiaya;
+                                $tot_shu += $data->shu;
                                 ?>
                             <tr
                             @if(!Request::is('admins/laporancu/index_cu/*'))
@@ -286,199 +268,36 @@
                                 <td class="bg-aqua disabled color-palette"></td>
                                 <td hidden>{{ $data->id }}</td>
                                 @if(!Request::is('admins/laporancu/index_cu/*'))
-                                    <td>{{ $cu_name }}</td>
-                                    <td>{{ $no_ba }}</td>
+                                    <td>{{ $data->cuprimer->name }}</td>
+                                    <td>{{ $data->cuprimer->no_ba }}</td>
                                     <td>{{ $do }}</td>
                                     <td>{{ $wilayah }}</td>
                                 @endif
-
-                                @if(!empty($data->periode))
-                                    <?php $date = new Date($data->periode); ?>
-                                    <td data-order="{{ $data->periode }}"> {{ $date->format('F Y') }}</td>
-                                @else
-                                    <td>0</td>
-                                @endif
-
-                                @if(!empty($data->l_biasa))
-                                    <?php 
-                                        $l_biasa = number_format($data->l_biasa,"0",",","."); $tot_l_biasa += $data->l_biasa;
-
-                                    ?>
-                                    <td data-order="{{ $data->l_biasa }}">{{ $l_biasa }}</td>
-                                @else
-                                    <td>0</td>
-                                @endif
-
-                                @if(!empty($data->l_lbiasa))
-                                    <?php $l_lbiasa = number_format($data->l_lbiasa,"0",",",".");  $tot_l_lbiasa += $data->l_lbiasa;?>
-                                    <td data-order="{{ $data->l_lbiasa }}">{{ $l_lbiasa }}</td>
-                                @else
-                                    <td>0</td>
-                                @endif
-
-                                @if(!empty($data->p_biasa))
-                                    <?php $p_biasa = number_format($data->p_biasa,"0",",","."); $tot_p_biasa += $data->p_biasa;?>
-                                    <td data-order="{{ $data->p_biasa }}">{{ $p_biasa }}</td>
-                                @else
-                                    <td>0</td>
-                                @endif
-
-                                @if(!empty($data->p_lbiasa))
-                                    <?php $p_lbiasa = number_format($data->p_lbiasa,"0",",","."); $tot_p_lbiasa += $data->p_lbiasa;?>
-                                    <td data-order="{{ $data->p_lbiasa }}">{{ $p_lbiasa }}</td>
-                                @else
-                                    <td>0</td>
-                                @endif
-
-                                @if(!empty($data->l_biasa) || !empty($data->l_lbiasa) || !empty($data->p_biasa) ||!empty($data->p_lbiasa))
-                                    <?php
-                                    $total = $data->l_biasa + $data->l_lbiasa + $data->p_biasa + $data->p_lbiasa;
-                                    $total_num = number_format($total,"0",",",".");
-                                    $tot_anggota += $total;
-                                    ?>
-                                    <td data-order="{{ $total }}">{{ $total_num }}</td>
-                                @else
-                                    <td>0</td>
-                                @endif
-
-                                @if(!empty($data->aset))
-                                    <?php $aset = number_format($data->aset,"0",",","."); $tot_aset += $data->aset;?>
-                                    <td data-order="{{ $data->aset }}">{{ $aset }}</td>
-                                @else
-                                    <td>0</td>
-                                @endif
-
-                                @if(!empty($data->aktivalancar))
-                                    <?php $aktivalancar = number_format($data->aktivalancar,"0",",","."); $tot_aktivalancar += $data->aktivalancar;?>
-                                    <td data-order="{{ $data->aktivalancar }}">{{ $aktivalancar }}</td>
-                                @else
-                                    <td>0</td>
-                                @endif
-
-                                @if(!empty($data->simpanansaham))
-                                    <?php $simpanansaham = number_format($data->simpanansaham,"0",",","."); $tot_simpanansaham += $data->simpanansaham;?>
-                                    <td data-order="{{ $data->simpanansaham }}">{{ $simpanansaham }}</td>
-                                @else
-                                    <td>0</td>
-                                @endif
-
-                                @if(!empty($data->nonsaham_unggulan))
-                                    <?php $nonsaham_unggulan = number_format($data->nonsaham_unggulan,"0",",","."); $tot_nonsaham_unggulan += $data->nonsaham_unggulan;?>
-                                    <td data-order="{{ $data->nonsaham_unggulan }}">{{ $nonsaham_unggulan }}</td>
-                                @else
-                                    <td>0</td>
-                                @endif
-
-                                @if(!empty($data->nonsaham_harian))
-                                    <?php $nonsaham_harian = number_format($data->nonsaham_harian,"0",",","."); $tot_nonsaham_harian += $data->nonsaham_harian;?>
-                                    <td data-order="{{ $data->nonsaham_harian }}">{{ $nonsaham_harian }}</td>
-                                @else
-                                    <td>0</td>
-                                @endif
-
-                                @if(!empty($data->hutangspd))
-                                    <?php $hutangspd = number_format($data->hutangspd,"0",",","."); $tot_hutangspd += $data->hutangspd;?>
-                                    <td data-order="{{ $data->hutangspd }}">{{ $hutangspd }}</td>
-                                @else
-                                    <td>0</td>
-                                @endif
-
-                                @if(!empty($data->piutangberedar))
-                                    <?php $piutangberedar = number_format($data->piutangberedar,"0",",","."); $tot_piutangberedar += $data->piutangberedar;?>
-                                    <td data-order="{{ $data->piutangberedar }}">{{ $piutangberedar }}</td>
-                                @else
-                                    <td>0</td>
-                                @endif
-
-                                @if(!empty($data->piutangberedar) || !empty($data->piutanglalai_1bulan) || !empty($data->piutanglalai_12bulan))
-                                    <?php
-                                    $piutangbersih = $data->piutangberedar - ($data->piutanglalai_1bulan + $data->piutanglalai_12bulan);
-                                    $piutangbersih_num = number_format($piutangbersih,"0",",",".");
-                                    $tot_piutangbersih += $piutangbersih;
-                                    ?>
-                                    <td data-order="{{ $piutangbersih }}">{{ $piutangbersih_num }}</td>
-                                @else
-                                    <td>0</td>
-                                @endif
-
-                                @if(!empty($data->piutanglalai_1bulan))
-                                    <?php $piutanglalai_1bulan = number_format($data->piutanglalai_1bulan,"0",",","."); $tot_piutanglalai_1bulan += $data->piutanglalai_1bulan;?>
-                                    <td data-order="{{ $data->piutanglalai_1bulan }}">{{ $piutanglalai_1bulan }}</td>
-                                @else
-                                    <td>0</td>
-                                @endif
-
-                                @if(!empty($data->piutanglalai_12bulan))
-                                    <?php $piutanglalai_12bulan = number_format($data->piutanglalai_12bulan,"0",",","."); $tot_piutanglalai_12bulan += $data->piutanglalai_12bulan;?>
-                                    <td data-order="{{ $data->piutanglalai_12bulan }}">{{ $piutanglalai_12bulan }}</td>
-                                @else
-                                    <td>0</td>
-                                @endif
-
-                               
-
-                                @if(!empty($data->aset) || !empty($data->piutangberedar))
-                                    <?php $rasio_beredar = number_format((($data->piutangberedar / $data->aset)*100),2); $tot_beredar += $rasio_beredar; ?>
-                                    <td data-order="{{ $rasio_beredar }}">{{ $rasio_beredar }} %</td>
-                                @else
-                                    <td>0 %</td>
-                                @endif
-
-                                @if(!empty($data->piutangberedar) || !empty($data->piutanglalai_1bulan) || !empty($data->piutanglalai_12bulan))
-                                    <?php $rasio_lalai = number_format(((($data->piutanglalai_1bulan + $data->piutanglalai_12bulan) / $data->piutangberedar)*100),2); $tot_lalai += $rasio_lalai;?>
-                                    <td data-order="{{ $rasio_lalai }}">{{ $rasio_lalai }} %</td>
-                                @else
-                                    <td>0 %</td>
-                                @endif
-
-                                @if(!empty($data->dcr))
-                                    <?php $dcr = number_format($data->dcr,"0",",","."); $tot_dcr += $data->dcr;?>
-                                    <td data-order="{{ $data->dcr }}">{{ $dcr }}</td>
-                                @else
-                                    <td>0</td>
-                                @endif
-
-                                @if(!empty($data->dcu))
-                                    <?php $dcu = number_format($data->dcu,"0",",","."); $tot_dcu += $data->dcu;?>
-                                    <td data-order="{{ $data->dcu }}">{{ $dcu }}</td>
-                                @else
-                                    <td>0</td>
-                                @endif
-
-                                @if(!empty($data->totalpendapatan))
-                                    <?php $totalpendapatan = number_format($data->totalpendapatan,"0",",","."); $tot_totalpendapatan += $data->totalpendapatan;?>
-                                    <td data-order="{{ $data->totalpendapatan }}">{{ $totalpendapatan }}</td>
-                                @else
-                                    <td>0</td>
-                                @endif
-
-                                @if(!empty($data->totalbiaya))
-                                    <?php $totalbiaya = number_format($data->totalbiaya,"0",",","."); $tot_totalbiaya += $data->totalbiaya;?>
-                                    <td data-order="{{ $data->totalbiaya }}">{{ $totalbiaya }}</td>
-                                @else
-                                    <td>0</td>
-                                @endif
-
-                                @if(!empty($data->shu))
-                                    <?php $shu = number_format($data->shu,"0",",","."); $tot_shu += $data->shu;?>
-                                    <td data-order="{{ $data->shu }}">{{ $shu }}</td>
-                                @else
-                                    <td>0</td>
-                                @endif
-
-                                @if(!empty($data->created_at ))
-                                    <?php $date = new Date($data->created_at); ?>
-                                    <td><i hidden="true">{{$data->created_at}}</i> {{ $date->format('d/n/Y') }}</td>
-                                @else
-                                    <td>-</td>
-                                @endif
-
-                                @if(!empty($data->updated_at ))
-                                    <?php $date = new Date($data->updated_at); ?>
-                                    <td><i hidden="true">{{$data->updated_at}}</i> {{ $date->format('d/n/Y') }}</td>
-                                @else
-                                    <td>-</td>
-                                @endif    
+                                <td data-order="{{ $data->periode }}"> @if(!empty($data->periode)){{ $periode }}@else{{ '-' }}@endif</td>
+                                <td data-order="{{ $data->l_biasa }}">{{ number_format($data->l_biasa,"0",",",".") }}</td>
+                                <td data-order="{{ $data->l_lbiasa }}">{{ number_format($data->l_lbiasa,"0",",",".") }}</td>
+                                <td data-order="{{ $data->p_biasa }}">{{ number_format($data->p_biasa,"0",",",".") }}</td>    
+                                <td data-order="{{ $data->p_lbiasa }}">{{ number_format($data->p_lbiasa,"0",",",".") }}</td>
+                                <td data-order="{{ $total }}">{{ number_format($total,"0",",",".") }}</td>
+                                <td data-order="{{ $data->aset }}">{{ number_format($data->aset,"0",",",".") }}</td>
+                                <td data-order="{{ $data->aktivalancar }}">{{ number_format($data->aktivalancar,"0",",",".") }}</td>
+                                <td data-order="{{ $data->simpanansaham }}">{{ number_format($data->simpanansaham,"0",",",".") }}</td>
+                                <td data-order="{{ $data->nonsaham_unggulan }}">{{ number_format($data->nonsaham_unggulan,"0",",",".") }}</td>
+                                <td data-order="{{ $data->nonsaham_harian }}">{{ number_format($data->nonsaham_harian,"0",",",".") }}</td>
+                                <td data-order="{{ $data->hutangspd }}">{{ number_format($data->hutangspd,"0",",",".") }}</td>
+                                <td data-order="{{ $data->piutangberedar }}">{{ number_format($data->piutangberedar,"0",",",".")}}</td>
+                                <td data-order="{{ $piutangbersih }}">{{ number_format($piutangbersih,"0",",",".") }}</td>
+                                <td data-order="{{ $data->piutanglalai_1bulan }}">{{ number_format($data->piutanglalai_1bulan,"0",",",".") }}</td>
+                                <td data-order="{{ $data->piutanglalai_12bulan }}">{{ number_format($data->piutanglalai_12bulan,"0",",",".") }}</td>
+                                <td data-order="{{ $rasio_beredar }}">{{ $rasio_beredar }} %</td>
+                                <td data-order="{{ $rasio_lalai }}">{{ $rasio_lalai }} %</td>
+                                <td data-order="{{ $data->dcr }}">{{ number_format($data->dcr,"0",",",".") }}</td>
+                                <td data-order="{{ $data->dcu }}">{{ number_format($data->dcu,"0",",",".")}}</td>
+                                <td data-order="{{ $data->totalpendapatan }}">{{ number_format($data->totalpendapatan,"0",",",".") }}</td>
+                                <td data-order="{{ $data->totalbiaya }}">{{ number_format($data->totalbiaya,"0",",",".") }}</td>
+                                <td data-order="{{ $data->shu }}">{{ number_format($data->shu,"0",",",".") }}</td>
+                                <td data-order="{{ $data->created_at }}">@if(!empty($data->created_at)){{ $data->created_at->format('d/n/Y') }}@else{{ '-' }}@endif</td>
+                                <td data-order="{{ $data->updated_at }}">@if(!empty($data->updated_at)){{ $data->updated_at->format('d/n/Y') }}@else{{ '-' }}@endif</td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -529,7 +348,6 @@
                         </thead>
                         <tbody>
                         <?php
-
                             foreach($wilayahcuprimers as $wilayahcuprimer){
                                 $wilayahs[$wilayahcuprimer->id] = array(
                                         'id'=> $wilayahcuprimer->id,'nama'=> $wilayahcuprimer->name,'l_biasa' => 0.0,'l_lbiasa' => 0.0,'p_biasa' => 0.0,'p_lbiasa' => 0.0,'aset' => 0.0,

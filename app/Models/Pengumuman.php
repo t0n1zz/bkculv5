@@ -14,6 +14,10 @@ class Pengumuman extends Model {
     
     protected $fillable = ['name','penulis','urutan'];
 
+    public function getNameAttribute($value){
+        return !empty($value) ? $value : '-';
+    }
+
     public function Admin(){
         return $this->belongsTo('App\Models\Admin','penulis','id');
     }

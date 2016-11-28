@@ -214,7 +214,6 @@ $file_max = intval($file_max);
     $(document).ready(function(){
         $('#summernote').summernote({
             minHeight: 300,
-            maximumImageFileSize: 1242880,
             dialogsFade: true,
             placeholder: 'Silahkan isi disini...',
             addclass: {

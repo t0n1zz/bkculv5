@@ -13,4 +13,8 @@ class Pelayanan extends Model {
     ];
     
     protected $fillable = ['name','gambar','content'];
+
+    public function getNameAttribute($value){
+        return !empty($value) ? $value : '-';
+    }
 }

@@ -11,4 +11,8 @@ class Saran extends Model{
 
     protected $fillable = ['name','content','ip','tanggal'];
 
+    public function getNameAttribute($value){
+        return !empty($value) ? $value : '-';
+    }
+
 }

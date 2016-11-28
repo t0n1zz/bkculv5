@@ -13,6 +13,10 @@ class KategoriArtikel extends Model {
     
     protected $fillable = ['name','jumlah'];
 
+    public function getNameAttribute($value){
+        return !empty($value) ? $value : '-';
+    }
+
     public function artikel(){
         return $this->hasMany('App\Models\Artikel','kategori','id')
                     ->where('status','=','1')

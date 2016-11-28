@@ -16,6 +16,10 @@ class Cuprimer extends Model {
         ,'telp','hp','website','email','gambar','logo','app'
         ,'deskripsi','wilayah','bergabung','ultah','tp','staf'];
 
+    public function getNameAttribute($value){
+        return !empty($value) ? $value : '-';
+    }
+
     public function WilayahCuprimer(){
         return $this->belongsTo('App\Models\WilayahCuprimer','wilayah','id');
     }

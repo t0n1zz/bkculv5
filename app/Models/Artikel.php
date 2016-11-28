@@ -14,6 +14,15 @@ class Artikel extends Model {
     
     protected $fillable = ['judul','content','kategori','penulis','status','gambar','pilihan'];
 
+    public function getNameAttribute($value){
+        return !empty($value) ? $value : '-';
+    }
+
+    protected $casts = [
+        'status' => 'boolean',
+        'pilihan' => 'boolean',
+    ];
+
     public function KategoriArtikel(){
         return $this->belongsTo('App\Models\KategoriArtikel','kategori','id');
     }

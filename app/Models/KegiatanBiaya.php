@@ -12,4 +12,8 @@ class KegiatanBiaya extends Model {
         'jumlah','nominal','keterangan'
     ];
 
+    public function getNameAttribute($value){
+        return !empty($value) ? $value : '-';
+    }
+
 }
