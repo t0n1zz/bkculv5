@@ -33,7 +33,7 @@
             <li class="active"><a href="#tab_perkembangan" data-toggle="tab">Perkembangan Gerakan</a></li>
         </ul>
         <div class="tab-content"> 
-            <div class="tab-pane fade in active" id="tab_perkembangan">
+            <div class="tab-pane fade in active" id="tab_konsolidasi">
                 <div class="input-group tabletools">
                     <div class="input-group-addon"><i class="fa fa-search"></i></div>
                     <input type="text" id="searchtext" class="form-control" placeholder="Kata kunci pencarian..." autofocus>

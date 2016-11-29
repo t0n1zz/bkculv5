@@ -213,7 +213,7 @@ Route::group(array('prefix' => 'admins','middleware' => 'auth'), function(){
         'as'           => 'admins.laporancu.index_periode',
         'uses'         => 'LaporanCuController@index_periode',
         'middleware'   => ['auth', 'acl'],
-        'can'          => 'create.laporancu_view']);
+        'can'          => 'view.laporancu_view']);
     Route::get('laporancu/index_bkcu', [
         'as'           => 'admins.laporancu.index_bkcu',
         'uses'         => 'LaporanCuController@index_bkcu',

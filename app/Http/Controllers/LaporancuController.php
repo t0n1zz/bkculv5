@@ -2,12 +2,14 @@
 namespace App\Http\Controllers;
 
 use DB;
+use Auth;
 use Input;
 use Excel;
 use Redirect;
 use Validator;
 use App\Models\LaporanCu;
 use App\Models\Cuprimer;
+use App\Models\WilayahCuprimer;
 use App\Models\Excelitems;
 use Jenssegers\Date\Date;
 
@@ -37,7 +39,12 @@ class LaporanCuController extends Controller{
                     $gperiode[] = str_limit($data->cuprimer->name,7);
                 }
             }
-            return view('admins.'.$this->kelaspath.'.index', compact('datas','dataarray','gperiode'));
+
+            $wilayahcuprimers = WilayahCuprimer::get();
+            $wilayahs = $this->laporancu_provinsi($wilayahcuprimers,$datas);
+            $dos = $this->laporancu_do($datas);
+
+            return view('admins.'.$this->kelaspath.'.index', compact('datas','dataarray','gperiode','wilayahs','wilayahcuprimers','dos'));
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
         }
@@ -61,7 +68,11 @@ class LaporanCuController extends Controller{
                 $gperiode[] = $datacu->cuprimer->name;
             }
 
-            return view('admins.'.$this->kelaspath.'.index', compact('datas','dataarray','gperiode'));
+            $wilayahcuprimers = WilayahCuprimer::get();
+            $wilayahs = $this->laporancu_provinsi($wilayahcuprimers,$datas);
+            $dos = $this->laporancu_do($datas);
+
+            return view('admins.'.$this->kelaspath.'.index', compact('datas','dataarray','gperiode','wilayahs','wilayahcuprimers','dos'));
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
         }
@@ -178,7 +189,7 @@ class LaporanCuController extends Controller{
                 );
             }
             $dataarray = $infogerakans;
-            return view('admins.'.$this->kelaspath.'.index_bkcu', compact('infogerakans','dataarray','gperiode'));
+            return view('admins.'.$this->kelaspath.'.index', compact('infogerakans','dataarray','gperiode'));
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
         }    
@@ -187,6 +198,15 @@ class LaporanCuController extends Controller{
     public function index_cu($id)
     {
         try{
+            $cu = Auth::user()->getCU();
+
+            if($cu > 0){
+                $cuprimer = Cuprimer::where('id','=',$cu)->select('no_ba')->first();
+                $no_ba = $cuprimer->no_ba;
+                if($no_ba != $id)
+                    return Redirect::back();
+            }
+
             $datas = LaporanCu::where('no_ba','=',$id)->orderBy('periode','desc')->get();
 
             $dataarray = $datas->sortBy('periode')->toArray();
@@ -196,13 +216,145 @@ class LaporanCuController extends Controller{
                 $gperiode[] = date('F Y', strtotime($a));
             }
 
-//            dd($gperiode);
-
             return view('admins.'.$this->kelaspath.'.index', compact('datas','dataarray','gperiode','id'));
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
         }
     }
+
+    public function laporancu_provinsi($wilayahcuprimers,$datas)
+    {
+        foreach($wilayahcuprimers as $wilayahcuprimer){
+            $wilayahs[$wilayahcuprimer->id] = array(
+                    'id'=> $wilayahcuprimer->id,'nama'=> $wilayahcuprimer->name,'l_biasa' => 0.0,'l_lbiasa' => 0.0,'p_biasa' => 0.0,'p_lbiasa' => 0.0,'aset' => 0.0,
+                    'aktivalancar' => 0.0,'simpanansaham' => 0.0,'nonsaham_unggulan' => 0.0,'nonsaham_harian' => 0.0,
+                    'hutangspd' => 0.0,'piutangberedar' => 0.0,'piutanglalai_1bulan' => 0.0,'piutanglalai_12bulan' => 0.0,
+                    'dcr' => 0.0,'dcu' => 0.0,'totalpendapatan' => 0.0,'totalbiaya' => 0.0,'shu' => 0.0
+            );
+        }
+        foreach($wilayahs as $wil){
+            foreach($datas as $data){
+                if(!empty($data->cuprimer)){
+                    if($data->cuprimer->wilayah == $wil['id']){
+                        $wilayahs[$data->cuprimer->wilayah]['l_biasa'] += $data->l_biasa;
+                        $wilayahs[$data->cuprimer->wilayah]['l_lbiasa'] += $data->l_lbiasa;
+                        $wilayahs[$data->cuprimer->wilayah]['p_biasa'] += $data->p_biasa;
+                        $wilayahs[$data->cuprimer->wilayah]['p_lbiasa'] += $data->p_lbiasa;
+                        $wilayahs[$data->cuprimer->wilayah]['aset'] += $data->aset;
+                        $wilayahs[$data->cuprimer->wilayah]['aktivalancar'] += $data->aktivalancar;
+                        $wilayahs[$data->cuprimer->wilayah]['simpanansaham'] += $data->simpanansaham;
+                        $wilayahs[$data->cuprimer->wilayah]['nonsaham_unggulan'] += $data->nonsaham_unggulan;
+                        $wilayahs[$data->cuprimer->wilayah]['nonsaham_harian'] += $data->nonsaham_harian;
+                        $wilayahs[$data->cuprimer->wilayah]['hutangspd'] += $data->hutangspd;
+                        $wilayahs[$data->cuprimer->wilayah]['piutangberedar'] += $data->piutangberedar;
+                        $wilayahs[$data->cuprimer->wilayah]['piutanglalai_1bulan'] += $data->piutanglalai_1bulan;
+                        $wilayahs[$data->cuprimer->wilayah]['piutanglalai_12bulan'] += $data->piutanglalai_12bulan;
+                        $wilayahs[$data->cuprimer->wilayah]['dcr'] += $data->dcr;
+                        $wilayahs[$data->cuprimer->wilayah]['dcu'] += $data->dcu;
+                        $wilayahs[$data->cuprimer->wilayah]['totalpendapatan'] += $data->totalpendapatan;
+                        $wilayahs[$data->cuprimer->wilayah]['totalbiaya'] += $data->totalbiaya;
+                        $wilayahs[$data->cuprimer->wilayah]['shu'] += $data->shu;
+                    }
+                }
+            };
+        }
+
+        return $wilayahs;
+    }
+
+    public function laporancu_do($datas){
+        $dos = array(
+            'do_barat'=>
+                    array(
+                            'nama' => 'BARAT',
+                            'l_biasa' => 0.0,'l_lbiasa' => 0.0,'p_biasa' => 0.0,'p_lbiasa' => 0.0,'aset' => 0.0,
+                            'aktivalancar' => 0.0,'simpanansaham' => 0.0,'nonsaham_unggulan' => 0.0,'nonsaham_harian' => 0.0,
+                            'hutangspd' => 0.0,'piutangberedar' => 0.0,'piutanglalai_1bulan' => 0.0,'piutanglalai_12bulan' => 0.0,
+                            'dcr' => 0.0,'dcu' => 0.0,'totalpendapatan' => 0.0,'totalbiaya' => 0.0,'shu' => 0.0
+                    ),
+            'do_timur'=>
+                    array(
+                            'nama' => 'TIMUR',
+                            'l_biasa' => 0.0,'l_lbiasa' => 0.0,'p_biasa' => 0.0,'p_lbiasa' => 0.0,'aset' => 0.0,
+                            'aktivalancar' => 0.0,'simpanansaham' => 0.0,'nonsaham_unggulan' => 0.0,'nonsaham_harian' => 0.0,
+                            'hutangspd' => 0.0,'piutangberedar' => 0.0,'piutanglalai_1bulan' => 0.0,'piutanglalai_12bulan' => 0.0,
+                            'dcr' => 0.0,'dcu' => 0.0,'totalpendapatan' => 0.0,'totalbiaya' => 0.0,'shu' => 0.0
+                    ),
+            'do_tengah'=>
+                    array(
+                            'nama' => 'TENGAH',
+                            'l_biasa' => 0.0,'l_lbiasa' => 0.0,'p_biasa' => 0.0,'p_lbiasa' => 0.0,'aset' => 0.0,
+                            'aktivalancar' => 0.0,'simpanansaham' => 0.0,'nonsaham_unggulan' => 0.0,'nonsaham_harian' => 0.0,
+                            'hutangspd' => 0.0,'piutangberedar' => 0.0,'piutanglalai_1bulan' => 0.0,'piutanglalai_12bulan' => 0.0,
+                            'dcr' => 0.0,'dcu' => 0.0,'totalpendapatan' => 0.0,'totalbiaya' => 0.0,'shu' => 0.0
+                    ),
+        );
+        foreach($datas as $data){
+            if(!empty($data->cuprimer)){
+                if($data->cuprimer->do == "1"){
+                    $dos['do_barat']['l_biasa'] += $data->l_biasa;
+                    $dos['do_barat']['l_lbiasa'] += $data->l_lbiasa;
+                    $dos['do_barat']['p_biasa'] += $data->p_biasa;
+                    $dos['do_barat']['p_lbiasa'] += $data->p_lbiasa;
+                    $dos['do_barat']['aset'] += $data->aset;
+                    $dos['do_barat']['aktivalancar'] += $data->aktivalancar;
+                    $dos['do_barat']['simpanansaham'] += $data->simpanansaham;
+                    $dos['do_barat']['nonsaham_unggulan'] += $data->nonsaham_unggulan;
+                    $dos['do_barat']['nonsaham_harian'] += $data->nonsaham_harian;
+                    $dos['do_barat']['hutangspd'] += $data->hutangspd;
+                    $dos['do_barat']['piutangberedar'] += $data->piutangberedar;
+                    $dos['do_barat']['piutanglalai_1bulan'] += $data->piutanglalai_1bulan;
+                    $dos['do_barat']['piutanglalai_12bulan'] += $data->piutanglalai_12bulan;
+                    $dos['do_barat']['dcr'] += $data->dcr;
+                    $dos['do_barat']['dcu'] += $data->dcu;
+                    $dos['do_barat']['totalpendapatan'] += $data->totalpendapatan;
+                    $dos['do_barat']['totalbiaya'] += $data->totalbiaya;
+                    $dos['do_barat']['shu'] += $data->shu;
+                }else if($data->cuprimer->do == "2"){
+                    $dos['do_tengah']['l_biasa'] += $data->l_biasa;
+                    $dos['do_tengah']['l_lbiasa'] += $data->l_lbiasa;
+                    $dos['do_tengah']['p_biasa'] += $data->p_biasa;
+                    $dos['do_tengah']['p_lbiasa'] += $data->p_lbiasa;
+                    $dos['do_tengah']['aset'] += $data->aset;
+                    $dos['do_tengah']['aktivalancar'] += $data->aktivalancar;
+                    $dos['do_tengah']['simpanansaham'] += $data->simpanansaham;
+                    $dos['do_tengah']['nonsaham_unggulan'] += $data->nonsaham_unggulan;
+                    $dos['do_tengah']['nonsaham_harian'] += $data->nonsaham_harian;
+                    $dos['do_tengah']['hutangspd'] += $data->hutangspd;
+                    $dos['do_tengah']['piutangberedar'] += $data->piutangberedar;
+                    $dos['do_tengah']['piutanglalai_1bulan'] += $data->piutanglalai_1bulan;
+                    $dos['do_tengah']['piutanglalai_12bulan'] += $data->piutanglalai_12bulan;
+                    $dos['do_tengah']['dcr'] += $data->dcr;
+                    $dos['do_tengah']['dcu'] += $data->dcu;
+                    $dos['do_tengah']['totalpendapatan'] += $data->totalpendapatan;
+                    $dos['do_tengah']['totalbiaya'] += $data->totalbiaya;
+                    $dos['do_tengah']['shu'] += $data->shu;
+                }else if($data->cuprimer->do == "3"){
+                    $dos['do_timur']['l_biasa'] += $data->l_biasa;
+                    $dos['do_timur']['l_lbiasa'] += $data->l_lbiasa;
+                    $dos['do_timur']['p_biasa'] += $data->p_biasa;
+                    $dos['do_timur']['p_lbiasa'] += $data->p_lbiasa;
+                    $dos['do_timur']['aset'] += $data->aset;
+                    $dos['do_timur']['aktivalancar'] += $data->aktivalancar;
+                    $dos['do_timur']['simpanansaham'] += $data->simpanansaham;
+                    $dos['do_timur']['nonsaham_unggulan'] += $data->nonsaham_unggulan;
+                    $dos['do_timur']['nonsaham_harian'] += $data->nonsaham_harian;
+                    $dos['do_timur']['hutangspd'] += $data->hutangspd;
+                    $dos['do_timur']['piutangberedar'] += $data->piutangberedar;
+                    $dos['do_timur']['piutanglalai_1bulan'] += $data->piutanglalai_1bulan;
+                    $dos['do_timur']['piutanglalai_12bulan'] += $data->piutanglalai_12bulan;
+                    $dos['do_timur']['dcr'] += $data->dcr;
+                    $dos['do_timur']['dcu'] += $data->dcu;
+                    $dos['do_timur']['totalpendapatan'] += $data->totalpendapatan;
+                    $dos['do_timur']['totalbiaya'] += $data->totalbiaya;
+                    $dos['do_timur']['shu'] += $data->shu;
+                }
+            }    
+        };
+
+        return $dos;    
+    }
+
     /**
      * Show the form for creating a new artikel
      *

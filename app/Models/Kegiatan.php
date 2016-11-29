@@ -24,10 +24,6 @@ class Kegiatan extends Model {
         return !empty($value) ? $value : '-';
     }
 
-    public function getNameAttribute($value){
-        return !empty($value) ? $value : '-';
-    }
-
     public function Admin(){
         return $this->belongsTo('App\Models\Admin','penulis','id');
     }

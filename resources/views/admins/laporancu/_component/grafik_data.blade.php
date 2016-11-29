@@ -241,7 +241,7 @@
             }
         ]
     };
-    @if(!Request::is('admins/laporancu/index_cu/*'))
+    @if(Request::is('admins/laporancu'))
         var data_l_biasa2 = {
             labels: {!! json_encode($gperiode2,JSON_NUMERIC_CHECK) !!},
             datasets: [
@@ -678,6 +678,7 @@
             ]
         };
     @endif
+    @if(!Request::is('admins/laporancu/index_bkcu')) 
     var data_p1 = {
         labels: {!! json_encode($gperiode,JSON_NUMERIC_CHECK) !!},
         datasets: [
@@ -808,4 +809,5 @@
             }
         ]
     };
+    @endif
 </script>

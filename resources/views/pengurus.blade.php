@@ -27,7 +27,7 @@
                     <div class="team-member">
                         <div class="member-photo">
                             @if(!empty($pengurus->gambar) && is_file($imagepath.$pengurus->gambar.".jpg"))
-                                {{ Html::image($imagepath.$pengawas->gambar.'.jpg',$pengurus->name) }}
+                                {{ Html::image($imagepath.$pengurus->gambar.'.jpg',$pengurus->name) }}
                             @else
                                 {{ Html::image('images/no_image_man.jpg', $pengurus->name) }}
                             @endif
@@ -53,7 +53,7 @@
                     <div class="team-member">
                         <div class="member-photo">
                             @if(!empty($pengurus->gambar) && is_file($imagepath.$pengurus->gambar.".jpg"))
-                                {{ Html::image($imagepath.$pengawas->gambar.'.jpg',$pengurus->name) }}
+                                {{ Html::image($imagepath.$pengurus->gambar.'.jpg',$pengurus->name) }}
                             @else
                                 {{ Html::image('images/no_image_man.jpg', $pengurus->name) }}
                             @endif
