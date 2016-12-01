@@ -31,7 +31,7 @@
     </h1>
     <ol class="breadcrumb">
         <li><a href="{{ URL::to('admins') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active"><i class="fa fa-line-chart"></i> {{ $title }}</li>
+        <li class="active"><i class="fa fa-line-chart"></i> Kelola {{ $title }}</li>
     </ol>
 </section>
 
@@ -203,11 +203,11 @@
                                 <?php
                                     if(!Request::is('admins/laporancu/index_cu/*')){
                                         if($data->cuprimer->do == "1"){
-                                            $do ="BARAT";
+                                            $do ="Barat";
                                         }else if($data->cuprimer->do == "2"){
-                                            $do ="TENGAH";
+                                            $do ="Tengah";
                                         }else if($data->cuprimer->do == "3"){
-                                            $do ="TIMUR";
+                                            $do ="Timur";
                                         }else{
                                             $do ='-';
                                         }
@@ -797,17 +797,17 @@
     <!--grafik-->
     <div class="nav-tabs-custom">
         <ul class="nav nav-tabs">
-            <li class="active"><a href="#tab_grafik_cu" data-toggle="tab">Grafik {{ $title }}</a></li>
+            <li class="active"><a href="#tab_cu" data-toggle="tab">Grafik {{ $title }}</a></li>
             @if(Request::is('admins/laporancu') || Request::is('admins/laporancu/index_periode/*'))
-                <li><a href="#tab_grafik_provinsi" data-toggle="tab">Grafik {{ $title }} (Provinsi)</a></li>
-                <li><a href="#tab_grafik_do" data-toggle="tab">Grafik {{ $title }} (District Office)</a></li>
+                <li><a href="#tab_provinsi" data-toggle="tab">Grafik {{ $title }} (Provinsi)</a></li>
+                <li><a href="#tab_do" data-toggle="tab">Grafik {{ $title }} (District Office)</a></li>
             @endif
             @if(!Request::is('admins/laporancu/index_bkcu')) 
-                <li><a href="#tab_grafik_pearls" data-toggle="tab">Grafik P.E.A.R.L.S</a></li>
+                <li><a href="#tab_pearls" data-toggle="tab">Grafik P.E.A.R.L.S</a></li>
             @endif
         </ul>
         <div class="tab-content">
-            <div class="tab-pane fade in active" id="tab_grafik_cu">
+            <div class="tab-pane fade in active" id="tab_cu">
                 <?php
                 $gl_biasa = array_column($dataarray,'l_biasa');
                 $gl_lbiasa = array_column($dataarray,'l_lbiasa');
@@ -879,7 +879,7 @@
                 </div>
             </div>
             @if(Request::is('admins/laporancu') || Request::is('admins/laporancu/index_periode/*'))
-                <div class="tab-pane fade" id="tab_grafik_provinsi">
+                <div class="tab-pane fade" id="tab_provinsi">
                     <?php
                     $gperiode2 = array_column($wilayahs,'nama');
                     $gl_biasa2 = array_column($wilayahs,'l_biasa');
@@ -950,7 +950,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="tab-pane fade" id="tab_grafik_do">
+                <div class="tab-pane fade" id="tab_do">
                     <?php
                     $gperiode3 = array_column($dos,'nama');
                     $gl_biasa3= array_column($dos,'l_biasa');
@@ -1023,7 +1023,7 @@
                 </div>
             @endif
             @if(!Request::is('admins/laporancu/index_bkcu')) 
-                <div class="tab-pane fade" id="tab_grafik_pearls">
+                <div class="tab-pane fade" id="tab_pearls">
                     <?php
                         if(!empty($datapearls)){
                            $gp1 = array_column($datapearls,'p1');
@@ -1143,19 +1143,19 @@
             return false;
         });
     });
-    // $('.nav-tabs li a').click(function (e) {
-    //     //get selected href
-    //     var href = $(this).attr('href');
+    $('.nav-tabs li a').click(function (e) {
+        //get selected href
+        var href = $(this).attr('href');
 
-    //     //set all nav tabs to inactive
-    //     $('.nav-tabs li').removeClass('active');
+        //set all nav tabs to inactive
+        $('.nav-tabs li').removeClass('active');
 
-    //     //get all nav tabs matching the href and set to active
-    //     $('.nav-tabs li a[href="'+href+'"]').closest('li').addClass('active');
+        //get all nav tabs matching the href and set to active
+        $('.nav-tabs li a[href="'+href+'"]').closest('li').addClass('active');
 
-    //     //active tab
-    //     $('.tab-pane').removeClass('fade active in');
-    //     $('.tab-pane'+href).addClass('fade active in');
-    // })
+        //active tab
+        $('.tab-pane').removeClass('fade active in');
+        $('.tab-pane'+href).addClass('fade active in');
+    })
 </script>
 @stop

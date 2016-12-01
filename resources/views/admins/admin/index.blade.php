@@ -43,6 +43,7 @@ $kelas = "admin";
                         <th>#</th>
                         <th hidden></th>
                         <th>Username</th>
+                        <th>Nama</th>
                         <th>CU</th>
                         <th>Terakhir Login</th>
                         <th>Terakhir Logout</th>
@@ -54,20 +55,13 @@ $kelas = "admin";
                         <tr>
                             <td class="bg-aqua disabled color-palette"></td>
                             <td hidden>{{ $data->id }}</td>
-                            @if(!empty($data->username))
-                                <td>{{ $data->username }}</td>
-                            @else
-                                <td>-</td>
-                            @endif
+                            <td>{{ $data->username }}</td>
+                            <td>{{ $data->name }}</td>
 
                             @if($data->cu == "0")
                                 <td>BKCU</td>
                             @else
-                                @if(!empty($data->cuprimer))
-                                    <td>{{ $data->cuprimer->name }}</td>
-                                @else
-                                    <td>-</td>
-                                @endif
+                                <td>{{ $data->cuprimer->name }}</td>
                             @endif
 
                             @if($data->login != "0000-00-00 00:00:00")
@@ -222,7 +216,7 @@ $kelas = "admin";
                             return item[1];
                         });
                         var cu = $.map(table.rows({ selected:true }).data(),function(item){
-                            return item[3];
+                            return item[4];
                         });
                         if(id != ""){
                             $('input:checkbox').removeAttr('checked');
@@ -268,7 +262,7 @@ $kelas = "admin";
                             return item[1];
                         });
                         var status = $.map(table.rows({ selected:true }).data(),function(item){
-                            return item[6];
+                            return item[7];
                         });
                         if(id != ""){
                             $('#modalstatus').modal({show:true});

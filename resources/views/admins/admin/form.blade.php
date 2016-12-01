@@ -9,7 +9,7 @@ $kelas ='admin';
     <div class="box-body">
         <div class="row">
             <!--username-->
-            <div class="col-sm-12">
+            <div class="col-sm-6">
                 <div class="form-group has-feedback">
                     <h4>Username</h4>
                     <div class="input-group">
@@ -27,6 +27,25 @@ $kelas ='admin';
                 </div>  
             </div>
             <!--/username-->
+            <!--name-->
+            <div class="col-sm-6">
+                <div class="form-group has-feedback">
+                    <h4>Nama</h4>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-font"></i></span>
+                        @if(!empty($data))
+                            {{ Form::text('name',null,array('class'=>'form-control','id'=>'name',
+                            'placeholder'=>'Silahkan masukkan nama', 'autocomplete'=>'off','readonly'))}}
+                        @else
+                            {{ Form::text('name',null,array('class'=>'form-control','id'=>'name',
+                            'placeholder'=>'Silahkan masukkan nama','autocomplete'=>'off','required'))}}
+                        @endif
+                        <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                    </div>
+                    <div class="help-block">Nama harus diisi.</div>
+                </div>  
+            </div>
+            <!--/name-->
 
             @if(empty($data))
                 <!--password 1-->

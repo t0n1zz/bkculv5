@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>BKCU</title>
+    <title>AdminBKCU</title>
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <!-- icon-->
     <link rel="icon" href="{{asset('images/logo.png')}}" sizes="16x16">

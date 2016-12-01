@@ -47,6 +47,17 @@ class CuprimerController extends Controller{
         }
     }
 
+    public function detail($id){
+        try {
+            $data = Cuprimer::with('wilayahcuprimer')->find($id);
+            $datatp = TpCU::where('cu','=',$id)->orderBy('cu','desc')->get();
+
+            return view('admins.'.$this->kelaspath.'.detail', compact('data','datatp','id'));
+        }catch (Exception $e){
+            return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
+        }
+    }
+
     public function create()
     {
         try{

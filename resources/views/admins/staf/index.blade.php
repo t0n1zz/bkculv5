@@ -74,43 +74,23 @@ $imagepath = "images_staf/";
                                 <th hidden></th>
                                 <th data-sortable="false">Foto</th>
                                 <th>Nama </th>
-                                <th>Jabatan</th>
                                 <th>Jenis Kelamin</th>
+                                <th>Jabatan</th>
                                 <th>Status</th>
                                 <th>Agama</th>
                                 <th>Pendidikan</th>
-                                <th data-sortable="false"></th>
+                                <th>No. Telepon</th>
+                                <th>No. Handphone</th>
+                                <th>E-mail</th>
+                                <th>Alamat</th>
                             </tr>
                         </thead>
                         <tbody>
                         @foreach($datas as $data)
                             <?php
-                                $telp = '-';
-                                $handphone = '-';
-                                $email = '-';
-                                $kota = '-';
-                                $alamat = '-';
-                                $tingkat = '-';
-                                $pendidikan = '-';
-                                $organisasi = '-';
-
-                                if(!empty($data->telp)){
-                                    $telp = $data->telp;
-                                }
-                                if(!empty($data->handphone)){
-                                    $handphone = $data->handphone;
-                                }
-                                if(!empty($data->email)){
-                                    $email = $data->email;
-                                }
-                                if(!empty($data->kota)){
-                                    $kota = $data->kota;
-                                }
-                                if(!empty($data->alamat)){
-                                    $newarr = explode("\n",$data->alamat);
-                                    foreach($newarr as $str){
-                                        $status = $str;
-                                    }
+                                $newarr = explode("\n",$data->alamat);
+                                foreach($newarr as $str){
+                                    $alamat = $str;
                                 }
 
                                 $jabatans = \App\Models\StafRiwayat::where('id_staf','=',$data->id)
@@ -139,77 +119,45 @@ $imagepath = "images_staf/";
                                     }
                                 }
                             ?>
-                            <tr data-key-telp="{{ $telp }}"
-                                data-key-handphone="{{ $handphone }}"
-                                data-key-email="{{ $email }}"
-                                data-key-kota="{{ $kota }}"
-                                data-key-alamat="{{ $alamat }}"
-                            >
+                            <tr >
                                 <td class="bg-aqua disabled color-palette"></td>    
                                 <td hidden>{{$data->id}}</td>
                                 @if(!empty($data->gambar) && is_file($imagepath.$data->gambar."n.jpg"))
                                     <td style="white-space: nowrap"><div class="modalphotos" >
                                             {{ Html::image($imagepath.$data->gambar.'n.jpg',asset($imagepath.$data->gambar."jpg"),
                                              array('class' => 'img-responsive',
-                                            'id' => 'tampilgambar', 'width' => '50')) }}
+                                            'id' => 'tampilgambar', 'width' => '40px')) }}
                                         </div></td>
                                 @elseif(!empty($data->gambar) && is_file($imagepath.$data->gambar))
                                     <td style="white-space: nowrap"><div class="modalphotos" >
                                             {{ Html::image($imagepath.$data->gambar,asset($imagepath.$data->gambar),
                                                 array('class' => 'img-responsive ',
-                                                'id' => 'tampilgambar', 'width' => '50')) }}
+                                                'id' => 'tampilgambar', 'width' => '40px')) }}
                                         </div></td>
                                 @else
                                     @if($data->kelamin == "Wanita")
                                         <td>{{ Html::image('images/no_image_woman.jpg', 'a picture', array('class' => 'img-responsive',
-                                                            'id' => 'tampilgambar', 'width' => '50')) }}</td>
+                                                            'id' => 'tampilgambar', 'width' => '40px')) }}</td>
                                     @else
                                         <td>{{ Html::image('images/no_image_man.jpg', 'a picture', array('class' => 'img-responsive',
-                                                            'id' => 'tampilgambar', 'width' => '50')) }}</td>
+                                                            'id' => 'tampilgambar', 'width' => '40px')) }}</td>
                                     @endif
                                 @endif
-
-                                @if(!empty($data->name))
-                                    <td>{!! $data->name !!}</td>
-                                @else
-                                    <td>-</td>
-                                @endif
-
-                                @if(!empty($pekerjaan))
-                                    <td>
-                                    @foreach($pekerjaan as $p)
-                                        {!! $p  !!}<br/>
-                                    @endforeach
-                                    </td>
-                                @else
-                                    <td>-</td>
-                                @endif
-
-                                @if(!empty($data->kelamin))
-                                    <td>{!! $data->kelamin !!}</td>
-                                @else
-                                    <td>-</td>
-                                @endif
-
-                                @if(!empty($data->status))
-                                    <td>{!! $data->status !!}</td>
-                                @else
-                                    <td>-</td>
-                                @endif
-
-                                @if(!empty($data->agama))
-                                    <td>{!! $data->agama !!}</td>
-                                @else
-                                    <td>-</td>
-                                @endif
-
-                                @if(!empty($data->pendidikan))
-                                    <td>{!! $data->pendidikan !!}</td>
-                                @else
-                                    <td>-</td>
-                                @endif
-
-                                <td class="details-control" style="cursor: pointer"><i class="fa fa-bars"></i></td>
+                                
+                                <td>{{ $data->name }}</td>
+                                <td>{{ $data->kelamin }}</td>
+                                <td>
+                                @foreach($pekerjaan as $p)
+                                    {{ $p  }}<br/>
+                                @endforeach
+                                </td>
+                                <td>{{ $data->status }}</td>
+                                <td>{{ $data->agama }}</td>
+                                <td>{{ $data->pendidikan }}</td>
+                                <td>{{ $data->telp }}</td>
+                                <td>{{ $data->handphone }}</td>
+                                <td>{{ $data->email }}</td>
+                                <td>{{ $alamat }}</td>
                             </tr>
                         @endforeach
 
@@ -357,26 +305,26 @@ $imagepath = "images_staf/";
                 return false;
             });
 
-            $('#dataTables-example').on('click', 'td.details-control', function () {
-                var tr = $(this).closest('tr');
-                var row = table.row(tr);
+            // $('#dataTables-example').on('click', 'td.details-control', function () {
+            //     var tr = $(this).closest('tr');
+            //     var row = table.row(tr);
 
-                if (row.child.isShown()) {
-                    // This row is already open - close it
-                    row.child.hide();
-                    tr.removeClass('shown');
-                } else {
-                    // Open this row
-                    row.child(format({
-                        'No. Telepon ' : tr.data('key-telp'),
-                        'No. Handphone' :  tr.data('key-handphone'),
-                        'Email' : tr.data('key-email'),
-                        'Kota' : tr.data('key-kota'),
-                        'Alamat' : tr.data('key-alamat')
-                    })).show();
-                    tr.addClass('shown');
-                }
-            });
+            //     if (row.child.isShown()) {
+            //         // This row is already open - close it
+            //         row.child.hide();
+            //         tr.removeClass('shown');
+            //     } else {
+            //         // Open this row
+            //         row.child(format({
+            //             'No. Telepon ' : tr.data('key-telp'),
+            //             'No. Handphone' :  tr.data('key-handphone'),
+            //             'Email' : tr.data('key-email'),
+            //             'Kota' : tr.data('key-kota'),
+            //             'Alamat' : tr.data('key-alamat')
+            //         })).show();
+            //         tr.addClass('shown');
+            //     }
+            // });
         });
 
     </script>

@@ -20,8 +20,8 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         'password' => 'required'
     ];
 
-    protected $fillable = ['username','password',
-        'logout','login','cu','status'];
+    protected $fillable = ['username','password','name',
+        'logout','login','cu','status','gambar'];
 
 	/**
 	 * The database table used by the model.
@@ -46,6 +46,11 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     public function getId()
     {
         return $this->id;
+    }
+
+    public function getName()
+    {
+        return $this->name;
     }
 
     public function getUsername()

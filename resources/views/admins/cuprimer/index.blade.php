@@ -2,6 +2,7 @@
 $title = "Kelola CU";
 $kelas = 'cuprimer';
 $kelas2 = 'wilayahcuprimer';
+$imagepath = "images_cu/";
 ?>
 
 @extends('admins._layouts.layout')
@@ -50,9 +51,11 @@ $kelas2 = 'wilayahcuprimer';
                         <tr>
                             <th data-sortable="false">#</th>
                             <th hidden></th>
+                            <th>Foto</th>
                             <th>Nama </th>
                             <th>No. BA</th>
                             <th>Wilayah</th>
+                            <th>District Office</th>
                             <th>Tanggal Berdiri</th>
                             <th>Tanggal Bergabung</th>
                             <th>TP</th>
@@ -69,100 +72,48 @@ $kelas2 = 'wilayahcuprimer';
                         </thead>
                         <tbody>
                         @foreach($datas as $data)
+                            <?php 
+                                $date = new Date($data->ultah); 
+                                $date2 = new Date($data->bergabung);
+                                if($data->do == "1"){
+                                    $do ="Barat";
+                                }else if($data->do == "2"){
+                                    $do ="Tengah";
+                                }else if($data->do == "3"){
+                                    $do ="Timur";
+                                }else{
+                                    $do ='-';
+                                }
+                            ?>
                             <tr>
                                 <td class="bg-aqua disabled color-palette"></td>
                                 <td hidden>{{ $data->id }}</td>
-                                @if(!empty($data->name))
-                                    <td>{{ $data->name }}</td>
+                                @if(!empty($data->gambar) && is_file($imagepath.$data->gambar."n.jpg"))
+                                    <th><img class="img-responsive"  width="50px" src="{{ asset($imagepath.$data->gambar.'n.jpg') }}"
+                                             id="tampilgambar" alt="{{ asset($imagepath.$data->gambar."jpg") }}"></th>
+                                @elseif(!empty($data->gambar) && is_file($imagepath.$data->gambar))
+                                    <th><img class="img-responsive" width="50px" src="{{ asset($imagepath.$data->gambar) }}"
+                                             id="tampilgambar" alt="{{ asset($imagepath.$data->gambar) }}"></th>
                                 @else
-                                    <td>-</td>
-                                @endif
-                                
-                                @if(!empty($data->no_ba))
-                                    <td>{{ $data->no_ba }}</td>
-                                @else
-                                    <td>-</td>
-                                @endif
-
-                                @if(!empty($data->wilayahcuprimer->name))
-                                    <td>{{ $data->wilayahcuprimer->name }}</td>
-                                @else
-                                    <td>-</td>
-                                @endif
-
-                                @if(!empty($data->ultah))
-                                    <?php $date = new Date($data->ultah); ?>
-                                    <td data-order="{{ $data->ultah }}">{{ $date->format('d/m/Y') }}</td>
-                                @else
-                                    <td>-</td>
-                                @endif
-
-                                @if(!empty($data->bergabung))
-                                    <?php $date2 = new Date($data->bergabung); ?>
-                                    <td data-order="{{ $data->bergabung }}">{{ $date2->format('d/m/Y') }}</td>
-                                @else
-                                    <td>-</td>
-                                @endif
-
-                                @if(!empty($data->tp))
-                                    <td>{{ $data->tp }}</td>
-                                @else
-                                    <td>-</td>
-                                @endif
-
-                                @if(!empty($data->staf))
-                                    <td>{{ $data->staf }}</td>
-                                @else
-                                    <td>-</td>
-                                @endif
-
-                                @if(!empty($data->app))
-                                    <td>{{ $data->app }}</td>
-                                @else
-                                    <td>-</td>
-                                @endif
-
-                                @if(!empty($data->badan_hukum))
-                                    <td>{{ $data->badan_hukum }}</td>
-                                @else
-                                    <td>-</td>
-                                @endif
-
-                                @if(!empty($data->telp))
-                                    <td>{{ $data->telp }}</td>
-                                @else
-                                    <td>-</td>
-                                @endif
-
-                                @if(!empty($data->hp))
-                                    <td>{{ $data->hp }}</td>
-                                @else
-                                    <td>-</td>
-                                @endif
-
-                                @if(!empty($data->pos))
-                                    <td>{{ $data->pos }}</td>
-                                @else
-                                    <td>-</td>
-                                @endif
-
-                                @if(!empty($data->email))
-                                    <td>{{ $data->email }}</td>
-                                @else
-                                    <td>-</td>
-                                @endif
-
-                                @if(!empty($data->alamat))
-                                    <td>{{ $data->alamat }}</td>
-                                @else
-                                    <td>-</td>
-                                @endif
-
-                                @if(!empty($data->website))
-                                    <td><a href="http://{{$data->website}}" class="facebook" target="_blank"> {{ $data->website }} </a></td>
-                                @else
-                                    <td>-</td>
-                                @endif
+                                    <th><img class="img-responsive" width="50px" src="{{ asset('images/image-cu.jpg') }}"
+                                         id="tampilgambar" alt="cu profile"></th>
+                                @endif  
+                                <td>{{ $data->name }}</td>
+                                <td>{{ $data->no_ba }}</td>
+                                <td>{{ $data->wilayahcuprimer->name }}</td>
+                                <td>{{ $do }}</td>
+                                <td data-order="{{ $data->ultah }}">{{ $date->format('d/m/Y') }}</td>
+                                <td data-order="{{ $data->bergabung }}">{{ $date2->format('d/m/Y') }}</td>
+                                <td>{{ $data->tp }}</td>
+                                <td>{{ $data->staf }}</td>
+                                <td>{{ $data->app }}</td>
+                                <td>{{ $data->badan_hukum }}</td>
+                                <td>{{ $data->telp }}</td>
+                                <td>{{ $data->hp }}</td>
+                                <td>{{ $data->pos }}</td>
+                                <td>{{ $data->email }}</td>
+                                <td>{{ $data->alamat }}</td>
+                                <td><a href="http://{{$data->website}}" class="facebook" target="_blank"> {{ $data->website }} </a></td>
                             </tr>
                         @endforeach
 
@@ -191,12 +142,7 @@ $kelas2 = 'wilayahcuprimer';
                         <tr>
                             <td class="bg-aqua disabled color-palette"></td>
                             <td hidden>{{ $data->id }}</td>
-                            @if(!empty($data->name))
-                                <td>{{ $data->name }}</td>
-                            @else
-                                <td>-</td>
-                            @endif
-
+                            <td>{{ $data->name }}</td>
                             @if($data && count($data->hascuprimer) > 0)
                                 <td><a class="btn btn-default" href="#" disabled="">{{ $data->jumlah }}</a></td>
                             @else
@@ -382,6 +328,20 @@ $kelas2 = 'wilayahcuprimer';
         );
         new $.fn.dataTable.Buttons(table,{
             buttons: [
+                {
+                    text: '<i class="fa fa-building"></i> Profil',
+                    action: function(){
+                        var id = $.map(table.rows({ selected: true }).data(),function(item){
+                            return item[1];
+                        });
+                        var kelas = "{{ $kelas }}";
+                        if(id != ""){
+                            window.location.href =  kelas + "/detail/" + id;
+                        }else{
+                            $('#modalwarning').modal({show:true});
+                        }
+                    }
+                },
                 @permission('view.laporancu_view')
                 {
                     text: '<i class="fa fa-line-chart"></i> Laporan',
@@ -399,36 +359,13 @@ $kelas2 = 'wilayahcuprimer';
                 @endpermission
                 @permission('view.staf_view')
                 {
-                    text: '<i class="fa fa-users"></i> Staf',
+                    text: '<i class="fa fa-sitemap"></i> Staf',
                     action: function(){
                         var id = $.map(table.rows({ selected: true }).data(),function(item){
                             return item[1];
                         });
                         if(id != ""){
                             window.location.href =  "/admins/staf/index_cu/" + id;
-                        }else{
-                            $('#modalwarning').modal({show:true});
-                        }
-                    }
-                }
-                @endpermission
-            ]
-        });
-        table.buttons( 0, null ).container().prependTo(
-                table.table().container()
-        );
-        new $.fn.dataTable.Buttons(table,{
-            buttons: [
-                @permission('view.cudetail_view')
-                {
-                    text: '<i class="fa fa-database"></i> Detail',
-                    action: function(){
-                        var id = $.map(table.rows({ selected: true }).data(),function(item){
-                            return item[1];
-                        });
-                        var kelas = "{{ $kelas }}";
-                        if(id != ""){
-                            window.location.href =  kelas + "/" + id + "/detail";
                         }else{
                             $('#modalwarning').modal({show:true});
                         }

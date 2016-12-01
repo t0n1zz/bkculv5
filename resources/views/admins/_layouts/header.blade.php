@@ -19,9 +19,9 @@
 ?>
 <header class="main-header">
     <!-- logo -->
-    <a class="logo" href="{!! route('admins') !!}" style="font-size: 1em">
+    <a class="logo" href="{!! route('admins') !!}" >
         <span class="logo-mini"><img src="{!! asset('images/logo.png') !!}" width="30" alt="logo"></span>
-        <span class="logo-lg"><b>BKCU</b></span>
+        <span class="logo-lg"><b>Admin</b>BKCU</span>
     </a>
     <!-- /logo -->
     <!-- header navbar -->
@@ -34,10 +34,8 @@
         <!-- navbar right menu -->
         <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
-                <li><a href="#" ><i class="fa fa-fw fa-user-circle-o"></i> {{ Auth::user()->getUsername() }} &nbsp <i class="fa fa-fw fa-building"></i> {{ $name_cu }}</a></li>
-                <li>
-                    <a href="#" class="modalsignout" data-toggle="modal" data-target="#modalsignout"><i class="fa fa-fw fa-sign-out" ></i> Logout</a>
-                </li>
+                <li><a href="#" ><i class="fa fa-fw fa-user-circle-o"></i> {{ Auth::user()->getName() }} - {{ $name_cu }}</a></li>
+                <li><a href="#" class="modalsignout" data-toggle="modal" data-target="#modalsignout"><i class="fa fa-fw fa-sign-out" ></i> Logout</a></li>
             </ul>
         </div>
         <!-- /navbar right menu -->

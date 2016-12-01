@@ -5,23 +5,45 @@ $cu = Auth::user()->getCU();
 <aside class="main-sidebar">
     <section class="sidebar">
         <ul class="sidebar-menu">
+            <!-- Sidebar user panel -->
+            <div class="user-panel">
+                <?php
+                    $gambar = Auth::user()->getGambar();
+                    $imagepath = 'images/';
+                ?>
+                @if(!empty($gambar) && is_file($imagepath.$gambar.".jpg"))
+                    <div class="pull-left image">
+                        <img src="{!! asset($imagepath.$gambar.".jpg") !!}" class="img-circle" alt="User Image" />
+                    </div>
+                @else
+                    <div class="pull-left image">
+                        <img src="{!! asset($imagepath."user.png") !!}" class="img-circle" alt="User Image" />
+                    </div>
+                @endif
+                <div class="pull-left info">
+                    <p>{!! Auth::user()->getName() !!}</p>
+                    <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+                </div>
+            </div>
+            <!-- Sidebar user panel -->
+            <li class="header">NAVIGASI UTAMA</li>
             <!-- dashboard -->
             <li {{ Request::is('admins') ? 'class=active' : '' }}>
-                <a href="{{ URL::to('admins')  }}"><i class="fa fa-dashboard fa-fw"></i> <span>Dashboard</span></a>
+                <a href="{{ URL::to('admins')  }}"><i class="fa fa-dashboard "></i> <span>Dashboard</span></a>
             </li>
             <!-- /dashboard -->
             <!-- pengumuman -->
             @permission('view.pengumuman_view')
                 <li {!! Request::is('admins/pengumuman') ? 'class="active""' : '' !!}>
 
-                    <a href="{!! route('admins.pengumuman.index') !!}"><i class="fa fa-comments-o fa-fw"></i> <span>Pengumuman</span></a>
+                    <a href="{!! route('admins.pengumuman.index') !!}"><i class="fa fa-comments-o "></i> <span>Pengumuman</span></a>
                 </li>
             @endpermission
             <!-- /pengumuman -->
             <!-- artikel -->
             @permission('view.artikel_view|view.kategoriartikel_view|create.artikel_create')
                 <li {!! Request::is('admins/artikel') || Request::is('admins/artikel*') || Request::is('admins/kategoriartikel') ? 'class="treeview active"' : 'treeview' !!} >
-                    <a href="#"><i class="fa fa-book fa-fw"></i> <span>Artikel</span> <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>
+                    <a href="#"><i class="fa fa-book"></i> <span>Artikel</span> <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>
                     <ul {{ Request::is('admins/artikel*') ? 'class=treeview-menu menu open style=display:block;' : 'class=treeview-menu' }}>
                         @permission('create.artikel_create')
                         <li {!! Request::is('admins/artikel/create') ? 'class="treeview active"' : '' !!} >
@@ -40,7 +62,7 @@ $cu = Auth::user()->getCU();
             <!-- kegiatan -->
             @permission('view.kegiatan_view|create.kegiatan_create')
                 <li {!! Request::is('admins/kegiatan') || Request::is('admins/kegiatan*') ? 'class="treeview active"' : 'treeview' !!} >
-                    <a href="#"><i class="fa fa-suitcase fa-fw"></i> <span>Kegiatan</span> <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>
+                    <a href="#"><i class="fa fa-suitcase"></i> <span>Kegiatan</span> <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>
                     <ul {{ Request::is('admins/kegiatan*') ? 'class=treeview-menu menu open style=display:block;' : 'class=treeview-menu' }}>
                         @permission('create.kegiatan_create')
                         <li {!! Request::is('admins/kegiatan/create') ? 'class="treeview active"' : '' !!} >
@@ -58,8 +80,13 @@ $cu = Auth::user()->getCU();
             <!-- /kegiatan -->
             <!-- cuprimer -->
             @permission('view.cuprimer_view|view.tpcu_view|view.wilayahcuprimer_view|create.cuprimer_create')
+                @if($cu !=0)
+                    <li {!! Request::is('admins/cuprimer*') ? 'class="active"' : '' !!}>
+                        <a href="{{ route('admins.cuprimer.detail',array($cu)) }}"><i class="fa fa-building"></i> <span>Profil CU</span></a>
+                    </li>
+                @else
                 <li {!! Request::is('admins/cuprimer') || Request::is('admins/cuprimer*') || Request::is('admins/wilayahcuprimer') || Request::is('admins/tpcu*') ? 'class="treeview active"' : 'treeview' !!} >
-                    <a href="#"><i class="fa fa-building-o fa-fw"></i> <span>CU</span> <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>
+                    <a href="#"><i class="fa fa-building-o"></i> <span>CU</span> <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>
                     <ul {{ Request::is('admins/cuprimer*') ? 'class=treeview-menu menu open style=display:block;' : 'class=treeview-menu' }}>
                         @permission('create.cuprimer_create')
                         <li {!! Request::is('admins/cuprimer/create') ? 'class="treeview active"' : '' !!} >
@@ -73,12 +100,13 @@ $cu = Auth::user()->getCU();
                         @endpermission
                     </ul>    
                 </li>
+                @endif
             @endpermission
             <!-- /cuprimer -->
             <!-- staf -->
             @permission('view.staf_view|create.staf_create')
                 <li {!! Request::is('admins/staf') || Request::is('admins/staf*') ? 'class="treeview active"' : 'treeview' !!} >
-                    <a href="#"><i class="fa fa-sitemap fa-fw"></i> <span>Staf</span> <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>
+                    <a href="#"><i class="fa fa-sitemap"></i> <span>Staf</span> <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>
                     <ul {{ Request::is('admins/staf*') ? 'class=treeview-menu menu open style=display:block;' : 'class=treeview-menu' }}>
                         @permission('create.staf_create')
                         <li {!! Request::is('admins/staf/create') ? 'class="treeview active"' : '' !!} >
@@ -100,51 +128,84 @@ $cu = Auth::user()->getCU();
             @endpermission
             <!-- /staf -->
             <!-- laporancu -->
-            @permission('view.laporancu_view|view.laporancudetail_view')
-                <li {!! Request::is('admins/laporancu') || Request::is('admins/laporancu*') ? 'class="active"' : '' !!} >
-                    <a @if(Auth::check() && Auth::user()->can('view.laporancu_view'))
-                            href="{{ route('admins.laporancu.index') }}"
-                        @elseif(Auth::check() && Auth::user()->can('view.laporancudetail_view') && $cu > '0')
-                            <?php 
-                                $cuprimer = App\Models\Cuprimer::where('id','=',$cu)->select('no_ba')->first();
-                                $no_ba = $cuprimer->no_ba;
-                            ?>
-                            href="{{ route('admins.laporancu.index_cu',array($no_ba)) }}"
-                        @endif><i class="fa fa-line-chart fa-fw"></i> <span>Laporan CU</span></a>
+            @permission('view.laporancu_view|view.laporancudetail_view|create.laporancu_create|create.laporancudetail_create')
+                <li {!! Request::is('admins/laporancu') || Request::is('admins/laporancu*') ? 'class="treeview active"' : 'treeview' !!} >
+                    <a href="#"><i class="fa fa-line-chart"></i> <span>Laporan CU</span> <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>
+                    <ul {{ Request::is('admins/laporancu*') ? 'class=treeview-menu menu open style=display:block;' : 'class=treeview-menu' }}>
+                        @permission('create.laporancu_create|create.laporancudetail_create')
+                        <li {!! Request::is('admins/laporancu/create') ? 'class="treeview active"' : '' !!} >
+                            <a href="{!! route('admins.laporancu.create') !!}"><i class="fa fa-plus"></i> Tambah</a>
+                        </li>
+                        @endpermission
+                        @permission('view.laporancu_view|view.laporancudetail_view')
+                        <li {!! Request::is('admins/laporancu') || Request::is('admins/laporancu/index_cu*') || Request::is('admins/laporancu/index_bkcu') || Request::is('admins/laporancu/index_periode*') ? 'class="treeview active"' : '' !!} >
+                            <a @if(Auth::check() && Auth::user()->can('view.laporancu_view'))
+                                    href="{{ route('admins.laporancu.index') }}"
+                                @elseif(Auth::check() && Auth::user()->can('view.laporancudetail_view') && $cu > '0')
+                                    <?php 
+                                        $cuprimer = App\Models\Cuprimer::where('id','=',$cu)->select('no_ba')->first();
+                                        $no_ba = $cuprimer->no_ba;
+                                    ?>
+                                    href="{{ route('admins.laporancu.index_cu',array($no_ba)) }}"
+                                @endif><i class="fa fa-circle-o"></i> Kelola</a>
+                        </li>
+                        @endpermission        
+                    </ul>    
                 </li>
             @endpermission
             <!-- /laporancu -->
             <!-- download -->
             @permission('view.download_view')
-                <li {!! Request::is('admins/download') || Request::is('admins/download*') ? 'class="active"' : '' !!} >
-                    <a href="{{ route('admins.download.index') }}"><i class="fa fa-download fa-fw"></i> <span>Download</span></a>
+                <li {!! Request::is('admins/download') || Request::is('admins/download*') ? 'class="treeview active"' : 'treeview' !!} >
+                    <a href="#"><i class="fa fa-download"></i> <span>Download</span> <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>
+                    <ul {{ Request::is('admins/download*') ? 'class=treeview-menu menu open style=display:block;' : 'class=treeview-menu' }}>
+                        <li {!! Request::is('admins/download/create') ? 'class="treeview active"' : '' !!} >
+                            <a href="{{ route('admins.download.create') }}"><span class="fa fa-plus"></span> Tambah</a>
+                        </li>
+                        <li {!! Request::is('admins/download') ? 'class="treeview active"' : '' !!} >
+                            <a href="{{ route('admins.download.index') }}"><i class="fa fa-circle-o"></i> Kelola</a>
+                        </li>
+                    </ul>
                 </li>
             @endpermission
             <!-- /download -->
             <!-- admin -->
-            @permission('view.admin_view')
+            @permission('view.admin_view|create.admin_create')
                 <li {!! Request::is('admins/admin') || Request::is('admins/admin*') ? 'class="active"' : '' !!} >
-                    <a href="{{ route('admins.admin.index') }}"><i class="fa fa-user-circle-o fa-fw"></i> <span>Admin</span></a>
+                    <a href="#"><i class="fa fa-user-circle-o"></i> <span>Admin</span> <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>
+                    <ul {{ Request::is('admins/admin*') ? 'class=treeview-menu menu open style=display:block;' : 'class=treeview-menu' }}>
+                        @permission('create.admin_create')
+                        <li {!! Request::is('admins/admin/create') ? 'class="treeview active"' : '' !!} >
+                            <a href="{{ route('admins.admin.create') }}"><span class="fa fa-plus"></span> Tambah</a>
+                        </li>
+                        @endpermission
+                        @permission('view.admin_view')
+                        <li {!! Request::is('admins/admin') ? 'class="treeview active"' : '' !!} >
+                            <a href="{{ route('admins.admin.index') }}"><i class="fa fa-circle-o"></i> Kelola</a>
+                        </li>
+                        @endpermission    
+                    </ul>
                 </li>
             @endpermission   
             <!-- /admin -->
+            <li class="header">LAIN-LAIN</li>
             <!-- foto kegiatan -->
             <li>
                 <a href="https://www.flickr.com/photos/127271987@N07/"
-                   target="_blank"><i class="fa fa-picture-o fa-fw"></i> <span>Foto Kegiatan</span></a>
+                   target="_blank"><i class="fa fa-picture-o"></i> <span>Foto Kegiatan</span></a>
             </li>
             <!-- /foto kegiatan -->
             <!-- statistik -->
             @permission('view.statistikweb_view')
                 <li {!! Request::is('admins/statistik') ? 'class="active"' : '' !!}>
-                    <a href="{{ route('statistik') }}"><i class="fa fa-road fa-fw"></i> <span>Statistik Website</span></a>
+                    <a href="{{ route('statistik') }}"><i class="fa fa-road"></i> <span>Statistik Website</span></a>
                 </li>
             @endpermission
             <!-- /statistik -->
             <!-- saran -->
             @permission('view.saran_view')
                 <li {!! Request::is('admins/saran') ? 'class="active"' : '' !!}>
-                    <a href="{!! route('admins.saran.index') !!}"><i class="fa fa-paper-plane-o fa-fw"></i> <span>Saran atau Kritik</span></a>
+                    <a href="{!! route('admins.saran.index') !!}"><i class="fa fa-paper-plane-o"></i> <span>Saran atau Kritik</span></a>
                 </li>
             @endpermission
             <!-- /saran -->

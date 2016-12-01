@@ -133,6 +133,11 @@ Route::group(array('prefix' => 'admins','middleware' => 'auth'), function(){
         'uses'         => 'CuprimerController@index',
         'middleware'   => ['auth', 'acl'],
         'can'          => 'view.cuprimer_view']);
+    Route::get('cuprimer/detail/{id}', [
+        'as'           => 'admins.cuprimer.detail',           
+        'uses'         => 'CuprimerController@detail',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'view.cuprimer_view']);
     Route::get('cuprimer/create', [
         'as'           => 'admins.cuprimer.create',
         'uses'         => 'CuprimerController@create',

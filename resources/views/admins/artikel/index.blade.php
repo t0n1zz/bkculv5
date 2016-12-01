@@ -53,6 +53,7 @@ $imagepath = 'images_artikel/';
                     <tr>
                         <th data-sortable="false">#</th>
                         <th hidden></th>
+                        <th>Foto</th>
                         <th>Judul</th>
                         <th>Kategori</th>
                         <th>Penulis</th>
@@ -60,7 +61,6 @@ $imagepath = 'images_artikel/';
                         <th>Tanggal Ubah</th>
                         <th>Terbit</th>
                         <th>Pilihan</th>
-                        <th>Gambar</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -68,13 +68,6 @@ $imagepath = 'images_artikel/';
                         <tr>
                             <td class="bg-aqua disabled color-palette"></td>
                             <td hidden>{{ $data->id }}</td>
-                            <td class="warptext">{{ $data->judul }}</td>    
-                            <td>{{ $data->kategoriartikel->name }}</td>
-                            <td>{{ $data->penulis }}</td>
-                            <td>{{ $data->created_at->format('d/n/Y') }}</td>
-                            <td>{{ $data->updated_at->format('d/n/Y')  }}</td>
-                            @if($data->status)<td>Iya</td>@else<td>Tidak</td>@endif    
-                            @if($data->pilihan)<td>Iya</td>@else<td>Tidak</td>@endif 
                             @if(!empty($data->gambar) && is_file($imagepath.$data->gambar."n.jpg"))
                                 <td style="white-space: nowrap"><div class="modalphotos" >
                                         {{ Html::image(($imagepath.$data->gambar).'n.jpg',asset(($imagepath.$data->gambar)."jpg"),
@@ -91,6 +84,13 @@ $imagepath = 'images_artikel/';
                                 <td>{{ Html::image('images/no_image.jpg', 'a picture', array('class' => 'img-responsive',
                                                 'id' => 'tampilgambar', 'width' => '50')) }}</td>
                             @endif
+                            <td class="warptext">{{ $data->judul }}</td>    
+                            <td>{{ $data->kategoriartikel->name }}</td>
+                            <td>{{ $data->penulis }}</td>
+                            <td>{{ $data->created_at->format('d/n/Y') }}</td>
+                            <td>{{ $data->updated_at->format('d/n/Y')  }}</td>
+                            @if($data->status)<td>Iya</td>@else<td>Tidak</td>@endif    
+                            @if($data->pilihan)<td>Iya</td>@else<td>Tidak</td>@endif 
                         </tr>
                     @endforeach
                     </tbody>
