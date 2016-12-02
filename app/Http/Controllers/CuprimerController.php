@@ -10,6 +10,7 @@ use Validator;
 use App\Models\TpCU;
 use App\Models\Cuprimer;
 use App\Models\WilayahCuprimer;
+use \DOMDocument;
 
 class CuprimerController extends Controller{
 
@@ -49,6 +50,13 @@ class CuprimerController extends Controller{
 
     public function detail($id){
         try {
+            $cu = Auth::user()->getCU();
+
+            if($cu > 0){
+                if($cu != $id)
+                    return Redirect::back();
+            }
+
             $data = Cuprimer::with('wilayahcuprimer')->find($id);
             $datatp = TpCU::where('cu','=',$id)->orderBy('cu','desc')->get();
 
@@ -118,6 +126,13 @@ class CuprimerController extends Controller{
     public function edit($id)
     {
         try {
+            $cu = Auth::user()->getCU();
+
+            if($cu > 0){
+                if($cu != $id)
+                    return Redirect::back();
+            }
+            
             $data = Cuprimer::find($id);
             $datas2 = WilayahCuprimer::orderBy('name', 'asc')->get();
 
@@ -176,19 +191,40 @@ class CuprimerController extends Controller{
             $data2 = $this->input_content($data2);
             $data2 = $this->input_gambar($kelas,$data2);
 
-
             $kelas->update($data2);
 
-            if (Input::Get('simpan2'))
-                return Redirect::route('admins.cuprimer.create')->with('sucessmessage', 'CU <b><i>' . $name . '</i></b> Telah berhasil diubah.');
-            else
-                return Redirect::route('admins.cuprimer.index')->with('sucessmessage', 'CU <b><i>' . $name . '</i></b> Telah berhasil diubah.');
+            $cu = \Auth::user()->getCU();
+
+            if (Input::Get('simpan2')){
+                return Redirect::route('admins.'.$this->kelaspath.'.create')->with('sucessmessage', 'CU <b><i>' . $name . '</i></b> Telah berhasil diubah.');
+            }else{
+                if($cu == '0')
+                    return Redirect::route('admins.'.$this->kelaspath.'.index')->with('sucessmessage', 'CU <b><i>' . $name . '</i></b> Telah berhasil diubah.');
+                else
+                    return Redirect::route('admins.'.$this->kelaspath.'.detail',array($cu))->with('sucessmessage', 'CU <b><i>' . $name . '</i></b> Telah berhasil diubah.');
+            }
 
         }catch (Exception $e){
             if($e->getMessage() == "getimagesize(): Filename cannot be empty")
                 return Redirect::back()->withInput()->with('errormessage','Pastikan ukuran file gambar tidak lebih besar dari ' .$file_max. ' ' .$file_max_meassure_unit);
             else
                 return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
+        }
+    }
+
+    public function update_deskripsi($id)
+    {
+        try{
+            $kelas = Cuprimer::findOrFail($id);
+            $name = $kelas->name;
+            $data = Input::all();
+            $data2 = $this->input_content($data); 
+
+            $kelas->update($data2);
+
+            return Redirect::route('admins.'.$this->kelaspath.'.detail',array($id))->with('sucessmessage', 'Profil CU <b>' .$name. '</b> Telah berhasil di ubah.');
+        }catch (Exception $e){
+            return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
         }
     }
 
@@ -214,61 +250,6 @@ class CuprimerController extends Controller{
         }
     }
 
-    public function update_info_public()
-    {
-        try{
-            $id = Auth::user()->cuprimer->id;
-            //get php max file upload size
-            $file_max = ini_get('upload_max_filesize');
-            $file_max_str_leng = strlen($file_max);
-            $file_max_meassure_unit = substr($file_max,$file_max_str_leng - 1,1);
-            $file_max_meassure_unit = $file_max_meassure_unit == 'K' ? 'kb' : ($file_max_meassure_unit == 'M' ? 'mb' : ($file_max_meassure_unit == 'G' ? 'gb' : 'unidades'));
-            $file_max = substr($file_max,0,$file_max_str_leng - 1);
-            $file_max = intval($file_max);
-
-            //validasi
-            $validator = Validator::make($data = Input::all(), Cuprimer::$rules);
-            if ($validator->fails())
-            {
-                return Redirect::back()->withErrors($validator)->withInput();
-            }
-
-            $name = Input::get('name');
-            $kelas = Cuprimer::findOrFail($id);
-            $data2 = $this->input_gambar($kelas,$data);
-            $data2 = $this->input_tanggal($data);
-
-            $kelas->update($data2);
-
-            return Redirect::route('cu')->with('sucessmessage', 'Informasi dasar CU <b><i>' . $name . '</i></b> telah berhasil diubah.');
-
-        }catch (Exception $e){
-            if($e->getMessage() == "getimagesize(): Filename cannot be empty")
-                return Redirect::back()->withInput()->with('errormessage','Pastikan ukuran file gambar tidak lebih besar dari ' .$file_max. ' ' .$file_max_meassure_unit);
-            else
-                return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
-        }
-    }
-
-    public function update_deskripsi_public()
-    {
-        try{
-            $id = Auth::user()->cuprimer->id;
-
-            $name = Input::get('name');
-            $kelas = Cuprimer::findOrFail($id);
-            $data = Input::all();
-            $data2 = $this->input_content($data);
-
-            $kelas->update($data2);
-
-            return Redirect::route('cu')->with('sucessmessage', 'Deskripsi CU <b><i>' . $name . '</i></b> telah berhasil diubah.');
-
-        }catch (Exception $e){
-            return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
-        }
-    }
-
     public function input_wilayah($data)
     {
         $wilayah = Input::get('wilayah');
@@ -281,7 +262,8 @@ class CuprimerController extends Controller{
             $last_id = $wilayahcuprimer->id;
             array_set($data,'wilayah',$last_id);
         }else {
-            array_set($data,'wilayah',$wilayah);
+            if(!empty($wilayah))
+                array_set($data,'wilayah',$wilayah);
         }
 
         return $data;
@@ -289,13 +271,16 @@ class CuprimerController extends Controller{
 
     public function input_tanggal($data)
     {
-        $timestamp = strtotime(str_replace('/', '-',Input::get('ultah')));
-        $tanggal = date('Y-m-d',$timestamp);
-        array_set($data,'ultah',$tanggal);
+        $date1 = Input::get('bergabung');
+        if(!empty($date1)){
+            $timestamp = strtotime(str_replace('/', '-',$date1));
+            $tanggal = date('Y-m-d',$timestamp);
+            array_set($data,'ultah',$tanggal);
+        }
 
-        $date = Input::get('bergabung');
-        if(!empty($date)){
-            $timestamp2 = strtotime(str_replace('/', '-',$date));
+        $date2 = Input::get('bergabung');
+        if(!empty($date2)){
+            $timestamp2 = strtotime(str_replace('/', '-',$date2));
             $tanggal2 = date('Y-m-d',$timestamp2);
             array_set($data,'bergabung',$tanggal2);
         }
@@ -307,7 +292,7 @@ class CuprimerController extends Controller{
     {
         //gambar
         $name = preg_replace('/[^A-Za-z0-9\-]/', '',Input::get('name'));
-        $formatedname = $judul.str_random(5).date('Y-m-d');
+        $formatedname = $name.str_random(5).date('Y-m-d');
         $img = Input::file('gambar');
         if (!is_null($img)) {
 
@@ -326,7 +311,7 @@ class CuprimerController extends Controller{
 
     public function input_content($data)
     {
-        $content = Input::get('content');
+        $content = Input::get('deskripsi');
 
         if(!empty($content)){
             $array1 = array();

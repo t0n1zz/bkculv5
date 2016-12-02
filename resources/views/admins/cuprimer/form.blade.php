@@ -7,6 +7,7 @@ $file_max_meassure_unit = substr($file_max,$file_max_str_leng - 1,1);
 $file_max_meassure_unit = $file_max_meassure_unit == 'K' ? 'kb' : ($file_max_meassure_unit == 'M' ? 'mb' : ($file_max_meassure_unit == 'G' ? 'gb' : 'unidades'));
 $file_max = substr($file_max,0,$file_max_str_leng - 1);
 $file_max = intval($file_max);
+$cu = \Auth::user()->getCU();
 ?>
 @section('css')
     <link rel="stylesheet" type="text/css" href="{{asset('plugins/summernote/summernote.css')}}" >
@@ -212,14 +213,68 @@ $file_max = intval($file_max);
                     <div class="help-block">Silahkan masukkan alamat.</div>
                 </div>
             </div>
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <h4>Deskripsi <small>Silahkan tambahkan misi, visi, nilai-nilai inti dan slogan serta profil singkat CU.</small></h4>
+                    {{ Form::textarea('deskripsi',null,array('class' => 'form-control','rows' => '3','placeholder'=>'Silahkan masukkan alamat','id'=>'summernote')) }}
+                    <div class="help-block">Silahkan masukkan alamat.</div>
+                </div>
+            </div>
         </div>
     </div>
     <div class="box-footer with-border">
-        <button type="submit" name="simpan" accesskey="s" class="btn btn-primary" value="simpan">
-            <i class="fa fa-save"></i> <u>S</u>impan</button>
-        <button type="submit" name="simpan2" accesskey="m" class="btn btn-primary" value="simpan">
-            <i class="fa fa-save fa-fw"></i><i class="fa fa-plus"></i> Si<u>m</u>pan dan buat baru</button>
-        <a href="{{ route('admins.'.$kelas.'.index') }}" name="batal" accesskey="b" class="btn btn-danger" value="batal">
-            <i class="fa fa-times"></i> <u>B</u>atal</a>
+            <button type="submit" name="simpan" accesskey="s" class="btn btn-primary" value="simpan">
+                <i class="fa fa-save"></i> <u>S</u>impan</button>
+            @if($cu == '0')      
+                <button type="submit" name="simpan2" accesskey="m" class="btn btn-primary" value="simpan">
+                    <i class="fa fa-save fa-fw"></i><i class="fa fa-plus"></i> Si<u>m</u>pan dan buat baru</button>
+                <a href="{{ route('admins.'.$kelas.'.index') }}" name="batal" accesskey="b" class="btn btn-danger" value="batal">
+                    <i class="fa fa-times"></i> <u>B</u>atal</a>
+            @else
+                <a href="{{ route('admins.'.$kelas.'.detail',array($cu)) }}" name="batal" accesskey="b" class="btn btn-danger" value="batal">
+                    <i class="fa fa-times"></i> <u>B</u>atal</a>   
+            @endif     
+            
     </div>
 </div>
+
+
+@section('js')
+<script type="text/javascript" src="{{ URL::asset('plugins/summernote/summernote.js') }}"></script>
+<script type="text/javascript" src="{{ URL::asset('plugins/summernote/plugins/summernote-ext-addclass.js') }}"></script>
+<script type="text/javascript" src="{{ URL::asset('plugins/summernote/plugins/summernote-cleaner.js') }}"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#summernote').summernote({
+            minHeight: 300,
+            dialogsFade: true,
+            placeholder: 'Silahkan isi disini...',
+            addclass: {
+                debug: false,
+                classTags: [{title:"Button",value:"btn btn-success"},"jumbotron", "lead","img-rounded","img-circle", "img-responsive","btn", "btn btn-success","btn btn-danger","text-muted", "text-primary", "text-warning", "text-danger", "text-success", "table-bordered", "table-responsive", "alert", "alert alert-success", "alert alert-info", "alert alert-warning", "alert alert-danger", "visible-sm", "hidden-xs", "hidden-md", "hidden-lg", "hidden-print"]
+            },
+            cleaner:{
+                notTime:2400, // Time to display Notifications.
+                action:'paste', // both|button|paste 'button' only cleans via toolbar button, 'paste' only clean when pasting content, both does both options.
+                newline:'<br>', // Summernote's default is to use '<p><br></p>'
+                notStyle:'position:absolute;bottom:0;left:2px', // Position of Notification
+                icon:'<i class="note-icon">Clean Word Format</i>'
+            },
+            toolbar: [
+                ['cleaner',['cleaner']],
+                ['para',['style']],
+                ['style', ['addclass','bold', 'italic', 'underline', 'hr']],
+                ['font', ['strikethrough', 'superscript', 'subscript','clear']],
+                ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol']],
+                ['paragraph',['paragraph']],
+                ['table',['table']],
+                ['height', ['height']],
+                ['misc',['fullscreen','codeview']],
+                ['misc2',['undo','redo']]
+            ]
+        });
+    });    
+</script>
+@stop

@@ -57,7 +57,7 @@ $imagepath = "images_cu/";
                             <th>Wilayah</th>
                             <th>District Office</th>
                             <th>Tanggal Berdiri</th>
-                            <th>Tanggal Bergabung</th>
+                            <th>Tanggal Bergtabung</th>
                             <th>TP</th>
                             <th>Staf</th>
                             <th>Aplikasi</th>

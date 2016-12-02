@@ -98,6 +98,11 @@ $cu = Auth::user()->getCU();
                             <a href="{{ route('admins.cuprimer.index') }}"><i class="fa fa-circle-o"></i> Kelola</a>
                         </li>
                         @endpermission
+                        @permission('view.tpcu_view')
+                        <li {!! Request::is('admins/tpcu') ? 'class="treeview active"' : '' !!} >
+                            <a href="{{ route('admins.tpcu.index') }}"><i class="fa fa-circle-o"></i> TP</a>
+                        </li>
+                        @endpermission
                     </ul>    
                 </li>
                 @endif

@@ -1,5 +1,4 @@
 <?php
-
 $title = "Profil CU";
 $kelas = "cuprimer";
 $imagepath = "images_cu/";
@@ -21,6 +20,7 @@ $datejoin = new Date($data->bergabung);
 
 @section('css')
     @include('admins._components.datatable_CSS')
+    <link rel="stylesheet" type="text/css" href="{{asset('plugins/summernote/summernote.css')}}" >
 @stop
 @section('content')
 <!-- Content Header (Page header) -->
@@ -110,26 +110,26 @@ $datejoin = new Date($data->bergabung);
                             </div>
                             <hr/>
                         </section>
-                        @if(!empty($data->deskripsi))
-                            <section id="deskripsi">
-                                <div class="row">
-                                    <div class="col-lg-12">
-                                        <p>{{ $data->deskripsi }}</p>
-                                    </div>
-                                </div>
-                            </section>
-                        @else
-                            <section id="deskripsi">
-                                <div class="row">
-                                    <div class="col-lg-12">
+                        <section id="deskripsi">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    @if(empty($data->deskripsi))
                                         <div class="callout callout-info">
                                           <h1>Ayo! Isi profil CU anda...</h1>
-                                          <p>Silahkan tambahkan misi, visi, nilai-nilai inti dan slogan serta profil singkat CU dengan menekan tombol [ <b><i class="fa fa-pencil"></i> Ubah</b> ]</p>
+                                          <p>Silahkan tambahkan misi, visi, nilai-nilai inti dan slogan serta profil singkat CU.</p>
                                         </div>
-                                    </div>
-                                </div>
-                            </section>    
-                        @endif
+                                        {{ Form::model($data,array('route' => array('admins.'.$kelas.'.update_deskripsi',$data->id),'method' => 'put','role' => 'form')) }}
+                                            <textarea id="summernote" name="deskripsi"></textarea>
+                                            <button type="submit" name="simpan" accesskey="s" class="btn btn-primary" value="simpan">
+                                                <i class="fa fa-save"></i> <u>S</u>impan
+                                            </button>
+                                        {{ Form::close() }}
+                                    @else
+                                        {!! $data->deskripsi !!}
+                                    @endif
+                                </div>      
+                            </div>
+                        </section>    
                     </div><!-- /.tab-pane -->
                 </div><!-- /.tab-content -->
             </div><!-- /.nav-tabs-custom -->
@@ -138,4 +138,45 @@ $datejoin = new Date($data->bergabung);
 
 </section><!-- /.content -->
 
+@section('js')
+<script type="text/javascript" src="{{ URL::asset('plugins/summernote/summernote.js') }}"></script>
+<script type="text/javascript" src="{{ URL::asset('plugins/summernote/plugins/summernote-ext-addclass.js') }}"></script>
+<script type="text/javascript" src="{{ URL::asset('plugins/summernote/plugins/summernote-cleaner.js') }}"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#summernote').summernote({
+            minHeight: 300,
+            dialogsFade: true,
+            placeholder: 'Silahkan isi disini...',
+            addclass: {
+                debug: false,
+                classTags: [{title:"Button",value:"btn btn-success"},"jumbotron", "lead","img-rounded","img-circle", "img-responsive","btn", "btn btn-success","btn btn-danger","text-muted", "text-primary", "text-warning", "text-danger", "text-success", "table-bordered", "table-responsive", "alert", "alert alert-success", "alert alert-info", "alert alert-warning", "alert alert-danger", "visible-sm", "hidden-xs", "hidden-md", "hidden-lg", "hidden-print"]
+            },
+            cleaner:{
+                notTime:2400, // Time to display Notifications.
+                action:'paste', // both|button|paste 'button' only cleans via toolbar button, 'paste' only clean when pasting content, both does both options.
+                newline:'<br>', // Summernote's default is to use '<p><br></p>'
+                notStyle:'position:absolute;bottom:0;left:2px', // Position of Notification
+                icon:'<i class="note-icon">Clean Word Format</i>'
+            },
+            toolbar: [
+                ['cleaner',['cleaner']],
+                ['para',['style']],
+                ['style', ['addclass','bold', 'italic', 'underline', 'hr']],
+                ['font', ['strikethrough', 'superscript', 'subscript','clear']],
+                ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol']],
+                ['paragraph',['paragraph']],
+                ['table',['table']],
+                ['height', ['height']],
+                ['misc',['fullscreen','codeview']],
+                ['misc2',['undo','redo']]
+            ]
+        });
+    });    
+</script>
 @stop
+
+@stop
+

@@ -158,6 +158,11 @@ Route::group(array('prefix' => 'admins','middleware' => 'auth'), function(){
         'uses'         => 'CuprimerController@update',
         'middleware'   => ['auth', 'acl'],
         'can'          => 'update.cuprimer_update']);
+    Route::put('cuprimer/update_deskripsi/{cuprimer}', [
+        'as'           => 'admins.cuprimer.update_deskripsi',
+        'uses'         => 'CuprimerController@update_deskripsi',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'update.cuprimer_update']);
     Route::delete('cuprimer/{cuprimer}', [
         'as'           => 'admins.cuprimer.destroy',
         'uses'         => 'CuprimerController@destroy',
