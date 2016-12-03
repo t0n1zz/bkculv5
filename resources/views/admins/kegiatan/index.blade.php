@@ -32,12 +32,17 @@ $kelas = "kegiatan";
         </ul>
         <div class="tab-content"> 
             <div class="tab-pane fade in active" id="tab_kegiatan">
-                <div class="col-sm-9" style="padding: .2em ;">
+                @if(Auth::user()->getCU() == '0')
+                    <div class="col-sm-8" style="padding: .2em ;">
+                @else
+                    <div class="col-sm-12" style="padding: .2em ;">
+                @endif
                     <div class="input-group tabletools">
                         <div class="input-group-addon"><i class="fa fa-search"></i></div>
                         <input type="text" id="searchtext" class="form-control" placeholder="Kata kunci pencarian..." autofocus>
                     </div>
                 </div>
+                @if(Auth::user()->getCU() == '0')
                 <div class="col-sm-3" style="padding: .2em ;">
                     <?php
                         $data = App\Models\Kegiatan::orderBy('tanggal','DESC')->groupBy('tanggal')->get(['tanggal']);
@@ -59,6 +64,7 @@ $kelas = "kegiatan";
                         </select>
                     </div>
                 </div>
+                @endif
                 <table class="table table-hover" id="dataTables-example" width="100%">
                     <thead class="bg-light-blue-active color-palette">
                     <tr>

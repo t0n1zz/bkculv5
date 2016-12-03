@@ -61,7 +61,11 @@ $kelas = "admin";
                             @if($data->cu == "0")
                                 <td>BKCU</td>
                             @else
-                                <td>{{ $data->cuprimer->name }}</td>
+                                @if(!empty($data->cuprimer))
+                                    <td>{{ $data->cuprimer->name }}</td>
+                                @else
+                                    <td>-</td>
+                                @endif    
                             @endif
 
                             @if($data->login != "0000-00-00 00:00:00")

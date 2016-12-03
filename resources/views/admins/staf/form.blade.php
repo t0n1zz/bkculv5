@@ -53,9 +53,9 @@ $file_max = intval($file_max);
                                         @endif
                                         >Puskopdit BKCU Kalimantan</option>
                                 @foreach($datas2 as $data2)
-                                    <option value="{{ $data2->id }}"
+                                    <option value="{{ $data2->no_ba }}"
                                     @if(!empty($data))
-                                        @if($data->cu == $data2->id)
+                                        @if($data->cu == $data2->no_ba)
                                             {!! "selected" !!}
                                                 @endif
                                             @endif

@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use Input;
+use Auth;
 use Redirect;
 use Validator;
 use App\Models\TpCU;
@@ -10,6 +11,7 @@ use App\Models\Cuprimer;
 class TpcuController extends Controller{
 
     protected $kelaspath = 'tpcu';
+    protected $imagepath = 'images_tpcu/';
     /**
      * Display a listing of artikels
      *
@@ -30,6 +32,13 @@ class TpcuController extends Controller{
 
     public function index_cu($id){
         try{
+            $cu = Auth::user()->getCU();
+
+            if($cu > 0){
+                if($cu != $id)
+                    return Redirect::back();
+            }
+
             $datas = TpCU::with('cuprimer')
                 ->where('cu','=',$id)->orderBy('name','desc')->get();
 
@@ -70,6 +79,11 @@ class TpcuController extends Controller{
                 return Redirect::back()->withErrors($validator)->withInput();
             }
 
+            $cu = \Auth::user()->getCU();
+            if($cu != '0'){
+                array_set($data,'cu',$cu);
+            }
+
             $date = Input::get('ultah');
             if(!empty($date)){
                 $timestamp2 = strtotime(str_replace('/', '-',$date));
@@ -79,10 +93,15 @@ class TpcuController extends Controller{
 
             TpCU::create($data);
 
-            if(Input::Get('simpan2'))
+            if(Input::Get('simpan2')){
                 return Redirect::route('admins.'.$this->kelaspath.'.create')->with('sucessmessage','TP CU Telah berhasil ditambah.');
-            else
-                return Redirect::route('admins.'.$this->kelaspath.'.index')->with('sucessmessage','TP CU Telah berhasil ditambah.');
+            }else{
+                if($cu == '0'){
+                    return Redirect::route('admins.'.$this->kelaspath.'.index')->with('sucessmessage','TP CU Telah berhasil ditambah.');
+                }else{
+                    return Redirect::route('admins.'.$this->kelaspath.'.index_cu',array($no_ba))->with('sucessmessage', 'TP CU Telah berhasil ditambah.');
+                }
+            }
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
         }
@@ -131,13 +150,39 @@ class TpcuController extends Controller{
             }
             $kelas->update($data);
 
-            if (Input::Get('simpan2'))
-                return Redirect::route('admins.'.$this->kelaspath.'.create')->with('sucessmessage', 'TP CU Telah berhasil diubah.');
-            else
-                return Redirect::route('admins.'.$this->kelaspath.'.index')->with('sucessmessage', 'TP CU Telah berhasil diubah.');
+            if(Input::Get('simpan2')){
+                return Redirect::route('admins.'.$this->kelaspath.'.create')->with('sucessmessage','TP CU Telah berhasil diubah.');
+            }else{
+                if($cu == '0'){
+                    return Redirect::route('admins.'.$this->kelaspath.'.index')->with('sucessmessage','TP CU Telah berhasil diubah.');
+                }else{
+                    return Redirect::route('admins.'.$this->kelaspath.'.index_cu',array($no_ba))->with('sucessmessage', 'TP CU Telah berhasil diubah.');
+                }
+            }
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
         }
+    }
+
+    public function input_gambar($kelas,$data)
+    {
+        //gambar
+        $name = preg_replace('/[^A-Za-z0-9\-]/', '',Input::get('name'));
+        $formatedname = $name.str_random(5).date('Y-m-d');
+        $img = Input::file('gambar');
+        if (!is_null($img)) {
+
+            $filename = $formatedname.".jpg";
+            $filename2 = $formatedname."n.jpg";
+
+            $this->save_image($img, $kelas, $filename,$filename2);
+            array_set($data,'gambar',$formatedname);
+        }else{
+            $filename = $kelas->gambar;
+            array_set($data,'gambar',$filename);
+        }
+
+        return $data;
     }
 
     /**
@@ -150,6 +195,11 @@ class TpcuController extends Controller{
     {
         try{
             $id = Input::get('id');
+            $kelas = TpCU::findOrFail($id);
+            $path = public_path($this->imagepath);
+
+            File::delete($path . $kelas->gambar);
+            File::delete($path . $kelas->gambar ."n.jpg");
 
             TpCU::destroy($id);
 
@@ -157,6 +207,22 @@ class TpcuController extends Controller{
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
         }
+    }
+
+    function save_image($img,$kelas,$filename,$filename2,$filename3)
+    {
+        list($width, $height) = getimagesize($img);
+
+        $path = public_path($this->imagepath);
+
+        File::delete($path . $kelas->gambar);
+        File::delete($path . $kelas->gambar .".jpg");
+        File::delete($path . $kelas->gambar ."n.jpg");
+        File::delete($path . $kelas->gambar ."b.jpg");
+
+        Image::make($img->getRealPath())->fit(848,636)->save($path . $filename);
+        Image::make($img->getRealPath())->fit(360,240)->save($path . $filename2);
+        Image::make($img->getRealPath())->fit(1220,424)->save($path . $filename3);
     }
 
 }

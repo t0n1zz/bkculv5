@@ -74,6 +74,6 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     }
 
     public function cuprimer(){
-        return $this->belongsTo('App\Models\Cuprimer','cu','id');
+        return $this->belongsTo('App\Models\Cuprimer','cu','no_ba');
     }
 }

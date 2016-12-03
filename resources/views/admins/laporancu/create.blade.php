@@ -1,5 +1,5 @@
 <?php
-$title="Tambah Perkembangan CU";
+$title="Tambah Laporan CU";
 $kelas="laporancu";
 ?>
 @extends('admins._layouts.layout')
@@ -9,7 +9,7 @@ $kelas="laporancu";
 <section class="content-header">
     <h1>
         <i class="fa fa-plus"></i> {{ $title }}
-        <small>Menambah Data Perkembangan</small>
+        <small>Menambah Data Laporan CU</small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="{{ URL::to('admins')  }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>

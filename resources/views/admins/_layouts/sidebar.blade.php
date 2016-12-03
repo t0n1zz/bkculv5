@@ -61,6 +61,11 @@ $cu = Auth::user()->getCU();
             <!-- /artikel -->
             <!-- kegiatan -->
             @permission('view.kegiatan_view|create.kegiatan_create')
+                @if($cu !=0)
+                    <li {!! Request::is('admins/kegiatan') ? 'class="active"' : '' !!}>
+                        <a href="{{ route('admins.kegiatan.index') }}"><i class="fa fa-suitcase"></i> <span>Kegiatan BKCU</span></a>
+                    </li>
+                @else
                 <li {!! Request::is('admins/kegiatan') || Request::is('admins/kegiatan*') ? 'class="treeview active"' : 'treeview' !!} >
                     <a href="#"><i class="fa fa-suitcase"></i> <span>Kegiatan</span> <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>
                     <ul {{ Request::is('admins/kegiatan*') ? 'class=treeview-menu menu open style=display:block;' : 'class=treeview-menu' }}>
@@ -76,16 +81,17 @@ $cu = Auth::user()->getCU();
                         @endpermission
                     </ul>
                 </li>
+                @endif
             @endpermission
             <!-- /kegiatan -->
             <!-- cuprimer -->
-            @permission('view.cuprimer_view|view.tpcu_view|view.wilayahcuprimer_view|create.cuprimer_create')
+            @permission('view.cuprimer_view|view.wilayahcuprimer_view|create.cuprimer_create')
                 @if($cu !=0)
                     <li {!! Request::is('admins/cuprimer*') ? 'class="active"' : '' !!}>
                         <a href="{{ route('admins.cuprimer.detail',array($cu)) }}"><i class="fa fa-building"></i> <span>Profil CU</span></a>
                     </li>
                 @else
-                <li {!! Request::is('admins/cuprimer') || Request::is('admins/cuprimer*') || Request::is('admins/wilayahcuprimer') || Request::is('admins/tpcu*') ? 'class="treeview active"' : 'treeview' !!} >
+                <li {!! Request::is('admins/cuprimer') || Request::is('admins/cuprimer*') || Request::is('admins/wilayahcuprimer') ? 'class="treeview active"' : 'treeview' !!} >
                     <a href="#"><i class="fa fa-building-o"></i> <span>CU</span> <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>
                     <ul {{ Request::is('admins/cuprimer*') ? 'class=treeview-menu menu open style=display:block;' : 'class=treeview-menu' }}>
                         @permission('create.cuprimer_create')
@@ -98,16 +104,35 @@ $cu = Auth::user()->getCU();
                             <a href="{{ route('admins.cuprimer.index') }}"><i class="fa fa-circle-o"></i> Kelola</a>
                         </li>
                         @endpermission
-                        @permission('view.tpcu_view')
-                        <li {!! Request::is('admins/tpcu') ? 'class="treeview active"' : '' !!} >
-                            <a href="{{ route('admins.tpcu.index') }}"><i class="fa fa-circle-o"></i> TP</a>
-                        </li>
-                        @endpermission
                     </ul>    
                 </li>
                 @endif
             @endpermission
             <!-- /cuprimer -->
+            <!-- tpcu -->
+            @permission('view.tpcu_view|create.tpcu_create')
+                <li {!! Request::is('admins/tpcu*') ? 'class="treeview active"' : 'treeview' !!} >
+                    <a href="#"><i class="fa fa-home"></i> <span>TP CU</span> <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>
+                    <ul {{ Request::is('admins/tpcu*') ? 'class=treeview-menu menu open style=display:block;' : 'class=treeview-menu' }}>
+                        @permission('create.tpcu_create')
+                        <li {!! Request::is('admins/tpcu/create') ? 'class="treeview active"' : '' !!} >
+                            <a href="{{ route('admins.tpcu.create') }}"><i class="fa fa-plus"></i> Tambah</a>
+                        </li>
+                        @endpermission
+                        @permission('view.tpcu_view')
+                        <li {!! Request::is('admins/tpcu') || Request::is('admins/tpcu/index_cu*') ? 'class="treeview active"' : '' !!} >
+                            <a @if($cu == '0')
+                                    href="{{ route('admins.tpcu.index') }}"
+                                @elseif($cu > '0')
+                                    href="{{ route('admins.tpcu.index_cu',array($cu)) }}"
+                                @endif
+                            ><i class="fa fa-circle-o"></i> Kelola</a>
+                        </li>
+                        @endpermission
+                    </ul>    
+                </li>
+            @endpermission
+            <!-- /tpcu -->
             <!-- staf -->
             @permission('view.staf_view|create.staf_create')
                 <li {!! Request::is('admins/staf') || Request::is('admins/staf*') ? 'class="treeview active"' : 'treeview' !!} >

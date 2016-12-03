@@ -13,7 +13,7 @@
             @if($title == "Ubah Info")
                 {{ "active" }}
             @endif
-                ">
+        ">
             <h4 class="list-group-item-heading"><i class="fa fa-fw fa-info"></i> Ubah Info</h4>
             <p class="list-group-item-text">Mengubah Informasi Dasar CU</p>
         </a>

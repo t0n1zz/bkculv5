@@ -51,7 +51,7 @@ $imagepath = "images_cu/";
                         <tr>
                             <th data-sortable="false">#</th>
                             <th hidden></th>
-                            <th>Foto</th>
+                            <th data-sortable="false">Foto</th>
                             <th>Nama </th>
                             <th>No. BA</th>
                             <th>Wilayah</th>
@@ -337,6 +337,19 @@ $imagepath = "images_cu/";
                         var kelas = "{{ $kelas }}";
                         if(id != ""){
                             window.location.href =  kelas + "/detail/" + id;
+                        }else{
+                            $('#modalwarning').modal({show:true});
+                        }
+                    }
+                },
+                {
+                    text: '<i class="fa fa-home"></i> TP',
+                    action: function(){
+                        var id = $.map(table.rows({ selected: true }).data(),function(item){
+                            return item[1];
+                        });
+                        if(id != ""){
+                            window.location.href =  "/admins/tpcu/index_cu/" + id;
                         }else{
                             $('#modalwarning').modal({show:true});
                         }

@@ -34,12 +34,17 @@ $kelas = 'tpcu';
             </ul>
             <div class="tab-content"> 
                 <div class="tab-pane fade in active" id="tab_tpcu">
-                    <div class="col-sm-9" style="padding: .2em ;">
+                    @if(Auth::user()->getCU() == '0')
+                        <div class="col-sm-8" style="padding: .2em ;">
+                    @else
+                        <div class="col-sm-12" style="padding: .2em ;">
+                    @endif
                         <div class="input-group tabletools">
                             <div class="input-group-addon"><i class="fa fa-search"></i></div>
-                            <input type="text" id="searchtext" class="form-control" placeholder="Kata kunci pencarian..." autofocus>
+                            <input type="text" id="searchtext" class="form-control" placeholder="Kata kunci pencarian...">
                         </div>
                     </div>
+                    @if(Auth::user()->getCU() == '0')
                     <div class="col-sm-3" style="padding: .2em ;">
                         <?php $culists = App\Models\Cuprimer::orderBy('name','asc')->get(); ?>
                         <div class="input-group tabletools">
@@ -55,13 +60,14 @@ $kelas = 'tpcu';
                             </select>
                         </div>
                     </div>
+                    @endif
                     <table class="table table-hover order-column" id="dataTables-example" width="100%">
                         <thead class="bg-light-blue-active color-palette">
                         <tr>
-                            <th>#</th>
+                            <th data-sortable="false">#</th>
                             <th hidden></th>
+                            <th data-sortable="false">Foto</th>
                             @if(Request::is('admins/tpcu'))<th>Nama Credit Union</th>@endif
-                            @if(Request::is('admins/tpcu'))<th>No. BA</th>@endif
                             <th>Nama @if(Request::is('admins/tpcu')) TP @endif</th>
                             <th>No. TP</th>
                             <th>Tanggal Berdiri</th>
@@ -73,61 +79,28 @@ $kelas = 'tpcu';
                         </thead>
                         <tbody>
                         @foreach($datas as $data)
+                            <?php $date = new Date($data->ultah); ?>
                             <tr>
                                 <td class="bg-aqua disabled color-palette"></td>
                                 <td hidden>{{ $data->id }}</td>
-
-                                @if(Request::is('admins/tpcu'))
-                                    @if(!empty($data->cuprimer))<td>{{ $data->cuprimer->name }}</td>@else<td>-</td>@endif
-                                @endif
-
-                                @if(Request::is('admins/tpcu'))
-                                    @if(!empty($data->cuprimer))<td>{{ $data->cuprimer->no_ba }}</td>@else<td>-</td>@endif
-                                @endif
-
-                                @if(!empty($data->name))
-                                    <td>{{ $data->name }}</td>
+                                 @if(!empty($data->gambar) && is_file($imagepath.$data->gambar."n.jpg"))
+                                    <th><img class="img-responsive"  width="50px" src="{{ asset($imagepath.$data->gambar.'n.jpg') }}"
+                                             id="tampilgambar" alt="{{ asset($imagepath.$data->gambar."jpg") }}"></th>
+                                @elseif(!empty($data->gambar) && is_file($imagepath.$data->gambar))
+                                    <th><img class="img-responsive" width="50px" src="{{ asset($imagepath.$data->gambar) }}"
+                                             id="tampilgambar" alt="{{ asset($imagepath.$data->gambar) }}"></th>
                                 @else
-                                    <td>-</td>
-                                @endif
-
-                                @if(!empty($data->no_tp))
-                                    <td>{{ $data->no_tp }}</td>
-                                @else
-                                    <td>-</td>
-                                @endif
-
-                                @if(!empty($data->ultah))
-                                    <?php $date = new Date($data->ultah); ?>
-                                    <td><i hidden="true">{{ $data->ultah }}</i>  {{ $date->format('d/m/Y') }}</td>
-                                @else
-                                    <td>-</td>
-                                @endif
-
-                                @if(!empty($data->telp))
-                                    <td>{{ $data->telp }}</td>
-                                @else
-                                    <td>-</td>
-                                @endif
-
-                                @if(!empty($data->hp))
-                                    <td>{{ $data->hp }}</td>
-                                @else
-                                    <td>-</td>
-                                @endif
-
-                                @if(!empty($data->pos))
-                                    <td>{{ $data->pos }}</td>
-                                @else
-                                    <td>-</td>
-                                @endif
-
-                                @if(!empty($data->alamat))
-                                    <td>{{ $data->alamat }}</td>
-                                @else
-                                    <td>-</td>
-                                @endif
-
+                                    <th><img class="img-responsive" width="50px" src="{{ asset('images/image-cu.jpg') }}"
+                                         id="tampilgambar" alt="cu profile"></th>
+                                @endif  
+                                @if(Request::is('admins/tpcu'))<td>{{ $data->cuprimer->name }}</td>@endif
+                                <td>{{ $data->name }}</td>
+                                <td>{{ $data->no_tp }}</td>
+                                <td><i hidden="true">{{ $data->ultah }}</i>  {{ $date->format('d/m/Y') }}</td>
+                                <td>{{ $data->telp }}</td>
+                                <td>{{ $data->hp }}</td>
+                                <td>{{ $data->pos }}</td>
+                                <td>{{ $data->alamat }}</td>
                             </tr>
                         @endforeach
 
@@ -183,6 +156,8 @@ $kelas = 'tpcu';
                         var kelas = "{{ $kelas }}";
                         if(id != ""){
                             window.location.href =  kelas + "/" + id + "/edit";
+                        }else{
+                            $('#modalwarning').modal({show:true});
                         }
                     }
                 },

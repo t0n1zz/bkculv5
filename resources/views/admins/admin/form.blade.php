@@ -123,13 +123,13 @@ $kelas ='admin';
                                 <select class="form-control" name="cu" id="pilih_cu">
                                     <option value="" selected disabled>Silahkan pilih CU</option>
                                     @foreach($datas2 as $data2)
-                                        <option value="{{ $data2->id }}"
-                                        @if(!empty($data))
-                                            @if($data->cu == $data->id)
-                                                {{ "selected" }}
-                                                    @endif
+                                        <option value="{{ $data2->no_ba }}"
+                                            @if(!empty($data))
+                                                @if($data->cu == $data2->no_ba)
+                                                    {{ "selected" }}
                                                 @endif
-                                                >{{ $data2->name }}</option>
+                                            @endif
+                                        >{{ $data2->name }}</option>
                                     @endforeach
                                 </select>
                             </div>

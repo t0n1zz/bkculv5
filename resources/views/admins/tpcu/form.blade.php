@@ -1,5 +1,12 @@
 <?php
 $kelas ='tpcu';
+$file_max = ini_get('upload_max_filesize');
+$file_max_str_leng = strlen($file_max);
+$file_max_meassure_unit = substr($file_max,$file_max_str_leng - 1,1);
+$file_max_meassure_unit = $file_max_meassure_unit == 'K' ? 'kb' : ($file_max_meassure_unit == 'M' ? 'mb' : ($file_max_meassure_unit == 'G' ? 'gb' : 'unidades'));
+$file_max = substr($file_max,0,$file_max_str_leng - 1);
+$file_max = intval($file_max);
+$cu = \Auth::user()->getCU();
 ?>
 <!-- Alert -->
 @include('admins._layouts.alert')
@@ -8,18 +15,35 @@ $kelas ='tpcu';
 <div class="box box-primary">
     <div class="box-body">
         <div class="row">
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <h4>Foto TP</h4>
+                    <div class="thumbnail" >
+                        @if(!empty($data->gambar))
+                            {{ Html::image($imagepath.$data->gambar.'n.jpg', 'a picture', array('class' => 'img-responsive', 'id' => 'tampilgambar', 'width' => '200')) }}
+                        @else
+                            {{ Html::image('images/no_image.jpg', 'a picture', array('class' => 'img-responsive', 'id' => 'tampilgambar', 'width' => '200')) }}
+                        @endif
+                        <div class="caption">
+                            {{ Form::file('gambar', array('onChange' => 'readURL(this)')) }}
+                        </div>
+                    </div>
+                    <div class="help-block">Ukuran maksimum file gambar adalah {!! $file_max. ' ' .$file_max_meassure_unit !!}.</div>
+                </div>
+            </div>
+            @if(Auth::user()->getCU() == '0')
             <!--nama credit union-->
             <div class="col-sm-12">
                 <div class="form-group">
-                    <h4>Credit Union</h4>
+                    <h4>Credit Union</h4>t
                     <div class="input-group">
                         <div class="input-group-addon"><i class="fa fa-list"></i></div>
                         <select class="form-control" name="cu" required>
                             <option hidden="">Silahkan pilih Credit Union</option>
                             @foreach($datas2 as $data2)
-                                <option value="{{ $data2->id }}"
+                                <option value="{{ $data2->no_ba }}"
                                 @if(!empty($data))
-                                    @if($data->cu == $data2->id)
+                                    @if($data->cu == $data2->no_ba)
                                         {!! "selected" !!}
                                             @endif
                                         @endif
@@ -31,6 +55,7 @@ $kelas ='tpcu';
                 </div>
             </div>
             <!--/nama credit union-->
+            @endif
             <!--nama tp-->
             <div class="col-sm-6">
                 <div class="form-group has-feedback">
@@ -110,9 +135,15 @@ $kelas ='tpcu';
             <button type="submit" name="simpan2" accesskey="m" class="btn btn-primary" value="simpan">
                 <i class="fa fa-save fa-fw"></i><i class="fa fa-plus"></i> Si<u>m</u>pan dan buat baru
             </button>
-            <a href="{{ route('admins.'.$kelas.'.index' )}}" name="batal" accesskey="b" class="btn btn-danger" value="batal">
-                <i class="fa fa-times"></i> <u>B</u>atal
-            </a>
+            @if($cu == '0')  
+                <a href="{{ route('admins.'.$kelas.'.index' )}}" name="batal" accesskey="b" class="btn btn-danger" value="batal">
+                    <i class="fa fa-times"></i> <u>B</u>atal
+                </a>
+            @else
+                <a href="{{ route('admins.'.$kelas.'.index_cu',array($cu) )}}" name="batal" accesskey="b" class="btn btn-danger" value="batal">
+                    <i class="fa fa-times"></i> <u>B</u>atal
+                </a>
+            @endif
         </div>
     </div>
 </div>

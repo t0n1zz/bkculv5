@@ -411,7 +411,6 @@ class LaporanCuController extends Controller{
                 }else{
                     return Redirect::route('admins.'.$this->kelaspath.'.index_cu',array($no_ba))->with('sucessmessage', 'Data Perkembangan CU Telah berhasil diubah.');
                 }
-                
             }
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
@@ -522,7 +521,7 @@ class LaporanCuController extends Controller{
             if(!empty($data) && $data->count()){
                 foreach($data as $key => $value){
                     $insert[] = [
-                        'no_ba' => $value->no_ba,
+                        'cu' => $value->no_ba,
                         'l_biasa' => $value->l_biasa,
                         'l_lbiasa' => $value->l_lbiasa,
                         'p_biasa' => $value->p_biasa,

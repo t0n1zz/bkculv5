@@ -109,11 +109,11 @@
     <div class="nav-tabs-custom">
         <ul class="nav nav-tabs">
             @if(!Request::is('admins/laporancu/index_bkcu')) 
-                <li class="active"><a href="#tab_cu" data-toggle="tab">{{ $title }}</a></li>
+                <li class="active"><a href="#tab_cu" data-toggle="tab">Perkembangan</a></li>
             @endif
             @if(Request::is('admins/laporancu') || Request::is('admins/laporancu/index_periode/*'))
-                <li><a href="#tab_provinsi" data-toggle="tab">{{ $title }} (Provinsi)</a></li>
-                <li><a href="#tab_do" data-toggle="tab">{{ $title }} (District Office)</a></li>
+                <li><a href="#tab_provinsi" data-toggle="tab">Perkembangan (Provinsi)</a></li>
+                <li><a href="#tab_do" data-toggle="tab">Perkembangan (District Office)</a></li>
             @endif
             @if(!Request::is('admins/laporancu/index_bkcu')) 
                 <li><a href="#tab_pearls" data-toggle="tab">P.E.A.R.L.S</a></li>
@@ -219,36 +219,40 @@
                                         }
                                     }
 
-                                    $tot_cu++;
+                                    
                                     $date = new Date($data->periode);
                                     $periode = $date->format('F Y');
-                                    $tot_l_biasa += $data->l_biasa;
-                                    $tot_l_lbiasa += $data->l_lbiasa;
-                                    $tot_p_biasa += $data->p_biasa;
-                                    $tot_p_lbiasa += $data->p_lbiasa;
-                                    $total = $data->l_biasa + $data->l_lbiasa + $data->p_biasa + $data->p_lbiasa;
-                                    $tot_anggota += $total;
-                                    $tot_aset += $data->aset;
-                                    $tot_aktivalancar += $data->aktivalancar;
-                                    $tot_simpanansaham += $data->simpanansaham;
-                                    $tot_nonsaham_unggulan += $data->nonsaham_unggulan;
-                                    $tot_nonsaham_harian += $data->nonsaham_harian;
-                                    $tot_hutangspd += $data->hutangspd;
-                                    $tot_piutangberedar += $data->piutangberedar;
-                                    $piutangbersih = $data->piutangberedar - ($data->piutanglalai_1bulan + $data->piutanglalai_12bulan);
-                                    $tot_piutangbersih += $piutangbersih;
-                                    $tot_piutanglalai_1bulan += $data->piutanglalai_1bulan;
-                                    $tot_piutanglalai_12bulan += $data->piutanglalai_12bulan;
                                     $rasio_beredar = number_format((($data->piutangberedar / $data->aset)*100),2); 
-                                    $tot_beredar += $rasio_beredar;
                                     $rasio_lalai = number_format(((($data->piutanglalai_1bulan + $data->piutanglalai_12bulan) / $data->piutangberedar)*100),2);
-                                    $tot_lalai += $rasio_lalai;
-                                    $tot_dcr += $data->dcr;
-                                    $tot_dcu += $data->dcu;
-                                    $tot_totalpendapatan += $data->totalpendapatan;
-                                    $tot_totalbiaya += $data->totalbiaya;
-                                    $tot_shu += $data->shu;
-                                    ?>
+                                    $total = $data->l_biasa + $data->l_lbiasa + $data->p_biasa + $data->p_lbiasa;
+                                    $piutangbersih = $data->piutangberedar - ($data->piutanglalai_1bulan + $data->piutanglalai_12bulan);
+
+                                    if(!Request::is('admins/laporancu/index_cu/*')) {
+                                        $tot_cu++;
+                                        $tot_l_biasa += $data->l_biasa;
+                                        $tot_l_lbiasa += $data->l_lbiasa;
+                                        $tot_p_biasa += $data->p_biasa;
+                                        $tot_p_lbiasa += $data->p_lbiasa;
+                                        $tot_anggota += $total;
+                                        $tot_aset += $data->aset;
+                                        $tot_aktivalancar += $data->aktivalancar;
+                                        $tot_simpanansaham += $data->simpanansaham;
+                                        $tot_nonsaham_unggulan += $data->nonsaham_unggulan;
+                                        $tot_nonsaham_harian += $data->nonsaham_harian;
+                                        $tot_hutangspd += $data->hutangspd;
+                                        $tot_piutangberedar += $data->piutangberedar;
+                                        $tot_piutangbersih += $piutangbersih;
+                                        $tot_piutanglalai_1bulan += $data->piutanglalai_1bulan;
+                                        $tot_piutanglalai_12bulan += $data->piutanglalai_12bulan;
+                                        $tot_beredar += $rasio_beredar;
+                                        $tot_lalai += $rasio_lalai;
+                                        $tot_dcr += $data->dcr;
+                                        $tot_dcu += $data->dcu;
+                                        $tot_totalpendapatan += $data->totalpendapatan;
+                                        $tot_totalbiaya += $data->totalbiaya;
+                                        $tot_shu += $data->shu;
+                                    }
+                                ?>
                                 <tr
                                 @if(!Request::is('admins/laporancu/index_cu/*'))
                                     @if($data->periode < $datas->first()->periode){!! 'class="highlight"'  !!}@endif
@@ -797,10 +801,10 @@
     <!--grafik-->
     <div class="nav-tabs-custom">
         <ul class="nav nav-tabs">
-            <li class="active"><a href="#tab_cu" data-toggle="tab">Grafik {{ $title }}</a></li>
+            <li class="active"><a href="#tab_cu" data-toggle="tab">Grafik Perkembangan</a></li>
             @if(Request::is('admins/laporancu') || Request::is('admins/laporancu/index_periode/*'))
-                <li><a href="#tab_provinsi" data-toggle="tab">Grafik {{ $title }} (Provinsi)</a></li>
-                <li><a href="#tab_do" data-toggle="tab">Grafik {{ $title }} (District Office)</a></li>
+                <li><a href="#tab_provinsi" data-toggle="tab">Grafik Perkembangan (Provinsi)</a></li>
+                <li><a href="#tab_do" data-toggle="tab">Grafik Perkembangan (District Office)</a></li>
             @endif
             @if(!Request::is('admins/laporancu/index_bkcu')) 
                 <li><a href="#tab_pearls" data-toggle="tab">Grafik P.E.A.R.L.S</a></li>
@@ -1026,7 +1030,7 @@
                 <div class="tab-pane fade" id="tab_pearls">
                     <?php
                         if(!empty($datapearls)){
-                           $gp1 = array_column($datapearls,'p1');
+                            $gp1 = array_column($datapearls,'p1');
                             $gp2 = array_column($datapearls,'p2');
                             $ge1 = array_column($datapearls,'e1');
                             $ge5 = array_column($datapearls,'e5');

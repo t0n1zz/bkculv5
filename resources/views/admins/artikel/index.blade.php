@@ -53,7 +53,7 @@ $imagepath = 'images_artikel/';
                     <tr>
                         <th data-sortable="false">#</th>
                         <th hidden></th>
-                        <th>Foto</th>
+                        <th data-sortable="false">Foto</th>
                         <th>Judul</th>
                         <th>Kategori</th>
                         <th>Penulis</th>

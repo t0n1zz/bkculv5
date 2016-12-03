@@ -1,6 +1,6 @@
 <?php
-$title="Ubah Data Perkembangan CU";
-$kelas="perkembangancu";
+$title="Ubah Data Laporan CU";
+$kelas="laporancu";
 ?>
 @extends('admins._layouts.layout')
 
