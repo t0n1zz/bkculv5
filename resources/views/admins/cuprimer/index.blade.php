@@ -41,7 +41,7 @@ $imagepath = "images_cu/";
         </ul>
         <div class="tab-content">
             @permission('view.'.$kelas.'_view') 
-                <div class="tab-pane fade in active" id="tab_cuprimer">
+                <div class="tab-pane active" id="tab_cuprimer">
                     <div class="input-group tabletools">
                         <div class="input-group-addon"><i class="fa fa-search"></i></div>
                         <input type="text" id="searchtext" class="form-control" placeholder="Kata kunci pencarian..." autofocus>
@@ -122,7 +122,7 @@ $imagepath = "images_cu/";
                 </div>
             @endpermission
             @permission('view.'.$kelas2.'_view')
-            <div class="tab-pane fade" id="tab_wilayahcuprimer">
+            <div class="tab-pane" id="tab_wilayahcuprimer">
                 <div class="input-group tabletools">
                     <div class="input-group-addon"><i class="fa fa-search"></i></div>
                     <input type="text" id="searchtext2" class="form-control" placeholder="Kata kunci pencarian..." autofocus>
@@ -295,6 +295,8 @@ $imagepath = "images_cu/";
                         var kelas = "{{ $kelas }}";
                         if(id != ""){
                             window.location.href =  kelas + "/" + id + "/edit";
+                        }else{
+                            $('#modalwarning').modal({show:true});
                         }
                     }
                 },

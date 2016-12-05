@@ -3,6 +3,8 @@ namespace App\Http\Controllers;
 
 use Input;
 use Auth;
+use File;
+use Image; 
 use Redirect;
 use Validator;
 use App\Models\TpCU;
@@ -84,6 +86,7 @@ class TpcuController extends Controller{
                 array_set($data,'cu',$cu);
             }
 
+            $kelas = new TpCU();
             $date = Input::get('ultah');
             if(!empty($date)){
                 $timestamp2 = strtotime(str_replace('/', '-',$date));
@@ -91,16 +94,17 @@ class TpcuController extends Controller{
                 array_set($data,'ultah',$tanggal2);
             }
 
+            $data = $this->input_gambar($kelas,$data);
+
             TpCU::create($data);
 
             if(Input::Get('simpan2')){
                 return Redirect::route('admins.'.$this->kelaspath.'.create')->with('sucessmessage','TP CU Telah berhasil ditambah.');
             }else{
-                if($cu == '0'){
+                if($cu == '0')
                     return Redirect::route('admins.'.$this->kelaspath.'.index')->with('sucessmessage','TP CU Telah berhasil ditambah.');
-                }else{
-                    return Redirect::route('admins.'.$this->kelaspath.'.index_cu',array($no_ba))->with('sucessmessage', 'TP CU Telah berhasil ditambah.');
-                }
+                else
+                    return Redirect::route('admins.tpcu.index_cu',array($cu))->with('sucessmessage','TP CU Telah berhasil ditambah.');
             }
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
@@ -148,16 +152,13 @@ class TpcuController extends Controller{
                 $tanggal2 = date('Y-m-d',$timestamp2);
                 array_set($data,'ultah',$tanggal2);
             }
+            $data = $this->input_gambar($kelas,$data);
             $kelas->update($data);
 
             if(Input::Get('simpan2')){
                 return Redirect::route('admins.'.$this->kelaspath.'.create')->with('sucessmessage','TP CU Telah berhasil diubah.');
             }else{
-                if($cu == '0'){
-                    return Redirect::route('admins.'.$this->kelaspath.'.index')->with('sucessmessage','TP CU Telah berhasil diubah.');
-                }else{
-                    return Redirect::route('admins.'.$this->kelaspath.'.index_cu',array($no_ba))->with('sucessmessage', 'TP CU Telah berhasil diubah.');
-                }
+                return Redirect::route('admins.'.$this->kelaspath.'.index')->with('sucessmessage','TP CU Telah berhasil diubah.');
             }
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
@@ -170,6 +171,8 @@ class TpcuController extends Controller{
         $name = preg_replace('/[^A-Za-z0-9\-]/', '',Input::get('name'));
         $formatedname = $name.str_random(5).date('Y-m-d');
         $img = Input::file('gambar');
+
+
         if (!is_null($img)) {
 
             $filename = $formatedname.".jpg";
@@ -198,7 +201,7 @@ class TpcuController extends Controller{
             $kelas = TpCU::findOrFail($id);
             $path = public_path($this->imagepath);
 
-            File::delete($path . $kelas->gambar);
+            ile::delete($path . $kelas->gambar .".jpg");
             File::delete($path . $kelas->gambar ."n.jpg");
 
             TpCU::destroy($id);
@@ -209,20 +212,26 @@ class TpcuController extends Controller{
         }
     }
 
-    function save_image($img,$kelas,$filename,$filename2,$filename3)
+    function save_image($img,$kelas,$filename,$filename2)
     {
         list($width, $height) = getimagesize($img);
 
         $path = public_path($this->imagepath);
 
-        File::delete($path . $kelas->gambar);
         File::delete($path . $kelas->gambar .".jpg");
         File::delete($path . $kelas->gambar ."n.jpg");
-        File::delete($path . $kelas->gambar ."b.jpg");
 
-        Image::make($img->getRealPath())->fit(848,636)->save($path . $filename);
-        Image::make($img->getRealPath())->fit(360,240)->save($path . $filename2);
-        Image::make($img->getRealPath())->fit(1220,424)->save($path . $filename3);
+        if($width > 720){
+            Image::make($img->getRealPath())->resize(720, null,
+                function ($constraint) {
+                    $constraint->aspectRatio();
+                })
+                ->save($path . $filename);
+        }else{
+            Image::make($img->getRealPath())->save($path . $filename);
+        }
+
+        Image::make($img->getRealPath())->fit(288,200)->save($path . $filename2);
     }
 
 }

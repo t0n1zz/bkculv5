@@ -201,9 +201,7 @@ class LaporanCuController extends Controller{
             $cu = Auth::user()->getCU();
 
             if($cu > 0){
-                $cuprimer = Cuprimer::where('id','=',$cu)->select('no_ba')->first();
-                $no_ba = $cuprimer->no_ba;
-                if($no_ba != $id)
+                if($cu != $id)
                     return Redirect::back();
             }
 
@@ -404,12 +402,12 @@ class LaporanCuController extends Controller{
             LaporanCu::create($data);
 
             if(Input::Get('simpan2')){
-                return Redirect::route('admins.'.$this->kelaspath.'.create')->with('sucessmessage','Data Perkembangan CU Telah berhasil ditambah.');
+                return Redirect::route('admins.'.$this->kelaspath.'.create')->with('sucessmessage','Laporan CU Telah berhasil ditambah.');
             }else{
                 if($cu == '0'){
-                    return Redirect::route('admins.'.$this->kelaspath.'.index')->with('sucessmessage','Data Perkembangan CU Telah berhasil ditambah.');
+                    return Redirect::route('admins.'.$this->kelaspath.'.index')->with('sucessmessage','Laporan CU Telah berhasil ditambah.');
                 }else{
-                    return Redirect::route('admins.'.$this->kelaspath.'.index_cu',array($no_ba))->with('sucessmessage', 'Data Perkembangan CU Telah berhasil diubah.');
+                    return Redirect::route('admins.'.$this->kelaspath.'.index_cu',array($no_ba))->with('sucessmessage', 'Laporan CU Telah berhasil diubah.');
                 }
             }
         }catch (Exception $e){
@@ -468,15 +466,17 @@ class LaporanCuController extends Controller{
                 array_set($data,'no_ba',$no_ba);
             }
 
+            // dd($data);
+
             $kelas->update($data);
 
             if (Input::Get('simpan2')){
-                return Redirect::route('admins.'.$this->kelaspath.'.create')->with('sucessmessage', 'Data Perkembangan CU Telah berhasil diubah.');
+                return Redirect::route('admins.'.$this->kelaspath.'.create')->with('sucessmessage', 'Laporan CU Telah berhasil diubah.');
             }else{
                 if($cu == '0')
-                    return Redirect::route('admins.'.$this->kelaspath.'.index')->with('sucessmessage', 'Data Perkembangan CU Telah berhasil diubah.');
+                    return Redirect::route('admins.'.$this->kelaspath.'.index')->with('sucessmessage', 'Laporan CU Telah berhasil diubah.');
                 else
-                    return Redirect::route('admins.'.$this->kelaspath.'.index_cu',array($no_ba))->with('sucessmessage', 'Data Perkembangan CU Telah berhasil diubah.');
+                    return Redirect::route('admins.'.$this->kelaspath.'.index_cu',array($no_ba))->with('sucessmessage', 'Laporan CU Telah berhasil diubah.');
             }
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
@@ -501,10 +501,10 @@ class LaporanCuController extends Controller{
             
               
             if($cu == '0'){
-                return Redirect::route('admins.'.$this->kelaspath.'.index')->with('sucessmessage','Data Perkembangan CU Telah berhasil di hapus.');
+                return Redirect::route('admins.'.$this->kelaspath.'.index')->with('sucessmessage','Laporan CU Telah berhasil di hapus.');
             }else{
                 $no_ba = $cuprimer->no_ba;
-                return Redirect::route('admins.'.$this->kelaspath.'.index_cu',array($no_ba))->with('sucessmessage','Data Perkembangan CU Telah berhasil di hapus.');
+                return Redirect::route('admins.'.$this->kelaspath.'.index_cu',array($no_ba))->with('sucessmessage','Laporan CU Telah berhasil di hapus.');
             }
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
@@ -563,7 +563,7 @@ class LaporanCuController extends Controller{
 
                 if(!empty($insert)){
                   DB::table('LaporanCu')->insert($insert);
-                  return Redirect::route('admins.'.$this->kelaspath.'.index')->with('sucessmessage','Data Perkembangan CU Telah berhasil di import.');
+                  return Redirect::route('admins.'.$this->kelaspath.'.index')->with('sucessmessage','Laporan CU Telah berhasil di import.');
                 }
 
             // $perkembangans = LaporanCu::get(['cu','periode']);

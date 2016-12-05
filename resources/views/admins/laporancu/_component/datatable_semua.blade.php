@@ -64,20 +64,20 @@
                 {
                     extend: 'colvisGroup',
                     text: ' Anggota',
-                    show: [ 0,1,2,6,7,8,9,10,11 ],
-                    hide: [ 3,4,5,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30 ]
+                    show: [ 0,1,2,3,7,8,9,10,11,12 ],
+                    hide: [ 4,5,6,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31 ]
                 },
                 {
                     extend: 'colvisGroup',
                     text: 'SHU',
-                    show: [ 0,1,2,6,12,26,27,28 ],
-                    hide: [ 3,4,5,7,8,9,10,11,13,14,15,16,17,18,19,20,21,22,23,24,25,29,30 ]
+                    show: [ 0,1,2,3,7,13,27,28,29 ],
+                    hide: [ 4,5,6,8,9,10,11,12,14,15,16,17,18,19,20,21,22,23,24,25,26,30,31 ]
                 },
                 {
                     extend: 'colvisGroup',
                     text: 'Piutang',
-                    show: [ 0,1,2,6,18,19,20,21,22,23 ],
-                    hide: [ 3,4,5,7,8,9,10,11,12,13,14,15,16,17,24,25,26,27,28,29,30 ]
+                    show: [ 0,1,2,3,7,19,20,21,22,23,24 ],
+                    hide: [ 4,5,6,8,9,10,11,12,13,14,15,16,17,18,25,26,27,28,29,30,31 ]
                 },
             @else
                 {
@@ -147,8 +147,8 @@
                     });
                     if(id != ""){
                         $('#modalhapus').modal({show:true});
-                        $('#modalhapus_judul').text('Hapus Data Perkembangan CU');
-                        $('#modalhapus_detail').text('Hapus Data Perkembangan CU');
+                        $('#modalhapus_judul').text('Hapus Laporan CU');
+                        $('#modalhapus_detail').text('Hapus Laporan CU');
                         $('#modalhapus_id').attr('value',id);
                     }else{
                         $('#modalwarning').modal({show:true});
@@ -163,12 +163,12 @@
 
     new $.fn.dataTable.Buttons(table,{
         buttons: [
-            @if(!Request::is('admins/perkembangancu/index_cu/*'))
+            @if(!Request::is('admins/laporancu/index_cu/*'))
             {
                 text: '<i class="fa fa-database"></i> Detail',
                 action: function(){
                     var id = $.map(table.rows({ selected: true }).data(),function(item){
-                        return item[3];
+                        return item[2];
                     });
                     var kelas = "{{ $kelas }}";
                     if(id != ""){

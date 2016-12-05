@@ -13,7 +13,7 @@ class TpCU extends Model {
     ];
 
     protected $fillable = [
-        'cu','name','ultah','telp','hp','pos','alamat'
+        'cu','no_tp','name','ultah','telp','hp','pos','alamat','gambar'
     ];
 
     public function getNameAttribute($value){
@@ -21,7 +21,7 @@ class TpCU extends Model {
     }
 
     public function cuprimer(){
-        return $this->belongsTo('App\Models\Cuprimer','cu','id');
+        return $this->belongsTo('App\Models\Cuprimer','cu','no_ba');
     }
 
 }

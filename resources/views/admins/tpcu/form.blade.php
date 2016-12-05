@@ -1,5 +1,6 @@
 <?php
 $kelas ='tpcu';
+$imagepath = 'images_tpcu/';
 $file_max = ini_get('upload_max_filesize');
 $file_max_str_leng = strlen($file_max);
 $file_max_meassure_unit = substr($file_max,$file_max_str_leng - 1,1);
@@ -31,11 +32,11 @@ $cu = \Auth::user()->getCU();
                     <div class="help-block">Ukuran maksimum file gambar adalah {!! $file_max. ' ' .$file_max_meassure_unit !!}.</div>
                 </div>
             </div>
-            @if(Auth::user()->getCU() == '0')
+            @if($cu  == '0')
             <!--nama credit union-->
             <div class="col-sm-12">
                 <div class="form-group">
-                    <h4>Credit Union</h4>t
+                    <h4>Credit Union</h4>
                     <div class="input-group">
                         <div class="input-group-addon"><i class="fa fa-list"></i></div>
                         <select class="form-control" name="cu" required>
@@ -55,6 +56,8 @@ $cu = \Auth::user()->getCU();
                 </div>
             </div>
             <!--/nama credit union-->
+            @else
+                <input type="text" value="{{ $cu }}" name="cu" hidden readonly>
             @endif
             <!--nama tp-->
             <div class="col-sm-6">
@@ -70,6 +73,20 @@ $cu = \Auth::user()->getCU();
                 </div>
             </div>
             <!--/nama tp-->
+            <!--nama tp-->
+            <div class="col-sm-6">
+                <div class="form-group has-feedback">
+                    <h4>No. TP </h4>
+                    <div class="input-group">
+                        <span class="input-group-addon">0-9</span>
+                        {{ Form::text('no_tp',null,array('class' => 'form-control', 'placeholder' => 'Silahkan masukkan no TP',
+                            'required','autocomplete'=>'off')) }}
+                        <span class="glyphicon form-control-feedback" aria-hidden="true"></span>    
+                    </div>
+                    <div class="help-block">No TP harus diisi .</div>
+                </div>
+            </div>
+            <!--/nama tp-->
             <!-- ultah -->
             <div class="col-sm-6">
                 <div class="form-group">
@@ -77,12 +94,12 @@ $cu = \Auth::user()->getCU();
                     <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                         <?php
-                        if(!empty($data->ultah)){
-                            $timestamp = strtotime($data->ultah);
-                            $tanggal = date('d/m/Y',$timestamp);
-                        }
+                            if(!empty($data)){
+                                $timestamp = strtotime($data->ultah);
+                                $tanggal = date('d/m/Y',$timestamp);
+                            }
                         ?>
-                        <input type="text" name="ultah" value="@if(!empty($ultah)){{$ultah}}@endif" class="form-control"
+                        <input type="text" name="ultah" value="@if(!empty($data)){{$tanggal}}@endif" class="form-control"
                                data-inputmask="'alias': 'date'" placeholder="dd/mm/yyyy" required />
                     </div>
                     <div class="help-block">Tanggal berdiri TP harus diisi.</div>

@@ -57,10 +57,9 @@ class CuprimerController extends Controller{
                     return Redirect::back();
             }
 
-            $data = Cuprimer::with('wilayahcuprimer')->find($id);
-            $datatp = TpCU::where('cu','=',$id)->orderBy('cu','desc')->get();
+            $data = Cuprimer::with('wilayahcuprimer')->where('no_ba','=',$id)->first();
 
-            return view('admins.'.$this->kelaspath.'.detail', compact('data','datatp','id'));
+            return view('admins.'.$this->kelaspath.'.detail', compact('data','id'));
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
         }
@@ -133,7 +132,7 @@ class CuprimerController extends Controller{
                     return Redirect::back();
             }
             
-            $data = Cuprimer::find($id);
+            $data = Cuprimer::where('no_ba','=',$id)->first();
             $datas2 = WilayahCuprimer::orderBy('name', 'asc')->get();
 
             return view('admins.'.$this->kelaspath.'.edit', compact('data', 'datas2'));
@@ -386,7 +385,6 @@ class CuprimerController extends Controller{
 
             if($kelas->hascuprimer->count() > 0)
                 return Redirect::back()->withInput()->with('errormessage','Maaf terdapat informasi CU pada wilayah ini, silahkan hapus informasi CU tersebut.');
-
 
             WilayahCuprimer::destroy($id);
 

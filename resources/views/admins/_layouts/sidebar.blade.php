@@ -172,11 +172,7 @@ $cu = Auth::user()->getCU();
                             <a @if(Auth::check() && Auth::user()->can('view.laporancu_view'))
                                     href="{{ route('admins.laporancu.index') }}"
                                 @elseif(Auth::check() && Auth::user()->can('view.laporancudetail_view') && $cu > '0')
-                                    <?php 
-                                        $cuprimer = App\Models\Cuprimer::where('id','=',$cu)->select('no_ba')->first();
-                                        $no_ba = $cuprimer->no_ba;
-                                    ?>
-                                    href="{{ route('admins.laporancu.index_cu',array($no_ba)) }}"
+                                    href="{{ route('admins.laporancu.index_cu',array($cu)) }}"
                                 @endif><i class="fa fa-circle-o"></i> Kelola</a>
                         </li>
                         @endpermission        

@@ -7,7 +7,7 @@ $file_max_meassure_unit = substr($file_max,$file_max_str_leng - 1,1);
 $file_max_meassure_unit = $file_max_meassure_unit == 'K' ? 'kb' : ($file_max_meassure_unit == 'M' ? 'mb' : ($file_max_meassure_unit == 'G' ? 'gb' : 'unidades'));
 $file_max = substr($file_max,0,$file_max_str_leng - 1);
 $file_max = intval($file_max);
-$cu = \Auth::user()->getCU();
+$cu = Auth::user()->getCU();
 ?>
 @section('css')
     <link rel="stylesheet" type="text/css" href="{{asset('plugins/summernote/summernote.css')}}" >
@@ -52,9 +52,14 @@ $cu = \Auth::user()->getCU();
                     <h4>No. BA</h4>
                     <div class="input-group">
                         <span class="input-group-addon">0-9</span>
-                        {{ Form::number('no_ba',null,array('class' => 'form-control', 'placeholder' => 'Silahkan masukkan nomor anggota',
-                            'onKeyPress' => 'return isNumberKey(event)','required','autocomplete'=>'off'))}}
-                        <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                        @if($cu == 0)
+                            {{ Form::number('no_ba',null,array('class' => 'form-control', 'placeholder' => 'Silahkan masukkan nomor anggota',
+                                'onKeyPress' => 'return isNumberKey(event)','required','autocomplete'=>'off'))}}
+                            <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                        @else
+                            {{ Form::number('no_ba',null,array('class' => 'form-control', 'placeholder' => 'Silahkan masukkan nomor anggota','readonly'))}}
+                        @endif    
+                        
                     </div>
                     <div class="help-block">No. BA harus diisi.</div>
                 </div>

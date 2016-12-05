@@ -185,8 +185,7 @@
         }});
     }); --}}
     // input mask
-    // $(":input").inputmask();
-
+    $(":input").inputmask();
 
 </script>
 @yield('js')

@@ -1,6 +1,7 @@
 <?php
 $title = "Kelola TP CU";
 $kelas = 'tpcu';
+$imagepath = 'images_tpcu/';
 ?>
 
 @extends('admins._layouts.layout')
@@ -33,7 +34,7 @@ $kelas = 'tpcu';
                 <li class="active"><a href="#tab_tpcu" data-toggle="tab">TP CU</a></li>
             </ul>
             <div class="tab-content"> 
-                <div class="tab-pane fade in active" id="tab_tpcu">
+                <div class="tab-pane active" id="tab_tpcu">
                     @if(Auth::user()->getCU() == '0')
                         <div class="col-sm-8" style="padding: .2em ;">
                     @else
@@ -93,7 +94,7 @@ $kelas = 'tpcu';
                                     <th><img class="img-responsive" width="50px" src="{{ asset('images/image-cu.jpg') }}"
                                          id="tampilgambar" alt="cu profile"></th>
                                 @endif  
-                                @if(Request::is('admins/tpcu'))<td>{{ $data->cuprimer->name }}</td>@endif
+                                @if(Request::is('admins/tpcu'))<td>@if(!empty($data->cuprimer)){{ $data->cuprimer->name }}@endif</td>@endif
                                 <td>{{ $data->name }}</td>
                                 <td>{{ $data->no_tp }}</td>
                                 <td><i hidden="true">{{ $data->ultah }}</i>  {{ $date->format('d/m/Y') }}</td>
@@ -155,7 +156,7 @@ $kelas = 'tpcu';
                         });
                         var kelas = "{{ $kelas }}";
                         if(id != ""){
-                            window.location.href =  kelas + "/" + id + "/edit";
+                            window.location.href =  "/admins/" + kelas + "/" + id + "/edit";
                         }else{
                             $('#modalwarning').modal({show:true});
                         }

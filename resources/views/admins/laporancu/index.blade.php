@@ -124,7 +124,7 @@
         </ul>
         <div class="tab-content"> 
             @if(!Request::is('admins/laporancu/index_bkcu'))  
-                <div class="tab-pane fade in active" id="tab_cu">
+                <div class="tab-pane active" id="tab_cu">
                     <div class="input-group tabletools">
                         <div class="input-group-addon"><i class="fa fa-search"></i></div>
                         <input type="text" id="searchtext" class="form-control" placeholder="Kata kunci pencarian..." autofocus>
@@ -134,10 +134,13 @@
                             <tr>
                                 <th rowspan="2" data-sortable="false" >#</th>
                                 <th rowspan="2" hidden></th>
-                                @if(!Request::is('admins/laporancu/index_cu/*'))<th rowspan="2">Credit Union</th>@endif
-                                @if(!Request::is('admins/laporancu/index_cu/*'))<th rowspan="2">No.Ba</th>@endif
-                                @if(!Request::is('admins/laporancu/index_cu/*'))<th rowspan="2">District Office</th>@endif
-                                @if(!Request::is('admins/laporancu/index_cu/*'))<th rowspan="2">Wilayah</th>@endif
+                                @if(!Request::is('admins/laporancu/index_cu/*'))
+                                    <th rowspan="2" hidden></th>
+                                    <th rowspan="2">Credit Union</th>
+                                    <th rowspan="2">No.Ba</th>
+                                    <th rowspan="2">District Office</th>
+                                    <th rowspan="2">Wilayah</th>
+                                @endif
                                 <th rowspan="2">Periode Laporan</th>
                                 <th colspan="5" class="text-center">Anggota</th>
                                 <th rowspan="2">ASET</th>
@@ -260,6 +263,7 @@
                                     <td class="bg-aqua disabled color-palette"></td>
                                     <td hidden>{{ $data->id }}</td>
                                     @if(!Request::is('admins/laporancu/index_cu/*'))
+                                        <td hidden>{{ $data->cuprimer->no_ba }}</td>
                                         <td>{{ $data->cuprimer->name }}</td>
                                         <td>{{ $data->cuprimer->no_ba }}</td>
                                         <td>{{ $do }}</td>
@@ -391,7 +395,7 @@
                 </div>
             @endif          
             @if(Request::is('admins/laporancu') || Request::is('admins/laporancu/index_periode/*'))             
-                <div class="tab-pane fade" id="tab_provinsi">
+                <div class="tab-pane" id="tab_provinsi">
                     <div class="input-group tabletools">
                         <div class="input-group-addon"><i class="fa fa-search"></i></div>
                         <input type="text" id="searchtextprov" class="form-control" placeholder="Kata kunci pencarian..." >
@@ -471,7 +475,7 @@
                         </tbody>
                     </table>
                 </div>                  
-                <div class="tab-pane fade" id="tab_do">
+                <div class="tab-pane" id="tab_do">
                     <table class="table table-hover table-bordered" id="dataTables-do" width="100%">
                         <thead>
                         <tr class="bg-light-blue-active color-palette">
@@ -549,7 +553,7 @@
                 </div>
             @endif
             @if(!Request::is('admins/laporancu/index_bkcu')) 
-                <div class="tab-pane fade" id="tab_pearls">
+                <div class="tab-pane" id="tab_pearls">
                     <div class="input-group tabletools">
                         <div class="input-group-addon"><i class="fa fa-search"></i></div>
                         <input type="text" id="searchtextpearls" class="form-control" placeholder="Kata kunci pencarian..." autofocus>
@@ -710,7 +714,7 @@
                 </div> 
             @endif
             @if(Request::is('admins/laporancu/index_bkcu'))
-                <div class="tab-pane fade in active" id="tab_konsolidasi">
+                <div class="tab-pane active" id="tab_konsolidasi">
                     <div class="input-group tabletools">
                         <div class="input-group-addon"><i class="fa fa-search"></i></div>
                         <input type="text" id="searchtextkonsolidasi" class="form-control" placeholder="Kata kunci pencarian..." autofocus>
@@ -811,7 +815,7 @@
             @endif
         </ul>
         <div class="tab-content">
-            <div class="tab-pane fade in active" id="tab_cu">
+            <div class="tab-pane active" id="tab_cu">
                 <?php
                 $gl_biasa = array_column($dataarray,'l_biasa');
                 $gl_lbiasa = array_column($dataarray,'l_lbiasa');
@@ -883,7 +887,7 @@
                 </div>
             </div>
             @if(Request::is('admins/laporancu') || Request::is('admins/laporancu/index_periode/*'))
-                <div class="tab-pane fade" id="tab_provinsi">
+                <div class="tab-pane" id="tab_provinsi">
                     <?php
                     $gperiode2 = array_column($wilayahs,'nama');
                     $gl_biasa2 = array_column($wilayahs,'l_biasa');
@@ -954,7 +958,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="tab-pane fade" id="tab_do">
+                <div class="tab-pane" id="tab_do">
                     <?php
                     $gperiode3 = array_column($dos,'nama');
                     $gl_biasa3= array_column($dos,'l_biasa');
@@ -1027,7 +1031,7 @@
                 </div>
             @endif
             @if(!Request::is('admins/laporancu/index_bkcu')) 
-                <div class="tab-pane fade" id="tab_pearls">
+                <div class="tab-pane" id="tab_pearls">
                     <?php
                         if(!empty($datapearls)){
                             $gp1 = array_column($datapearls,'p1');

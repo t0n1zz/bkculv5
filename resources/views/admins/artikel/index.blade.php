@@ -42,7 +42,7 @@ $imagepath = 'images_artikel/';
         </ul>
         <div class="tab-content"> 
             @permission('view.'.$kelas.'_view')
-            <div class="tab-pane fade in active" id="tab_artikel">
+            <div class="tab-pane active" id="tab_artikel">
                 <div class="input-group tabletools">
                     <div class="input-group-addon"><i class="fa fa-search"></i></div>
                     <input type="text" id="searchtext" class="form-control" placeholder="Kata kunci pencarian..." autofocus>
@@ -98,7 +98,7 @@ $imagepath = 'images_artikel/';
             </div>
             @endpermission
             @permission('view.'.$kelas2.'_view')
-            <div class="tab-pane fade" id="tab_kategoriartikel">
+            <div class="tab-pane" id="tab_kategoriartikel">
                 <div class="input-group tabletools">
                     <div class="input-group-addon"><i class="fa fa-search"></i></div>
                     <input type="text" id="searchtext2" class="form-control" placeholder="Kata kunci pencarian..." autofocus>

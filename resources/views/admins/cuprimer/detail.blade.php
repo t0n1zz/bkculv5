@@ -61,6 +61,9 @@ $datejoin = new Date($data->bergabung);
                     <p class="text-muted text-center">{{ $data->wilayahcuprimer->name }}</p>
                     <ul class="list-group list-group-unbordered">
                         <li class="list-group-item">
+                            <b>No. BA</b> <a class="pull-right">{{ $data->no_ba }}</a>
+                        </li>
+                        <li class="list-group-item">
                             <b>District Office</b> <a class="pull-right">{{ $do }}</a>
                         </li>
                         <li class="list-group-item">
@@ -74,7 +77,24 @@ $datejoin = new Date($data->bergabung);
                         <i class="fa fa-pencil"></i> Ubah</a>
                 </div><!-- /.box-body -->
             </div><!-- /.box -->
-        </div><!-- /.col -->
+
+            <div class="small-box bg-aqua">
+                <?php $total_pengumuman = App\Models\TpCU::where('cu','=',$data->no_ba)->count(); $route = route('admins.tpcu.index_cu',array($data->no_ba)); ?>
+                <div class="inner">
+                    <a href="{{ $route }}" style="color:white"> 
+                        <h3>{{ $total_pengumuman }}</h3>
+                        <p>TP CU</p>
+                    </a>
+                </div>
+                <div class="icon">
+                   <a href="{{ $route }}" style="color: rgba(0, 0, 0, 0.15)"> 
+                        <i class="fa fa-home"></i>
+                   </a>
+                </div>
+                <a href="{{ $route }}"
+                   class="small-box-footer">Lihat <i class="fa fa-arrow-circle-right"></i></a>
+                </div>
+            </div><!-- /.col -->
 
         <div class="col-md-9">
             <!-- Alert -->

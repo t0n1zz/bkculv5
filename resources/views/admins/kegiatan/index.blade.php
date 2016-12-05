@@ -31,7 +31,7 @@ $kelas = "kegiatan";
             <li class="active"><a href="#tab_kegiatan" data-toggle="tab">Kegiatan</a></li>
         </ul>
         <div class="tab-content"> 
-            <div class="tab-pane fade in active" id="tab_kegiatan">
+            <div class="tab-pane active" id="tab_kegiatan">
                 @if(Auth::user()->getCU() == '0')
                     <div class="col-sm-8" style="padding: .2em ;">
                 @else

@@ -31,7 +31,7 @@ $kelas = "pengumuman";
             <li class="active"><a href="#tab_pengumuman" data-toggle="tab">Pengumuman</a></li>
         </ul>
         <div class="tab-content">
-          <div class="tab-pane fade in active" id="tab_pengumuman">
+          <div class="tab-pane active" id="tab_pengumuman">
                 <div class="input-group tabletools">
                     <div class="input-group-addon"><i class="fa fa-search"></i></div>
                     <input type="text" id="searchtext" class="form-control" placeholder="Kata kunci pencarian..." autofocus>

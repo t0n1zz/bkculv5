@@ -66,7 +66,7 @@ $kelas ='laporancu';
                     <div class="input-group">
                         <span class="input-group-addon">0-9</span>
                         {{ Form::text('l.biasa',null,array('class' => 'form-control', 'placeholder' => '0',
-                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ','")) }}
+                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ',','autoUnmask': true, 'removeMaskOnSubmit': true")) }}
                     </div>
                 </div>
             </div>
@@ -76,7 +76,7 @@ $kelas ='laporancu';
                     <div class="input-group">
                         <span class="input-group-addon">0-9</span>
                         {{ Form::text('l.lbiasa',null,array('class' => 'form-control', 'placeholder' => '0',
-                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ','")) }}
+                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ',','autoUnmask': true, 'removeMaskOnSubmit': true")) }}
                     </div>
                 </div>
             </div>
@@ -86,7 +86,7 @@ $kelas ='laporancu';
                     <div class="input-group">
                         <span class="input-group-addon">0-9</span>
                         {{ Form::text('p.biasa',null,array('class' => 'form-control', 'placeholder' => '0',
-                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ','")) }}
+                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ',','autoUnmask': true, 'removeMaskOnSubmit': true")) }}
                     </div>
                 </div>
             </div>
@@ -96,7 +96,7 @@ $kelas ='laporancu';
                     <div class="input-group">
                         <span class="input-group-addon">0-9</span>
                         {{ Form::text('p.lbiasa',null,array('class' => 'form-control', 'placeholder' => '0',
-                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ','")) }}
+                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ',','autoUnmask': true, 'removeMaskOnSubmit': true")) }}
                     </div>
                 </div>
             </div>
@@ -106,7 +106,7 @@ $kelas ='laporancu';
                     <div class="input-group">
                         <span class="input-group-addon">0-9</span>
                         {{ Form::text('totalanggota_lalu',null,array('class' => 'form-control', 'placeholder' => '0',
-                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ','")) }}
+                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ',','autoUnmask': true, 'removeMaskOnSubmit': true")) }}
                     </div>
                 </div>
             </div>
@@ -128,7 +128,7 @@ $kelas ='laporancu';
                     <div class="input-group">
                         <span class="input-group-addon">0-9</span>
                         {{ Form::text('aset_lalu',null,array('class' => 'form-control', 'placeholder' => '0',
-                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ','")) }}
+                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ',','autoUnmask': true, 'removeMaskOnSubmit': true")) }}
                     </div>
                 </div>
             </div>
@@ -138,7 +138,7 @@ $kelas ='laporancu';
                     <div class="input-group">
                         <span class="input-group-addon">0-9</span>
                         {{ Form::text('aset_masalah',null,array('class' => 'form-control', 'placeholder' => '0',
-                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ','")) }}
+                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ',','autoUnmask': true, 'removeMaskOnSubmit': true")) }}
                     </div>
                 </div>
             </div>
@@ -148,7 +148,7 @@ $kelas ='laporancu';
                     <div class="input-group">
                         <span class="input-group-addon">0-9</span>
                         {{ Form::text('aset_tidak_menghasilkan',null,array('class' => 'form-control', 'placeholder' => '0',
-                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ','")) }}
+                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ',','autoUnmask': true, 'removeMaskOnSubmit': true")) }}
                     </div>
                 </div>
             </div>
@@ -158,7 +158,7 @@ $kelas ='laporancu';
                     <div class="input-group">
                         <span class="input-group-addon">0-9</span>
                         {{ Form::text('aset_likuid_tidak_menghasilkan',null,array('class' => 'form-control', 'placeholder' => '0',
-                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ','")) }}
+                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ',','autoUnmask': true, 'removeMaskOnSubmit': true")) }}
                     </div>
                 </div>
             </div>
@@ -170,7 +170,7 @@ $kelas ='laporancu';
                     <div class="input-group">
                         <span class="input-group-addon">0-9</span>
                         {{ Form::text('aktivalancar',null,array('class' => 'form-control', 'placeholder' => '0',
-                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ','")) }}
+                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ',','autoUnmask': true, 'removeMaskOnSubmit': true")) }}
                     </div>
                 </div>
             </div>
@@ -182,7 +182,7 @@ $kelas ='laporancu';
                     <div class="input-group">
                         <span class="input-group-addon">0-9</span>
                         {{ Form::text('simpanansaham',null,array('class' => 'form-control', 'placeholder' => '0',
-                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ','")) }}
+                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ',','autoUnmask': true, 'removeMaskOnSubmit': true")) }}
                     </div>
                 </div>
             </div>
@@ -194,7 +194,7 @@ $kelas ='laporancu';
                     <div class="input-group">
                         <span class="input-group-addon">0-9</span>
                         {{ Form::text('nonsaham_unggulan',null,array('class' => 'form-control', 'placeholder' => '0',
-                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ','")) }}
+                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ',','autoUnmask': true, 'removeMaskOnSubmit': true")) }}
                     </div>
                 </div>
             </div>
@@ -206,7 +206,7 @@ $kelas ='laporancu';
                     <div class="input-group">
                         <span class="input-group-addon">0-9</span>
                         {{ Form::text('nonsaham_harian',null,array('class' => 'form-control', 'placeholder' => '0',
-                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ','")) }}
+                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ',','autoUnmask': true, 'removeMaskOnSubmit': true")) }}
                     </div>
                 </div>
             </div>
@@ -221,7 +221,7 @@ $kelas ='laporancu';
                     <div class="input-group">
                         <span class="input-group-addon">0-9</span>
                         {{ Form::text('hutangspd',null,array('class' => 'form-control', 'placeholder' => '0',
-                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ','")) }}
+                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ',','autoUnmask': true, 'removeMaskOnSubmit': true")) }}
                     </div>
                 </div>
             </div>
@@ -231,7 +231,7 @@ $kelas ='laporancu';
                     <div class="input-group">
                         <span class="input-group-addon">0-9</span>
                         {{ Form::text('hutang_tidak_berbiaya_30hari',null,array('class' => 'form-control', 'placeholder' => '0',
-                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ','")) }}
+                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ',','autoUnmask': true, 'removeMaskOnSubmit': true")) }}
                     </div>
                 </div>
             </div>
@@ -241,7 +241,7 @@ $kelas ='laporancu';
                     <div class="input-group">
                         <span class="input-group-addon">0-9</span>
                         {{ Form::text('totalhutang_pihak3',null,array('class' => 'form-control', 'placeholder' => '0',
-                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ','")) }}
+                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ',','autoUnmask': true, 'removeMaskOnSubmit': true")) }}
                     </div>
                 </div>
             </div>
@@ -253,7 +253,7 @@ $kelas ='laporancu';
                     <div class="input-group">
                         <span class="input-group-addon">0-9</span>
                         {{ Form::text('piutangberedar',null,array('class' => 'form-control', 'placeholder' => '0',
-                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ','")) }}
+                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ',','autoUnmask': true, 'removeMaskOnSubmit': true")) }}
                     </div>
                 </div>
             </div>
@@ -263,7 +263,7 @@ $kelas ='laporancu';
                     <div class="input-group">
                         <span class="input-group-addon">0-9</span>
                         {{ Form::text('piutanganggota',null,array('class' => 'form-control', 'placeholder' => '0',
-                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ','")) }}
+                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ',','autoUnmask': true, 'removeMaskOnSubmit': true")) }}
                     </div>
                 </div>
             </div>
@@ -273,7 +273,7 @@ $kelas ='laporancu';
                     <div class="input-group">
                         <span class="input-group-addon">0-9</span>
                         {{ Form::text('piutanglalai_1bulan',null,array('class' => 'form-control', 'placeholder' => '0',
-                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ','")) }}
+                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ',','autoUnmask': true, 'removeMaskOnSubmit': true")) }}
                     </div>
                 </div>
             </div>
@@ -283,7 +283,7 @@ $kelas ='laporancu';
                     <div class="input-group">
                         <span class="input-group-addon">0-9</span>
                         {{ Form::text('piutanglalai_12bulan',null,array('class' => 'form-control', 'placeholder' => '0',
-                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ','")) }}
+                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ',','autoUnmask': true, 'removeMaskOnSubmit': true")) }}
                     </div>
                 </div>
             </div>
@@ -295,7 +295,7 @@ $kelas ='laporancu';
                     <div class="input-group">
                         <span class="input-group-addon">0-9</span>
                         {{ Form::text('dcu',null,array('class' => 'form-control', 'placeholder' => '0',
-                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ','")) }}
+                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ',','autoUnmask': true, 'removeMaskOnSubmit': true")) }}
                     </div>
                 </div>
             </div>
@@ -307,7 +307,7 @@ $kelas ='laporancu';
                     <div class="input-group">
                         <span class="input-group-addon">0-9</span>
                         {{ Form::text('dcr',null,array('class' => 'form-control', 'placeholder' => '0',
-                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ','")) }}
+                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ',','autoUnmask': true, 'removeMaskOnSubmit': true")) }}
                     </div>
                 </div>
             </div>
@@ -319,7 +319,7 @@ $kelas ='laporancu';
                     <div class="input-group">
                         <span class="input-group-addon">0-9</span>
                         {{ Form::text('iuran_gedung',null,array('class' => 'form-control', 'placeholder' => '0',
-                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ','")) }}
+                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ',','autoUnmask': true, 'removeMaskOnSubmit': true")) }}
                     </div>
                 </div>
             </div>
@@ -331,7 +331,7 @@ $kelas ='laporancu';
                     <div class="input-group">
                         <span class="input-group-addon">0-9</span>
                         {{ Form::text('donasi',null,array('class' => 'form-control', 'placeholder' => '0',
-                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ','")) }}
+                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ',','autoUnmask': true, 'removeMaskOnSubmit': true")) }}
                     </div>
                 </div>
             </div>
@@ -343,7 +343,7 @@ $kelas ='laporancu';
                     <div class="input-group">
                         <span class="input-group-addon">0-9</span>
                         {{ Form::text('bjs_saham',null,array('class' => 'form-control', 'placeholder' => '0',
-                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ','")) }}
+                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ',','autoUnmask': true, 'removeMaskOnSubmit': true")) }}
                     </div>
                 </div>
             </div>
@@ -355,7 +355,7 @@ $kelas ='laporancu';
                     <div class="input-group">
                         <span class="input-group-addon">0-9</span>
                         {{ Form::text('beban_operasional',null,array('class' => 'form-control', 'placeholder' => '0',
-                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ','")) }}
+                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ',','autoUnmask': true, 'removeMaskOnSubmit': true")) }}
                     </div>
                 </div>
             </div>
@@ -367,7 +367,7 @@ $kelas ='laporancu';
                     <div class="input-group">
                         <span class="input-group-addon">0-9</span>
                         {{ Form::text('investasi_likuid',null,array('class' => 'form-control', 'placeholder' => '0',
-                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ','")) }}
+                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ',','autoUnmask': true, 'removeMaskOnSubmit': true")) }}
                     </div>
                 </div>
             </div>
@@ -382,7 +382,7 @@ $kelas ='laporancu';
                     <div class="input-group">
                         <span class="input-group-addon">0-9</span>
                         {{ Form::text('totalpendapatan',null,array('class' => 'form-control', 'placeholder' => '0',
-                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ','")) }}
+                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ',','autoUnmask': true, 'removeMaskOnSubmit': true")) }}
                     </div>
                 </div>
             </div>
@@ -394,7 +394,7 @@ $kelas ='laporancu';
                     <div class="input-group">
                         <span class="input-group-addon">0-9</span>
                         {{ Form::text('totalbiaya',null,array('class' => 'form-control', 'placeholder' => '0',
-                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ','")) }}
+                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ',','autoUnmask': true, 'removeMaskOnSubmit': true")) }}
                     </div>
                 </div>
             </div>
@@ -406,7 +406,7 @@ $kelas ='laporancu';
                     <div class="input-group">
                         <span class="input-group-addon">0-9</span>
                         {{ Form::text('shu',null,array('class' => 'form-control', 'placeholder' => '0',
-                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ','")) }}
+                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ',','autoUnmask': true, 'removeMaskOnSubmit': true")) }}
                     </div>
                 </div>
             </div>
@@ -418,7 +418,7 @@ $kelas ='laporancu';
                     <div class="input-group">
                         <span class="input-group-addon">0-9</span>
                         {{ Form::text('shu_lalu',null,array('class' => 'form-control', 'placeholder' => '0',
-                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ','")) }}
+                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ',','autoUnmask': true, 'removeMaskOnSubmit': true")) }}
                     </div>
                 </div>
             </div>
@@ -430,7 +430,7 @@ $kelas ='laporancu';
                     <div class="input-group">
                         <span class="input-group-addon">0-9</span>
                         {{ Form::text('lajuinflasi',null,array('class' => 'form-control', 'placeholder' => '0',
-                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ','")) }}
+                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ',','autoUnmask': true, 'removeMaskOnSubmit': true")) }}
                     </div>
                 </div>
             </div>
@@ -442,7 +442,7 @@ $kelas ='laporancu';
                     <div class="input-group">
                         <span class="input-group-addon">0-9</span>
                         {{ Form::text('hargapasar',null,array('class' => 'form-control', 'placeholder' => '0',
-                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ','")) }}
+                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ',','autoUnmask': true, 'removeMaskOnSubmit': true")) }}
                     </div>
                 </div>
             </div>

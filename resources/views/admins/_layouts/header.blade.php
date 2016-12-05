@@ -9,11 +9,11 @@
     //     $tanggal = "Belum pernah login";
     // }
 
-    $id_cu = Auth::user()->getCU();
-    if($id_cu == '0'){
+    $cu = Auth::user()->getCU();
+    if($cu == '0'){
         $name_cu = 'BKCU';
     }else{
-        $cuprimer = App\Models\Cuprimer::where('id','=',$id_cu)->select('name')->first();
+        $cuprimer = App\Models\Cuprimer::where('no_ba','=',$cu)->select('name')->first();
         $name_cu = $cuprimer->name;
     }
 ?>
