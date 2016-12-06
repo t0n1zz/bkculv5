@@ -15,6 +15,7 @@ if($data->do == "1"){
 
 $dateultah = new Date($data->ultah);
 $datejoin = new Date($data->bergabung);
+$cu = Auth::user()->getCU();
 ?>
 @extends('admins._layouts.layout')
 
@@ -31,6 +32,9 @@ $datejoin = new Date($data->bergabung);
     </h1>
     <ol class="breadcrumb">
         <li><a href="{{ URL::to('admins')  }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+        @if($cu == 0)
+            <li><a href="{{ route('admins.cuprimer.index') }}"><i class="fa fa-building"></i> Kelola CU</li></a>
+        @endif
         <li class="active"><i class="fa fa-building"></i> {{ $title }}</li>
     </ol>
 </section>

@@ -126,7 +126,6 @@ $imagepath = 'images_artikel/';
                             @endif
                         </tr>
                     @endforeach
-
                     </tbody>
                 </table>
             </div>

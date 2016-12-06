@@ -1,6 +1,7 @@
 <?php
 $title="Tambah Laporan CU";
 $kelas="laporancu";
+$cu = Auth::user()->getCU();
 ?>
 @extends('admins._layouts.layout')
 
@@ -13,7 +14,13 @@ $kelas="laporancu";
     </h1>
     <ol class="breadcrumb">
         <li><a href="{{ URL::to('admins')  }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li><a href="{{ route('admins.'.$kelas.'.index') }}"><i class="fa fa-line-chart"></i> Kelola Laporan CU</a></li>
+        <li>
+        @if($cu == 0)
+            <a href="{{ route('admins.'.$kelas.'.index' )}}">
+        @else
+            <a href="{{ route('admins.'.$kelas.'.index_cu',array($cu) )}}">   
+        @endif
+        <i class="fa fa-line-chart"></i> Kelola Laporan CU</a></li>
         <li class="active"><i class="fa fa-plus"></i> {!! $title !!}</li>
     </ol>
 </section>

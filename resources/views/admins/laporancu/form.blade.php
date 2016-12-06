@@ -462,11 +462,7 @@ $kelas ='laporancu';
             @if($cu == 0)
                 href="{{ route('admins.'.$kelas.'.index' )}}"
             @else
-                <?php 
-                    $cuprimer = App\Models\Cuprimer::where('id','=',$cu)->select('no_ba')->first();
-                    $no_ba = $cuprimer->no_ba;
-                ?>
-                href="{{ route('admins.'.$kelas.'.index_cu',array($no_ba) )}}"           
+                href="{{ route('admins.'.$kelas.'.index_cu',array($cu) )}}"           
             @endif
             name="batal" accesskey="b" class="btn btn-danger" value="batal">
                 <i class="fa fa-times"></i> <u>B</u>atal

@@ -51,6 +51,7 @@ $imagepath = "images_cu/";
                         <tr>
                             <th data-sortable="false">#</th>
                             <th hidden></th>
+                            <th hidden></th>
                             <th data-sortable="false">Foto</th>
                             <th>Nama </th>
                             <th>No. BA</th>
@@ -88,6 +89,7 @@ $imagepath = "images_cu/";
                             <tr>
                                 <td class="bg-aqua disabled color-palette"></td>
                                 <td hidden>{{ $data->id }}</td>
+                                <td hidden>{{ $data->no_ba }}</td>
                                 @if(!empty($data->gambar) && is_file($imagepath.$data->gambar."n.jpg"))
                                     <th><img class="img-responsive"  width="50px" src="{{ asset($imagepath.$data->gambar.'n.jpg') }}"
                                              id="tampilgambar" alt="{{ asset($imagepath.$data->gambar."jpg") }}"></th>
@@ -334,7 +336,7 @@ $imagepath = "images_cu/";
                     text: '<i class="fa fa-building"></i> Profil',
                     action: function(){
                         var id = $.map(table.rows({ selected: true }).data(),function(item){
-                            return item[1];
+                            return item[2];
                         });
                         var kelas = "{{ $kelas }}";
                         if(id != ""){
@@ -348,7 +350,7 @@ $imagepath = "images_cu/";
                     text: '<i class="fa fa-home"></i> TP',
                     action: function(){
                         var id = $.map(table.rows({ selected: true }).data(),function(item){
-                            return item[1];
+                            return item[2];
                         });
                         if(id != ""){
                             window.location.href =  "/admins/tpcu/index_cu/" + id;
@@ -362,10 +364,10 @@ $imagepath = "images_cu/";
                     text: '<i class="fa fa-line-chart"></i> Laporan',
                     action: function(){
                         var id = $.map(table.rows({ selected: true }).data(),function(item){
-                            return item[3];
+                            return item[2];
                         });
                         if(id != ""){
-                            window.location.href =  "/admins/perkembangancu/index_cu/" + id;
+                            window.location.href =  "/admins/laporancu/index_cu/" + id;
                         }else{
                             $('#modalwarning').modal({show:true});
                         }
@@ -377,7 +379,7 @@ $imagepath = "images_cu/";
                     text: '<i class="fa fa-sitemap"></i> Staf',
                     action: function(){
                         var id = $.map(table.rows({ selected: true }).data(),function(item){
-                            return item[1];
+                            return item[2];
                         });
                         if(id != ""){
                             window.location.href =  "/admins/staf/index_cu/" + id;

@@ -32,6 +32,25 @@ class UserController extends controller{
         }
     }
 
+    public function detail($id)
+    {
+        try{
+            $cu = Auth::user()->getCU();
+            $iduser = Auth::user()->getId();
+
+            if($cu > 0){
+                if($iduser != $id)
+                    return Redirect::back();
+            }
+
+            $data = User::find($id);
+
+            return view('admins.'.$this->kelaspath.'.detail', compact('data','cu'));
+        }catch (Exception $e){
+            return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
+        }
+    }
+
     public function create()
     {
         try{
@@ -127,7 +146,13 @@ class UserController extends controller{
     public function update_password()
     {
         try{
-            $id = Input::get('id');
+            $cu = Auth::user()->getCU(); 
+
+            if($cu == '0')
+                $id = Input::get('id');
+            else
+                $id = Auth::user()->getId();
+                 
             $kelas = User::findOrFail($id);
 
             $password1 = Input::get('password');
@@ -139,7 +164,11 @@ class UserController extends controller{
             $kelas->password = Hash::make(Input::get('password'));
 
             $kelas->update();
-            return Redirect::route('admins.'.$this->kelaspath.'.index')->with('sucessmessage', 'Admin <b><i>' . $kelas->username . '</i></b> telah berhasil diubah.');
+
+            if($cu == '0')
+                return Redirect::route('admins.'.$this->kelaspath.'.index')->with('sucessmessage', 'Admin <b><i>' . $kelas->username . '</i></b> telah berhasil diubah.');
+            else
+                return Redirect::back()->with('sucessmessage', 'Password Admin <b><i>' . $kelas->username . '</i></b> telah berhasil diubah.');
 
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());

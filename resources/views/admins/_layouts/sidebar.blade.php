@@ -1,6 +1,7 @@
 <?php
 $cusidebars = App\Models\Cuprimer::orderBy('name','asc')->get();
 $cu = Auth::user()->getCU();
+$iduser = Auth::user()->getId();
 ?>
 <aside class="main-sidebar">
     <section class="sidebar">
@@ -196,6 +197,11 @@ $cu = Auth::user()->getCU();
             @endpermission
             <!-- /download -->
             <!-- admin -->
+            @if($cu !=0)
+                <li {!! Request::is('admins/admin*') ? 'class="active"' : '' !!}>
+                    <a href="{{ route('admins.admin.detail',array($iduser)) }}"><i class="fa fa-user-circle-o"></i> <span>Admin</span></a>
+                </li>
+            @else
             @permission('view.admin_view|create.admin_create')
                 <li {!! Request::is('admins/admin') || Request::is('admins/admin*') ? 'class="active"' : '' !!} >
                     <a href="#"><i class="fa fa-user-circle-o"></i> <span>Admin</span> <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>
@@ -212,7 +218,8 @@ $cu = Auth::user()->getCU();
                         @endpermission    
                     </ul>
                 </li>
-            @endpermission   
+            @endpermission
+            @endif   
             <!-- /admin -->
             <li class="header">LAIN-LAIN</li>
             <!-- foto kegiatan -->

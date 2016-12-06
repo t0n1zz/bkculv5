@@ -60,8 +60,8 @@ $imagepath = "images_staf/";
                                     <option {{ Request::is('admins/staf/') ? 'selected' : '' }}
                                             value="/admins/staf/"><b>PUSKOPDIT BKCU Kalimantan</b></option>
                                     @foreach($culists as $culist)
-                                        <option {{ Request::is('admins/staf/index_cu/'.$culist->id) ? 'selected' : '' }}
-                                                value="/admins/staf/index_cu/{{$culist->id}}"><b>{{ $culist->name }}</b></option>
+                                        <option {{ Request::is('admins/staf/index_cu/'.$culist->no_ba) ? 'selected' : '' }}
+                                                value="/admins/staf/index_cu/{{$culist->no_ba}}"><b>{{ $culist->name }}</b></option>
                                     @endforeach
                                 </select>
                             </div>

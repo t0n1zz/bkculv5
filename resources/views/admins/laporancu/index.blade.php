@@ -31,7 +31,7 @@
     </h1>
     <ol class="breadcrumb">
         <li><a href="{{ URL::to('admins') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active"><i class="fa fa-line-chart"></i> Kelola {{ $title }}</li>
+        <li class="active"><i class="fa fa-line-chart"></i> Kelola Laporan CU</li>
     </ol>
 </section>
 

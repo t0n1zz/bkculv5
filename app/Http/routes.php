@@ -387,6 +387,10 @@ Route::group(array('prefix' => 'admins','middleware' => 'auth'), function(){
         'as' => 'admins.admin.update_password',
         'uses' => 'UserController@update_password'
     ));
+    Route::get('admin/detail/{id}',array(
+        'as' => 'admins.admin.detail',
+        'uses' => 'UserController@detail'
+    ));
 // kegiatan
      Route::get('kegiatan', [
         'as'           => 'admins.kegiatan.index',           

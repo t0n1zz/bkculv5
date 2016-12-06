@@ -170,7 +170,7 @@
         </td>
     </tr>
     <?php $akses= "kegiatandetail"; $logo= "fa-suitcase"; ?>
-    <tr id="{{ $akses }}">
+    <tr id="{{ $akses }}" class="bkcu">
         <td class="bg-light-blue-active color-palette"><h5 class="hakakses-title"><i class="fa {{ $logo }} fa-fw"></i> Kegiatan (Detail)</h5></td>
         <td><div class="checkbox">
                 <label><input name="{{$akses}}_view" value="1" type="checkbox" id="{{$akses}}_view" 
@@ -178,19 +178,19 @@
                     /> <i class="fa fa-eye"></i> Lihat</label>
             </div>
         </td>
-        <td class="bkcu"><div class="checkbox">
+        <td><div class="checkbox">
                 <label><input name="{{$akses}}_peserta" value="1" type="checkbox" id="{{$akses}}_peserta" 
                     @if(!empty($data)) @if($data->can($akses.'_peserta')) {{ 'checked' }} @endif @endif
                     /> <i class="fa fa-user"></i> Peserta</label>
             </div>
         </td>
-        <td class="bkcu"><div class="checkbox">
+        <td><div class="checkbox">
                 <label><input name="{{$akses}}_biaya" value="1" type="checkbox" id="{{$akses}}_biaya" 
                     @if(!empty($data)) @if($data->can($akses.'_biaya')) {{ 'checked' }} @endif @endif
                     /> <i class="fa fa-calculator"></i> Biaya</label>
             </div>
         </td>
-        <td class="bkcu"><div class="checkbox">
+        <td><div class="checkbox">
                 <label><input name="{{$akses}}_evaluasi" value="1" type="checkbox" id="{{$akses}}_evaluasi"
                     @if(!empty($data)) @if($data->can($akses.'_evaluasi')) {{ 'checked' }} @endif @endif
                     /> <i class="fa fa-edit"></i> Evaluasi</label>
@@ -388,7 +388,7 @@
         </td>
     </tr>
     <?php $akses= "stafdetail"; $logo= "fa-users"; ?>
-    <tr id="{{ $akses }}">
+    <tr id="{{ $akses }}" class="bkcu">
         <td class="bg-light-blue-active color-palette"><h5 class="hakakses-title"><i class="fa {{ $logo }} fa-fw"></i> Staf (Detail)</h5></td>
         <td><div class="checkbox">
                 <label><input name="{{$akses}}_view" value="1" type="checkbox" id="{{$akses}}_view" 
@@ -440,20 +440,20 @@
     <?php $akses= "admin"; $logo="fa-user-circle-o"; ?>
     <tr id="{{ $akses }}">
         <td rowspan="2" class="bg-light-blue-active color-palette"><h5 class="hakakses-title"><i class="fa {{ $logo }} fa-fw"></i> {{ ucfirst($akses) }}</h5></td>
-        <td><div class="checkbox">
+        <td class="bkcu"><div class="checkbox">
                 <label><input name="{{$akses}}_view" value="1" type="checkbox" id="{{$akses}}_view" 
                     @if(!empty($data)) @if($data->can($akses.'_view')) {{ 'checked' }} @endif @endif
                     /> <i class="fa fa-eye"></i> Lihat</label>
             </div>
         </td>
-        <td><div class="checkbox">
+        <td class="bkcu"><div class="checkbox">
                 <label><input name="{{$akses}}_create" value="1" type="checkbox" id="{{$akses}}_create" 
                     @if(!empty($data)) @if($data->can($akses.'_create')) {{ 'checked' }} @endif @endif
                     /> <i class="fa fa-plus"></i> Tambah</label>
             </div>
         </td>
         
-        <td><div class="checkbox">
+        <td class="bkcu"><div class="checkbox">
                 <label><input name="{{$akses}}_destroy" value="1" type="checkbox" id="{{$akses}}_destroy"
                     @if(!empty($data)) @if($data->can($akses.'_destroy')) {{ 'checked' }} @endif @endif
                     /> <i class="fa fa-trash"></i> Hapus</label>
@@ -465,7 +465,7 @@
                     /> <i class="fa fa-key"></i> Password</label>
             </div>
         </td>
-        <td><div class="checkbox">
+        <td class="bkcu"><div class="checkbox">
                 <label><input name="{{$akses}}_update_akses" value="1" type="checkbox" id="{{$akses}}_update_akses"
                     @if(!empty($data)) @if($data->can($akses.'_update_akses')) {{ 'checked' }} @endif @endif
                     /> <i class="fa fa-hand-paper-o"></i> Akses</label>
@@ -473,7 +473,7 @@
         </td>
     </tr>
     <tr>
-        <td><div class="checkbox">
+        <td class="bkcu"><div class="checkbox">
                 <label><input name="{{$akses}}_update_status" value="1" type="checkbox" id="{{$akses}}_update_status"
                     @if(!empty($data)) @if($data->can($akses.'_status')) {{ 'checked' }} @endif @endif
                     /> <i class="fa fa-check-square"></i> Status</label>

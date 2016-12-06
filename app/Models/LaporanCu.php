@@ -5,7 +5,7 @@ use illuminate\Database\Eloquent\Model;
 
 class LaporanCu extends Model {
     
-    protected $table = 'perkembangancu';
+    protected $table = 'laporancu';
     
     public static $rules = [];
 

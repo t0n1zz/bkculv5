@@ -196,6 +196,13 @@ $kelas = "admin";
                     }
                 },
                 @endpermission
+            ]
+        });
+        table.buttons( 0, null ).container().prependTo(
+                table.table().container()
+        );
+        new $.fn.dataTable.Buttons(table,{
+            buttons: [
                 @permission('update_password.'.$kelas.'_update_password')
                 {
                     text: '<i class="fa fa-key"></i> Ubah Password',
@@ -283,6 +290,13 @@ $kelas = "admin";
                     }
                 },
                 @endpermission
+            ]
+        });
+        table.buttons( 0, null ).container().prependTo(
+                table.table().container()
+        );
+        new $.fn.dataTable.Buttons(table,{
+            buttons: [
                 @permission('destroy.'.$kelas.'_destroy')
                 {
                     text: '<i class="fa fa-trash"></i> <u>H</u>apus',

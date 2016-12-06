@@ -46,7 +46,7 @@ $imagepath = 'images_tpcu/';
                         </div>
                     </div>
                     @if(Auth::user()->getCU() == '0')
-                    <div class="col-sm-3" style="padding: .2em ;">
+                    <div class="col-sm-4" style="padding: .2em ;">
                         <?php $culists = App\Models\Cuprimer::orderBy('name','asc')->get(); ?>
                         <div class="input-group tabletools">
                             <div class="input-group-addon primary-color"><i class="fa fa-building"></i> TP CU</div>
@@ -55,8 +55,8 @@ $imagepath = 'images_tpcu/';
                                         value="/admins/tpcu">SEMUA CU</option>
                                 <option disabled>--------------</option>         
                                 @foreach($culists as $culist)
-                                    <option {{ Request::is('admins/tpcu/index_cu/'.$culist->id) ? 'selected' : '' }}
-                                            value="/admins/tpcu/index_cu/{{$culist->id}}">{{ $culist->name }}</option>
+                                    <option {{ Request::is('admins/tpcu/index_cu/'.$culist->no_ba) ? 'selected' : '' }}
+                                            value="/admins/tpcu/index_cu/{{$culist->no_ba}}">{{ $culist->name }}</option>
                                 @endforeach
                             </select>
                         </div>
