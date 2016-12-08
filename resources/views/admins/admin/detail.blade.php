@@ -58,21 +58,15 @@ $datelogout= new Date($data->logout);
                             <b>Username</b> <a class="pull-right">{{ $data->username }}</a>
                         </li>
                         <li class="list-group-item">
-                            <b>Terakhir Login</b> <a class="pull-right">{{ $datelogin->format('j F Y') }}</a>
+                            <b>Terakhir Login</b> <a class="pull-right">{{ $datelogin->format('d/n/Y | H:i:s') }}</a>
                         </li>
                         <li class="list-group-item">
-                            <b>&nbsp</b><a class="pull-right">{{ $datelogin->format('H:i:s') }}</a>
-                        </li>
-                        <li class="list-group-item">
-                            <b>Terakhir Logout</b> <a class="pull-right">{{ $datelogout->format('j F Y') }}</a>
-                        </li>
-                        <li class="list-group-item">
-                            <b>&nbsp</b><a class="pull-right">{{ $datelogout->format('H:i:s') }}</a>
+                            <b>Terakhir Logout</b> <a class="pull-right">{{ $datelogout->format('d/n/Y | H:i:s') }}</a>
                         </li>
                     </ul>
                 </div><!-- /.box-body -->
             </div><!-- /.box -->
-        </div>    
+        </div>
 
         <div class="col-md-9">
             <!-- Alert -->
@@ -81,35 +75,32 @@ $datelogout= new Date($data->logout);
             <div class="nav-tabs-custom">
                 <ul class="nav nav-tabs">
                     <li class="active"><a href="#password" data-toggle="tab">Ubah Password</a></li>
-                    <li><a href="#akses" data-toggle="tab">Hak Akses</a></li>
                 </ul>
                 <div class="tab-content">
                     <div class="tab-pane active" id="password">
-                        <section id="password">
-                            {{ Form::open(array('route' => array('admins.'.$kelas.'.update_password'))) }}
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="form-group">
-                                        <h5>Password Baru</h5>
-                                        <div class="input-group">
-                                            <span class="input-group-addon"><i class="fa fa-font"></i></span>
-                                            <input type="password" name="password" class="form-control" id="password"
-                                                   placeholder="Silahkan masukkan password baru" autocomplete="off">
-                                        </div>
+                        {{ Form::open(array('route' => array('admins.'.$kelas.'.update_password'))) }}
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <h5>Password Baru</h5>
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-font"></i></span>
+                                        <input type="password" name="password" class="form-control" id="password"
+                                               placeholder="Silahkan masukkan password baru" autocomplete="off">
                                     </div>
-                                    <div class="form-group">
-                                        <h5>Ulangi Password</h5>
-                                        <div class="input-group">
-                                            <span class="input-group-addon"><i class="fa fa-font"></i></span>
-                                            <input type="password" name="password2" class="form-control" id="password2"
-                                                   placeholder="Silahkan ulangi password baru" autocomplete="off">
-                                        </div>
-                                    </div>
-                                    <button type="submit" class="btn btn-primary" id="modalbutton"><i class="fa fa-save"></i> Simpan</button>
                                 </div>
+                                <div class="form-group">
+                                    <h5>Ulangi Password</h5>
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-font"></i></span>
+                                        <input type="password" name="password2" class="form-control" id="password2"
+                                               placeholder="Silahkan ulangi password baru" autocomplete="off">
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary" id="modalbutton"><i class="fa fa-save"></i> Simpan</button>
                             </div>
-                            {{ Form::close() }}
-                        </section>  
+                        </div>
+                        {{ Form::close() }}
                     </div><!-- /.tab-pane -->
                 </div><!-- /.tab-content -->
             </div><!-- /.nav-tabs-custom -->

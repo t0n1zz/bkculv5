@@ -26,7 +26,7 @@ class ExcelController extends Controller
 	{
 		if(Input::hasFile('import_file')){
 			$path = Input::file('import_file')->getRealPath();
-			$data = Excel::load($path, function($reader) {
+			$data = Excel::load($path, function($reader) {zend_version(4q)
 			})->get();
 			if(!empty($data)){
 				foreach ($data as $key => $value) {

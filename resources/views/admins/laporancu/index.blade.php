@@ -595,6 +595,9 @@
                             @foreach($datas as $data)
                                 <?php  
                                     $date = new Date($data->periode);
+                                    $tot_nonsaham = $data->nonsaham_harian + $data->nonsaham_unggulan;
+                                    $tot_anggota = $data->l_biasa + $data->l_lbiasa + $data->p_biasa + $data->p_lbiasa;
+
                                     $p1 = $data->piutanglalai_12bulan != 0 ? $data->dcr / $data->piutanglalai_12bulan : $data->dcr / 0.01;
                                     $p2 = $data->piutanglalai_1bulan != 0 ? ($data->dcr - $data->piutanglalai_12bulan) / $data->piutanglalai_1bulan : ($data->dcr - $data->piutanglalai_12bulan) / 0.01;
                                     if($p1 == 1 && $p2 > 0.35){
@@ -609,8 +612,8 @@
                                     $a2 = $data->aset != 0 ? $data->aset_tidak_menghasilkan / $data->aset : $data->aset_tidak_menghasilkan / 0.01;
                                     $r7 = $data->ratasaham != 0 ? $data->bjs_saham / $data->ratasaham : $data->bjs_saham / 0.01;
                                     $r9 = $data->rataaset != 0 ? $data->beban_operasional / $data->rataaset : $data->beban_operasional / 0.01;
-                                    $l1 = $data->tot_nonsaham != 0 ? (($data->investasi_likuid + $data->aset_likuid_tidak_menghasilkan) - $data->hutang_tidak_berbiaya_30hari) / $data->tot_nonsaham : (($data->investasi_likuid + $data->aset_likuid_tidak_menghasilkan) - $data->hutang_tidak_berbiaya_30hari) / 0.01;
-                                    $s10 = $data->totalanggota_lalu != 0 ? ($data->tot_agt - $data->totalanggota_lalu) / $data->totalanggota_lalu : ($data->tot_agt - $data->totalanggota_lalu) / 0.01;
+                                    $l1 = $tot_nonsaham != 0 ? (($data->investasi_likuid + $data->aset_likuid_tidak_menghasilkan) - $data->hutang_tidak_berbiaya_30hari) / $tot_nonsaham : (($data->investasi_likuid + $data->aset_likuid_tidak_menghasilkan) - $data->hutang_tidak_berbiaya_30hari) / 0.01;
+                                    $s10 = $data->totalanggota_lalu != 0 ? ($tot_anggota - $data->totalanggota_lalu) / $data->totalanggota_lalu : ($tot_anggota - $data->totalanggota_lalu) / 0.01;
                                     $s11 = $data->aset_lalu != 0 ? ($data->aset - $data->aset_lalu) / $data->aset_lalu : ($data->aset - $data->aset_lalu) / 0.01;
 
                                     $p1 = $p1 > 1 ? 1 : $p1;
@@ -1087,13 +1090,54 @@
                 <h4 class="modal-title"><i class="fa fa-upload"></i> Upload File Excel</h4>
             </div>
             <div class="modal-body">
-                <h4>Upload file excel</h4>
-                <input type="file" class="form-control" name="import_file"
-                       accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-                <p>Pastikan menggunakan format berikut: <a href="">format excel</a></p>      
+                @if($cu == '0')
+                    <h5>Silahkan pilih tipe file excel yang akan diupload.</h5>
+                    <table class="table table-condese table-bordered">
+                        <tr>
+                            <td><label class="radio-inline">
+                              <input type="radio" name="radiobtn" id="singlebtn" value="single" onclick="func_single()">Satu CU
+                            </label></td>
+                            <td><label class="radio-inline">
+                              <input type="radio" name="radiobtn" id="multibtn" value="multi" onclick="func_multi()">Beberapa CU
+                            </label></td>
+                        </tr>
+                    </table>
+                    <div id="singlediv" style="display: none;">
+                        <h5>Pilih CU</h5>
+                        <div class="input-group" style="margin-bottom: 20px;">
+                            <div class="input-group-addon primary-color"><i class="fa fa-building"></i></div>
+                            <select class="form-control" id="dynamic_select" name="nama_cu">    
+                                @foreach($culists as $culist)
+                                    <option value="{{$culist->no_ba}}">{{ $culist->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <h5>Periode Laporan</h5>
+                        <div class="input-group" style="margin-bottom: 20px;">
+                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                            <input type="text" name="peritode" class="form-control"
+                                   data-inputmask="'alias': 'date'" placeholder="dd/mm/yyyy" />
+                        </div>
+                        <h5>Masukkan file excel disini</h5>
+                        <input type="file" class="form-control" name="import_single"
+                               accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                        <p>Pastikan menggunakan format berikut: <a href="">format excel</a></p> 
+                    </div> 
+                    <div id="multidiv" style="display: none;">
+                        <h5>Masukkan file excel disini</h5>
+                        <input type="file" class="form-control" name="import_multi"
+                               accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                        <p>Pastikan menggunakan format berikut: <a href="">format excel</a></p> 
+                    </div>
+                @else
+                    <h5>Masukkan file excel disini</h5>
+                    <input type="file" class="form-control" name="import_multi"
+                           accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                    <p>Pastikan menggunakan format berikut: <a href="">format excel</a></p>         
+                @endif
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-default" id="modalbutton"><i class="fa fa-upload"></i> Upload</button>
+                <button type="submit" class="btn btn-primary" id="modalbutton"><i class="fa fa-upload"></i> Upload</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Batal</button>
             </div>
         </div><!-- /.modal-content -->
@@ -1131,6 +1175,14 @@
 @endif
 {{--common function--}}
 <script>
+    function func_single(){
+        $('#singlediv').show();
+        $('#multidiv').hide();
+    }
+    function func_multi(){
+        $('#singlediv').hide();
+        $('#multidiv').show();
+    }
     $(function(){
         // bind change event to select
         $('#dynamic_select').on('change', function () {

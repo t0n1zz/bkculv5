@@ -440,7 +440,7 @@
     <?php $akses= "admin"; $logo="fa-user-circle-o"; ?>
     <tr id="{{ $akses }}">
         <td rowspan="2" class="bg-light-blue-active color-palette"><h5 class="hakakses-title"><i class="fa {{ $logo }} fa-fw"></i> {{ ucfirst($akses) }}</h5></td>
-        <td class="bkcu"><div class="checkbox">
+        <td ><div class="checkbox">
                 <label><input name="{{$akses}}_view" value="1" type="checkbox" id="{{$akses}}_view" 
                     @if(!empty($data)) @if($data->can($akses.'_view')) {{ 'checked' }} @endif @endif
                     /> <i class="fa fa-eye"></i> Lihat</label>

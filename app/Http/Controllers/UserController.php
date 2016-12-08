@@ -44,8 +44,9 @@ class UserController extends controller{
             }
 
             $data = User::find($id);
+            $dataperms = $data->getPermissions();
 
-            return view('admins.'.$this->kelaspath.'.detail', compact('data','cu'));
+            return view('admins.'.$this->kelaspath.'.detail', compact('data','dataperms','cu'));
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
         }
