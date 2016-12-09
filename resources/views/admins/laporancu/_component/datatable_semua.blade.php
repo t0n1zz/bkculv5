@@ -107,6 +107,7 @@
 
     new $.fn.dataTable.Buttons(table,{
         buttons: [
+            @permission('create.laporancu_create')
             {
                 text: '<i class="fa fa-plus"></i> <u>T</u>ambah',
                 key: {
@@ -117,6 +118,8 @@
                     window.location.href = "{{URL::to('admins/'.$kelas.'/create')}}";
                 }
             },
+            @endpermission
+            @permission('update.laporancu_update')
             {
                 text: '<i class="fa fa-pencil"></i> <u>U</u>bah',
                 key: {
@@ -135,6 +138,8 @@
                     }
                 }
             },
+            @endpermission
+            @permission('destroy.laporancu_destroy')
             {
                 text: '<i class="fa fa-trash"></i> <u>H</u>apus',
                 key: {
@@ -154,7 +159,20 @@
                         $('#modalwarning').modal({show:true});
                     }
                 }
-            }
+            },
+            @endpermission
+            @permission('upload.laporancu_upload')
+            {
+                text: '<i class="fa fa-upload fa-fw"></i> Upload Excel',
+                key: {
+                    altKey: true,
+                    key: 'u'
+                },
+                action: function(){
+                    $('#modalexcel').modal({show:true});
+                }
+            },
+            @endpermission
         ]
     });
     table.buttons( 0, null ).container().prependTo(

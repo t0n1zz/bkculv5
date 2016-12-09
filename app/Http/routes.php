@@ -193,27 +193,27 @@ Route::group(array('prefix' => 'admins','middleware' => 'auth'), function(){
         'as'           => 'admins.laporancu.create',
         'uses'         => 'LaporanCuController@create',
         'middleware'   => ['auth', 'acl'],
-        'can'          => 'create.laporancu_create|create.laporancudetail_create']);
+        'can'          => 'create.laporancu_create|create.laporancu_create']);
     Route::get('laporancu/{laporancu}/edit', [
         'as'           => 'admins.laporancu.edit',
         'uses'         => 'LaporanCuController@edit',
         'middleware'   => ['auth', 'acl'],
-        'can'          => 'update.laporancu_update|update.laporancudetail_update']);
+        'can'          => 'update.laporancu_update|update.laporancu_update']);
     Route::post('laporancu', [
         'as'           => 'admins.laporancu.store',
         'uses'         => 'LaporanCuController@store',
         'middleware'   => ['auth', 'acl'],
-        'can'          => 'create.laporancu_create|create.laporancudetail_create']);
+        'can'          => 'create.laporancu_create|create.laporancu_create']);
     Route::put('laporancu/{laporancu}', [
         'as'           => 'admins.laporancu.update',
         'uses'         => 'LaporanCuController@update',
         'middleware'   => ['auth', 'acl'],
-        'can'          => 'update.laporancu_update|update.laporancudetail_update']);
+        'can'          => 'update.laporancu_update|update.laporancu_update']);
     Route::delete('laporancu/{laporancu}', [
         'as'           => 'admins.laporancu.destroy',
         'uses'         => 'LaporanCuController@destroy',
         'middleware'   => ['auth', 'acl'],
-        'can'          => 'destroy.laporancu_destroy|destroy.laporancudetail_destroy']);
+        'can'          => 'destroy.laporancu_destroy|destroy.laporancu_destroy']);
     Route::post('laporancu/importexcel', [
         'as'           => 'admins.laporancu.importexcel',
         'uses'         => 'LaporanCuController@importexcel',
@@ -228,12 +228,12 @@ Route::group(array('prefix' => 'admins','middleware' => 'auth'), function(){
         'as'           => 'admins.laporancu.index_bkcu',
         'uses'         => 'LaporanCuController@index_bkcu',
         'middleware'   => ['auth', 'acl'],
-        'can'          => 'view.laporanbkcu_view']);
+        'can'          => 'view.laporancu_view']);
     Route::get('laporancu/index_cu/{id}', [
         'as'           => 'admins.laporancu.index_cu',
         'uses'         => 'LaporanCuController@index_cu',
         'middleware'   => ['auth', 'acl'],
-        'can'          => 'view.laporancudetail_view']);
+        'can'          => 'view.laporancu_view']);
 //tp CU
     Route::get('tpcu', [
         'as'           => 'admins.tpcu.index',           
@@ -370,27 +370,56 @@ Route::group(array('prefix' => 'admins','middleware' => 'auth'), function(){
         'can'          => 'update_urutan.pengumuman_update_urutan']);
 
 // user
-    Route::resource('admin','UserController',array('except' => array('show','edit')));    
-    Route::get('admin/edit_akses/{id}',array(
-        'as' => 'admins.admin.edit_akses',
-        'uses' => 'UserController@edit_akses'
-    ));
-    Route::post('admin/update_akses',array(
-        'as' => 'admins.admin.update_akses',
-        'uses' => 'UserController@update_akses'
-    ));
-    Route::post('admin/update_status',array(
-        'as' => 'admins.admin.update_status',
-        'uses' => 'UserController@update_status'
-    ));
-    Route::post('admin/update_password',array(
-        'as' => 'admins.admin.update_password',
-        'uses' => 'UserController@update_password'
-    ));
-    Route::get('admin/detail/{id}',array(
-        'as' => 'admins.admin.detail',
-        'uses' => 'UserController@detail'
-    ));
+    Route::get('admin', [
+        'as'           => 'admins.admin.index',           
+        'uses'         => 'UserController@index',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'view.admin_view']);
+    Route::get('admin/detail/{id}', [
+        'as'           => 'admins.admin.detail',           
+        'uses'         => 'UserController@detail',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'detail.admin_detail']);
+    Route::get('admin/create', [
+        'as'           => 'admins.admin.create',
+        'uses'         => 'UserController@create',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'create.admin_create']);
+    Route::post('admin', [
+        'as'           => 'admins.admin.store',
+        'uses'         => 'UserController@store',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'create.admin_create']);
+    Route::delete('admin/{admin}', [
+        'as'           => 'admins.admin.destroy',
+        'uses'         => 'UserController@destroy',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'destroy.admin_destroy']);
+    Route::get('admin/edit_akses/{id}', [
+        'as'           => 'admins.admin.edit_akses',           
+        'uses'         => 'UserController@edit_akses',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'update_akses.admin_update_akses']);
+    Route::post('admin/update_akses', [
+        'as'           => 'admins.admin.update_akses',           
+        'uses'         => 'UserController@update_akses',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'update_akses.admin_update_akses']);
+    Route::post('admin/update_status', [
+        'as'           => 'admins.admin.update_status',           
+        'uses'         => 'UserController@update_status',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'update_status.admin_update_status']);
+    Route::post('admin/update_password', [
+        'as'           => 'admins.admin.update_password',           
+        'uses'         => 'UserController@update_password',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'update_password.admin_update_password']);
+    Route::post('admin/check_password', [
+        'as'           => 'admins.admin.check_password',           
+        'uses'         => 'UserController@check_password',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'view.admin_view']);  
 // kegiatan
      Route::get('kegiatan', [
         'as'           => 'admins.kegiatan.index',           
@@ -525,16 +554,16 @@ Route::get('/addrole',function(){
     //     'description' => 'update status artikel'
     // ]);
 
-    // $class = 'tpcu';
+    $class = 'admin';
 
-    // $permission = new Kodeine\Acl\Models\Eloquent\Permission();
-    // $permUser = $permission->create([ 
-    //     'name'        => $class.'_view',
-    //     'slug'        => [ 
-    //         'view' => true,
-    //     ],
-    //     'description' => 'View '.$class
-    // ]);
+    $permission = new Kodeine\Acl\Models\Eloquent\Permission();
+    $permUser = $permission->create([ 
+        'name'        => $class.'_detail',
+        'slug'        => [ 
+            'detail' => true,
+        ],
+        'description' => 'Detail '.$class
+    ]);
 
     // $permission = new Kodeine\Acl\Models\Eloquent\Permission();
     // $permUser = $permission->create([ 

@@ -178,7 +178,7 @@ $imagepath = 'images_tpcu/';
                             $('#modalhapus').modal({show:true});
                             $('#modalhapus_judul').text('Hapus TP CU');
                             $('#modalhapus_detail').text('Hapus TP CU');
-                            $('#hapus-id').attr('value',id);
+                            $('#modalhapus_id').attr('value',id);
                         }else{
                             $('#modalwarning').modal({show:true});
                         }

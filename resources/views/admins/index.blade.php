@@ -5,7 +5,7 @@ $periodeiode = $data->groupBy('periode');
 $cu = Auth::user()->getCU();
 $iduser = Auth::user()->getId();
 
-if(Auth::user()->can('view.laporanbkcu_view') && $cu == '0'){
+if(Auth::user()->can('view.laporancu_view') && $cu == '0'){
     $periodeiode1 = collect([]);
     foreach ($periodeiode as $data){
         $periodeiode1->push($data->first());
@@ -86,8 +86,9 @@ if(Auth::user()->can('view.laporanbkcu_view') && $cu == '0'){
 
     $dataarray = $infogerakans;
     $data1 = array_last($infogerakans);
-    $gvalue = array_column($dataarray,'aset');
-}elseif(Auth::user()->can('view.laporancudetail_view') && $cu != '0'){
+    $gvalue = array_column($dataarray,'aset'); 
+}
+if(Auth::user()->can('view.laporancu_view') && $cu != '0'){
 
     $datas = App\Models\LaporanCu::where('no_ba','=',$cu)->orderBy('periode','desc')->get();
 
@@ -100,8 +101,6 @@ if(Auth::user()->can('view.laporanbkcu_view') && $cu == '0'){
     $data1 = array_last($dataarray);
     $gvalue = array_column($dataarray,'aset');
 }
-
-$tot_anggota =  $data1['l_biasa'] + $data1['p_biasa'] + $data1['l_lbiasa'] + $data1['p_lbiasa'];   
 ?>
 @extends('admins._layouts.layout')
 
@@ -125,7 +124,7 @@ $tot_anggota =  $data1['l_biasa'] + $data1['p_biasa'] + $data1['l_lbiasa'] + $da
     <!-- Alert -->
     @include('admins._layouts.alert')
     <!-- Alert -->
-            <!-- Small boxes (Stat box) -->
+    <!-- Small boxes (Stat box) -->
     <div class="row">
         <!-- pengumuman -->
         @permission('view.pengumuman_view')
@@ -268,7 +267,7 @@ $tot_anggota =  $data1['l_biasa'] + $data1['p_biasa'] + $data1['l_lbiasa'] + $da
                             $total_laporan = App\Models\LaporanCu::count(); 
                         if(Auth::user()->can('view.laporancu_view') && $cu == '0'){ 
                             $route = route('admins.laporancu.index');
-                        }elseif(Auth::user()->can('view.laporancudetail_view') && $cu != '0'){
+                        }elseif(Auth::user()->can('view.laporancu_view') && $cu != '0'){
                             $route = route('admins.laporancu.index_cu',array($cu));
                         }
                         ?>
@@ -341,7 +340,7 @@ $tot_anggota =  $data1['l_biasa'] + $data1['p_biasa'] + $data1['l_lbiasa'] + $da
         @endpermission
         <!-- /download -->
         <!-- admin -->
-        @permission('view.admin_view')
+        @permission('view.admin_view|detail.admin_detail')
             <div class="col-xs-6 col-sm-3 col-md-2">
                 <div class="small-box bg-aqua">
                     <?php 
@@ -353,7 +352,11 @@ $tot_anggota =  $data1['l_biasa'] + $data1['p_biasa'] + $data1['l_lbiasa'] + $da
                       }
                     ?>
                     <div class="inner">
-                        <a href="{{ $route }}" style="color:white">
+                        @permission('detail.admin_detail')
+                            <a href="{{ route('admins.admin.detail',array($iduser)) }}"  style="color:white">
+                        @else
+                             <a href="#" data-toggle="modal" data-target="#modalcheckpass" style="color:white">
+                        @endpermission
                           @if($cu == '0')
                             <h3>{{ $total_admin }}</h3>
                             <p>Admin</p>
@@ -364,12 +367,20 @@ $tot_anggota =  $data1['l_biasa'] + $data1['p_biasa'] + $data1['l_lbiasa'] + $da
                         </a>    
                     </div>
                     <div class="icon">
-                        <a href="{{ $route }}" style="color: rgba(0, 0, 0, 0.15)">
+                        @permission('detail.admin_detail')
+                            <a href="{{ route('admins.admin.detail',array($iduser)) }}" style="color: rgba(0, 0, 0, 0.15)">
+                        @else
+                            <a href="#" data-toggle="modal" data-target="#modalcheckpass" style="color: rgba(0, 0, 0, 0.15)">
+                        @endpermission    
                             <i class="fa fa-user-circle-o"></i>
                         </a>
                     </div>
-                    <a href="{{ $route }}"
-                       class="small-box-footer">Lihat <i class="fa fa-arrow-circle-right"></i></a>
+                    @permission('detail.admin_detail')
+                        <a href="{{ route('admins.admin.detail',array($iduser)) }}" class="small-box-footer">
+                    @else
+                        <a href="#" data-toggle="modal" data-target="#modalcheckpass" class="small-box-footer">
+                    @endpermission 
+                       Lihat <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
             </div>
         @endpermission
@@ -378,7 +389,7 @@ $tot_anggota =  $data1['l_biasa'] + $data1['p_biasa'] + $data1['l_lbiasa'] + $da
     <!-- /Small boxes (Stat box) -->
     <!-- Main content -->
     <div class="row">
-        @if(Auth::user()->can('view.laporanbkcu_view') || Auth::user()->can('view.laporancudetail_view'))
+        @if(Auth::user()->can('view.laporanbkcu_view') || Auth::user()->can('view.laporancu_view'))
             <div class="col-md-12">
               <div class="box box-primary">
                 <div class="box-header with-border">
@@ -435,6 +446,7 @@ $tot_anggota =  $data1['l_biasa'] + $data1['p_biasa'] + $data1['l_lbiasa'] + $da
                         <!-- /.description-block -->
                         <div class="description-block margin-bottom" style="margin-bottom: .5em;">
                           <span><i class="fa fa-male"></i><i class="fa fa-child"></i><i class="fa fa-female"></i> Total</span>
+                          <?php $tot_anggota =  $data1['l_biasa'] + $data1['p_biasa'] + $data1['l_lbiasa'] + $data1['p_lbiasa'];  ?>
                           <h5 class="description-header" style="margin-top:.5em;"> {{ number_format($tot_anggota,"0",",",".") }}</h5>
                         </div>
                         <!-- /.description-block -->
@@ -555,7 +567,7 @@ $tot_anggota =  $data1['l_biasa'] + $data1['p_biasa'] + $data1['l_lbiasa'] + $da
               <!-- /.box -->
             </div>
         @endif
-        @if($cu != '0')
+        @if(Auth::user()->can('view.laporancu_view') && $cu != '0')
           <?php
             $tot_nonsaham = $data1['nonsaham_harian'] + $data1['nonsaham_unggulan'];
 
@@ -964,71 +976,73 @@ $tot_anggota =  $data1['l_biasa'] + $data1['p_biasa'] + $data1['l_lbiasa'] + $da
             } );
         } ).draw();
     </script>
-    <script>
-    var randomColorFactor = function() {
-        return Math.round(Math.random() * 255);
-    };
-    var randomColor = function(opacity) {
-        return 'rgba(' + randomColorFactor() + ',' + randomColorFactor() + ',' + randomColorFactor() + ',' + (opacity || '.3') + ')';
-    };
-    var data = {
-        labels: {!! json_encode($gperiode,JSON_NUMERIC_CHECK) !!},
-        datasets: [
-            {
-                label: "Aset",
-                data: {!! json_encode($gvalue,JSON_NUMERIC_CHECK) !!},
-                fill: false
-            }
-        ]
-    };
-    var config = {
-        type: 'line',
-        data: data,
-        options:{
-            responsive: true,
-            legend: {
-                position: 'false'
-            },
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero:true,
-                        callback: function(value, index, values) {
-                            if(parseInt(value) > 1000){
-                                return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-                            } else {
-                                return value;
+    @if(Auth::user()->can('view.laporancu_view'))
+        <script>
+            var randomColorFactor = function() {
+                return Math.round(Math.random() * 255);
+            };
+            var randomColor = function(opacity) {
+                return 'rgba(' + randomColorFactor() + ',' + randomColorFactor() + ',' + randomColorFactor() + ',' + (opacity || '.3') + ')';
+            };
+            var data = {
+                labels: {!! json_encode($gperiode,JSON_NUMERIC_CHECK) !!},
+                datasets: [
+                    {
+                        label: "Aset",
+                        data: {!! json_encode($gvalue,JSON_NUMERIC_CHECK) !!},
+                        fill: false
+                    }
+                ]
+            };
+            var config = {
+                type: 'line',
+                data: data,
+                options:{
+                    responsive: true,
+                    legend: {
+                        position: 'false'
+                    },
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero:true,
+                                callback: function(value, index, values) {
+                                    if(parseInt(value) > 1000){
+                                        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                                    } else {
+                                        return value;
+                                    }
+                                }
+                            }
+                        }]
+                    },
+                    tooltips: {
+                        callbacks: {
+                            label: function(tooltipItem, data) {
+                                return Number(tooltipItem.yLabel).toFixed(0).replace(/./g, function(c, i, a) {
+                                    return i > 0 && c !== "," && (a.length - i) % 3 === 0 ? "." + c : c;
+                                });
                             }
                         }
                     }
-                }]
-            },
-            tooltips: {
-                callbacks: {
-                    label: function(tooltipItem, data) {
-                        return Number(tooltipItem.yLabel).toFixed(0).replace(/./g, function(c, i, a) {
-                            return i > 0 && c !== "," && (a.length - i) % 3 === 0 ? "." + c : c;
-                        });
-                    }
-                }
-            }
-        },
-    };
-    $.each(config.data.datasets, function(i, dataset) {
-        dataset.borderColor = "#9fe3f4";
-        dataset.backgroundColor = "#00c0ef";
-        dataset.pointBorderColor = "#0483a2";
-        dataset.pointBackgroundColor = "#fff";
-        dataset.pointBorderWidth = 1;
-        dataset.pointHoverBackgroundColor = "#00c0ef";
-        dataset.pointHoverBorderColor = "#0483a2";
-        dataset.pointHoverBorderWidth = 2;
-        dataset.pointRadius = 5;
-        dataset.pointHitRadios = 10;
-    });
-    window.onload = function() {
-        var ctx = document.getElementById("chart").getContext("2d");
-        window.chart = new Chart(ctx, config);
-    };
-</script>
+                },
+            };
+            $.each(config.data.datasets, function(i, dataset) {
+                dataset.borderColor = "#9fe3f4";
+                dataset.backgroundColor = "#00c0ef";
+                dataset.pointBorderColor = "#0483a2";
+                dataset.pointBackgroundColor = "#fff";
+                dataset.pointBorderWidth = 1;
+                dataset.pointHoverBackgroundColor = "#00c0ef";
+                dataset.pointHoverBorderColor = "#0483a2";
+                dataset.pointHoverBorderWidth = 2;
+                dataset.pointRadius = 5;
+                dataset.pointHitRadios = 10;
+            });
+            window.onload = function() {
+                var ctx = document.getElementById("chart").getContext("2d");
+                window.chart = new Chart(ctx, config);
+            };
+        </script>
+    @endif
 @stop

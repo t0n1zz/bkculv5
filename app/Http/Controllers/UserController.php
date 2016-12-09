@@ -22,7 +22,7 @@ class UserController extends controller{
     public function index()
     {
         try{
-            $datas = User::where('id', '!=','0')->get();
+            $datas = User::where('id', '!=','1')->get();
 
             // dd($datas);
 
@@ -77,6 +77,7 @@ class UserController extends controller{
             $kelas = new User();
 
             $kelas->username = $username;
+            $kelas->name = Input::get('name');
             $cu = Input::get('cu');
             $tipe = Input::get('tipe');
             $password = Input::get('password');
@@ -156,11 +157,18 @@ class UserController extends controller{
                  
             $kelas = User::findOrFail($id);
 
+            
             $password1 = Input::get('password');
             $password2 = Input::get('password2');
 
+            if($cu != 0){
+                $password_now = Input::get('password_now');
+                if (!Hash::check($password_now, $kelas->password))
+                    return Redirect::back()->withInput()->with('errormessage', 'Password yang saat ini digunakan salah.');
+            }
+
             if($password1 != $password2)
-                return Redirect::back()->withInput()->with('errormessage', 'Password lama anda tidak sesuai.');
+                return Redirect::back()->withInput()->with('errormessage', 'Password anda tidak sesuai.');
 
             $kelas->password = Hash::make(Input::get('password'));
 
@@ -234,6 +242,18 @@ class UserController extends controller{
         }
     }
 
+    public function check_password()
+    {
+        $cu = Auth::user()->getCU();
+        $pass = Auth::user()->getPass(); 
+
+        $password_now = Input::get('password_now');
+        if (Hash::check($password_now, $pass))
+            return Redirect::route('admins.'.$this->kelaspath.'.index');
+        else
+            return Redirect::back()->withInput()->with('errormessage', 'Password anda salah.');
+    }
+
     public function hak_akses_save($adminrole)
     {
         $this->hak_akses('pengumuman','view',$adminrole);
@@ -280,12 +300,6 @@ class UserController extends controller{
         $this->hak_akses('laporancu','update',$adminrole);
         $this->hak_akses('laporancu','destroy',$adminrole);
         $this->hak_akses('laporancu','upload',$adminrole);
-        $this->hak_akses('laporanbkcu','view',$adminrole);
-        $this->hak_akses('laporancudetail','view',$adminrole);
-        $this->hak_akses('laporancudetail','create',$adminrole);
-        $this->hak_akses('laporancudetail','update',$adminrole);
-        $this->hak_akses('laporancudetail','destroy',$adminrole);
-        $this->hak_akses('laporancudetail','upload',$adminrole);
         $this->hak_akses('staf','view',$adminrole);
         $this->hak_akses('staf','create',$adminrole);
         $this->hak_akses('staf','update',$adminrole);
@@ -303,6 +317,7 @@ class UserController extends controller{
         $this->hak_akses('admin','update_akses',$adminrole);
         $this->hak_akses('admin','update_status',$adminrole);
         $this->hak_akses('admin','destroy',$adminrole);
+        $this->hak_akses('admin','detail',$adminrole);
     }
 
     public function hak_akses($namaakses,$tipe,$adminrole){

@@ -99,7 +99,7 @@ $kelas = "admin";
 </section>
 <!-- modal -->
 <div class="modal fade" id="modalpassword" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    {{ Form::open(array('route' => array('admins.'.$kelas.'.update_password'))) }}
+    {{ Form::open(array('route' => array('admins.'.$kelas.'.update_password'),'data-toggle'=>'validator','role'=>'form')) }}
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header bg-light-blue-active color-palette">
@@ -108,21 +108,26 @@ $kelas = "admin";
             </div>
             <div class="modal-body">
                 <input type="text" name="id" id="modalpassword_id" value="" hidden>
-                <div class="form-group">
-                    <h4>Password Baru</h4>
+                <div class="form-group has-feedback">
+                    <h5>Password Baru</h5>
                     <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-font"></i></span>
-                        <input type="password" name="password" class="form-control" id="password"
-                               placeholder="Silahkan masukkan password baru" autocomplete="off">
+                        {{ Form::password('password',array('class' => 'form-control','id'=>'password',
+                        'placeholder' => 'Silahkan masukkan password baru','required','data-minlength'=>'5'))}}
+                        <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                     </div>
+                    <div class="help-block">Password minimal 5 karakter.</div>
                 </div>
-                <div class="form-group">
-                    <h4>Ulangi Password</h4>
+                <div class="form-group has-feedback">
+                    <h5>Ulangi Password</h5>
                     <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-font"></i></span>
-                        <input type="password" name="password2" class="form-control" id="password2"
-                               placeholder="Silahkan ulangi password baru" autocomplete="off">
+                        {{ Form::password('password2',array('class' => 'form-control','id'=>'konfirmpassword',
+                        'placeholder' => 'Silahkan masukkan password admin sekali lagi','required',
+                        'data-match'=>'#password','data-match-error'=>'Maaf, password tidak sesuai.'))}}
+                        <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                     </div>
+                    <div class="help-block">Silahkan tulis ulang password anda.</div>
                 </div>
             </div>
             <div class="modal-footer">

@@ -44,7 +44,7 @@ class LaporanCuController extends Controller{
             $wilayahs = $this->laporancu_provinsi($wilayahcuprimers,$datas);
             $dos = $this->laporancu_do($datas);
 
-            dd($datas);
+            // dd($datas);
 
             return view('admins.'.$this->kelaspath.'.index', compact('datas','dataarray','gperiode','wilayahs','wilayahcuprimers','dos'));
         }catch (Exception $e){
@@ -429,6 +429,12 @@ class LaporanCuController extends Controller{
             $data = LaporanCu::find($id);
             $datas2 = Cuprimer::orderBy('name','asc')->get();
 
+            $cu = Auth::user()->getCU();
+            if($cu > 0){
+                if($cu != $data->no_ba)
+                    return Redirect::back();
+            }
+
             return view('admins.'.$this->kelaspath.'.edit', compact('data','datas2'));
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
@@ -463,12 +469,8 @@ class LaporanCuController extends Controller{
             
             $cu = \Auth::user()->getCU();
             if($cu != '0'){
-                $cuprimer = \App\Models\Cuprimer::where('id','=',$cu)->select('no_ba')->first();
-                $no_ba = $cuprimer->no_ba;
-                array_set($data,'no_ba',$no_ba);
+                array_set($data,'no_ba',$cu);
             }
-
-            // dd($data);
 
             $kelas->update($data);
 
@@ -478,7 +480,7 @@ class LaporanCuController extends Controller{
                 if($cu == '0')
                     return Redirect::route('admins.'.$this->kelaspath.'.index')->with('sucessmessage', 'Laporan CU Telah berhasil diubah.');
                 else
-                    return Redirect::route('admins.'.$this->kelaspath.'.index_cu',array($no_ba))->with('sucessmessage', 'Laporan CU Telah berhasil diubah.');
+                    return Redirect::route('admins.'.$this->kelaspath.'.index_cu',array($cu))->with('sucessmessage', 'Laporan CU Telah berhasil diubah.');
             }
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());

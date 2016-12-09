@@ -159,22 +159,23 @@ $iduser = Auth::user()->getId();
             @endpermission
             <!-- /staf -->
             <!-- laporancu -->
-            @permission('view.laporancu_view|view.laporancudetail_view|create.laporancu_create|create.laporancudetail_create')
+            @permission('view.laporancu_view|create.laporancu_create')
                 <li {!! Request::is('admins/laporancu') || Request::is('admins/laporancu*') ? 'class="treeview active"' : 'treeview' !!} >
                     <a href="#"><i class="fa fa-line-chart"></i> <span>Laporan CU</span> <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>
                     <ul {{ Request::is('admins/laporancu*') ? 'class=treeview-menu menu open style=display:block;' : 'class=treeview-menu' }}>
-                        @permission('create.laporancu_create|create.laporancudetail_create')
+                        @permission('create.laporancu_create')
                         <li {!! Request::is('admins/laporancu/create') ? 'class="treeview active"' : '' !!} >
                             <a href="{!! route('admins.laporancu.create') !!}"><i class="fa fa-plus"></i> Tambah</a>
                         </li>
                         @endpermission
-                        @permission('view.laporancu_view|view.laporancudetail_view')
+                        @permission('view.laporancu_view')
                         <li {!! Request::is('admins/laporancu') || Request::is('admins/laporancu/index_cu*') || Request::is('admins/laporancu/index_bkcu') || Request::is('admins/laporancu/index_periode*') ? 'class="treeview active"' : '' !!} >
-                            <a @if(Auth::check() && Auth::user()->can('view.laporancu_view'))
+                            <a @if($cu == '0'))
                                     href="{{ route('admins.laporancu.index') }}"
-                                @elseif(Auth::check() && Auth::user()->can('view.laporancudetail_view') && $cu > '0')
+                                @else
                                     href="{{ route('admins.laporancu.index_cu',array($cu)) }}"
-                                @endif><i class="fa fa-circle-o"></i> Kelola</a>
+                                @endif
+                            ><i class="fa fa-circle-o"></i> Kelola</a>
                         </li>
                         @endpermission        
                     </ul>    
@@ -197,11 +198,11 @@ $iduser = Auth::user()->getId();
             @endpermission
             <!-- /download -->
             <!-- admin -->
-            @if($cu !=0)
+            @permission('detail.admin_detail')
                 <li {!! Request::is('admins/admin*') ? 'class="active"' : '' !!}>
                     <a href="{{ route('admins.admin.detail',array($iduser)) }}"><i class="fa fa-user-circle-o"></i> <span>Admin</span></a>
                 </li>
-            @else
+            @endpermission
             @permission('view.admin_view|create.admin_create')
                 <li {!! Request::is('admins/admin') || Request::is('admins/admin*') ? 'class="active"' : '' !!} >
                     <a href="#"><i class="fa fa-user-circle-o"></i> <span>Admin</span> <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>
@@ -213,13 +214,12 @@ $iduser = Auth::user()->getId();
                         @endpermission
                         @permission('view.admin_view')
                         <li {!! Request::is('admins/admin') ? 'class="treeview active"' : '' !!} >
-                            <a href="{{ route('admins.admin.index') }}"><i class="fa fa-circle-o"></i> Kelola</a>
+                            <a href="#" data-toggle="modal" data-target="#modalcheckpass"><i class="fa fa-circle-o"></i> Kelola</a>
                         </li>
                         @endpermission    
                     </ul>
                 </li>
-            @endpermission
-            @endif   
+            @endpermission  
             <!-- /admin -->
             <li class="header">LAIN-LAIN</li>
             <!-- foto kegiatan -->

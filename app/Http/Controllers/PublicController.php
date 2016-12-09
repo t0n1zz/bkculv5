@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Input;
+use Redirect;
 use DB;
 use Jenssegers\Date\Date;
 

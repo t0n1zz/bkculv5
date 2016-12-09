@@ -25,7 +25,7 @@
     <link rel="stylesheet" type="text/css" href="{{asset('admin/AdminLTE.css')}}" >
     <link rel="stylesheet" type="text/css" href="{{asset('admin/skin-blue.css')}}" >
     <!-- pace -->
-    <link rel="stylesheet" type="text/css" href="{{asset('plugins/pace/pace.min.css')}}" >
+    <link rel="stylesheet" type="text/css" href="{{asset('plugins/pace/pace.css')}}" >
     <!-- perfect scroll -->
     <link rel="stylesheet" type="text/css" href="{{asset('plugins/perfect-scrollbar/css/perfect-scrollbar.min.css')}}" >
     <!-- Custom Fonts -->
@@ -60,7 +60,7 @@
     <footer class="main-footer">
         <!-- To the right -->
         <div class="pull-right hidden-xs">
-            <a href="{{ route('admins.version') }}"><b>Version</b> 2.0.1</a>
+            <a href="{{ route('admins.version') }}"><b>Admin</b>BKCU 2.1.0</a>
         </div>
         <!-- Default to the left -->
         <strong>Copyright &copy; {{ date("Y") }} <a href="#">Puskopdit BKCU Kalimantan</a>.</strong> All rights reserved.
@@ -96,7 +96,7 @@
             </div>
             <div class="modal-body">
                 <h4 style="font-size: 16px" id="modalhapus_detail"></h4>
-                <input type="text" name="id" value="" id="modalhapus_id" hidden>
+                <input type="text" name="id" value="" id="modalhapus_id" hidden="">
             </div>
             <div class="modal-footer">
                 <button type="submit" class="btn btn-danger" id="modalbutton"><i class="fa fa-trash fa-fw"></i> Hapus</button>
@@ -146,6 +146,34 @@
     </div><!-- /.modal-dialog -->
 </div>
 <!-- /signout -->
+<!-- check -->
+<div class="modal fade" id="modalcheckpass" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    {{ Form::open(array('route' => array('admins.admin.check_password'),'data-toggle'=>'validator','role'=>'form')) }}
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-aqua-active color-palette">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title"><i class="fa fa-warning fa-fw"></i> Password</h4>
+            </div>
+            <div class="modal-body">
+                <h4>Mohon masukkan kembali password anda</h4>
+                <div class="form-group has-feedback">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-font"></i></span>
+                        {{ Form::password('password_now',array('class' => 'form-control','id'=>'password_now', 'placeholder' => 'Password','required','data-minlength'=>'5'))}}
+                        <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" id="modalbutton"><i class="fa fa-check"></i> ok</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times fa-fw"></i> Tidak</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+    {{ Form::close() }}
+</div>
+<!-- /check -->
 <!-- jquery -->
 <script type="text/javascript" src="{{ URL::asset('plugins/jQuery/jquery-1.9.1.min.js') }}"></script>
 <!-- Bootstrap Core JavaScript -->
@@ -187,6 +215,10 @@
     // input mask
     $(":input").inputmask();
 
+    //modal autofocus
+    $('#modalcheckpass').on('shown.bs.modal', function () {
+       $('#password_now').focus();
+    })
 </script>
 @yield('js')
 <!-- custom script -->

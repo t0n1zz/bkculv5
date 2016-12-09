@@ -41,28 +41,31 @@
     @include('admins._layouts.alert')
     <!-- /Alert -->
     <!--content-->
+    @if($cu == '0')
     <div class="box box-solid">
         <div class="box-body">
-            @if(Auth::check() && Auth::user()->can('view.laporancudetail_view') && $cu == '0')
+            @if(Request::is('admins/laporancu'))
                 <div class="col-sm-6" style="padding: .2em ;">
-                    <div class="input-group">
-                        <div class="input-group-addon primary-color"><i class="fa fa-file-o fa-fw"></i> Laporan Dari</div>
-                        <select class="form-control" id="dynamic_select">
-                            <option {{ Request::is('admins/laporancu') ? 'selected' : '' }}
-                                    value="/admins/laporancu">Semua Credit Union</option>
-                            <option {{ Request::is('admins/laporancu/index_bkcu') ? 'selected' : '' }}
-                                    value="/admins/laporancu/index_bkcu">Konsolidasi</option>
-                            <option disabled>--------------</option>        
-                            @foreach($culists as $culist)
-                                <option {{ Request::is('admins/laporancu/index_cu/'.$culist->no_ba) ? 'selected' : '' }}
-                                        value="/admins/laporancu/index_cu/{{$culist->no_ba}}">{{ $culist->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
+            @elseif(Request::is('admins/laporancu/index_bkcu') || Request::is('admins/laporancu/index_cu*'))
+                <div class="col-sm-12" style="padding: .2em ;">
             @endif
+                <div class="input-group">
+                    <div class="input-group-addon primary-color"><i class="fa fa-file-o fa-fw"></i> Laporan</div>
+                    <select class="form-control" id="dynamic_select">
+                        <option {{ Request::is('admins/laporancu') ? 'selected' : '' }}
+                                value="/admins/laporancu">Semua Credit Union</option>
+                        <option {{ Request::is('admins/laporancu/index_bkcu') ? 'selected' : '' }}
+                                value="/admins/laporancu/index_bkcu">Konsolidasi</option>
+                        <option disabled>--------------</option>        
+                        @foreach($culists as $culist)
+                            <option {{ Request::is('admins/laporancu/index_cu/'.$culist->no_ba) ? 'selected' : '' }}
+                                    value="/admins/laporancu/index_cu/{{$culist->no_ba}}">{{ $culist->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
             @if(Request::is('admins/laporancu') || Request::is('admins/laporancu/index_periode/*'))
-                <div class="col-sm-4" style="padding: .2em ;">
+                <div class="col-sm-6" style="padding: .2em ;">
                     <?php
                         $data = App\Models\laporancu::orderBy('periode','DESC')->groupBy('periode')->get(['periode']);
                         $periodeiode = $data->groupBy('periode');
@@ -86,25 +89,9 @@
                     </div>
                 </div>
             @endif
-            @if(Request::is('admins/laporancu') || Request::is('admins/laporancu/index_periode/*'))
-                @permission('upload.laporancu_upload')
-                    <div class="col-sm-2" style="padding: .2em ;">   
-                        <a href="#" class="btn btn-default btn-block" data-toggle="modal" data-target="#modalexcel">
-                            <i class="fa fa-upload fa-fw"></i> Upload Excel
-                        </a>  
-                    </div>
-                @endpermission
-            @elseif(Request::is('admins/laporancu/index_cu/*'))
-                @permission('upload.laporancudetail_upload')
-                    <div class="col-sm-2" style="padding: .2em ;">   
-                        <a href="#" class="btn btn-default btn-block" data-toggle="modal" data-target="#modalexcel">
-                            <i class="fa fa-upload fa-fw"></i> Upload Excel
-                        </a>  
-                    </div>
-                @endpermission
-            @endif
         </div>
     </div>
+    @endif
     {{-- table --}}
     <div class="nav-tabs-custom">
         <ul class="nav nav-tabs">

@@ -201,7 +201,7 @@ class TpcuController extends Controller{
             $kelas = TpCU::findOrFail($id);
             $path = public_path($this->imagepath);
 
-            ile::delete($path . $kelas->gambar .".jpg");
+            File::delete($path . $kelas->gambar .".jpg");
             File::delete($path . $kelas->gambar ."n.jpg");
 
             TpCU::destroy($id);

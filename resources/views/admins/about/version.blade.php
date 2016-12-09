@@ -13,7 +13,7 @@ $title = "Version";
     </h1>
     <ol class="breadcrumb">
         <li><a href="{{ URL::to('admins') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active"><i class="fa fa-info"></i> {{ $title }}</li>
+        <li class="active"><i class="fa fa-th-list"></i> {{ $title }}</li>
     </ol>
 </section>
 <!-- /header -->
@@ -21,6 +21,60 @@ $title = "Version";
     <div class="row">
         <div class="col-md-12">
             <ul class="timeline">
+                <li class="time-label">
+                  <span class="bg-red">
+                    9 Desember 2016
+                  </span>
+                </li>
+                <li>
+                    <i class="fa fa-gears bg-blue"></i>
+                    <div class="timeline-item">
+                        <span class="time"><i class="fa fa-clock-o"></i> 15:00</span>
+                        <h3 class="timeline-header"><a href="#">Version 2.1.0</a> admin site</h3>
+                        <div class="timeline-body">
+                            Penambahan fitur bagian laporan cu yang berfungsi untuk menampilkan perkembangan Credit Union diserta dengan perhitungan analisis P.E.A.R.L.S serta upgrade sistem utama aplikasi dari versi 4.2 ke versi 5.2 dan peningkatan fitur-fitur pada plugin yang dipakai.
+                            <br/><br/>
+                            Berikut adalah rincian perubahan pada versi ini:
+                            <br/><br/>
+                            <ul>
+                                <li>Upgrade laravel versi 4.2 ke versi 5.2 yang menawarkan:
+                                    <ul>
+                                        <li>Support PHP 7</li>
+                                        <li>Peningkatan keamanan dengan "middleware"</li>
+                                        <li>Peningkatan eksekusi kode program</li>
+                                        <li>Penambahan dukungan terhadap plugin-plugin</li>
+                                        <li>Proteksi semua input terhadap serangan SQL injection</li>
+                                    </ul>
+                                </li>     
+                                <li>Penambahan bagian laporan cu yang berfungsi:
+                                    <ul>
+                                        <li>Menampung dan mengolah data laporan keuangan CU menjadi laporan perkembangan CU serta analisis P.E.A.R.L.S</li>
+                                        <li>Menampilkan laporan CU dalam tabel interaktif serta grafik</li>
+                                        <li>Input data laporan melalui upload excel <small class="label bg-yellow">beta</small></li>
+                                    </ul>
+                                </li>
+                                <li>Penambahan bagian TP CU untuk mendata informasi TP tiap CU secara lebih mendetail</li>
+                                <li>Penambahan bagian admin untuk CU yang memungkinkan staf CU untuk:
+                                    <ul>
+                                        <li>Mengisi / mengubah profil dari CU</li>
+                                        <li>Menambah, mengubah dan menghapus data TP di CU</li>
+                                        <li>Menambah, mengubah dan menghapus laporan CU</li>
+                                    </ul>
+                                </li>        
+                                <li>Penambahan fitur dan perubahan penggunaan pada Datatable</li>
+                                <li>Penambahan fitur text editor untuk bagian artikel</li>
+                                <li>Penambahan fitur pada bagian admin</li>
+                                <li>Pengubahan struktur navigasi sidebar</li>
+                                <li>Penambahan fitur validator untuk validasi input</li>
+                                <li>Penggunaan input mask untuk pengisian tanggal serta pengisian angka</li>
+                                <li>Penggunaan pace untuk animasi loading resource dan request ajax</li>
+                                <li>Penggantian Plugin ACL entrust dengan kodeine untuk integrasi lebih lanjut dengan laravel ACL</li>
+                                <li>Menghapus plugin flickering untuk akses ke flickr</li>
+                            </ul>
+                            <hr/>
+                        </div>
+                    </div>
+                </li>
                 <li class="time-label">
                   <span class="bg-red">
                     2 Januari 2016
@@ -52,7 +106,7 @@ $title = "Version";
                   </span>
                 </li>
                 <li>
-                    <i class="fa fa-gears bg-purple"></i>
+                    <i class="fa fa-gears bg-blue"></i>
                     <div class="timeline-item">
                         <span class="time"><i class="fa fa-clock-o"></i> 13:15</span>
                         <h3 class="timeline-header"><a href="#">Version 2.0.0</a> Admin Site</h3>
@@ -105,6 +159,7 @@ $title = "Version";
                                 <li>Perbaikan error pada controller</li>
                                 <li>Perbaikan error pada model</li>
                             </ul>
+                            <hr/>
                         </div>
                     </div>
                 </li>
@@ -153,6 +208,7 @@ $title = "Version";
                                 <li>Peningkatan pengalaman membaca artikel dengan tulisan serta layout yang lebih nyaman di mata</li>
                                 <li>Peningkatan pengalaman berinteraksi dan konsistensi desain secara keseluruhan pada semua halaman.</li>
                             </ul>
+                            <hr/>
                         </div>
                     </div>
                 </li>

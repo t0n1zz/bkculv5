@@ -52,7 +52,11 @@ $datelogout= new Date($data->logout);
                     @endif
                     <br/>
                     <h3 class="profile-username text-center">{{ $data->name }}</h3>
-                    <p class="text-muted text-center">{{ $data->cuprimer->name }}</p>
+                    @if(!empty($data->cuprimer))
+                        <p class="text-muted text-center">{{ $data->cuprimer->name }}</p>
+                    @else
+                        <p class="text-muted text-center">PUSKOPDIT BKCU Kalimantan</p>
+                    @endif    
                     <ul class="list-group list-group-unbordered">
                         <li class="list-group-item">
                             <b>Username</b> <a class="pull-right">{{ $data->username }}</a>
@@ -78,25 +82,39 @@ $datelogout= new Date($data->logout);
                 </ul>
                 <div class="tab-content">
                     <div class="tab-pane active" id="password">
-                        {{ Form::open(array('route' => array('admins.'.$kelas.'.update_password'))) }}
+                        {{ Form::open(array('route' => array('admins.'.$kelas.'.update_password'),'data-toggle'=>'validator','role'=>'form')) }}
                         <div class="row">
                             <div class="col-lg-12">
-                                <div class="form-group">
+                                <div class="form-group has-feedback">
+                                    <h5>Password Saat Ini</h5>
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-font"></i></span>
+                                        {{ Form::password('password_now',array('class' => 'form-control','id' =>'password_now', 'placeholder' => 'Silahkan masukkan password yang saat ini digunakan','required','data-minlength'=>'5'))}}
+                                        <span class="glyphicon form-control-feedback"></span>
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="form-group has-feedback">
                                     <h5>Password Baru</h5>
                                     <div class="input-group">
                                         <span class="input-group-addon"><i class="fa fa-font"></i></span>
-                                        <input type="password" name="password" class="form-control" id="password"
-                                               placeholder="Silahkan masukkan password baru" autocomplete="off">
+                                        {{ Form::password('password',array('class' => 'form-control','id' => 'password1', 'placeholder' => 'Silahkan masukkan password baru','required','data-minlength'=>'5'))}}
+                                        <span class="glyphicon form-control-feedback"></span>       
                                     </div>
+                                    <div class="help-block">Password minimal 5 karakter.</div>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group has-feedback">
                                     <h5>Ulangi Password</h5>
                                     <div class="input-group">
                                         <span class="input-group-addon"><i class="fa fa-font"></i></span>
-                                        <input type="password" name="password2" class="form-control" id="password2"
-                                               placeholder="Silahkan ulangi password baru" autocomplete="off">
+                                        {{ Form::password('password2',array('class' => 'form-control','id'=>'konfirmpassword',
+                                           'placeholder' => 'Silahkan masukkan password admin sekali lagi','required',
+                                           'data-match'=>'#password1','data-match-error'=>'Maaf, password tidak sesuai.'))}}
+                                        <span class="glyphicon form-control-feedback"></span>       
                                     </div>
+                                    <div class="help-block">Silahkan tulis ulang password anda.</div>
                                 </div>
+                                <hr/>
                                 <button type="submit" class="btn btn-primary" id="modalbutton"><i class="fa fa-save"></i> Simpan</button>
                             </div>
                         </div>

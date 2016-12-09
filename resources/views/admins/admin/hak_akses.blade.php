@@ -282,7 +282,7 @@
         </td>
     </tr>
     <?php $akses= "laporancu"; $logo= "fa-line-chart"; ?>
-    <tr id="{{ $akses }}" class="bkcu">
+    <tr id="{{ $akses }}">
         <td class="bg-light-blue-active color-palette"><h5 class="hakakses-title"><i class="fa {{ $logo }} fa-fw"></i> Laporan CU</h5></td>
         <td><div class="checkbox">
                 <label><input name="{{$akses}}_view" value="1" type="checkbox" id="{{$akses}}_view" 
@@ -312,50 +312,6 @@
                 <label><input name="{{$akses}}_upload" value="1" type="checkbox" id="{{$akses}}_upload"
                     @if(!empty($data)) @if($data->can($akses.'_upload')) {{ 'checked' }} @endif @endif
                     /> <i class="fa fa-upload"></i> Upload</label>
-            </div>
-        </td>
-    </tr>
-    <?php $akses= "laporancudetail"; $logo= "fa-line-chart"; ?>
-    <tr id="{{ $akses }}">
-        <td class="bg-light-blue-active color-palette"><h5 class="hakakses-title"><i class="fa {{ $logo }} fa-fw"></i> Laporan CU (Detail)</h5></td>
-        <td><div class="checkbox">
-                <label><input name="{{$akses}}_view" value="1" type="checkbox" id="{{$akses}}_view" 
-                    @if(!empty($data)) @if($data->can($akses.'_view')) {{ 'checked' }} @endif @endif
-                    /> <i class="fa fa-eye"></i> Lihat</label>
-            </div>
-        </td>
-        <td><div class="checkbox">
-                <label><input name="{{$akses}}_create" value="1" type="checkbox" id="{{$akses}}_create" 
-                    @if(!empty($data)) @if($data->can($akses.'_create')) {{ 'checked' }} @endif @endif
-                    /> <i class="fa fa-plus"></i> Tambah</label>
-            </div>
-        </td>
-        <td><div class="checkbox">
-                <label><input name="{{$akses}}_update" value="1" type="checkbox" id="{{$akses}}_update" 
-                    @if(!empty($data)) @if($data->can($akses.'_update')) {{ 'checked' }} @endif @endif
-                    /> <i class="fa fa-pencil"></i> Ubah</label>
-            </div>
-        </td>
-        <td><div class="checkbox">
-                <label><input name="{{$akses}}_destroy" value="1" type="checkbox" id="{{$akses}}_destroy"
-                    @if(!empty($data)) @if($data->can($akses.'_destroy')) {{ 'checked' }} @endif @endif
-                    /> <i class="fa fa-trash"></i> Hapus</label>
-            </div>
-        </td>
-        <td><div class="checkbox">
-                <label><input name="{{$akses}}_upload" value="1" type="checkbox" id="{{$akses}}_upload"
-                    @if(!empty($data)) @if($data->can($akses.'_upload')) {{ 'checked' }} @endif @endif
-                    /> <i class="fa fa-upload"></i> Upload</label>
-            </div>
-        </td>
-    </tr>
-    <?php $akses= "laporanbkcu"; $logo= "fa-line-chart"; ?>
-    <tr id="{{ $akses }}" class="bkcu">
-        <td class="bg-light-blue-active color-palette"><h5 class="hakakses-title"><i class="fa {{ $logo }} fa-fw"></i> Laporan BKCU</h5></td>
-        <td><div class="checkbox">
-                <label><input name="{{$akses}}_view" value="1" type="checkbox" id="{{$akses}}_view" 
-                    @if(!empty($data)) @if($data->can($akses.'_view')) {{ 'checked' }} @endif @endif
-                    /> <i class="fa fa-eye"></i> Lihat</label>
             </div>
         </td>
     </tr>
@@ -440,7 +396,7 @@
     <?php $akses= "admin"; $logo="fa-user-circle-o"; ?>
     <tr id="{{ $akses }}">
         <td rowspan="2" class="bg-light-blue-active color-palette"><h5 class="hakakses-title"><i class="fa {{ $logo }} fa-fw"></i> {{ ucfirst($akses) }}</h5></td>
-        <td ><div class="checkbox">
+        <td class="bkcu"><div class="checkbox">
                 <label><input name="{{$akses}}_view" value="1" type="checkbox" id="{{$akses}}_view" 
                     @if(!empty($data)) @if($data->can($akses.'_view')) {{ 'checked' }} @endif @endif
                     /> <i class="fa fa-eye"></i> Lihat</label>
@@ -460,19 +416,25 @@
             </div>
         </td>
         <td><div class="checkbox">
+                <label><input name="{{$akses}}_detail" value="1" type="checkbox" id="{{$akses}}_detail"
+                    @if(!empty($data)) @if($data->can($akses.'_status')) {{ 'checked' }} @endif @endif
+                    /> <i class="fa fa-id-badge"></i> Detail</label>
+            </div>
+        </td>
+        <td><div class="checkbox">
                 <label><input name="{{$akses}}_update_password" value="1" type="checkbox" id="{{$akses}}_update_password" 
                     @if(!empty($data)) @if($data->can($akses.'_update_password')) {{ 'checked' }} @endif @endif
                     /> <i class="fa fa-key"></i> Password</label>
             </div>
         </td>
+    </tr>
+    <tr>
         <td class="bkcu"><div class="checkbox">
                 <label><input name="{{$akses}}_update_akses" value="1" type="checkbox" id="{{$akses}}_update_akses"
                     @if(!empty($data)) @if($data->can($akses.'_update_akses')) {{ 'checked' }} @endif @endif
                     /> <i class="fa fa-hand-paper-o"></i> Akses</label>
             </div>
         </td>
-    </tr>
-    <tr>
         <td class="bkcu"><div class="checkbox">
                 <label><input name="{{$akses}}_update_status" value="1" type="checkbox" id="{{$akses}}_update_status"
                     @if(!empty($data)) @if($data->can($akses.'_status')) {{ 'checked' }} @endif @endif
