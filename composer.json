@@ -16,7 +16,8 @@
         "barryvdh/laravel-debugbar": "^2.2",
         "yajra/laravel-datatables-oracle": "^6.18",
         "kodeine/laravel-acl": "~1.0@dev",
-        "doctrine/dbal": "^2.5"
+        "doctrine/dbal": "^2.5",
+        "caouecs/laravel-lang": "~3.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

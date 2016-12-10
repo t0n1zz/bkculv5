@@ -218,7 +218,7 @@ Route::group(array('prefix' => 'admins','middleware' => 'auth'), function(){
         'as'           => 'admins.laporancu.importexcel',
         'uses'         => 'LaporanCuController@importexcel',
         'middleware'   => ['auth', 'acl'],
-        'can'          => 'create.laporancu_upload']);
+        'can'          => 'upload.laporancu_upload']);
     Route::get('laporancu/index_periode/{periode}', [
         'as'           => 'admins.laporancu.index_periode',
         'uses'         => 'LaporanCuController@index_periode',

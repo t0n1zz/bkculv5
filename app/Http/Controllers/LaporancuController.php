@@ -520,57 +520,59 @@ class LaporanCuController extends Controller{
         $cu = \Auth::user()->getCU();
         if($cu == '0'){
             $tipe = Input::get('radiobtn');
+
             if($tipe == "multi"){
-                if(Input::hasFile('import_file')){
-                    $path = Input::file('import_file')->getRealPath();
+                if(Input::hasFile('import_multi')){
+                    $path = Input::file('import_multi')->getRealPath();
                     $data = Excel::selectSheetsByIndex(0)->load($path, function($reader) {
                     })->get();
 
                     if(!empty($data) && $data->count()){
                         foreach($data as $key => $value){
                             $insert[] = [
-                                'cu' => $value->no_ba,
+                                'no_ba' => $value->no_ba,
                                 'l_biasa' => $value->l_biasa,
                                 'l_lbiasa' => $value->l_lbiasa,
                                 'p_biasa' => $value->p_biasa,
                                 'p_lbiasa' => $value->p_lbiasa,
-                                'totalanggota_lalu' => $value->totalanggota_lalu,
                                 'aset' => $value->aset,
-                                'aset_lalu' => $value->aset_lalu,
-                                'aset_masalah' => $value->aset_masalah,
-                                'aset_tidak_menghasilkan' => $value->aset_tidak_menghasilkan,
-                                'aset_likuid_tidak_menghasilkan' => $value->aset_likuid_tidak_menghasilkan,
                                 'aktivalancar' => $value->aktivalancar,
                                 'simpanansaham' => $value->simpanansaham,
-                                'simpanansaham_lalu' => $value->simpanansaham_lalu,
                                 'nonsaham_unggulan' => $value->nonsaham_unggulan,
                                 'nonsaham_harian' => $value->nonsaham_harian,
                                 'hutangspd' => $value->hutangspd,
-                                'hutang_tidak_berbiaya_30hari' => $value->hutang_tidak_berbiaya_30hari,
-                                'totalhutang_pihak3' => $value->totalhutang_pihak3,
                                 'piutangberedar' => $value->piutangberedar,
-                                'piutanganggota' => $value->piutanganggota,
                                 'piutanglalai_1bulan' => $value->piutanglalai_1bulan,
                                 'piutanglalai_12bulan' => $value->piutanglalai_12bulan,
                                 'dcr' => $value->dcr,
                                 'dcu' => $value->dcu,
+                                'totalpendapatan' => $value->totalpendapatan,
+                                'totalbiaya' => $value->totalbiaya,
+                                'shu' => $value->shu,
+                                'totalanggota_lalu' => $value->totalanggota_lalu,
+                                'aset_lalu' => $value->aset_lalu,
+                                'aset_masalah' => $value->aset_masalah,
+                                'aset_tidak_menghasilkan' => $value->aset_tidak_menghasilkan,
+                                'aset_likuid_tidak_menghasilkan' => $value->aset_likuid_tidak_menghasilkan,                 
+                                'simpanansaham_lalu' => $value->simpanansaham_lalu,               
+                                'hutang_tidak_berbiaya_30hari' => $value->hutang_tidak_berbiaya_30hari,
+                                'totalhutang_pihak3' => $value->totalhutang_pihak3,        
+                                'piutanganggota' => $value->piutanganggota,         
                                 'iuran_gedung' => $value->iuran_gedung,
                                 'donasi' => $value->donasi,
                                 'bjs_saham' => $value->bjs_saham,
                                 'beban_operasional' => $value->beban_operasional,
                                 'investasi_likuid' => $value->investasi_likuid,
-                                'totalpendapatan' => $value->totalpendapatan,
-                                'totalbiaya' => $value->totalbiaya,
-                                'shu' => $value->shu,
                                 'shu_lalu' => $value->shu_lalu,
                                 'lajuinflasi' => $value->lajuinflasi,
                                 'hargapasar' => $value->hargapasar,
-                                'periode' => $value->periode
+                                'periode' => $value->periode,
+                                'created_at' => $value->tgl_masuk
                             ];
                         }
 
                         if(!empty($insert)){
-                          DB::table('LaporanCu')->insert($insert);
+                          DB::table('laporancu')->insert($insert);
                           return Redirect::route('admins.'.$this->kelaspath.'.index')->with('sucessmessage','Laporan CU Telah berhasil di import.');
                         }
                     }
@@ -584,7 +586,7 @@ class LaporanCuController extends Controller{
                     array_set($data,'periode',$tanggal2);
                 }
 
-                if(Input::hasFile('import_file')){
+                if(Input::hasFile('import_single')){
                     $path = Input::file('import_file')->getRealPath();
                     $data = Excel::load($path, function($reader) {
                     })->get();
@@ -603,7 +605,7 @@ class LaporanCuController extends Controller{
                     }
 
                     if(!empty($insert)){
-                      DB::table('LaporanCu')->insert($insert);
+                      DB::table('laporancu')->insert($insert);
                       return Redirect::route('admins.'.$this->kelaspath.'.index')->with('sucessmessage','Laporan CU Telah berhasil di import.');
                     }
                 }

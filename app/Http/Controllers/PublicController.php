@@ -6,7 +6,7 @@ use Input;
 use Redirect;
 use DB;
 use Jenssegers\Date\Date;
-
+use Response;
 use App\Models\Artikel;
 use App\Models\KategoriArtikel;
 use App\Models\Cuprimer;

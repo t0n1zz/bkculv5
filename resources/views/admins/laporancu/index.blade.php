@@ -44,7 +44,7 @@
     @if($cu == '0')
     <div class="box box-solid">
         <div class="box-body">
-            @if(Request::is('admins/laporancu'))
+            @if(Request::is('admins/laporancu') || Request::is('admins/laporancu/index_periode*'))
                 <div class="col-sm-6" style="padding: .2em ;">
             @elseif(Request::is('admins/laporancu/index_bkcu') || Request::is('admins/laporancu/index_cu*'))
                 <div class="col-sm-12" style="padding: .2em ;">
@@ -192,28 +192,32 @@
                             @foreach($datas as $data)
                                 <?php
                                     if(!Request::is('admins/laporancu/index_cu/*')){
-                                        if($data->cuprimer->do == "1"){
-                                            $do ="Barat";
-                                        }else if($data->cuprimer->do == "2"){
-                                            $do ="Tengah";
-                                        }else if($data->cuprimer->do == "3"){
-                                            $do ="Timur";
-                                        }else{
-                                            $do ='-';
-                                        }
-
-                                        foreach($wilayahcuprimers as $wilayahcuprimer){
-                                            if($data->cuprimer->wilayah == $wilayahcuprimer->id){
-                                                $wilayah =$wilayahcuprimer->name;
+                                        if(!empty($data->cuprimer)){
+                                            if($data->cuprimer->do == "1"){
+                                                $do ="Barat";
+                                            }else if($data->cuprimer->do == "2"){
+                                                $do ="Tengah";
+                                            }else if($data->cuprimer->do == "3"){
+                                                $do ="Timur";
+                                            }else{
+                                                $do ='-';
                                             }
+                                            foreach($wilayahcuprimers as $wilayahcuprimer){
+                                                if($data->cuprimer->wilayah == $wilayahcuprimer->id){
+                                                    $wilayah =$wilayahcuprimer->name;
+                                                }
+                                            }
+                                        }else{
+                                            $do = '-';
+                                            $wilayah = '-';
                                         }
                                     }
 
                                     
                                     $date = new Date($data->periode);
                                     $periode = $date->format('F Y');
-                                    $rasio_beredar = number_format((($data->piutangberedar / $data->aset)*100),2); 
-                                    $rasio_lalai = number_format(((($data->piutanglalai_1bulan + $data->piutanglalai_12bulan) / $data->piutangberedar)*100),2);
+                                    $rasio_beredar = $data->aset != 0 ? ($data->piutangberedar / $data->aset)*100 : ($data->piutangberedar / 1)*100; 
+                                    $rasio_lalai = $data->piutangberedar != 0 ? (($data->piutanglalai_1bulan + $data->piutanglalai_12bulan) / $data->piutangberedar)*100 : (($data->piutanglalai_1bulan + $data->piutanglalai_12bulan) / 1)*100;
                                     $total = $data->l_biasa + $data->l_lbiasa + $data->p_biasa + $data->p_lbiasa;
                                     $piutangbersih = $data->piutangberedar - ($data->piutanglalai_1bulan + $data->piutanglalai_12bulan);
 
@@ -250,9 +254,15 @@
                                     <td class="bg-aqua disabled color-palette"></td>
                                     <td hidden>{{ $data->id }}</td>
                                     @if(!Request::is('admins/laporancu/index_cu/*'))
-                                        <td hidden>{{ $data->cuprimer->no_ba }}</td>
-                                        <td>{{ $data->cuprimer->name }}</td>
-                                        <td>{{ $data->cuprimer->no_ba }}</td>
+                                        @if(!empty($data->cuprimer))
+                                            <td hidden>{{ $data->cuprimer->no_ba }}</td>
+                                            <td>{{ $data->cuprimer->name }}</td>
+                                            <td>{{ $data->cuprimer->no_ba }}</td>
+                                        @else
+                                            <td hidden>-</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                        @endif
                                         <td>{{ $do }}</td>
                                         <td>{{ $wilayah }}</td>
                                     @endif
@@ -272,15 +282,15 @@
                                     <td data-order="{{ $piutangbersih }}">{{ number_format($piutangbersih,"0",",",".") }}</td>
                                     <td data-order="{{ $data->piutanglalai_1bulan }}">{{ number_format($data->piutanglalai_1bulan,"0",",",".") }}</td>
                                     <td data-order="{{ $data->piutanglalai_12bulan }}">{{ number_format($data->piutanglalai_12bulan,"0",",",".") }}</td>
-                                    <td data-order="{{ $rasio_beredar }}">{{ $rasio_beredar }} %</td>
-                                    <td data-order="{{ $rasio_lalai }}">{{ $rasio_lalai }} %</td>
+                                    <td data-order="{{ $rasio_beredar }}">{{ number_format($rasio_beredar,"0",",",".") }} %</td>
+                                    <td data-order="{{ $rasio_lalai }}">{{ number_format($rasio_lalai,"0",",",".") }} %</td>
                                     <td data-order="{{ $data->dcr }}">{{ number_format($data->dcr,"0",",",".") }}</td>
                                     <td data-order="{{ $data->dcu }}">{{ number_format($data->dcu,"0",",",".")}}</td>
                                     <td data-order="{{ $data->totalpendapatan }}">{{ number_format($data->totalpendapatan,"0",",",".") }}</td>
                                     <td data-order="{{ $data->totalbiaya }}">{{ number_format($data->totalbiaya,"0",",",".") }}</td>
                                     <td data-order="{{ $data->shu }}">{{ number_format($data->shu,"0",",",".") }}</td>
-                                    <td data-order="{{ $data->created_at }}">@if(!empty($data->created_at)){{ $data->created_at->format('d/n/Y') }}@else{{ '-' }}@endif</td>
-                                    <td data-order="{{ $data->updated_at }}">@if(!empty($data->updated_at)){{ $data->updated_at->format('d/n/Y') }}@else{{ '-' }}@endif</td>
+                                    <td data-order="{{ $data->created_at }}">@if(!empty($data->created_at)){{ $data->created_at->format('l, j F Y') }}@else{{ '-' }}@endif</td>
+                                    <td data-order="{{ $data->updated_at }}">@if(!empty($data->updated_at)){{ $data->updated_at->format('l, j F Y') }}@else{{ '-' }}@endif</td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -652,7 +662,13 @@
                                     <td class="bg-aqua disabled color-palette"></td>
 
                                     <td hidden>{{ $data->id }}</td>
-                                    @if(!Request::is('admins/laporancu/index_cu/*'))<td>{{ $data->cuprimer->name }}</td>@endif
+                                    @if(!Request::is('admins/laporancu/index_cu/*'))
+                                        @if(!empty($data->cuprimer))
+                                            <td>{{ $data->cuprimer->name }}</td>
+                                        @else
+                                            <td>-</td>    
+                                        @endif    
+                                    @endif
                                     <td data-order="{{ $data->periode }}"> {{ $date->format('F Y') }}</td>
                                     
                                     <td @if($p1 < 100) {!! 'class="bg-red disabled color-palette"' !!} @endif 
