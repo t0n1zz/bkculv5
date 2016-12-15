@@ -21,12 +21,19 @@ class CuprimerController extends Controller{
     {
         try{
             $datas = Cuprimer::with('WilayahCuprimer')
+                ->where('status','=','1')
                 ->orderBy('name','asc')
                 ->get();
 
+            $datas_non = Cuprimer::with('WilayahCuprimer')
+                ->where('status','=','0')
+                ->orderBy('name','asc')
+                ->get();
+
+
             $datas2 = WilayahCuprimer::all();
 
-            return view('admins.'.$this->kelaspath.'.index', compact('datas','datas2'));
+            return view('admins.'.$this->kelaspath.'.index', compact('datas','datas_non','datas2'));
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
         }
@@ -88,7 +95,10 @@ class CuprimerController extends Controller{
             $kelas = new Cuprimer();
             $name = Input::get('name');
 
-            $data2 = $this->input_data($kelas,$data);
+            $data2 = $this->input_wilayah($data);
+            $data2 = $this->input_tanggal($data2);
+            $data2 = $this->input_content($data2);
+            $data2 = $this->input_gambar($kelas,$data2);
 
             Cuprimer::create($data2);
 
@@ -208,6 +218,30 @@ class CuprimerController extends Controller{
                 return Redirect::back()->withInput()->with('errormessage','Pastikan ukuran file gambar tidak lebih besar dari ' .$file_max. ' ' .$file_max_meassure_unit);
             else
                 return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
+        }
+    }
+
+    public function update_status()
+    {
+        try{
+            $id = Input::get('id');
+            $kelas = Cuprimer::findOrFail($id);
+            $name = $kelas->name;
+            $status = $kelas->status;
+
+            if($status == 1) {
+                $statusname = "non-aktifkan";
+                $kelas->status = 0;
+            }else{
+                $statusname = "diaktifkan";
+                $kelas->status = 1;
+            }
+
+            $kelas->update();
+            return Redirect::route('admins.'.$this->kelaspath.'.index')->with('sucessmessage', 'Status CU  <b><i>' . $name . '</i></b> telah <b>' . $statusname . '</b>.');
+
+        }catch (Exception $e){
+            return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
         }
     }
 

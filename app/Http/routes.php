@@ -163,6 +163,11 @@ Route::group(array('prefix' => 'admins','middleware' => 'auth'), function(){
         'uses'         => 'CuprimerController@update_deskripsi',
         'middleware'   => ['auth', 'acl'],
         'can'          => 'update.cuprimer_update']);
+    Route::post('cuprimer/update_status', [
+        'as'           => 'admins.cuprimer.update_status',           
+        'uses'         => 'CuprimerController@update_status',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'update.cuprimer_update']);
     Route::delete('cuprimer/{cuprimer}', [
         'as'           => 'admins.cuprimer.destroy',
         'uses'         => 'CuprimerController@destroy',
@@ -193,27 +198,27 @@ Route::group(array('prefix' => 'admins','middleware' => 'auth'), function(){
         'as'           => 'admins.laporancu.create',
         'uses'         => 'LaporanCuController@create',
         'middleware'   => ['auth', 'acl'],
-        'can'          => 'create.laporancu_create|create.laporancu_create']);
+        'can'          => 'create.laporancu_create']);
     Route::get('laporancu/{laporancu}/edit', [
         'as'           => 'admins.laporancu.edit',
         'uses'         => 'LaporanCuController@edit',
         'middleware'   => ['auth', 'acl'],
-        'can'          => 'update.laporancu_update|update.laporancu_update']);
+        'can'          => 'update.laporancu_update']);
     Route::post('laporancu', [
         'as'           => 'admins.laporancu.store',
         'uses'         => 'LaporanCuController@store',
         'middleware'   => ['auth', 'acl'],
-        'can'          => 'create.laporancu_create|create.laporancu_create']);
+        'can'          => 'create.laporancu_create']);
     Route::put('laporancu/{laporancu}', [
         'as'           => 'admins.laporancu.update',
         'uses'         => 'LaporanCuController@update',
         'middleware'   => ['auth', 'acl'],
-        'can'          => 'update.laporancu_update|update.laporancu_update']);
+        'can'          => 'update.laporancu_update']);
     Route::delete('laporancu/{laporancu}', [
         'as'           => 'admins.laporancu.destroy',
         'uses'         => 'LaporanCuController@destroy',
         'middleware'   => ['auth', 'acl'],
-        'can'          => 'destroy.laporancu_destroy|destroy.laporancu_destroy']);
+        'can'          => 'destroy.laporancu_destroy']);
     Route::post('laporancu/importexcel', [
         'as'           => 'admins.laporancu.importexcel',
         'uses'         => 'LaporanCuController@importexcel',

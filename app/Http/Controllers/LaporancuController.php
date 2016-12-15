@@ -26,10 +26,11 @@ class LaporanCuController extends Controller{
         try{
             $data = LaporanCu::with('cuprimer')->orderBy('periode','DESC')->get();
             $data1 = $data->groupBy('no_ba');
-
+ 
             $datas = collect([]);
             foreach ($data1 as $data2){
-                $datas->push($data2->first());
+                if($data2->first()->cuprimer->status == "1")
+                    $datas->push($data2->first());
             }
 
             $dataarray = $datas->toArray();
@@ -61,7 +62,8 @@ class LaporanCuController extends Controller{
 
             $datas = collect([]);
             foreach ($data1 as $data2){
-                $datas->push($data2->first());
+                if($data2->first()->cuprimer->status == "1")
+                    $datas->push($data2->first());
             }
 
             $dataarray = $datas->toArray();
@@ -83,7 +85,7 @@ class LaporanCuController extends Controller{
     public function index_bkcu()
     {
         try{
-            $data = LaporanCu::orderBy('periode','ASC')->groupBy('periode')->get(['periode']);
+            $data = LaporanCu::with('cuprimer')->orderBy('periode','ASC')->groupBy('periode')->get(['periode']);
             $periodeiode = $data->groupBy('periode');
 
             $periodeiode1 = collect([]);
@@ -99,7 +101,8 @@ class LaporanCuController extends Controller{
 
                 $datascu = collect([]);
                 foreach ($datacu1 as $data2){
-                    $datascu->push($data2->first());
+                    if($data2->first()->cuprimer->status == "1")
+                        $datascu->push($data2->first());
                 }
 
                 $tot_l_biasa = 0;

@@ -14,7 +14,7 @@ class Cuprimer extends Model {
     
     protected $fillable = ['no_ba','name','badan_hukum','alamat','pos'
         ,'telp','hp','website','email','gambar','logo','app'
-        ,'deskripsi','wilayah','bergabung','ultah','tp','staf'];
+        ,'deskripsi','wilayah','bergabung','ultah','tp','staf','status'];
 
     public function getNameAttribute($value){
         return !empty($value) ? $value : '-';

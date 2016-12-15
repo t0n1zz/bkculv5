@@ -20,4 +20,8 @@ class WilayahCuprimer extends Model {
     public function hascuprimer(){
         return $this->hasMany('App\Models\Cuprimer','wilayah','id');
     }
+
+    public function Cuprimer(){
+        return $this->hasMany('App\Models\Cuprimer','wilayah','id')->where('status','=','1');
+    }
 }

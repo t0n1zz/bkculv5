@@ -1,10 +1,9 @@
 <?php
-    $culists = App\Models\Cuprimer::orderBy('name','asc')->select('no_ba','name')->get();
+    $culists = App\Models\Cuprimer::orderBy('name','asc')->where('status','=','1')->get();
+    $culists_non = App\Models\Cuprimer::orderBy('name','asc')->where('status','=','0')->get();
     if(Request::is('admins/laporancu/index_cu/*')){
-        foreach ($culists as $culist) {
-            if($culist->no_ba == $id)
-                $title = "Laporan CU " .$culist->name;
-        }
+        $cuname = App\Models\Cuprimer::orderBy('name','asc')->where('no_ba',$id)->first();
+        $title = "Laporan CU " .$cuname->name;
     }elseif(Request::is('admins/laporancu') || Request::is('admins/laporancu/index_periode/*')){
         $title = "Laporan CU";
     }else{
@@ -56,8 +55,13 @@
                                 value="/admins/laporancu">Semua Credit Union</option>
                         <option {{ Request::is('admins/laporancu/index_bkcu') ? 'selected' : '' }}
                                 value="/admins/laporancu/index_bkcu">Konsolidasi</option>
-                        <option disabled>--------------</option>        
+                        <option disabled>-------CU Aktif-------</option>      
                         @foreach($culists as $culist)
+                            <option {{ Request::is('admins/laporancu/index_cu/'.$culist->no_ba) ? 'selected' : '' }}
+                                    value="/admins/laporancu/index_cu/{{$culist->no_ba}}">{{ $culist->name }}</option>
+                        @endforeach
+                        <option disabled>-------CU Non-Aktif-------</option>
+                        @foreach($culists_non as $culist)
                             <option {{ Request::is('admins/laporancu/index_cu/'.$culist->no_ba) ? 'selected' : '' }}
                                     value="/admins/laporancu/index_cu/{{$culist->no_ba}}">{{ $culist->name }}</option>
                         @endforeach

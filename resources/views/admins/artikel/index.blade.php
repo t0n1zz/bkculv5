@@ -53,6 +53,8 @@ $imagepath = 'images_artikel/';
                     <tr>
                         <th data-sortable="false">#</th>
                         <th hidden></th>
+                        <th hidden></th>
+                        <th hidden></th>
                         <th data-sortable="false">Foto</th>
                         <th>Judul</th>
                         <th>Kategori</th>
@@ -68,6 +70,8 @@ $imagepath = 'images_artikel/';
                         <tr>
                             <td class="bg-aqua disabled color-palette"></td>
                             <td hidden>{{ $data->id }}</td>
+                            <td hidden>{{ $data->status }}</td>
+                            <td hidden>{{ $data->pilih }}</td>
                             @if(!empty($data->gambar) && is_file($imagepath.$data->gambar."n.jpg"))
                                 <td style="white-space: nowrap"><div class="modalphotos" >
                                         {{ Html::image(($imagepath.$data->gambar).'n.jpg',asset(($imagepath.$data->gambar)."jpg"),
@@ -89,8 +93,20 @@ $imagepath = 'images_artikel/';
                             <td>{{ $data->penulis }}</td>
                             <td>{{ $data->created_at->format('d/n/Y') }}</td>
                             <td>{{ $data->updated_at->format('d/n/Y')  }}</td>
-                            @if($data->status)<td>Iya</td>@else<td>Tidak</td>@endif    
-                            @if($data->pilihan)<td>Iya</td>@else<td>Tidak</td>@endif 
+                            <td>
+                                @if($data->status == "1")
+                                    <a href="#" class="btn btn-warning" disabled><i class="fa fa-check"></i></a>
+                                @else
+                                    <a href="#" class="btn btn-default" disabled><i class="fa fa-ban"></i></a>
+                                @endif
+                            </td>    
+                            <td>
+                                @if($data->pilihan == "1")
+                                    <a href="#" class="btn btn-warning" disabled><i class="fa fa-check"></i></a>
+                                @else
+                                    <a href="#" class="btn btn-default" disabled><i class="fa fa-ban"></i></a>
+                                @endif
+                            </td>
                         </tr>
                     @endforeach
                     </tbody>
@@ -350,15 +366,15 @@ $imagepath = 'images_artikel/';
                             return item[1];
                         });
                         var judul = $.map(table.rows({ selected:true }).data(),function(item){
-                            return item[2];
+                            return item[5];
                         });
                         var status = $.map(table.rows({ selected:true }).data(),function(item){
-                            return item[7];
+                            return item[2];
                         });
                         if(id != ""){
                             $('#modalstatus').modal({show:true});
-                            if(status !="Ya"){
-                                $('#judulterbit').text('Terbitkan artikel "' + judul + '"" ini?');
+                            if(status != "1"){
+                                $('#judulterbit').text('Terbitkan artikel "' + judul + '" ini?');
                             }else{
                                 $('#judulterbit').text('Tidak menerbitkan artikel "' + judul + '"" ini?');
                             }
@@ -381,14 +397,14 @@ $imagepath = 'images_artikel/';
                             return item[1];
                         });
                         var judul = $.map(table.rows({ selected:true }).data(),function(item){
-                            return item[2];
+                            return item[5];
                         });
                         var status = $.map(table.rows({ selected:true }).data(),function(item){
-                            return item[8];
+                            return item[3];
                         });
                         if(id != ""){
                             $('#modalpilihan').modal({show:true});
-                            if(status !="Ya"){
+                            if(status !="1"){
                                 $('#judulpilihan').text('Jadikan artikel "' + judul + '"" sebagai artikel pilihan?');
                             }else{
                                 $('#judulpilihan').text('Tidak Jadikan artikel "' + judul + '"" sebagai artikel pilihan?');

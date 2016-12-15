@@ -53,16 +53,25 @@ $imagepath = "images_staf/";
                     </div>
                     @if(Auth::user()->getCU() == '0')
                         <div class="col-sm-4" style="padding: .2em ;">
-                            <?php $culists = App\Models\Cuprimer::orderBy('name','asc')->get(); ?>
+                            <?php 
+                                $culists = App\Models\Cuprimer::orderBy('name','asc')->where('status','=','1')->get();
+                                $culists_non = App\Models\Cuprimer::orderBy('name','asc')->where('status','=','0')->get();
+                            ?>
                             <div class="input-group tabletools">
                                 <div class="input-group-addon primary-color"><i class="fa fa-users"></i> Staf CU</div>
                                 <select class="form-control"  id="dynamic_select">
                                     <option {{ Request::is('admins/staf/') ? 'selected' : '' }}
                                             value="/admins/staf/"><b>PUSKOPDIT BKCU Kalimantan</b></option>
+                                    <option disabled>-------CU Aktif-------</option>       
                                     @foreach($culists as $culist)
                                         <option {{ Request::is('admins/staf/index_cu/'.$culist->no_ba) ? 'selected' : '' }}
                                                 value="/admins/staf/index_cu/{{$culist->no_ba}}"><b>{{ $culist->name }}</b></option>
                                     @endforeach
+                                    <option disabled>-------CU Non-Aktif-------</option>
+                                    @foreach($culists_non as $culist)
+                                        <option {{ Request::is('admins/staf/index_cu/'.$culist->no_ba) ? 'selected' : '' }}
+                                                value="/admins/staf/index_cu/{{$culist->no_ba}}"><b>{{ $culist->name }}</b></option>
+                                    @endforeach   
                                 </select>
                             </div>
                         </div>

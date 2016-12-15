@@ -34,6 +34,7 @@ $imagepath = "images_cu/";
         <ul class="nav nav-tabs">
             @permission('view.'.$kelas.'_view')
                 <li class="active"><a href="#tab_cuprimer" data-toggle="tab">CU</a></li>
+                <li><a href="#tab_cuprimer_non" data-toggle="tab">CU (Non-aktif)</a></li>
             @endpermission
             @permission('view.'.$kelas2.'_view')
                 <li><a href="#tab_wilayahcuprimer" data-toggle="tab">Wilayah CU</a></li>
@@ -50,6 +51,7 @@ $imagepath = "images_cu/";
                         <thead class="bg-light-blue-active color-palette">
                         <tr>
                             <th data-sortable="false">#</th>
+                            <th hidden></th>
                             <th hidden></th>
                             <th hidden></th>
                             <th data-sortable="false">Foto</th>
@@ -90,6 +92,90 @@ $imagepath = "images_cu/";
                                 <td class="bg-aqua disabled color-palette"></td>
                                 <td hidden>{{ $data->id }}</td>
                                 <td hidden>{{ $data->no_ba }}</td>
+                                <td hidden=>{{ $data->status }}</td>
+                                @if(!empty($data->gambar) && is_file($imagepath.$data->gambar."n.jpg"))
+                                    <th><img class="img-responsive"  width="50px" src="{{ asset($imagepath.$data->gambar.'n.jpg') }}"
+                                             id="tampilgambar" alt="{{ asset($imagepath.$data->gambar."jpg") }}"></th>
+                                @elseif(!empty($data->gambar) && is_file($imagepath.$data->gambar))
+                                    <th><img class="img-responsive" width="50px" src="{{ asset($imagepath.$data->gambar) }}"
+                                             id="tampilgambar" alt="{{ asset($imagepath.$data->gambar) }}"></th>
+                                @else
+                                    <th><img class="img-responsive" width="50px" src="{{ asset('images/image-cu.jpg') }}"
+                                         id="tampilgambar" alt="cu profile"></th>
+                                @endif  
+                                <td>{{ $data->name }}</td>
+                                <td>{{ $data->no_ba }}</td>
+                                <td>{{ $data->wilayahcuprimer->name }}</td>
+                                <td>{{ $do }}</td>
+                                <td data-order="{{ $data->ultah }}">{{ $date->format('d/m/Y') }}</td>
+                                <td data-order="{{ $data->bergabung }}">{{ $date2->format('d/m/Y') }}</td>
+                                <td>{{ $data->tp }}</td>
+                                <td>{{ $data->staf }}</td>
+                                <td>{{ $data->app }}</td>
+                                <td>{{ $data->badan_hukum }}</td>
+                                <td>{{ $data->telp }}</td>
+                                <td>{{ $data->hp }}</td>
+                                <td>{{ $data->pos }}</td>
+                                <td>{{ $data->email }}</td>
+                                <td>{{ $data->alamat }}</td>
+                                <td><a href="http://{{$data->website}}" class="facebook" target="_blank"> {{ $data->website }} </a></td>
+                            </tr>
+                        @endforeach
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tab-pane " id="tab_cuprimer_non">
+                    <div class="input-group tabletools">
+                        <div class="input-group-addon"><i class="fa fa-search"></i></div>
+                        <input type="text" id="searchtext_non" class="form-control" placeholder="Kata kunci pencarian..." autofocus>
+                    </div>
+                    <table class="table table-hover order-column" id="dataTables_non" width="100%">
+                        <thead class="bg-light-blue-active color-palette">
+                        <tr>
+                            <th data-sortable="false">#</th>
+                            <th hidden></th>
+                            <th hidden></th>
+                            <th hidden></th>
+                            <th data-sortable="false">Foto</th>
+                            <th>Nama </th>
+                            <th>No. BA</th>
+                            <th>Wilayah</th>
+                            <th>District Office</th>
+                            <th>Tanggal Berdiri</th>
+                            <th>Tanggal Bergtabung</th>
+                            <th>TP</th>
+                            <th>Staf</th>
+                            <th>Aplikasi</th>
+                            <th>Badan Hukum</th>
+                            <th>Telepon</th>
+                            <th>Handphone</th>
+                            <th>Kode Pos</th>
+                            <th>Email</th>
+                            <th>Alamat</th>
+                            <th>Website</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($datas_non as $data)
+                            <?php 
+                                $date = new Date($data->ultah); 
+                                $date2 = new Date($data->bergabung);
+                                if($data->do == "1"){
+                                    $do ="Barat";
+                                }else if($data->do == "2"){
+                                    $do ="Tengah";
+                                }else if($data->do == "3"){
+                                    $do ="Timur";
+                                }else{
+                                    $do ='-';
+                                }
+                            ?>
+                            <tr>
+                                <td class="bg-aqua disabled color-palette"></td>
+                                <td hidden>{{ $data->id }}</td>
+                                <td hidden>{{ $data->no_ba }}</td>
+                                <td hidden=>{{ $data->status }}</td>
                                 @if(!empty($data->gambar) && is_file($imagepath.$data->gambar."n.jpg"))
                                     <th><img class="img-responsive"  width="50px" src="{{ asset($imagepath.$data->gambar.'n.jpg') }}"
                                              id="tampilgambar" alt="{{ asset($imagepath.$data->gambar."jpg") }}"></th>
@@ -237,6 +323,26 @@ $imagepath = "images_cu/";
     </div><!-- /.modal-dialog -->
     {{ Form::close() }}
 </div>
+<div class="modal fade" id="modalstatus" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    {{ Form::model($datas, array('route' => array('admins.'.$kelas.'.update_status'))) }}
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-light-blue-active color-palette">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title"><i class="fa fa-check-square"></i> Ubah Status</h4>
+            </div>
+            <div class="modal-body">
+                <input type="text" name="id" value="" id="modalstatus_id" hidden>
+                <h4 id="judul"></h4>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-warning" id="modalbutton"><i class="fa fa-check"></i> Ya</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Batal</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+    {{ Form::close() }}
+</div>
 @endpermission
 {{-- /modal --}}
 </section>
@@ -292,7 +398,7 @@ $imagepath = "images_cu/";
                     },
                     action: function(){
                         var id = $.map(table.rows({ selected: true }).data(),function(item){
-                            return item[1];
+                            return item[2];
                         });
                         var kelas = "{{ $kelas }}";
                         if(id != ""){
@@ -303,22 +409,35 @@ $imagepath = "images_cu/";
                     }
                 },
                 @endpermission
-                @permission('destroy.'.$kelas.'_destroy')
+            ]
+        });
+        table.buttons( 0, null ).container().prependTo(
+                table.table().container()
+        );
+        new $.fn.dataTable.Buttons(table,{
+            buttons: [
+                @permission('update.'.$kelas.'_update')
                 {
-                    text: '<i class="fa fa-trash"></i> <u>H</u>apus',
+                    text: '<i class="fa fa-ban"></i> Non-aktif',
                     key: {
                         altKey: true,
-                        key: 'h'
+                        key: 'u'
                     },
                     action: function(){
-                        var id = $.map(table.rows({ selected:true }).data(),function(item){
+                        var id = $.map(table.rows({ selected: true }).data(),function(item){
                             return item[1];
                         });
+                        var aktif = $.map(table.rows({ selected: true }).data(),function(item){
+                            return item[3];
+                        });
                         if(id != ""){
-                            $('#modalhapus').modal({show:true});
-                            $('#modalhapus_judul').text('Hapus Data CU');
-                            $('#modalhapus_detail').text('Hapus Data CU');
-                            $('#hapus-id').attr('value',id);
+                            $('#modalstatus').modal({show:true});
+                            if(aktif == "0"){
+                                $('#judul').text('Aktifkan CU ini?');
+                            }else{
+                                $('#judul').text('Non-aktifkan CU ini?');
+                            }
+                            $('#modalstatus_id').attr('value',id);
                         }else{
                             $('#modalwarning').modal({show:true});
                         }
@@ -415,6 +534,239 @@ $imagepath = "images_cu/";
         });
         table.buttons( 0, null ).container().prependTo(
                 table.table().container()
+        );
+    </script>
+    <script>
+        var table_non = $('#dataTables_non').DataTable({
+            dom: 'Bti',
+            select: true,
+            scrollY: '70vh',
+            scrollX: true,
+            autoWidth: true,
+            scrollCollapse : true,
+            paging : false,
+            stateSave : false,
+            order : [],
+            buttons: [],
+            language: {
+                buttons : {},
+                select:{
+                    rows:{
+                        _: "",
+                        0: "",
+                        1: ""
+                    }
+                },
+                "sProcessing":   "Sedang proses...",
+                "sLengthMenu":   "Tampilan _MENU_ entri",
+                "sZeroRecords":  "Tidak ditemukan data yang sesuai",
+                "sInfo":         "Tampilan _START_ sampai _END_ dari _TOTAL_ entri",
+                "sInfoEmpty":    "Tampilan 0 hingga 0 dari 0 entri",
+                "sInfoFiltered": "(disaring dari _MAX_ entri keseluruhan)",
+                "sInfoPostFix":  "",
+            },
+            fnInitComplete:function(){
+                $('.dataTables_scrollBody').perfectScrollbar();
+            },
+            fnDrawCallback: function( oSettings ) {
+                $('.dataTables_scrollBody').perfectScrollbar('destroy').perfectScrollbar();
+            }
+        });
+
+        table_non.on( 'order.dt search.dt', function () {
+            table_non.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+                cell.innerHTML = i+1;
+            } );
+        } ).draw();
+
+        $('#searchtext_non').keyup(function(){
+            table_non.search($(this).val()).draw() ;
+        });
+
+        new $.fn.dataTable.Buttons(table_non,{
+            buttons: [
+                {
+                    extend:'colvis',
+                    text: '<i class="fa fa-table"></i>'
+                },
+                {
+                    extend:'colvisRestore',
+                    text: 'Semua'
+                }
+            ]
+        });
+        table_non.buttons( 0, null ).container().prependTo(
+                table_non.table().container()
+        );
+        new $.fn.dataTable.Buttons(table_non,{
+            buttons: [
+                @permission('update.'.$kelas.'_update')
+                {
+                    text: '<i class="fa fa-pencil"></i> <u>U</u>bah',
+                    key: {
+                        altKey: true,
+                        key: 'u'
+                    },
+                    action: function(){
+                        var id = $.map(table_non.rows({ selected: true }).data(),function(item){
+                            return item[2];
+                        });
+                        var kelas = "{{ $kelas }}";
+                        if(id != ""){
+                            window.location.href =  kelas + "/" + id + "/edit";
+                        }else{
+                            $('#modalwarning').modal({show:true});
+                        }
+                    }
+                },
+                @endpermission
+                @permission('destroy.'.$kelas.'_destroy')
+                {
+                    text: '<i class="fa fa-trash"></i> <u>H</u>apus',
+                    key: {
+                        altKey: true,
+                        key: 'h'
+                    },
+                    action: function(){
+                        var id = $.map(table_non.rows({ selected:true }).data(),function(item){
+                            return item[1];
+                        });
+                        if(id != ""){
+                            $('#modalhapus').modal({show:true});
+                            $('#modalhapus_judul').text('Hapus Data CU');
+                            $('#modalhapus_detail').text('Hapus Data CU');
+                            $('#hapus-id').attr('value',id);
+                        }else{
+                            $('#modalwarning').modal({show:true});
+                        }
+                    }
+                },
+                @endpermission
+            ]
+        });
+        table_non.buttons( 0, null ).container().prependTo(
+                table_non.table().container()
+        );
+        new $.fn.dataTable.Buttons(table_non,{
+            buttons: [
+                @permission('update.'.$kelas.'_update')
+                {
+                    text: '<i class="fa fa-check"></i> Aktifkan',
+                    key: {
+                        altKey: true,
+                        key: 'u'
+                    },
+                    action: function(){
+                        var id = $.map(table_non.rows({ selected: true }).data(),function(item){
+                            return item[1];
+                        });
+                        var aktif = $.map(table_non.rows({ selected: true }).data(),function(item){
+                            return item[3];
+                        });
+                        if(id != ""){
+                            $('#modalstatus').modal({show:true});
+                            if(aktif == "0"){
+                                $('#judul').text('Aktifkan CU ini?');
+                            }else{
+                                $('#judul').text('Non-aktifkan CU ini?');
+                            }
+                            $('#modalstatus_id').attr('value',id);
+                        }else{
+                            $('#modalwarning').modal({show:true});
+                        }
+                    }
+                },
+                @endpermission
+            ]
+        });
+        table_non.buttons( 0, null ).container().prependTo(
+                table_non.table().container()
+        );
+        new $.fn.dataTable.Buttons(table_non,{
+            buttons: [
+                {
+                    text: '<i class="fa fa-building"></i> Profil',
+                    action: function(){
+                        var id = $.map(table_non.rows({ selected: true }).data(),function(item){
+                            return item[2];
+                        });
+                        var kelas = "{{ $kelas }}";
+                        if(id != ""){
+                            window.location.href =  kelas + "/detail/" + id;
+                        }else{
+                            $('#modalwarning').modal({show:true});
+                        }
+                    }
+                },
+                {
+                    text: '<i class="fa fa-home"></i> TP',
+                    action: function(){
+                        var id = $.map(table_non.rows({ selected: true }).data(),function(item){
+                            return item[2];
+                        });
+                        if(id != ""){
+                            window.location.href =  "/admins/tpcu/index_cu/" + id;
+                        }else{
+                            $('#modalwarning').modal({show:true});
+                        }
+                    }
+                },
+                @permission('view.laporancu_view')
+                {
+                    text: '<i class="fa fa-line-chart"></i> Laporan',
+                    action: function(){
+                        var id = $.map(table_non.rows({ selected: true }).data(),function(item){
+                            return item[2];
+                        });
+                        if(id != ""){
+                            window.location.href =  "/admins/laporancu/index_cu/" + id;
+                        }else{
+                            $('#modalwarning').modal({show:true});
+                        }
+                    }
+                },
+                @endpermission
+                @permission('view.staf_view')
+                {
+                    text: '<i class="fa fa-sitemap"></i> Staf',
+                    action: function(){
+                        var id = $.map(table_non.rows({ selected: true }).data(),function(item){
+                            return item[2];
+                        });
+                        if(id != ""){
+                            window.location.href =  "/admins/staf/index_cu/" + id;
+                        }else{
+                            $('#modalwarning').modal({show:true});
+                        }
+                    }
+                }
+                @endpermission
+            ]
+        });
+        table_non.buttons( 0, null ).container().prependTo(
+                table_non.table().container()
+        );
+        new $.fn.dataTable.Buttons(table_non,{
+            buttons: [
+                {
+                    extend:'excelHtml5',
+                    text: '<i class="fa fa-file-excel-o"></i> Excel',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                },
+                {
+                    extend:'print',
+                    text: '<i class="fa fa-print"></i> Print',
+                    exportOptions: {
+                        stripHtml: false,
+                        columns: ':visible'
+                    }
+                }
+            ]
+        });
+        table_non.buttons( 0, null ).container().prependTo(
+                table_non.table().container()
         );
     </script>
     @endpermission

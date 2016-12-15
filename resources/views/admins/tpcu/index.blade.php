@@ -47,14 +47,22 @@ $imagepath = 'images_tpcu/';
                     </div>
                     @if(Auth::user()->getCU() == '0')
                     <div class="col-sm-4" style="padding: .2em ;">
-                        <?php $culists = App\Models\Cuprimer::orderBy('name','asc')->get(); ?>
+                        <?php 
+                            $culists = App\Models\Cuprimer::orderBy('name','asc')->where('status','=','1')->get();
+                            $culists_non = App\Models\Cuprimer::orderBy('name','asc')->where('status','=','0')->get();
+                        ?>
                         <div class="input-group tabletools">
                             <div class="input-group-addon primary-color"><i class="fa fa-building"></i> TP CU</div>
                             <select class="form-control" id="dynamic_select">
                                 <option {{ Request::is('admins/tpcu') ? 'selected' : '' }}
                                         value="/admins/tpcu">SEMUA CU</option>
-                                <option disabled>--------------</option>         
+                                <option disabled>-------CU Aktif-------</option>        
                                 @foreach($culists as $culist)
+                                    <option {{ Request::is('admins/tpcu/index_cu/'.$culist->no_ba) ? 'selected' : '' }}
+                                            value="/admins/tpcu/index_cu/{{$culist->no_ba}}">{{ $culist->name }}</option>
+                                @endforeach
+                                <option disabled>-------CU Non-Aktif-------</option>        
+                                @foreach($culists_non as $culist)
                                     <option {{ Request::is('admins/tpcu/index_cu/'.$culist->no_ba) ? 'selected' : '' }}
                                             value="/admins/tpcu/index_cu/{{$culist->no_ba}}">{{ $culist->name }}</option>
                                 @endforeach

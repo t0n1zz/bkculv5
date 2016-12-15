@@ -287,7 +287,6 @@ $kelas = "admin";
                             }else{
                                 $('#judul').text('Non-aktifkan admin ini?');
                             }
-                            console.log(status)
                             $('#modalstatus_id').attr('value',id);
                         }else{
                             $('#modalwarning').modal({show:true});

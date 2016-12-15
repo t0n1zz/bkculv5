@@ -4,6 +4,9 @@ $data = App\Models\LaporanCu::orderBy('periode','ASC')->groupBy('periode')->get(
 $periodeiode = $data->groupBy('periode');
 $cu = Auth::user()->getCU();
 $iduser = Auth::user()->getId();
+$date = Date::now()->format('d-m');
+$query = "SELECT  id,name FROM cuprimer WHERE DATE_FORMAT(ultah, '%d-%m') = '$date' ";
+$ultahcu = DB::select(DB::raw($query));
 
 if(Auth::user()->can('view.laporancu_view') && $cu == '0'){
     $periodeiode1 = collect([]);
@@ -124,6 +127,18 @@ if(Auth::user()->can('view.laporancu_view') && $cu != '0'){
     <!-- Alert -->
     @include('admins._layouts.alert')
     <!-- Alert -->
+    <!-- birthday -->
+    @if(!empty($ultahcu))
+        <div class="alert alert-info alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <h4><i class="icon fa fa-birthday-cake"></i> Selamat ulang tahun kepada
+                @foreach($ultahcu as $ultah)
+                    {{ 'CU ' . $ultah->name}}
+                @endforeach
+            </h4>
+        </div>
+    @endif
+    <!-- birthday -->
     <!-- Small boxes (Stat box) -->
     <div class="row">
         <!-- pengumuman -->
@@ -198,7 +213,7 @@ if(Auth::user()->can('view.laporancu_view') && $cu != '0'){
                 <div class="small-box bg-yellow">
                     <?php 
                       if($cu == '0'){
-                        $total_cuprimer = App\Models\Cuprimer::count();
+                        $total_cuprimer = App\Models\Cuprimer::where('status','1')->count();
                         $route = route('admins.cuprimer.index');
                       }else{
                         $route = route('admins.cuprimer.detail',array($cu));

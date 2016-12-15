@@ -7,6 +7,7 @@ use Redirect;
 use DB;
 use Jenssegers\Date\Date;
 use Response;
+
 use App\Models\Artikel;
 use App\Models\KategoriArtikel;
 use App\Models\Cuprimer;
@@ -185,6 +186,7 @@ class PublicController extends Controller{
                     ->orderBy('name','asc')
                     ->get();
 
+
         return view('cuprimer',compact('jejarings'));
     }
 
@@ -194,6 +196,8 @@ class PublicController extends Controller{
                             ->first();
 
         $stafs = Staf::where('cu','=',$id)->get();
+
+
 
         return view('cuprimer_detail',compact('cudetail','stafs'));
     }

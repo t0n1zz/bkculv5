@@ -43,7 +43,7 @@ $kelas = "kegiatan";
                     </div>
                 </div>
                 @if(Auth::user()->getCU() == '0')
-                <div class="col-sm-3" style="padding: .2em ;">
+                <div class="col-sm-4" style="padding: .2em ;">
                     <?php
                         $data = App\Models\Kegiatan::orderBy('tanggal','DESC')->groupBy('tanggal')->get(['tanggal']);
                         $dataperiode = $data->groupBy('tanggal');
@@ -70,6 +70,7 @@ $kelas = "kegiatan";
                     <tr>
                         <th data-sortable="false">#</th>
                         <th hidden></th>
+                        <th hidden></th>
                         <th>Nama </th>
                         <th>Wilayah</th>
                         <th>Tempat</th>
@@ -85,6 +86,7 @@ $kelas = "kegiatan";
                         <tr>
                             <td class="bg-aqua disabled color-palette"></td>
                             <td hidden>{{ $data->id }}</td>
+                            <td hidden>{{ $data->status }}</td>
                             @if(!empty($data->name))
                                 <td class="warptext">{{ $data->name }}</td>
                             @else
@@ -133,12 +135,13 @@ $kelas = "kegiatan";
                                 ?>
                                 {{ $numberDays }} Hari
                             </td>
-
-                            @if($data->status == "0")
-                                <td>Belum</td>
-                            @else
-                                <td>Sudah</td>
-                            @endif
+                            <td>
+                                @if($data->status == "0")
+                                    <a href="#" class="btn btn-warning"><i class="fa fa-check"></i></a>
+                                @else
+                                    <a href="#" class="btn btn-default"><i class="fa fa-ban"></i></a>
+                                @endif
+                            </tr>
                         </tr>
                     @endforeach
                     </tbody>
