@@ -358,6 +358,24 @@ class LaporanCuController extends Controller{
         return $dos;    
     }
 
+    public function detail($id)
+    {
+        try{
+            $data = LaporanCu::find($id);
+            $datas2 = Cuprimer::orderBy('name','asc')->get();
+
+            $cu = Auth::user()->getCU();
+            if($cu > 0){
+                if($cu != $data->no_ba)
+                    return Redirect::back();
+            }
+
+            return view('admins.'.$this->kelaspath.'.detail', compact('data','datas2'));
+        }catch (Exception $e){
+            return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
+        }
+    }
+
     /**
      * Show the form for creating a new artikel
      *

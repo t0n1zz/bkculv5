@@ -239,6 +239,11 @@ Route::group(array('prefix' => 'admins','middleware' => 'auth'), function(){
         'uses'         => 'LaporanCuController@index_cu',
         'middleware'   => ['auth', 'acl'],
         'can'          => 'view.laporancu_view']);
+    Route::get('laporancu/detail/{id}', [
+        'as'           => 'admins.laporancu.detail',
+        'uses'         => 'LaporanCuController@detail',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'view.laporancu_view']);
 //tp CU
     Route::get('tpcu', [
         'as'           => 'admins.tpcu.index',           

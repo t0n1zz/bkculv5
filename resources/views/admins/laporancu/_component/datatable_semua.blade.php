@@ -161,6 +161,15 @@
                 }
             },
             @endpermission
+        ]
+    });
+    table.buttons( 0, null ).container().prependTo(
+            table.table().container()
+    );
+
+
+    new $.fn.dataTable.Buttons(table,{
+        buttons: [
             @permission('upload.laporancu_upload')
             {
                 text: '<i class="fa fa-upload fa-fw"></i> Upload Excel',
@@ -186,11 +195,11 @@
                 text: '<i class="fa fa-database"></i> Detail',
                 action: function(){
                     var id = $.map(table.rows({ selected: true }).data(),function(item){
-                        return item[2];
+                        return item[1];
                     });
                     var kelas = "{{ $kelas }}";
                     if(id != ""){
-                        window.location.href = "/admins/" + kelas + "/index_cu/" + id ;
+                        window.location.href = "/admins/" + kelas + "/detail/" + id ;
                     }
                 }
             }
