@@ -22,7 +22,7 @@ class UserController extends controller{
     public function index()
     {
         try{
-            $datas = User::where('id', '!=','1')->get();
+            $datas = User::where('id', '!=','0')->get();
 
             // dd($datas);
 

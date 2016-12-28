@@ -52,7 +52,7 @@
             </div>
             <div class="item">
                <div class="">
-                   {{ Html::image('images/puasa.jpg', 'Selamat Menunaikan Ibadah Puasa', array(
+                   {{ Html::image('images/natal.jpg', 'Selamat Menunaikan Ibadah Puasa', array(
                   'class' => 'img-responsive')) }}
                </div>
                <div class="slider-content">

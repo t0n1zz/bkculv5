@@ -11,8 +11,36 @@
         scrollCollapse : true,
         paging : false,
         stateSave : false,
-        order : [],
-        buttons: [],
+        order : [[ 8, 'desc']],
+        buttons: [
+            {
+                extend:'colvis',
+                columns: ':not(:contains(#))',
+                text: '<i class="fa fa-table"></i>'
+            },
+            {
+                extend:'colvisGroup',
+                text: 'Semua',
+                show: ':hidden'
+            },
+            {
+                extend: 'colvisGroup',
+                text: ' Anggota',
+                show: [ 0,1,2,3,4,8,9,10,11,12,13 ],
+                hide: [ 5,6,7,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32 ]
+            },
+            {
+                extend: 'colvisGroup',
+                text: 'SHU',
+                show: [ 0,1,2,3,7,13,27,28,29 ],
+                hide: [ 4,5,6,8,9,10,11,12,14,15,16,17,18,19,20,21,22,23,24,25,26,30,31 ]
+            },
+            {
+                extend: 'colvisGroup',
+                text: 'Piutang',
+                show: [ 0,1,2,3,7,19,20,21,22,23,24 ],
+                hide: [ 4,5,6,8,9,10,11,12,13,14,15,16,17,18,25,26,27,28,29,30,31 ]
+            }],
         language: {
             buttons : {},
             select:{
@@ -29,12 +57,6 @@
             "sInfoEmpty":    "Tampilan 0 hingga 0 dari 0 entri",
             "sInfoFiltered": "(disaring dari _MAX_ entri keseluruhan)",
             "sInfoPostFix":  "",
-        },
-        fnInitComplete:function(){
-            $('.dataTables_scrollBody').perfectScrollbar();
-        },
-        fnDrawCallback: function( oSettings ) {
-            $('.dataTables_scrollBody').perfectScrollbar('destroy').perfectScrollbar();
         }
     });
 
@@ -47,63 +69,6 @@
             cell.innerHTML = i+1;
         } );
     } ).draw();
-
-    new $.fn.dataTable.Buttons(table,{
-        buttons: [
-            {
-                extend:'colvis',
-                columns: ':not(:contains(#))',
-                text: '<i class="fa fa-table"></i>'
-            },
-            {
-                extend:'colvisGroup',
-                text: 'Semua',
-                show: ':hidden'
-            },
-            @if(!Request::is('admins/laporancu/index_cu/*'))
-                {
-                    extend: 'colvisGroup',
-                    text: ' Anggota',
-                    show: [ 0,1,2,3,7,8,9,10,11,12 ],
-                    hide: [ 4,5,6,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31 ]
-                },
-                {
-                    extend: 'colvisGroup',
-                    text: 'SHU',
-                    show: [ 0,1,2,3,7,13,27,28,29 ],
-                    hide: [ 4,5,6,8,9,10,11,12,14,15,16,17,18,19,20,21,22,23,24,25,26,30,31 ]
-                },
-                {
-                    extend: 'colvisGroup',
-                    text: 'Piutang',
-                    show: [ 0,1,2,3,7,19,20,21,22,23,24 ],
-                    hide: [ 4,5,6,8,9,10,11,12,13,14,15,16,17,18,25,26,27,28,29,30,31 ]
-                },
-            @else
-                {
-                    extend: 'colvisGroup',
-                    text: 'Anggota',
-                    show: [ 0,1,2,3,4,5,6,7 ],
-                    hide: [ 8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26]
-                },
-                {
-                    extend: 'colvisGroup',
-                    text: 'SHU',
-                    show: [ 0,1,2,8,22,23,24 ],
-                    hide: [ 3,4,5,6,7,9,10,11,12,13,14,15,16,17,18,19,21,25,26 ]
-                },
-                {
-                    extend: 'colvisGroup',
-                    text: 'Piutang',
-                    show: [ 0,1,2,14,15,16,17,18,19 ],
-                    hide: [ 3,4,5,6,7,8,9,10,11,12,13,20,21,22,23,24,25,26 ]
-                },
-            @endif
-        ]
-    });
-    table.buttons( 0, null ).container().prependTo(
-            table.table().container()
-    );
 
     new $.fn.dataTable.Buttons(table,{
         buttons: [

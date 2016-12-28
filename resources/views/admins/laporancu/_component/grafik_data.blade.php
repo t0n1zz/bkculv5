@@ -12,6 +12,7 @@
     var data_l_lbiasa = {
         labels: {!! json_encode($gperiode,JSON_NUMERIC_CHECK) !!},
         datasets: [
+            ,
             {
                 label: "Anggota Lelaki Luar Biasa",
                 data: {!! json_encode($gl_lbiasa,JSON_NUMERIC_CHECK) !!},

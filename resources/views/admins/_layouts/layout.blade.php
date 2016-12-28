@@ -26,8 +26,6 @@
     <link rel="stylesheet" type="text/css" href="{{asset('admin/skin-blue.css')}}" >
     <!-- pace -->
     <link rel="stylesheet" type="text/css" href="{{asset('plugins/pace/pace.css')}}" >
-    <!-- perfect scroll -->
-    <link rel="stylesheet" type="text/css" href="{{asset('plugins/perfect-scrollbar/css/perfect-scrollbar.min.css')}}" >
     <!-- Custom Fonts -->
     <link rel="stylesheet" type="text/css" href="{{asset('plugins/font-awesome/css/font-awesome.min.css')}}" >
     @yield('css')
@@ -180,10 +178,6 @@
 <script type="text/javascript" src="{{ URL::asset('plugins/bootstrap/js/bootstrap.min.js') }}"></script>
 <!-- fastclick for touch browser -->
 <script type="text/javascript" src="{{ URL::asset('plugins/fastclick/fastclick.min.js') }}"></script>
-<!-- perfect scroll -->
-<script type="text/javascript" src="{{ URL::asset('plugins/perfect-scrollbar/js/perfect-scrollbar.jquery.min.js') }}"></script>
-<!-- nice scroll -->
-<script type="text/javascript" src="{{ URL::asset('plugins/nicescroll/jquery.nicescroll.min.js') }}"></script>
 <!-- pace -->
 <script type="text/javascript" src="{{ URL::asset('plugins/pace/pace.min.js') }}"></script>
 <!-- APP -->

@@ -99,22 +99,21 @@
     {{-- table --}}
     <div class="nav-tabs-custom">
         <ul class="nav nav-tabs">
-            @if(!Request::is('admins/laporancu/index_bkcu')) 
-                <li class="active"><a href="#tab_cu" data-toggle="tab">Perkembangan</a></li>
-            @endif
             @if(Request::is('admins/laporancu') || Request::is('admins/laporancu/index_periode/*'))
-                <li><a href="#tab_provinsi" data-toggle="tab">Perkembangan (Provinsi)</a></li>
-                <li><a href="#tab_do" data-toggle="tab">Perkembangan (District Office)</a></li>
+                <li class="active"><a href="#tab_cu" data-toggle="tab">Tabel Perkembangan</a></li>
+                <li><a href="#tab_provinsi" data-toggle="tab">Tabel Perkembangan (Provinsi)</a></li>
+                <li><a href="#tab_do" data-toggle="tab">Tabel Perkembangan (District Office)</a></li>
+            @elseif(Request::is('admins/laporancu/index_cu*') || Request::is('admins/laporancu/index_bkcu')) 
+                <li class="active"><a href="#tab_konsolidasi" data-toggle="tab">Tabel Perkembangan</a></li>
+                <li><a href="#tab_pertumbuhan" data-toggle="tab">Tabel Pertumbuhan</a></li> 
             @endif
+
             @if(!Request::is('admins/laporancu/index_bkcu')) 
-                <li><a href="#tab_pearls" data-toggle="tab">P.E.A.R.L.S</a></li>
-            @endif
-            @if(Request::is('admins/laporancu/index_bkcu')) 
-                <li class="active"><a href="#tab_konsolidasi" data-toggle="tab">{{ $title }}</a></li>
+                <li><a href="#tab_pearls" data-toggle="tab">Tabel P.E.A.R.L.S</a></li>
             @endif
         </ul>
-        <div class="tab-content"> 
-            @if(!Request::is('admins/laporancu/index_bkcu'))  
+        <div class="tab-content">          
+            @if(Request::is('admins/laporancu') || Request::is('admins/laporancu/index_periode/*'))  
                 <div class="tab-pane active" id="tab_cu">
                     <div class="input-group tabletools">
                         <div class="input-group-addon"><i class="fa fa-search"></i></div>
@@ -125,13 +124,12 @@
                             <tr>
                                 <th rowspan="2" data-sortable="false" >#</th>
                                 <th rowspan="2" hidden></th>
-                                @if(!Request::is('admins/laporancu/index_cu/*'))
-                                    <th rowspan="2" hidden></th>
-                                    <th rowspan="2">Credit Union</th>
-                                    <th rowspan="2">No.Ba</th>
-                                    <th rowspan="2">District Office</th>
-                                    <th rowspan="2">Wilayah</th>
-                                @endif
+                                <th rowspan="2" hidden></th>
+                                <th rowspan="2" hidden></th>
+                                <th rowspan="2">Credit Union</th>
+                                <th rowspan="2">No.Ba</th>
+                                <th rowspan="2">District Office</th>
+                                <th rowspan="2">Wilayah</th>
                                 <th rowspan="2">Periode Laporan</th>
                                 <th colspan="5" class="text-center">Anggota</th>
                                 <th rowspan="2">ASET</th>
@@ -195,28 +193,25 @@
                                 ?>
                             @foreach($datas as $data)
                                 <?php
-                                    if(!Request::is('admins/laporancu/index_cu/*')){
-                                        if(!empty($data->cuprimer)){
-                                            if($data->cuprimer->do == "1"){
-                                                $do ="Barat";
-                                            }else if($data->cuprimer->do == "2"){
-                                                $do ="Tengah";
-                                            }else if($data->cuprimer->do == "3"){
-                                                $do ="Timur";
-                                            }else{
-                                                $do ='-';
-                                            }
-                                            foreach($wilayahcuprimers as $wilayahcuprimer){
-                                                if($data->cuprimer->wilayah == $wilayahcuprimer->id){
-                                                    $wilayah =$wilayahcuprimer->name;
-                                                }
-                                            }
+                                    if(!empty($data->cuprimer)){
+                                        if($data->cuprimer->do == "1"){
+                                            $do ="Barat";
+                                        }else if($data->cuprimer->do == "2"){
+                                            $do ="Tengah";
+                                        }else if($data->cuprimer->do == "3"){
+                                            $do ="Timur";
                                         }else{
-                                            $do = '-';
-                                            $wilayah = '-';
+                                            $do ='-';
                                         }
+                                        foreach($wilayahcuprimers as $wilayahcuprimer){
+                                            if($data->cuprimer->wilayah == $wilayahcuprimer->id){
+                                                $wilayah =$wilayahcuprimer->name;
+                                            }
+                                        }
+                                    }else{
+                                        $do = '-';
+                                        $wilayah = '-';
                                     }
-
                                     
                                     $date = new Date($data->periode);
                                     $periode = $date->format('F Y');
@@ -225,177 +220,167 @@
                                     $total = $data->l_biasa + $data->l_lbiasa + $data->p_biasa + $data->p_lbiasa;
                                     $piutangbersih = $data->piutangberedar - ($data->piutanglalai_1bulan + $data->piutanglalai_12bulan);
 
-                                    if(!Request::is('admins/laporancu/index_cu/*')) {
-                                        $tot_cu++;
-                                        $tot_l_biasa += $data->l_biasa;
-                                        $tot_l_lbiasa += $data->l_lbiasa;
-                                        $tot_p_biasa += $data->p_biasa;
-                                        $tot_p_lbiasa += $data->p_lbiasa;
-                                        $tot_anggota += $total;
-                                        $tot_aset += $data->aset;
-                                        $tot_aktivalancar += $data->aktivalancar;
-                                        $tot_simpanansaham += $data->simpanansaham;
-                                        $tot_nonsaham_unggulan += $data->nonsaham_unggulan;
-                                        $tot_nonsaham_harian += $data->nonsaham_harian;
-                                        $tot_hutangspd += $data->hutangspd;
-                                        $tot_piutangberedar += $data->piutangberedar;
-                                        $tot_piutangbersih += $piutangbersih;
-                                        $tot_piutanglalai_1bulan += $data->piutanglalai_1bulan;
-                                        $tot_piutanglalai_12bulan += $data->piutanglalai_12bulan;
-                                        $tot_beredar += $rasio_beredar;
-                                        $tot_lalai += $rasio_lalai;
-                                        $tot_dcr += $data->dcr;
-                                        $tot_dcu += $data->dcu;
-                                        $tot_totalpendapatan += $data->totalpendapatan;
-                                        $tot_totalbiaya += $data->totalbiaya;
-                                        $tot_shu += $data->shu;
-                                    }
+                                    $tot_cu++;
+                                    $tot_l_biasa += $data->l_biasa;
+                                    $tot_l_lbiasa += $data->l_lbiasa;
+                                    $tot_p_biasa += $data->p_biasa;
+                                    $tot_p_lbiasa += $data->p_lbiasa;
+                                    $tot_anggota += $total;
+                                    $tot_aset += $data->aset;
+                                    $tot_aktivalancar += $data->aktivalancar;
+                                    $tot_simpanansaham += $data->simpanansaham;
+                                    $tot_nonsaham_unggulan += $data->nonsaham_unggulan;
+                                    $tot_nonsaham_harian += $data->nonsaham_harian;
+                                    $tot_hutangspd += $data->hutangspd;
+                                    $tot_piutangberedar += $data->piutangberedar;
+                                    $tot_piutangbersih += $piutangbersih;
+                                    $tot_piutanglalai_1bulan += $data->piutanglalai_1bulan;
+                                    $tot_piutanglalai_12bulan += $data->piutanglalai_12bulan;
+                                    $tot_beredar += $rasio_beredar;
+                                    $tot_lalai += $rasio_lalai;
+                                    $tot_dcr += $data->dcr;
+                                    $tot_dcu += $data->dcu;
+                                    $tot_totalpendapatan += $data->totalpendapatan;
+                                    $tot_totalbiaya += $data->totalbiaya;
+                                    $tot_shu += $data->shu;
                                 ?>
-                                <tr
-                                @if(!Request::is('admins/laporancu/index_cu/*'))
-                                    @if($data->periode < $datas->first()->periode){!! 'class="highlight"'  !!}@endif
-                                        @endif>
+                                <tr @if($data->periode < $datas->first()->periode){!! 'class="highlight"'  !!} @endif>
                                     <td class="bg-aqua disabled color-palette"></td>
                                     <td hidden>{{ $data->id }}</td>
-                                    @if(!Request::is('admins/laporancu/index_cu/*'))
-                                        @if(!empty($data->cuprimer))
-                                            <td hidden>{{ $data->cuprimer->no_ba }}</td>
-                                            <td>{{ $data->cuprimer->name }}</td>
-                                            <td>{{ $data->cuprimer->no_ba }}</td>
-                                        @else
-                                            <td hidden>-</td>
-                                            <td>-</td>
-                                            <td>-</td>
-                                        @endif
-                                        <td>{{ $do }}</td>
-                                        <td>{{ $wilayah }}</td>
+                                    <td hidden>{{ $data->no_ba }}</td>
+                                    @if(!empty($data->cuprimer))
+                                        <td hidden>{{ $data->cuprimer->no_ba }}</td>
+                                        <td>{{ $data->cuprimer->name }}</td>
+                                        <td>{{ $data->cuprimer->no_ba }}</td>
+                                    @else
+                                        <td hidden>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
                                     @endif
+                                    <td>{{ $do }}</td>
+                                    <td>{{ $wilayah }}</td>
                                     <td data-order="{{ $data->periode }}"> @if(!empty($data->periode)){{ $periode }}@else{{ '-' }}@endif</td>
-                                    <td data-order="{{ $data->l_biasa }}">{{ number_format($data->l_biasa,"0",",",".") }}</td>
-                                    <td data-order="{{ $data->l_lbiasa }}">{{ number_format($data->l_lbiasa,"0",",",".") }}</td>
-                                    <td data-order="{{ $data->p_biasa }}">{{ number_format($data->p_biasa,"0",",",".") }}</td>    
-                                    <td data-order="{{ $data->p_lbiasa }}">{{ number_format($data->p_lbiasa,"0",",",".") }}</td>
-                                    <td data-order="{{ $total }}">{{ number_format($total,"0",",",".") }}</td>
-                                    <td data-order="{{ $data->aset }}">{{ number_format($data->aset,"0",",",".") }}</td>
-                                    <td data-order="{{ $data->aktivalancar }}">{{ number_format($data->aktivalancar,"0",",",".") }}</td>
-                                    <td data-order="{{ $data->simpanansaham }}">{{ number_format($data->simpanansaham,"0",",",".") }}</td>
-                                    <td data-order="{{ $data->nonsaham_unggulan }}">{{ number_format($data->nonsaham_unggulan,"0",",",".") }}</td>
-                                    <td data-order="{{ $data->nonsaham_harian }}">{{ number_format($data->nonsaham_harian,"0",",",".") }}</td>
-                                    <td data-order="{{ $data->hutangspd }}">{{ number_format($data->hutangspd,"0",",",".") }}</td>
-                                    <td data-order="{{ $data->piutangberedar }}">{{ number_format($data->piutangberedar,"0",",",".")}}</td>
-                                    <td data-order="{{ $piutangbersih }}">{{ number_format($piutangbersih,"0",",",".") }}</td>
-                                    <td data-order="{{ $data->piutanglalai_1bulan }}">{{ number_format($data->piutanglalai_1bulan,"0",",",".") }}</td>
-                                    <td data-order="{{ $data->piutanglalai_12bulan }}">{{ number_format($data->piutanglalai_12bulan,"0",",",".") }}</td>
-                                    <td data-order="{{ $rasio_beredar }}">{{ number_format($rasio_beredar,"0",",",".") }} %</td>
-                                    <td data-order="{{ $rasio_lalai }}">{{ number_format($rasio_lalai,"0",",",".") }} %</td>
-                                    <td data-order="{{ $data->dcr }}">{{ number_format($data->dcr,"0",",",".") }}</td>
-                                    <td data-order="{{ $data->dcu }}">{{ number_format($data->dcu,"0",",",".")}}</td>
-                                    <td data-order="{{ $data->totalpendapatan }}">{{ number_format($data->totalpendapatan,"0",",",".") }}</td>
-                                    <td data-order="{{ $data->totalbiaya }}">{{ number_format($data->totalbiaya,"0",",",".") }}</td>
-                                    <td data-order="{{ $data->shu }}">{{ number_format($data->shu,"0",",",".") }}</td>
+                                    <td>{{ number_format($data->l_biasa,"0",",",".") }}</td>
+                                    <td>{{ number_format($data->l_lbiasa,"0",",",".") }}</td>
+                                    <td>{{ number_format($data->p_biasa,"0",",",".") }}</td>    
+                                    <td>{{ number_format($data->p_lbiasa,"0",",",".") }}</td>
+                                    <td>{{ number_format($total,"0",",",".") }}</td>
+                                    <td>{{ number_format($data->aset,"0",",",".") }}</td>
+                                    <td>{{ number_format($data->aktivalancar,"0",",",".") }}</td>
+                                    <td>{{ number_format($data->simpanansaham,"0",",",".") }}</td>
+                                    <td>{{ number_format($data->nonsaham_unggulan,"0",",",".") }}</td>
+                                    <td>{{ number_format($data->nonsaham_harian,"0",",",".") }}</td>
+                                    <td>{{ number_format($data->hutangspd,"0",",",".") }}</td>
+                                    <td>{{ number_format($data->piutangberedar,"0",",",".")}}</td>
+                                    <td>{{ number_format($piutangbersih,"0",",",".") }}</td>
+                                    <td>{{ number_format($data->piutanglalai_1bulan,"0",",",".") }}</td>
+                                    <td>{{ number_format($data->piutanglalai_12bulan,"0",",",".") }}</td>
+                                    <td>{{ number_format($rasio_beredar,"0",",",".") }} %</td>
+                                    <td>{{ number_format($rasio_lalai,"0",",",".") }} %</td>
+                                    <td>{{ number_format($data->dcr,"0",",",".") }}</td>
+                                    <td>{{ number_format($data->dcu,"0",",",".")}}</td>
+                                    <td>{{ number_format($data->totalpendapatan,"0",",",".") }}</td>
+                                    <td>{{ number_format($data->totalbiaya,"0",",",".") }}</td>
+                                    <td>{{ number_format($data->shu,"0",",",".") }}</td>
                                     <td data-order="{{ $data->created_at }}">@if(!empty($data->created_at)){{ $data->created_at->format('l, j F Y') }}@else{{ '-' }}@endif</td>
                                     <td data-order="{{ $data->updated_at }}">@if(!empty($data->updated_at)){{ $data->updated_at->format('l, j F Y') }}@else{{ '-' }}@endif</td>
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
-                    @if(!Request::is('admins/laporancu/index_cu/*')) 
-                        <hr/>
-                        <table class="table table-hover table-bordered" id="dataTables-total" width="100%">
-                            <thead>
-                                <tr class="bg-light-blue-active color-palette">
-                                    <th rowspan="2" data-sortable="false">&nbsp</th>
-                                    <th colspan="5" class="text-center">Anggota</th>
-                                    <th rowspan="2">ASET</th>
-                                    <th rowspan="2">Aktiva LANCAR</th>
-                                    <th rowspan="2">Simpanan Saham(SP+SW)</th>
-                                    <th colspan="2" class="text-center">Simpanan Non Saham</th>
-                                    <th rowspan="2">Hutang SPD</th>
-                                    <th colspan="2" class="text-center">Piutang</th>
-                                    <th colspan="2" class="text-center">Piutang Lalai</th>
-                                    <th colspan="2" class="text-center">Rasio Piutang</th>
-                                    <th rowspan="2">DCR</th>
-                                    <th rowspan="2">DCU</th>
-                                    <th colspan="2" class="text-center">Total</th>
-                                    <th rowspan="2">SHU</th>
-                                </tr>
-                                <tr class="bg-light-blue-active color-palette">
-                                    <th>Lelaki Biasa</th>
-                                    <th>Lelaki L.Biasa</th>
-                                    <th>Perempuan Biasa</th>
-                                    <th>Perempuan L.Biasa</th>
-                                    <th>Total</th>
-                                    <th>Unggulan</th>
-                                    <th>Harian & Deposito</th>
-                                    <th>Beredar</th>
-                                    <th>Bersih</th>
-                                    <th> 1-12 Bulan</th>
-                                    <th> > 12 Bulan</th>
-                                    <th>Beredar</th>
-                                    <th>Lalai</th>
-                                    <th>Pendapatan</th>
-                                    <th>Biaya</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="bg-aqua disabled color-palette"><b>Total</b></td>
-                                    <td>{{ number_format($tot_l_biasa,"0",",",".") }}</td>
-                                    <td>{{ number_format($tot_l_lbiasa,"0",",",".") }}</td>
-                                    <td>{{ number_format($tot_p_biasa,"0",",",".") }}</td>
-                                    <td>{{ number_format($tot_p_lbiasa,"0",",",".") }}</td>
-                                    <td>{{ number_format($tot_anggota,"0",",",".")}}</td>
-                                    <td>{{ number_format($tot_aset,"0",",",".") }}</td>
-                                    <td>{{ number_format($tot_aktivalancar,"0",",",".") }}</td>
-                                    <td>{{ number_format($tot_simpanansaham,"0",",",".") }}</td>
-                                    <td>{{ number_format($tot_nonsaham_unggulan,"0",",",".") }}</td>
-                                    <td>{{ number_format($tot_nonsaham_harian,"0",",",".") }}</td>
-                                    <td>{{ number_format($tot_hutangspd,"0",",",".") }}</td>
-                                    <td>{{ number_format($tot_piutangberedar,"0",",",".") }}</td>
-                                    <td>{{ number_format($tot_piutanglalai_1bulan,"0",",",".") }}</td>
-                                    <td>{{ number_format($tot_piutanglalai_12bulan,"0",",",".") }}</td>
-                                    <td>{{ number_format($tot_piutangbersih,"0",",",".") }}</td>
-                                    <td>-</td>
-                                    <td>-</td>
-                                    <td>{{ number_format($tot_dcr,"0",",",".") }}</td>
-                                    <td>{{ number_format($tot_dcu,"0",",",".") }}</td>
-                                    <td>{{ number_format($tot_totalpendapatan,"0",",",".") }}</td>
-                                    <td>{{ number_format($tot_totalbiaya,"0",",",".") }}</td>
-                                    <td>{{ number_format($tot_shu,"0",",",".") }}</td>
-                                </tr>
-                                <tr>
-                                    <td class="bg-aqua disabled color-palette"><b>Rata - Rata</b></td>
-                                    @if($tot_cu != 0)
-                                        <td>{{ number_format($tot_l_biasa/$tot_cu,"0",",",".") }}</td>
-                                        <td>{{ number_format($tot_l_lbiasa/$tot_cu,"0",",",".") }}</td>
-                                        <td>{{ number_format($tot_p_biasa/$tot_cu,"0",",",".") }}</td>
-                                        <td>{{ number_format($tot_p_lbiasa/$tot_cu,"0",",",".") }}</td>
-                                        <td>{{ number_format($tot_anggota/$tot_cu,"0",",",".")}}</td>
-                                        <td>{{ number_format($tot_aset/$tot_cu,"0",",",".") }}</td>
-                                        <td>{{ number_format($tot_aktivalancar/$tot_cu,"0",",",".") }}</td>
-                                        <td>{{ number_format($tot_simpanansaham/$tot_cu,"0",",",".") }}</td>
-                                        <td>{{ number_format($tot_nonsaham_unggulan/$tot_cu,"0",",",".") }}</td>
-                                        <td>{{ number_format($tot_nonsaham_harian/$tot_cu,"0",",",".") }}</td>
-                                        <td>{{ number_format($tot_hutangspd/$tot_cu,"0",",",".") }}</td>
-                                        <td>{{ number_format($tot_piutangberedar/$tot_cu,"0",",",".") }}</td>
-                                        <td>{{ number_format($tot_piutanglalai_1bulan/$tot_cu,"0",",",".") }}</td>
-                                        <td>{{ number_format($tot_piutanglalai_12bulan/$tot_cu,"0",",",".") }}</td>
-                                        <td>{{ number_format($tot_piutangbersih/$tot_cu,"0",",",".") }}</td>
-                                        <td>{{ number_format( $tot_beredar/$tot_cu,"2",",",".") }} %</td>
-                                        <td>{{ number_format( $tot_lalai/$tot_cu,"2",",",".") }} %</td>
-                                        <td>{{ number_format($tot_dcr/$tot_cu,"0",",",".") }}</td>
-                                        <td>{{ number_format($tot_dcu/$tot_cu,"0",",",".") }}</td>
-                                        <td>{{ number_format($tot_totalpendapatan/$tot_cu,"0",",",".") }}</td>
-                                        <td>{{ number_format($tot_totalbiaya/$tot_cu,"0",",",".") }}</td>
-                                        <td>{{ number_format($tot_shu/$tot_cu,"0",",",".") }}</td>
-                                    @endif
-                                </tr>
-                            </tbody>
-                        </table>
-                    @endif
-                </div>
-            @endif          
-            @if(Request::is('admins/laporancu') || Request::is('admins/laporancu/index_periode/*'))             
+                    <hr/>
+                    <table class="table table-hover table-bordered" id="dataTables-total" width="100%">
+                        <thead>
+                            <tr class="bg-light-blue-active color-palette">
+                                <th rowspan="2" data-sortable="false">&nbsp</th>
+                                <th colspan="5" class="text-center">Anggota</th>
+                                <th rowspan="2">ASET</th>
+                                <th rowspan="2">Aktiva LANCAR</th>
+                                <th rowspan="2">Simpanan Saham(SP+SW)</th>
+                                <th colspan="2" class="text-center">Simpanan Non Saham</th>
+                                <th rowspan="2">Hutang SPD</th>
+                                <th colspan="2" class="text-center">Piutang</th>
+                                <th colspan="2" class="text-center">Piutang Lalai</th>
+                                <th colspan="2" class="text-center">Rasio Piutang</th>
+                                <th rowspan="2">DCR</th>
+                                <th rowspan="2">DCU</th>
+                                <th colspan="2" class="text-center">Total</th>
+                                <th rowspan="2">SHU</th>
+                            </tr>
+                            <tr class="bg-light-blue-active color-palette">
+                                <th>Lelaki Biasa</th>
+                                <th>Lelaki L.Biasa</th>
+                                <th>Perempuan Biasa</th>
+                                <th>Perempuan L.Biasa</th>
+                                <th>Total</th>
+                                <th>Unggulan</th>
+                                <th>Harian & Deposito</th>
+                                <th>Beredar</th>
+                                <th>Bersih</th>
+                                <th> 1-12 Bulan</th>
+                                <th> > 12 Bulan</th>
+                                <th>Beredar</th>
+                                <th>Lalai</th>
+                                <th>Pendapatan</th>
+                                <th>Biaya</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="bg-aqua disabled color-palette"><b>Total</b></td>
+                                <td>{{ number_format($tot_l_biasa,"0",",",".") }}</td>
+                                <td>{{ number_format($tot_l_lbiasa,"0",",",".") }}</td>
+                                <td>{{ number_format($tot_p_biasa,"0",",",".") }}</td>
+                                <td>{{ number_format($tot_p_lbiasa,"0",",",".") }}</td>
+                                <td>{{ number_format($tot_anggota,"0",",",".")}}</td>
+                                <td>{{ number_format($tot_aset,"0",",",".") }}</td>
+                                <td>{{ number_format($tot_aktivalancar,"0",",",".") }}</td>
+                                <td>{{ number_format($tot_simpanansaham,"0",",",".") }}</td>
+                                <td>{{ number_format($tot_nonsaham_unggulan,"0",",",".") }}</td>
+                                <td>{{ number_format($tot_nonsaham_harian,"0",",",".") }}</td>
+                                <td>{{ number_format($tot_hutangspd,"0",",",".") }}</td>
+                                <td>{{ number_format($tot_piutangberedar,"0",",",".") }}</td>
+                                <td>{{ number_format($tot_piutanglalai_1bulan,"0",",",".") }}</td>
+                                <td>{{ number_format($tot_piutanglalai_12bulan,"0",",",".") }}</td>
+                                <td>{{ number_format($tot_piutangbersih,"0",",",".") }}</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>{{ number_format($tot_dcr,"0",",",".") }}</td>
+                                <td>{{ number_format($tot_dcu,"0",",",".") }}</td>
+                                <td>{{ number_format($tot_totalpendapatan,"0",",",".") }}</td>
+                                <td>{{ number_format($tot_totalbiaya,"0",",",".") }}</td>
+                                <td>{{ number_format($tot_shu,"0",",",".") }}</td>
+                            </tr>
+                            <tr>
+                                <td class="bg-aqua disabled color-palette"><b>Rata - Rata</b></td>
+                                @if($tot_cu != 0)
+                                    <td>{{ number_format($tot_l_biasa/$tot_cu,"0",",",".") }}</td>
+                                    <td>{{ number_format($tot_l_lbiasa/$tot_cu,"0",",",".") }}</td>
+                                    <td>{{ number_format($tot_p_biasa/$tot_cu,"0",",",".") }}</td>
+                                    <td>{{ number_format($tot_p_lbiasa/$tot_cu,"0",",",".") }}</td>
+                                    <td>{{ number_format($tot_anggota/$tot_cu,"0",",",".")}}</td>
+                                    <td>{{ number_format($tot_aset/$tot_cu,"0",",",".") }}</td>
+                                    <td>{{ number_format($tot_aktivalancar/$tot_cu,"0",",",".") }}</td>
+                                    <td>{{ number_format($tot_simpanansaham/$tot_cu,"0",",",".") }}</td>
+                                    <td>{{ number_format($tot_nonsaham_unggulan/$tot_cu,"0",",",".") }}</td>
+                                    <td>{{ number_format($tot_nonsaham_harian/$tot_cu,"0",",",".") }}</td>
+                                    <td>{{ number_format($tot_hutangspd/$tot_cu,"0",",",".") }}</td>
+                                    <td>{{ number_format($tot_piutangberedar/$tot_cu,"0",",",".") }}</td>
+                                    <td>{{ number_format($tot_piutanglalai_1bulan/$tot_cu,"0",",",".") }}</td>
+                                    <td>{{ number_format($tot_piutanglalai_12bulan/$tot_cu,"0",",",".") }}</td>
+                                    <td>{{ number_format($tot_piutangbersih/$tot_cu,"0",",",".") }}</td>
+                                    <td>{{ number_format( $tot_beredar/$tot_cu,"2",",",".") }} %</td>
+                                    <td>{{ number_format( $tot_lalai/$tot_cu,"2",",",".") }} %</td>
+                                    <td>{{ number_format($tot_dcr/$tot_cu,"0",",",".") }}</td>
+                                    <td>{{ number_format($tot_dcu/$tot_cu,"0",",",".") }}</td>
+                                    <td>{{ number_format($tot_totalpendapatan/$tot_cu,"0",",",".") }}</td>
+                                    <td>{{ number_format($tot_totalbiaya/$tot_cu,"0",",",".") }}</td>
+                                    <td>{{ number_format($tot_shu/$tot_cu,"0",",",".") }}</td>
+                                @endif
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>           
                 <div class="tab-pane" id="tab_provinsi">
                     <div class="input-group tabletools">
                         <div class="input-group-addon"><i class="fa fa-search"></i></div>
@@ -449,28 +434,28 @@
                             <tr >
                                 <td class="bg-aqua disabled color-palette"></td>
                                 <td>{{ $data['nama'] }}</td>
-                                <td data-order="{{ $data['l_biasa'] }}">{{ number_format($data['l_biasa'],"0",",",".") }}</td>
-                                <td data-order="{{ $data['l_lbiasa'] }}">{{ number_format($data['l_lbiasa'],"0",",",".") }}</td>
-                                <td data-order="{{ $data['p_biasa'] }}">{{ number_format($data['p_biasa'],"0",",",".") }}</td>
-                                <td data-order="{{ $data['p_lbiasa'] }}">{{ number_format($data['p_lbiasa'],"0",",",".") }}</td>
-                                <td data-order="{{ $total }}">{{ number_format($total,"0",",",".") }}</td>
-                                <td data-order="{{ $data['aset'] }}">{{ number_format($data['aset'],"0",",",".") }}</td>
-                                <td data-order="{{ $data['aktivalancar'] }}">{{ number_format($data['aktivalancar'],"0",",",".") }}</td>
-                                <td data-order="{{ $data['simpanansaham'] }}">{{ number_format($data['simpanansaham'],"0",",",".") }}</td>
-                                <td data-order="{{ $data['nonsaham_unggulan'] }}">{{ number_format($data['nonsaham_unggulan'],"0",",",".") }}</td>
-                                <td data-order="{{ $data['nonsaham_harian'] }}">{{ number_format($data['nonsaham_harian'],"0",",",".") }}</td>
-                                <td data-order="{{ $data['hutangspd'] }}">{{ number_format($data['hutangspd'],"0",",",".") }}</td>
-                                <td data-order="{{ $data['piutangberedar'] }}">{{ number_format($data['piutangberedar'],"0",",",".") }}</td>
-                                <td data-order="{{ $data['piutanglalai_1bulan'] }}">{{ number_format($data['piutanglalai_1bulan'],"0",",",".") }}</td>
-                                <td data-order="{{ $data['piutanglalai_12bulan'] }}">{{ number_format($data['piutanglalai_12bulan'],"0",",",".") }}</td>
-                                <td data-order="{{ $piutangbersih }}">{{ number_format($piutangbersih,"0",",",".") }}</td>
-                                <td data-order="{{ $rasio_beredar }}">{{ number_format(($rasio_beredar*100),2) }} %</td>
-                                <td data-order="{{ $rasio_lalai }}">{{ number_format(($rasio_lalai*100),2) }} %</td>
-                                <td data-order="{{ $data['dcr'] }}">{{ number_format($data['dcr'],"0",",",".") }}</td>
-                                <td data-order="{{ $data['dcu'] }}">{{ number_format($data['dcu'],"0",",",".") }}</td>
-                                <td data-order="{{ $data['totalpendapatan'] }}">{{ number_format($data['totalpendapatan'],"0",",",".") }}</td>
-                                <td data-order="{{ $data['totalbiaya'] }}">{{ number_format($data['totalbiaya'],"0",",",".") }}</td>
-                                <td data-order="{{ $data['shu'] }}">{{ number_format($data['shu'],"0",",",".") }}</td>
+                                <td>{{ number_format($data['l_biasa'],"0",",",".") }}</td>
+                                <td>{{ number_format($data['l_lbiasa'],"0",",",".") }}</td>
+                                <td>{{ number_format($data['p_biasa'],"0",",",".") }}</td>
+                                <td>{{ number_format($data['p_lbiasa'],"0",",",".") }}</td>
+                                <td>{{ number_format($total,"0",",",".") }}</td>
+                                <td>{{ number_format($data['aset'],"0",",",".") }}</td>
+                                <td>{{ number_format($data['aktivalancar'],"0",",",".") }}</td>
+                                <td>{{ number_format($data['simpanansaham'],"0",",",".") }}</td>
+                                <td>{{ number_format($data['nonsaham_unggulan'],"0",",",".") }}</td>
+                                <td>{{ number_format($data['nonsaham_harian'],"0",",",".") }}</td>
+                                <td>{{ number_format($data['hutangspd'],"0",",",".") }}</td>
+                                <td>{{ number_format($data['piutangberedar'],"0",",",".") }}</td>
+                                <td>{{ number_format($data['piutanglalai_1bulan'],"0",",",".") }}</td>
+                                <td>{{ number_format($data['piutanglalai_12bulan'],"0",",",".") }}</td>
+                                <td>{{ number_format($piutangbersih,"0",",",".") }}</td>
+                                <td>{{ number_format(($rasio_beredar*100),2) }} %</td>
+                                <td>{{ number_format(($rasio_lalai*100),2) }} %</td>
+                                <td>{{ number_format($data['dcr'],"0",",",".") }}</td>
+                                <td>{{ number_format($data['dcu'],"0",",",".") }}</td>
+                                <td>{{ number_format($data['totalpendapatan'],"0",",",".") }}</td>
+                                <td>{{ number_format($data['totalbiaya'],"0",",",".") }}</td>
+                                <td>{{ number_format($data['shu'],"0",",",".") }}</td>
                             </tr>
                         @endforeach
                         </tbody>
@@ -525,34 +510,550 @@
                             <tr >
                                 <td class="bg-aqua disabled color-palette"></td>
                                 <td>{{ $data['nama'] }}</td>
-                                <td data-order="{{ $data['l_biasa'] }}">{{ number_format($data['l_biasa'],"0",",",".") }}</td>
-                                <td data-order="{{ $data['l_lbiasa'] }}">{{ number_format($data['l_lbiasa'],"0",",",".")}}</td>
-                                <td data-order="{{ $data['p_biasa'] }}">{{ number_format($data['p_biasa'],"0",",",".") }}</td>
-                                <td data-order="{{ $data['p_lbiasa'] }}">{{ number_format($data['p_lbiasa'],"0",",",".") }}</td>
-                                <td data-order="{{ $total }}">{{ number_format($total,"0",",",".") }}</td>
-                                <td data-order="{{ $data['aset'] }}">{{ number_format($data['aset'],"0",",",".") }}</td>
-                                <td data-order="{{ $data['aktivalancar'] }}">{{ number_format($data['aktivalancar'],"0",",",".") }}</td>
-                                <td data-order="{{ $data['simpanansaham'] }}">{{ number_format($data['simpanansaham'],"0",",",".") }}</td>
-                                <td data-order="{{ $data['nonsaham_unggulan'] }}">{{ number_format($data['nonsaham_unggulan'],"0",",",".") }}</td>
-                                <td data-order="{{ $data['nonsaham_harian'] }}">{{ number_format($data['nonsaham_harian'],"0",",",".") }}</td>
-                                <td data-order="{{ $data['hutangspd'] }}">{{ number_format($data['hutangspd'],"0",",",".") }}</td>
-                                <td data-order="{{ $data['piutangberedar'] }}">{{ number_format($data['piutangberedar'],"0",",",".") }}</td>
-                                <td data-order="{{ $data['piutanglalai_1bulan'] }}">{{ number_format($data['piutanglalai_1bulan'],"0",",",".") }}</td>
-                                <td data-order="{{ $data['piutanglalai_12bulan'] }}">{{ number_format($data['piutanglalai_12bulan'],"0",",",".") }}</td>
-                                <td data-order="{{ $piutangbersih }}">{{ number_format($piutangbersih,"0",",",".") }}</td>
-                                <td data-order="{{ $rasio_beredar }}">{{ number_format(($rasio_beredar*100),2) }} %</td>
-                                <td data-order="{{ $rasio_lalai }}">{{ number_format(($rasio_lalai*100),2) }} %</td>
-                                <td data-order="{{ $data['dcr'] }}">{{ number_format($data['dcr'],"0",",",".") }}</td>
-                                <td data-order="{{ $data['dcu'] }}">{{ number_format($data['dcr'],"0",",",".") }}</td>
-                                <td data-order="{{ $data['totalpendapatan'] }}">{{ number_format($data['totalpendapatan'],"0",",",".") }}</td>
-                                <td data-order="{{ $data['totalbiaya'] }}">{{ number_format($data['totalbiaya'],"0",",",".") }}</td>
-                                <td data-order="{{ $data['shu'] }}">{{ number_format($data['shu'],"0",",",".") }}</td>
+                                <td>{{ number_format($data['l_biasa'],"0",",",".") }}</td>
+                                <td>{{ number_format($data['l_lbiasa'],"0",",",".")}}</td>
+                                <td>{{ number_format($data['p_biasa'],"0",",",".") }}</td>
+                                <td>{{ number_format($data['p_lbiasa'],"0",",",".") }}</td>
+                                <td>{{ number_format($total,"0",",",".") }}</td>
+                                <td>{{ number_format($data['aset'],"0",",",".") }}</td>
+                                <td>{{ number_format($data['aktivalancar'],"0",",",".") }}</td>
+                                <td>{{ number_format($data['simpanansaham'],"0",",",".") }}</td>
+                                <td>{{ number_format($data['nonsaham_unggulan'],"0",",",".") }}</td>
+                                <td>{{ number_format($data['nonsaham_harian'],"0",",",".") }}</td>
+                                <td>{{ number_format($data['hutangspd'],"0",",",".") }}</td>
+                                <td>{{ number_format($data['piutangberedar'],"0",",",".") }}</td>
+                                <td>{{ number_format($data['piutanglalai_1bulan'],"0",",",".") }}</td>
+                                <td>{{ number_format($data['piutanglalai_12bulan'],"0",",",".") }}</td>
+                                <td>{{ number_format($piutangbersih,"0",",",".") }}</td>
+                                <td>{{ number_format(($rasio_beredar*100),2) }} %</td>
+                                <td>{{ number_format(($rasio_lalai*100),2) }} %</td>
+                                <td>{{ number_format($data['dcr'],"0",",",".") }}</td>
+                                <td>{{ number_format($data['dcr'],"0",",",".") }}</td>
+                                <td>{{ number_format($data['totalpendapatan'],"0",",",".") }}</td>
+                                <td>{{ number_format($data['totalbiaya'],"0",",",".") }}</td>
+                                <td>{{ number_format($data['shu'],"0",",",".") }}</td>
                             </tr>
                         @endforeach
                         </tbody>
                     </table>
                 </div>
+            @elseif(Request::is('admins/laporancu/index_cu*') || Request::is('admins/laporancu/index_bkcu'))
+                <div class="tab-pane active" id="tab_konsolidasi">
+                    <div class="input-group tabletools">
+                        <div class="input-group-addon"><i class="fa fa-search"></i></div>
+                        <input type="text" id="searchtextkonsolidasi" class="form-control" placeholder="Kata kunci pencarian..." autofocus>
+                    </div>
+                    <table class="table table-hover table-bordered" id="dataTables-konsolidasi" width="100%" > 
+                        <thead class="bg-light-blue-active color-palette">
+                            <tr>
+                                <th rowspan="2" data-sortable="false" >#</th>
+                                <th rowspan="2" >Periode Laporan</th>
+                                @if(!Request::is('admins/laporancu/index_cu/*'))
+                                    <th rowspan="2">CU</th>
+                                    <th rowspan="2">CU <br/>Tepat<br/>Waktu</th>
+                                @endif
+                                <th colspan="5" class="text-center">Anggota</th>
+                                <th rowspan="2">Kekayaan (ASET)</th>
+                                <th rowspan="2">Aktiva LANCAR</th>
+                                <th rowspan="2">Simpanan Saham(SP+SW)</th>
+                                <th colspan="2" class="text-center">Simpanan Non Saham</th>
+                                <th rowspan="2">Hutang SPD</th>
+                                <th colspan="2" class="text-center">Piutang</th>
+                                <th colspan="2" class="text-center">Piutang Lalai</th>
+                                <th colspan="2" class="text-center">Rasio Piutang</th>
+                                <th rowspan="2">DCR</th>
+                                <th rowspan="2">DCU</th>
+                                <th colspan="2" class="text-center">Total</th>
+                                <th rowspan="2">SHU</th>
+                                @if(Request::is('admins/laporancu/index_cu/*'))
+                                    <th rowspan="2">Tgl. Terima</th>
+                                    <th rowspan="2">Tgl. Ubah</th>
+                                @endif
+                            </tr>
+                            <tr>
+                                <th>Lelaki Biasa</th>
+                                <th>Lelaki L.Biasa</th>
+                                <th>Perempuan Biasa</th>
+                                <th>Perempuan L.Biasa</th>
+                                <th>Total</th>
+                                <th>Unggulan</th>
+                                <th>Harian & Deposito</th>
+                                <th>Beredar</th>
+                                <th>Bersih</th>
+                                <th> 1-12 Bulan</th>
+                                <th> > 12 Bulan</th>
+                                <th>Beredar</th>
+                                <th>Lalai</th>
+                                <th>Pendapatan</th>
+                                <th>Biaya</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                                $l_biasa2 = 0;
+                                $l_lbiasa2 = 0;
+                                $p_biasa2 = 0;
+                                $p_lbiasa2 = 0;
+                                $total2 = 0;
+                                $aset2 = 0;
+                                $aktivalancar2 = 0;
+                                $simpanansaham2 = 0;
+                                $nonsaham_unggulan2 = 0;
+                                $nonsaham_harian2 = 0;
+                                $hutangspd2 = 0;
+                                $piutangberedar2 = 0;
+                                $piutanglalai_1bulan2 = 0;
+                                $piutanglalai_12bulan2 = 0;
+                                $piutangbersih2 = 0;
+                                $rasio_beredar2 = 0;
+                                $rasio_lalai2 = 0;
+                                $dcr2 = 0;
+                                $dcu2 = 0;
+                                $totalpendapatan2 = 0;
+                                $totalbiaya2 = 0;
+                                $shu2 = 0;
+                            ?>
+                            @foreach($datas2 as $data)
+                                <?php
+                                    $total = $data['l_biasa'] + $data['l_lbiasa'] + $data['p_biasa'] + $data['p_lbiasa'];
+                                    $piutangbersih = $data['piutangberedar'] - ($data['piutanglalai_1bulan'] + $data['piutanglalai_12bulan']);
+                                    $data['aset'] == 0 ? $rasio_beredar = 0 : $rasio_beredar =  ($data['piutangberedar'] / $data['aset']);
+                                    $data['piutangberedar'] == 0 ? $rasio_lalai = 0 : $rasio_lalai = ($data['piutanglalai_1bulan'] + $data['piutanglalai_12bulan']) / $data['piutangberedar'];
+                                    $date = new Date($data['periode']);
+                                    $periode = $date->format('F Y');
+
+                                    if(Request::is('admins/laporancu/index_cu/*')){
+                                        $date2 = new Date($data['created_at']);
+                                        $created = $date2->format('d/m/Y');
+
+                                        $date3 = new Date($data['updated_at']);
+                                        $updated = $date3->format('d/m/Y');
+                                    }
+                                   
+                                    $l_biasa1 = $data['l_biasa'] - $l_biasa2;
+                                    $l_lbiasa1 = $data['l_lbiasa'] - $l_lbiasa2;
+                                    $p_biasa1 = $data['p_biasa'] - $p_biasa2;
+                                    $p_lbiasa1 = $data['p_lbiasa'] - $p_lbiasa2;
+                                    $total1 = $total - $total2;
+                                    $aset1 = $data['aset'] - $aset2;
+                                    $aktivalancar1 = $data['aktivalancar'] - $aktivalancar2;
+                                    $simpanansaham1 = $data['simpanansaham'] - $simpanansaham2;
+                                    $nonsaham_unggulan1 = $data['nonsaham_unggulan'] - $nonsaham_unggulan2;
+                                    $nonsaham_harian1 = $data['nonsaham_harian'] - $nonsaham_harian2;
+                                    $hutangspd1 = $data['hutangspd'] - $hutangspd2;
+                                    $piutangberedar1 = $data['piutangberedar'] - $piutangberedar2;
+                                    $piutanglalai_1bulan1 = $data['piutanglalai_1bulan'] - $piutanglalai_1bulan2;
+                                    $piutanglalai_12bulan1 = $data['piutanglalai_12bulan'] - $piutanglalai_12bulan2;
+                                    $piutangbersih1 = $piutangbersih - $piutangbersih2;
+                                    $rasio_beredar1 = $rasio_beredar - $rasio_beredar2;
+                                    $rasio_lalai1 = $rasio_lalai - $rasio_lalai2;
+                                    $dcr1 = $data['dcr'] - $dcr2;
+                                    $dcu1 = $data['dcu'] - $dcu2;
+                                    $totalpendapatan1 = $data['totalpendapatan'] - $totalpendapatan2;
+                                    $totalbiaya1 = $data['totalbiaya'] - $totalbiaya2;
+                                    $shu1 = $data['shu'] - $shu2;
+                                ?>
+                                <tr >
+                                    <td class="bg-aqua disabled color-palette"></td> 
+                                    <td data-order="{{ $data['periode'] }}">{{ $periode }}</td>
+                                    @if(!Request::is('admins/laporancu/index_cu/*'))
+                                        <td>{{ $data['tot_cu'] }}</td>
+                                        <td>{{ $data['tot_culaporan'] }}</td>
+                                    @endif
+                                    <td>{{ number_format($data['l_biasa'],"0",",",".") }}
+                                        @if($l_biasa1 != $data['l_biasa'])
+                                            @if($l_biasa1 > 0)
+                                                <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($l_biasa1,"0",",",".")}}"></i>
+                                            @elseif($l_biasa1 < 0)
+                                                <i class="fa fa-caret-square-o-down fa-fw text-red" data-toggle="tooltip" data-placement="right" title="Berkurang {{ number_format(abs($l_biasa1),"0",",",".")}}"></i>
+                                            @endif
+                                        @endif
+                                    </td>
+                                    <td>{{ number_format($data['l_lbiasa'],"0",",",".")}}
+                                        @if($l_lbiasa1 != $data['l_lbiasa'])
+                                            @if($l_lbiasa1 > 0)
+                                                <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($l_lbiasa1,"0",",",".")}}"></i>
+                                            @elseif($l_lbiasa1 < 0)
+                                                <i class="fa fa-caret-square-o-down fa-fw text-red" data-toggle="tooltip" data-placement="right" title="Berkurang {{ number_format(abs($l_lbiasa1),"0",",",".")}}"></i>
+                                            @endif
+                                        @endif
+                                    </td>
+                                    <td>{{ number_format($data['p_biasa'],"0",",",".") }}
+                                        @if($p_biasa1 != $data['p_biasa'])
+                                            @if($p_biasa1 > 0)
+                                                <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($p_biasa1,"0",",",".")}}"></i>
+                                            @elseif($p_biasa1 < 0)
+                                                <i class="fa fa-caret-square-o-down fa-fw text-red" data-toggle="tooltip" data-placement="right" title="Berkurang {{ number_format(abs($p_biasa1),"0",",",".")}}"></i>
+                                            @endif
+                                        @endif
+                                    </td>
+                                    <td>{{ number_format($data['p_lbiasa'],"0",",",".") }}
+                                        @if($p_lbiasa1 != $data['p_lbiasa'])
+                                            @if($p_lbiasa1 > 0)
+                                                <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($p_lbiasa1,"0",",",".")}}"></i>
+                                            @elseif($p_lbiasa1 < 0)
+                                                <i class="fa fa-caret-square-o-down fa-fw text-red" data-toggle="tooltip" data-placement="right" title="Berkurang {{ number_format(abs($p_lbiasa1),"0",",",".")}}"></i>
+                                            @endif
+                                        @endif
+                                    </td>
+                                    <td>{{ number_format($total,"0",",",".") }}
+                                        @if($total1 != $total)
+                                            @if($total1 > 0)
+                                                <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($total1,"0",",",".")}}"></i>
+                                            @elseif($total1 < 0)
+                                                <i class="fa fa-caret-square-o-down fa-fw text-red" data-toggle="tooltip" data-placement="right" title="Berkurang {{ number_format(abs($total1),"0",",",".")}}"></i>
+                                            @endif
+                                        @endif
+                                    </td>
+                                    <td>{{ number_format($data['aset'],"0",",",".") }}
+                                        @if($aset1 != $data['aset'])
+                                            @if($aset1 > 0)
+                                                <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($aset1,"0",",",".")}}"></i>
+                                            @elseif($aset1 < 0)
+                                                <i class="fa fa-caret-square-o-down fa-fw text-red" data-toggle="tooltip" data-placement="right" title="Berkurang {{ number_format(abs($aset1),"0",",",".")}}"></i>
+                                            @endif
+                                        @endif
+                                    </td>
+                                    <td>{{ number_format($data['aktivalancar'],"0",",",".") }}
+                                        @if($aktivalancar1 != $data['aktivalancar'])
+                                            @if($aktivalancar1 > 0)
+                                                <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($aktivalancar1,"0",",",".")}}"></i>
+                                            @elseif($aktivalancar1 < 0)
+                                                <i class="fa fa-caret-square-o-down fa-fw text-red" data-toggle="tooltip" data-placement="right" title="Berkurang {{ number_format(abs($aktivalancar1),"0",",",".")}}"></i>
+                                            @endif
+                                        @endif
+                                    </td>
+                                    <td>{{ number_format($data['simpanansaham'],"0",",",".") }}
+                                        @if($simpanansaham1 != $data['simpanansaham'])
+                                            @if($simpanansaham1 > 0)
+                                                <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($simpanansaham1,"0",",",".")}}"></i>
+                                            @elseif($simpanansaham1 < 0)
+                                                <i class="fa fa-caret-square-o-down fa-fw text-red" data-toggle="tooltip" data-placement="right" title="Berkurang {{ number_format(abs($simpanansaham1),"0",",",".")}}"></i>
+                                            @endif
+                                        @endif
+                                    </td>
+                                    <td>{{ number_format($data['nonsaham_unggulan'],"0",",",".") }}
+                                        @if($nonsaham_unggulan1 != $data['nonsaham_unggulan'])
+                                            @if($nonsaham_unggulan1 > 0)
+                                                <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($nonsaham_unggulan1,"0",",",".")}}"></i>
+                                            @elseif($nonsaham_unggulan1 < 0)
+                                                <i class="fa fa-caret-square-o-down fa-fw text-red" data-toggle="tooltip" data-placement="right" title="Berkurang {{ number_format(abs($nonsaham_unggulan1),"0",",",".")}}"></i>
+                                            @endif
+                                        @endif
+                                    </td>
+                                    <td>{{ number_format($data['nonsaham_harian'],"0",",",".") }}
+                                        @if($nonsaham_harian1 != $data['nonsaham_harian'])
+                                            @if($nonsaham_harian1 > 0)
+                                                <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($nonsaham_harian1,"0",",",".")}}"></i>
+                                            @elseif($nonsaham_harian1 < 0)
+                                                <i class="fa fa-caret-square-o-down fa-fw text-red" data-toggle="tooltip" data-placement="right" title="Berkurang {{ number_format(abs($nonsaham_harian1),"0",",",".")}}"></i>
+                                            @endif
+                                        @endif
+                                    </td>
+                                    <td>{{ number_format($data['hutangspd'],"0",",",".") }}
+                                        @if($hutangspd1 != $data['hutangspd'])
+                                            @if($hutangspd1 > 0)
+                                                <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($hutangspd1,"0",",",".")}}"></i>
+                                            @elseif($hutangspd1 < 0)
+                                                <i class="fa fa-caret-square-o-down fa-fw text-red" data-toggle="tooltip" data-placement="right" title="Berkurang {{ number_format(abs($hutangspd1),"0",",",".")}}"></i>
+                                            @endif
+                                        @endif
+                                    </td>
+                                    <td>{{ number_format($data['piutangberedar'],"0",",",".") }}
+                                        @if($piutangberedar1 != $data['piutangberedar'])
+                                            @if($piutangberedar1 > 0)
+                                                <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($piutangberedar1,"0",",",".")}}"></i>
+                                            @elseif($piutangberedar1 < 0)
+                                                <i class="fa fa-caret-square-o-down fa-fw text-red" data-toggle="tooltip" data-placement="right" title="Berkurang {{ number_format(abs($piutangberedar1),"0",",",".")}}"></i>
+                                            @endif
+                                        @endif
+                                    </td>
+                                    <td>{{ number_format($data['piutanglalai_1bulan'],"0",",",".") }}
+                                        @if($piutanglalai_1bulan1 != $data['piutanglalai_1bulan'])
+                                            @if($piutanglalai_1bulan1 > 0)
+                                                <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($piutanglalai_1bulan1,"0",",",".")}}"></i>
+                                            @elseif($piutanglalai_1bulan1 < 0)
+                                                <i class="fa fa-caret-square-o-down fa-fw text-red" data-toggle="tooltip" data-placement="right" title="Berkurang {{ number_format(abs($piutanglalai_1bulan1),"0",",",".")}}"></i>
+                                            @endif
+                                        @endif
+                                    </td>
+                                    <td>{{ number_format($data['piutanglalai_12bulan'],"0",",",".") }}
+                                        @if($piutanglalai_12bulan1 != $data['piutanglalai_12bulan'])
+                                            @if($piutanglalai_12bulan1 > 0)
+                                                <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($piutanglalai_12bulan1,"0",",",".")}}"></i>
+                                            @elseif($piutanglalai_12bulan1 < 0)
+                                                <i class="fa fa-caret-square-o-down fa-fw text-red" data-toggle="tooltip" data-placement="right" title="Berkurang {{ number_format(abs($piutanglalai_12bulan1),"0",",",".")}}"></i>
+                                            @endif
+                                        @endif
+                                    </td>
+                                    <td>{{ number_format($piutangbersih,"0",",",".") }}
+                                        @if($piutangbersih1 != $piutangbersih)
+                                            @if($piutangbersih1 > 0)
+                                                <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($piutangbersih1,"0",",",".")}}"></i>
+                                            @elseif($piutangbersih1 < 0)
+                                                <i class="fa fa-caret-square-o-down fa-fw text-red" data-toggle="tooltip" data-placement="right" title="Berkurang {{ number_format(abs($piutangbersih1),"0",",",".")}}"></i>
+                                            @endif
+                                        @endif
+                                    </td>
+                                    <td>{{ number_format(($rasio_beredar*100),2) }} % 
+                                        @if($rasio_beredar1 != $rasio_beredar)
+                                            @if($rasio_beredar1 > 0)
+                                                <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format(($rasio_beredar1*100),2) }} %"></i>
+                                            @elseif($rasio_beredar1 < 0)
+                                                <i class="fa fa-caret-square-o-down fa-fw text-red" data-toggle="tooltip" data-placement="right" title="Berkurang {{ number_format((abs($rasio_beredar1)*100),2) }} %"></i>
+                                            @endif
+                                        @endif
+                                    </td>
+                                    <td>{{ number_format(($rasio_lalai*100),2) }} %
+                                        @if($rasio_lalai1 != $rasio_lalai)
+                                            @if($rasio_lalai1 > 0)
+                                                <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format(($rasio_lalai1*100),2) }} %"></i>
+                                            @elseif($rasio_lalai1 < 0)
+                                                <i class="fa fa-caret-square-o-down fa-fw text-red" data-toggle="tooltip" data-placement="right" title="Berkurang {{ number_format((abs($rasio_lalai1)*100),2) }} %"></i>
+                                            @endif
+                                        @endif
+                                    </td>
+                                    <td>{{ number_format($data['dcr'],"0",",",".") }}
+                                        @if($dcr1 != $data['dcr'])
+                                            @if($dcr1 > 0)
+                                                <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($dcr1,"0",",",".")}}"></i>
+                                            @elseif($dcr1 < 0)
+                                                <i class="fa fa-caret-square-o-down fa-fw text-red" data-toggle="tooltip" data-placement="right" title="Berkurang {{ number_format(abs($dcr1),"0",",",".")}}"></i>
+                                            @endif
+                                        @endif
+                                    </td>
+                                    <td>{{ number_format($data['dcu'],"0",",",".") }}
+                                        @if($dcu1 != $data['dcu'])
+                                            @if($dcu1 > 0)
+                                                <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($dcu1,"0",",",".")}}"></i>
+                                            @elseif($dcu1 < 0)
+                                                <i class="fa fa-caret-square-o-down fa-fw text-red" data-toggle="tooltip" data-placement="right" title="Berkurang {{ number_format(abs($dcu1),"0",",",".")}}"></i>
+                                            @endif
+                                        @endif
+                                    </td>
+                                    <td>{{ number_format($data['totalpendapatan'],"0",",",".") }}
+                                        @if($totalpendapatan1 != $data['totalpendapatan'])
+                                            @if($totalpendapatan1 > 0)
+                                                <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($totalpendapatan1,"0",",",".")}}"></i>
+                                            @elseif($totalpendapatan1 < 0)
+                                                <i class="fa fa-caret-square-o-down fa-fw text-red" data-toggle="tooltip" data-placement="right" title="Berkurang {{ number_format(abs($totalpendapatan1),"0",",",".")}}"></i>
+                                            @endif
+                                        @endif
+                                    </td>
+                                    <td>{{ number_format($data['totalbiaya'],"0",",",".") }}
+                                        @if($totalbiaya1 != $data['totalbiaya'])
+                                            @if($totalbiaya1 > 0)
+                                                <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($totalbiaya1,"0",",",".")}}"></i>
+                                            @elseif($totalbiaya1 < 0)
+                                                <i class="fa fa-caret-square-o-down fa-fw text-red" data-toggle="tooltip" data-placement="right" title="Berkurang {{ number_format(abs($totalbiaya1),"0",",",".")}}"></i>
+                                            @endif
+                                        @endif
+                                    </td>
+                                    <td>{{ number_format($data['shu'],"0",",",".") }}
+                                        @if($shu1 != $data['shu'])
+                                            @if($shu1 > 0)
+                                                <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($shu1,"0",",",".")}}"></i>
+                                            @elseif($shu1 < 0)
+                                                <i class="fa fa-caret-square-o-down fa-fw text-red" data-toggle="tooltip" data-placement="right" title="Berkurang {{ number_format(abs($shu1),"0",",",".")}}"></i>
+                                            @endif
+                                        @endif
+                                    </td>
+                                    @if(Request::is('admins/laporancu/index_cu/*'))
+                                        <td>{{ $created }}</td>
+                                        <td>{{ $updated }}</td>
+                                    @endif
+                                </tr>
+                                <?php
+                                   $l_biasa2= $data['l_biasa']; 
+                                   $l_lbiasa2= $data['l_lbiasa']; 
+                                   $p_biasa2= $data['p_biasa']; 
+                                   $p_lbiasa2= $data['p_lbiasa']; 
+                                   $total2= $total;
+                                   $aset2= $data['aset'];
+                                   $aktivalancar2= $data['aktivalancar'];
+                                   $simpanansaham2= $data['simpanansaham'];
+                                   $nonsaham_unggulan2= $data['nonsaham_unggulan'];
+                                   $hutangspd2= $data['hutangspd'];
+                                   $piutangberedar2= $data['piutangberedar'];
+                                   $piutanglalai_1bulan2= $data['piutanglalai_1bulan'];
+                                   $piutanglalai_12bulan2= $data['piutanglalai_12bulan'];
+                                   $piutangbersih2= $piutangbersih;
+                                   $rasio_beredar2= $rasio_beredar;
+                                   $rasio_lalai2= $rasio_lalai;
+                                   $dcr2= $data['dcr'];
+                                   $dcu2= $data['dcu'];
+                                   $totalpendapatan2= $data['totalpendapatan'];
+                                   $totalbiaya2= $data['totalbiaya'];
+                                   $shu2= $data['shu'];
+                                ?>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div> 
+                <div class="tab-pane " id="tab_pertumbuhan">
+                    <div class="input-group tabletools">
+                        <div class="input-group-addon"><i class="fa fa-search"></i></div>
+                        <input type="text" id="searchtextkonsolidasi" class="form-control" placeholder="Kata kunci pencarian..." autofocus>
+                    </div>
+                    <table class="table table-hover table-bordered" id="dataTables-do" width="100%" > 
+                        <thead class="bg-light-blue-active color-palette">
+                            <tr>
+                                <th rowspan="2" data-sortable="false" >#</th>
+                                <th rowspan="2">Periode Laporan</th>
+                                <th colspan="5" class="text-center">Anggota</th>
+                                <th rowspan="2">Kekayaan (ASET)</th>
+                                <th rowspan="2">Aktiva LANCAR</th>
+                                <th rowspan="2">Simpanan Saham(SP+SW)</th>
+                                <th colspan="2" class="text-center">Simpanan Non Saham</th>
+                                <th rowspan="2">Hutang SPD</th>
+                                <th colspan="2" class="text-center">Piutang</th>
+                                <th colspan="2" class="text-center">Piutang Lalai</th>
+                                <th colspan="2" class="text-center">Rasio Piutang</th>
+                                <th rowspan="2">DCR</th>
+                                <th rowspan="2">DCU</th>
+                                <th colspan="2" class="text-center">Total</th>
+                                <th rowspan="2">SHU</th>
+                            </tr>
+                            <tr>
+                                <th>Lelaki Biasa</th>
+                                <th>Lelaki L.Biasa</th>
+                                <th>Perempuan Biasa</th>
+                                <th>Perempuan L.Biasa</th>
+                                <th>Total</th>
+                                <th>Unggulan</th>
+                                <th>Harian & Deposito</th>
+                                <th>Beredar</th>
+                                <th>Bersih</th>
+                                <th> 1-12 Bulan</th>
+                                <th> > 12 Bulan</th>
+                                <th>Beredar</th>
+                                <th>Lalai</th>
+                                <th>Pendapatan</th>
+                                <th>Biaya</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                                $l_biasa2 = 0;
+                                $l_lbiasa2 = 0;
+                                $p_biasa2 = 0;
+                                $p_lbiasa2 = 0;
+                                $total2 = 0;
+                                $aset2 = 0;
+                                $aktivalancar2 = 0;
+                                $simpanansaham2 = 0;
+                                $nonsaham_unggulan2 = 0;
+                                $nonsaham_harian2 = 0;
+                                $hutangspd2 = 0;
+                                $piutangberedar2 = 0;
+                                $piutanglalai_1bulan2 = 0;
+                                $piutanglalai_12bulan2 = 0;
+                                $piutangbersih2 = 0;
+                                $rasio_beredar2 = 0;
+                                $rasio_lalai2 = 0;
+                                $dcr2 = 0;
+                                $dcu2 = 0;
+                                $totalpendapatan2 = 0;
+                                $totalbiaya2 = 0;
+                                $shu2 = 0;
+                            ?>
+                            @foreach($datas2 as $data)
+                                <?php
+                                    $total = $data['l_biasa'] + $data['l_lbiasa'] + $data['p_biasa'] + $data['p_lbiasa'];
+                                    $piutangbersih = $data['piutangberedar'] - ($data['piutanglalai_1bulan'] + $data['piutanglalai_12bulan']);
+                                    $data['aset'] == 0 ? $rasio_beredar = 0 : $rasio_beredar =  ($data['piutangberedar'] / $data['aset']);
+                                    $data['piutangberedar'] == 0 ? $rasio_lalai = 0 : $rasio_lalai = ($data['piutanglalai_1bulan'] + $data['piutanglalai_12bulan']) / $data['piutangberedar'];
+                                    $date = new Date($data['periode']);
+                                    $periode = $date->format('F Y');
+
+                                    $l_biasa1 = $data['l_biasa'] - $l_biasa2;
+                                    $l_lbiasa1 = $data['l_lbiasa'] - $l_lbiasa2;
+                                    $p_biasa1 = $data['p_biasa'] - $p_biasa2;
+                                    $p_lbiasa1 = $data['p_lbiasa'] - $p_lbiasa2;
+                                    $total1 = $total - $total2;
+                                    $aset1 = $data['aset'] - $aset2;
+                                    $aktivalancar1 = $data['aktivalancar'] - $aktivalancar2;
+                                    $simpanansaham1 = $data['simpanansaham'] - $simpanansaham2;
+                                    $nonsaham_unggulan1 = $data['nonsaham_unggulan'] - $nonsaham_unggulan2;
+                                    $nonsaham_harian1 = $data['nonsaham_harian'] - $nonsaham_harian2;
+                                    $hutangspd1 = $data['hutangspd'] - $hutangspd2;
+                                    $piutangberedar1 = $data['piutangberedar'] - $piutangberedar2;
+                                    $piutanglalai_1bulan1 = $data['piutanglalai_1bulan'] - $piutanglalai_1bulan2;
+                                    $piutanglalai_12bulan1 = $data['piutanglalai_12bulan'] - $piutanglalai_12bulan2;
+                                    $piutangbersih1 = $piutangbersih - $piutangbersih2;
+                                    $rasio_beredar1 = $rasio_beredar - $rasio_beredar2;
+                                    $rasio_lalai1 = $rasio_lalai - $rasio_lalai2;
+                                    $dcr1 = $data['dcr'] - $dcr2;
+                                    $dcu1 = $data['dcu'] - $dcu2;
+                                    $totalpendapatan1 = $data['totalpendapatan'] - $totalpendapatan2;
+                                    $totalbiaya1 = $data['totalbiaya'] - $totalbiaya2;
+                                    $shu1 = $data['shu'] - $shu2;
+                                ?>
+                                <tr >
+                                    <td class="bg-aqua disabled color-palette"></td> 
+                                    <td data-order="{{ $data['periode'] }}">{{ $periode }}</td>
+                                    @if($l_biasa1 != $data['l_biasa'])
+                                        <td data-order="{{ $l_biasa1 }}">
+                                        @if($l_biasa1 > 0)
+                                            <span class="text-aqua"><i class="fa fa-caret-square-o-up"></i> {{ number_format($l_biasa1,"0",",",".")}}</span>
+                                        @elseif($l_biasa1 < 0)
+                                            <span class="text-red"><i class="fa fa-caret-square-o-down"></i> {{ number_format(abs($l_biasa1),"0",",",".")}}</span>
+                                        @endif
+                                        </td>
+                                    @else
+                                        <td>0</td>    
+                                    @endif
+                                    <td>{{ number_format($data['l_lbiasa'],"0",",",".")}}</td>
+                                    <td>{{ number_format($data['p_biasa'],"0",",",".") }}</td>
+                                    <td>{{ number_format($data['p_lbiasa'],"0",",",".") }}</td>
+                                    <td>{{ number_format($total,"0",",",".") }}</td>
+                                    <td>{{ number_format($data['aset'],"0",",",".") }}</td>
+                                    <td>{{ number_format($data['aktivalancar'],"0",",",".") }}</td>
+                                    <td>{{ number_format($data['simpanansaham'],"0",",",".") }}</td>
+                                    <td>{{ number_format($data['nonsaham_unggulan'],"0",",",".") }}</td>
+                                    <td>{{ number_format($data['nonsaham_harian'],"0",",",".") }}</td>
+                                    <td>{{ number_format($data['hutangspd'],"0",",",".") }}</td>
+                                    <td>{{ number_format($data['piutangberedar'],"0",",",".") }}</td>
+                                    <td>{{ number_format($data['piutanglalai_1bulan'],"0",",",".") }}</td>
+                                    <td>{{ number_format($data['piutanglalai_12bulan'],"0",",",".") }}</td>
+                                    <td>{{ number_format($piutangbersih,"0",",",".") }}</td>
+                                    <td>{{ number_format(($rasio_beredar*100),2) }} %</td>
+                                    <td>{{ number_format(($rasio_lalai*100),2) }} %</td>
+                                    <td>{{ number_format($data['dcr'],"0",",",".") }}</td>
+                                    <td>{{ number_format($data['dcr'],"0",",",".") }}</td>
+                                    <td>{{ number_format($data['totalpendapatan'],"0",",",".") }}</td>
+                                    <td>{{ number_format($data['totalbiaya'],"0",",",".") }}</td>
+                                    <td>{{ number_format($data['shu'],"0",",",".") }}</td>
+                                </tr>
+                                 <?php
+                                   $l_biasa2= $data['l_biasa']; 
+                                   $l_lbiasa2= $data['l_lbiasa']; 
+                                   $p_biasa2= $data['p_biasa']; 
+                                   $p_lbiasa2= $data['p_lbiasa']; 
+                                   $total2= $total;
+                                   $aset2= $data['aset'];
+                                   $aktivalancar2= $data['aktivalancar'];
+                                   $simpanansaham2= $data['simpanansaham'];
+                                   $nonsaham_unggulan2= $data['nonsaham_unggulan'];
+                                   $hutangspd2= $data['hutangspd'];
+                                   $piutangberedar2= $data['piutangberedar'];
+                                   $piutanglalai_1bulan2= $data['piutanglalai_1bulan'];
+                                   $piutanglalai_12bulan2= $data['piutanglalai_12bulan'];
+                                   $piutangbersih2= $piutangbersih;
+                                   $rasio_beredar2= $rasio_beredar;
+                                   $rasio_lalai2= $rasio_lalai;
+                                   $dcr2= $data['dcr'];
+                                   $dcu2= $data['dcu'];
+                                   $totalpendapatan2= $data['totalpendapatan'];
+                                   $totalbiaya2= $data['totalbiaya'];
+                                   $shu2= $data['shu'];
+                                ?>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>     
             @endif
+
             @if(!Request::is('admins/laporancu/index_bkcu')) 
                 <div class="tab-pane" id="tab_pearls">
                     <div class="input-group tabletools">
@@ -563,7 +1064,6 @@
                         <thead class="bg-light-blue-active color-palette">
                             <tr>
                                 <th rowspan="2" data-sortable="false" >#</th>
-                                <th rowspan="2" hidden></th>
                                 @if(!Request::is('admins/laporancu/index_cu/*'))<th rowspan="2">Credit Union</th>@endif
                                 <th rowspan="2">Periode Laporan</th>
                                 <th colspan="2" class="text-center">[P]<small>rotection</small></th>
@@ -664,8 +1164,6 @@
                                     ?>  
                                 <tr>
                                     <td class="bg-aqua disabled color-palette"></td>
-
-                                    <td hidden>{{ $data->id }}</td>
                                     @if(!Request::is('admins/laporancu/index_cu/*'))
                                         @if(!empty($data->cuprimer))
                                             <td>{{ $data->cuprimer->name }}</td>
@@ -723,92 +1221,6 @@
                     </table>
                 </div> 
             @endif
-            @if(Request::is('admins/laporancu/index_bkcu'))
-                <div class="tab-pane active" id="tab_konsolidasi">
-                    <div class="input-group tabletools">
-                        <div class="input-group-addon"><i class="fa fa-search"></i></div>
-                        <input type="text" id="searchtextkonsolidasi" class="form-control" placeholder="Kata kunci pencarian..." autofocus>
-                    </div>
-                    <table class="table table-hover table-bordered" id="dataTables-konsolidasi" width="100%" > 
-                        <thead class="bg-light-blue-active color-palette">
-                            <tr>
-                                <th rowspan="2" data-sortable="false" >#</th>
-                                <th rowspan="2">Periode Laporan</th>
-                                <th rowspan="2">CU</th>
-                                <th rowspan="2">CU <br/>Tepat<br/>Waktu</th>
-                                <th colspan="5" class="text-center">Anggota</th>
-                                <th rowspan="2">Kekayaan (ASET)</th>
-                                <th rowspan="2">Aktiva LANCAR</th>
-                                <th rowspan="2">Simpanan Saham(SP+SW)</th>
-                                <th colspan="2" class="text-center">Simpanan Non Saham</th>
-                                <th rowspan="2">Hutang SPD</th>
-                                <th colspan="2" class="text-center">Piutang</th>
-                                <th colspan="2" class="text-center">Piutang Lalai</th>
-                                <th colspan="2" class="text-center">Rasio Piutang</th>
-                                <th rowspan="2">DCR</th>
-                                <th rowspan="2">DCU</th>
-                                <th colspan="2" class="text-center">Total</th>
-                                <th rowspan="2">SHU</th>
-                            </tr>
-                            <tr>
-                                <th>Lelaki Biasa</th>
-                                <th>Lelaki L.Biasa</th>
-                                <th>Perempuan Biasa</th>
-                                <th>Perempuan L.Biasa</th>
-                                <th>Total</th>
-                                <th>Unggulan</th>
-                                <th>Harian & Deposito</th>
-                                <th>Beredar</th>
-                                <th>Bersih</th>
-                                <th> 1-12 Bulan</th>
-                                <th> > 12 Bulan</th>
-                                <th>Beredar</th>
-                                <th>Lalai</th>
-                                <th>Pendapatan</th>
-                                <th>Biaya</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($infogerakans as $data)
-                                <?php
-                                    $total = $data['l_biasa'] + $data['l_lbiasa'] + $data['p_biasa'] + $data['p_lbiasa'];
-                                    $piutangbersih = $data['piutangberedar'] - ($data['piutanglalai_1bulan'] + $data['piutanglalai_12bulan']);
-                                    $data['aset'] == 0 ? $rasio_beredar = 0 : $rasio_beredar =  ($data['piutangberedar'] / $data['aset']);
-                                    $data['piutangberedar'] == 0 ? $rasio_lalai = 0 : $rasio_lalai = ($data['piutanglalai_1bulan'] + $data['piutanglalai_12bulan']) / $data['piutangberedar'];
-                                ?>
-                                <tr >
-                                    <td class="bg-aqua disabled color-palette"></td>
-                                    <td>{{ $data['periode'] }}</td>
-                                    <td>{{ $data['tot_cu'] }}</td>
-                                    <td>{{ $data['tot_culaporan'] }}</td>
-                                    <td data-order="{{ $data['l_biasa'] }}">{{ number_format($data['l_biasa'],"0",",",".") }}</td>
-                                    <td data-order="{{ $data['l_lbiasa'] }}">{{ number_format($data['l_lbiasa'],"0",",",".")}}</td>
-                                    <td data-order="{{ $data['p_biasa'] }}">{{ number_format($data['p_biasa'],"0",",",".") }}</td>
-                                    <td data-order="{{ $data['p_lbiasa'] }}">{{ number_format($data['p_lbiasa'],"0",",",".") }}</td>
-                                    <td data-order="{{ $total }}">{{ number_format($total,"0",",",".") }}</td>
-                                    <td data-order="{{ $data['aset'] }}">{{ number_format($data['aset'],"0",",",".") }}</td>
-                                    <td data-order="{{ $data['aktivalancar'] }}">{{ number_format($data['aktivalancar'],"0",",",".") }}</td>
-                                    <td data-order="{{ $data['simpanansaham'] }}">{{ number_format($data['simpanansaham'],"0",",",".") }}</td>
-                                    <td data-order="{{ $data['nonsaham_unggulan'] }}">{{ number_format($data['nonsaham_unggulan'],"0",",",".") }}</td>
-                                    <td data-order="{{ $data['nonsaham_harian'] }}">{{ number_format($data['nonsaham_harian'],"0",",",".") }}</td>
-                                    <td data-order="{{ $data['hutangspd'] }}">{{ number_format($data['hutangspd'],"0",",",".") }}</td>
-                                    <td data-order="{{ $data['piutangberedar'] }}">{{ number_format($data['piutangberedar'],"0",",",".") }}</td>
-                                    <td data-order="{{ $data['piutanglalai_1bulan'] }}">{{ number_format($data['piutanglalai_1bulan'],"0",",",".") }}</td>
-                                    <td data-order="{{ $data['piutanglalai_12bulan'] }}">{{ number_format($data['piutanglalai_12bulan'],"0",",",".") }}</td>
-                                    <td data-order="{{ $piutangbersih }}">{{ number_format($piutangbersih,"0",",",".") }}</td>
-                                    <td data-order="{{ $rasio_beredar }}">{{ number_format(($rasio_beredar*100),2) }} %</td>
-                                    <td data-order="{{ $rasio_lalai }}">{{ number_format(($rasio_lalai*100),2) }} %</td>
-                                    <td data-order="{{ $data['dcr'] }}">{{ number_format($data['dcr'],"0",",",".") }}</td>
-                                    <td data-order="{{ $data['dcu'] }}">{{ number_format($data['dcr'],"0",",",".") }}</td>
-                                    <td data-order="{{ $data['totalpendapatan'] }}">{{ number_format($data['totalpendapatan'],"0",",",".") }}</td>
-                                    <td data-order="{{ $data['totalbiaya'] }}">{{ number_format($data['totalbiaya'],"0",",",".") }}</td>
-                                    <td data-order="{{ $data['shu'] }}">{{ number_format($data['shu'],"0",",",".") }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>  
-            @endif   
         </div>
     </div>
     {{-- table --}}
@@ -1156,30 +1568,32 @@
 
 @section('js')
 @include('admins._components.datatable_JS')
-<script type="text/javascript" src="{{ URL::asset('plugins/chartJS/Chart.bundle.js') }}"></script>
-{{-- <script type="text/javascript" src="{{ URL::asset('plugins/dataTables/extension/FixedColumns/js/dataTables.fixedColumns.min.js') }}"></script> --}}
-@include('admins.laporancu._component.grafik_data')
-@include('admins.laporancu._component.grafik')
-@include('admins.laporancu._component.grafik_tombol')
 <script>
-    $(document).ready(function(){
+    $(document).ready(function() {
         $('a[data-toggle="tab"]').on( 'shown.bs.tab', function (e) {
             $.fn.dataTable.tables( {visible: true, api: true} ).columns.adjust();
         } );
-    });
+    } );
 </script>
-@if(Request::is('admins/laporancu'))  
+@if(Request::is('admins/laporancu') || Request::is('admins/laporancu/index_periode*'))
+    @include('admins.laporancu._component.datatable_semua')
+    @include('admins.laporancu._component.datatable_total')
     @include('admins.laporancu._component.datatable_provinsi')
     @include('admins.laporancu._component.datatable_do')
-@endif
-@if(!Request::is('admins/laporancu/index_bkcu')) 
-    @include('admins.laporancu._component.datatable_semua')
-    @include('admins.laporancu._component.datatable_pearls')
-    @include('admins.laporancu._component.datatable_total')
-@endif
-@if(Request::is('admins/laporancu/index_bkcu'))
+@elseif(Request::is('admins/laporancu/index_bkcu') || Request::is('admins/laporancu/index_cu*'))
     @include('admins.laporancu._component.datatable_konsolidasi')
+    @include('admins.laporancu._component.datatable_do')
 @endif
+
+@if(!Request::is('admins/laporancu/index_bkcu'))
+    @include('admins.laporancu._component.datatable_pearls')
+@endif
+
+<script type="text/javascript" src="{{ URL::asset('plugins/chartJS/Chart.bundle.js') }}"></script>
+@include('admins.laporancu._component.grafik_data')
+@include('admins.laporancu._component.grafik')
+@include('admins.laporancu._component.grafik_tombol')
+
 {{--common function--}}
 <script>
     function func_single(){
@@ -1210,19 +1624,19 @@
             return false;
         });
     });
-    $('.nav-tabs li a').click(function (e) {
-        //get selected href
-        var href = $(this).attr('href');
+    // $('.nav-tabs li a').click(function (e) {
+    //     //get selected href
+    //     var href = $(this).attr('href');
 
-        //set all nav tabs to inactive
-        $('.nav-tabs li').removeClass('active');
+    //     //set all nav tabs to inactive
+    //     $('.nav-tabs li').removeClass('active');
 
-        //get all nav tabs matching the href and set to active
-        $('.nav-tabs li a[href="'+href+'"]').closest('li').addClass('active');
+    //     //get all nav tabs matching the href and set to active
+    //     $('.nav-tabs li a[href="'+href+'"]').closest('li').addClass('active');
 
-        //active tab
-        $('.tab-pane').removeClass('fade active in');
-        $('.tab-pane'+href).addClass('fade active in');
-    })
+    //     //active tab
+    //     $('.tab-pane').removeClass('fade active in');
+    //     $('.tab-pane'+href).addClass('fade active in');
+    // })
 </script>
 @stop

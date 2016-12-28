@@ -106,12 +106,12 @@ Route::group(array('prefix' => 'admins','middleware' => 'auth'), function(){
         'as'           => 'admins.artikel.update_status',
         'uses'         => 'ArtikelController@update_status',
         'middleware'   => ['auth', 'acl'],
-        'can'          => 'update_kategori.artikel_update_status']);
+        'can'          => 'update_status.artikel_update_status']);
     Route::post('artikel/update_pilihan', [
         'as'           => 'admins.artikel.update_pilihan',
         'uses'         => 'ArtikelController@update_pilihan',
         'middleware'   => ['auth', 'acl'],
-        'can'          => 'update_kategori.artikel_update_pilihan']);
+        'can'          => 'update_pilihan.artikel_update_pilihan']);
     Route::post('kategoriartikel', [
         'as'           => 'admins.kategoriartikel.store_kategori',
         'uses'         => 'ArtikelController@store_kategori',

@@ -321,7 +321,7 @@ $imagepath = "images_cu/";
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
-    {{ Form::close() }}
+    {{ Form::close() }}成思母亲节
 </div>
 <div class="modal fade" id="modalstatus" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     {{ Form::model($datas, array('route' => array('admins.'.$kelas.'.update_status'))) }}

@@ -94,8 +94,8 @@
     @include('_layouts.header')
     @yield('content')
 
-    {{--<img class="img-responsive" src="{{ asset('images/footer/footerimlek.png') }}"--}}
-       {{--width="100%"  style="vertical-align: bottom;margin-top: -3%;"/>--}}
+    <img class="img-responsive" src="{{ asset('images/footer/footernatal.png') }}"
+       width="100%"  style="vertical-align: bottom;margin-top: -3%;"/>
     @include('_layouts.footer')
 
             <!--modal photos-->

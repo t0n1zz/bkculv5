@@ -165,8 +165,8 @@ class LaporanCuController extends Controller{
                 $date = new Date($periode);
                 $gperiode[] = $date->format('F Y');
 
-                $infogerakans[$periode] = array(
-                        'periode' => $date->format('F Y'),
+                $datas2[$periode] = array(
+                        'periode' => $periode,
                         'l_biasa' => $tot_l_biasa,
                         'l_lbiasa' => $tot_l_lbiasa,
                         'p_biasa' => $tot_p_biasa,
@@ -193,8 +193,8 @@ class LaporanCuController extends Controller{
                         'tot_culaporan' => $tot_culaporan
                 );
             }
-            $dataarray = $infogerakans;
-            return view('admins.'.$this->kelaspath.'.index', compact('infogerakans','dataarray','gperiode'));
+            $dataarray = $datas2;
+            return view('admins.'.$this->kelaspath.'.index', compact('datas2','dataarray','gperiode'));
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
         }    
@@ -210,16 +210,17 @@ class LaporanCuController extends Controller{
                     return Redirect::back();
             }
 
-            $datas = LaporanCu::where('no_ba','=',$id)->orderBy('periode','desc')->get();
+            $datas = LaporanCu::where('no_ba','=',$id)->orderBy('periode','asc')->get();
 
             $dataarray = $datas->sortBy('periode')->toArray();
+            $datas2 = $datas->toArray();
             $periode = array_column($dataarray,'periode');
 
             foreach ($periode as $a){
                 $gperiode[] = date('F Y', strtotime($a));
             }
 
-            return view('admins.'.$this->kelaspath.'.index', compact('datas','dataarray','gperiode','id'));
+            return view('admins.'.$this->kelaspath.'.index', compact('datas','datas2','dataarray','gperiode','id'));
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
         }

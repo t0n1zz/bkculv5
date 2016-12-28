@@ -49,7 +49,7 @@ if(Auth::user()->can('view.laporancu_view') && $cu == '0'){
             $tot_p_biasa += $data->p_biasa;
             $tot_p_lbiasa += $data->p_lbiasa;
             $tot_aset += $data->aset;
-             $tot_aktivalancar += $data->aktivalancar;
+            $tot_aktivalancar += $data->aktivalancar;
             $tot_simpanansaham += $data->simpanansaham;
             $tot_nonsaham_unggulan += $data->nonsaham_unggulan;
             $tot_nonsaham_harian += $data->nonsaham_harian;
@@ -66,24 +66,24 @@ if(Auth::user()->can('view.laporancu_view') && $cu == '0'){
         $gperiode[] = $date->format('F Y');
 
         $infogerakans[$periode] = array(
-                'periode' => $date->format('F Y'),
-                'l_biasa' => $tot_l_biasa,
-                'l_lbiasa' => $tot_l_lbiasa,
-                'p_biasa' => $tot_p_biasa,
-                'p_lbiasa' => $tot_p_lbiasa,
-                'aset' => $tot_aset,
-                'aktivalancar' => $tot_aktivalancar,
-                'simpanansaham' => $tot_simpanansaham,
-                'nonsaham_unggulan' => $tot_nonsaham_unggulan,
-                'nonsaham_harian' => $tot_nonsaham_harian,
-                'piutangberedar' => $tot_piutangberedar,
-                'piutanglalai_1bulan' => $tot_piutanglalai_1bulan,
-                'piutanglalai_12bulan' => $tot_piutanglalai_12bulan,
-                'dcr' => $tot_dcr,
-                'dcu' => $tot_dcu,
-                'totalpendapatan' => $tot_totalpendapatan,
-                'totalbiaya' => $tot_totalbiaya,
-                'shu' => $tot_shu
+            'periode' => $date->format('F Y'),
+            'l_biasa' => $tot_l_biasa,
+            'l_lbiasa' => $tot_l_lbiasa,
+            'p_biasa' => $tot_p_biasa,
+            'p_lbiasa' => $tot_p_lbiasa,
+            'aset' => $tot_aset,
+            'aktivalancar' => $tot_aktivalancar,
+            'simpanansaham' => $tot_simpanansaham,
+            'nonsaham_unggulan' => $tot_nonsaham_unggulan,
+            'nonsaham_harian' => $tot_nonsaham_harian,
+            'piutangberedar' => $tot_piutangberedar,
+            'piutanglalai_1bulan' => $tot_piutanglalai_1bulan,
+            'piutanglalai_12bulan' => $tot_piutanglalai_12bulan,
+            'dcr' => $tot_dcr,
+            'dcu' => $tot_dcu,
+            'totalpendapatan' => $tot_totalpendapatan,
+            'totalbiaya' => $tot_totalbiaya,
+            'shu' => $tot_shu
         );
     };
 

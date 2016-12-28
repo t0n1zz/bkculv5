@@ -8,7 +8,11 @@
         scrollCollapse : true,
         paging : false,
         stateSave : false,
-        order : [],
+        @if(!Request::is('admins/laporancu/index_cu/*'))
+            order : [[ 2, 'desc']],
+        @else
+            order : [[ 1, 'desc']],
+        @endif    
         buttons: [
             {
                 extend:'colvis',
@@ -36,12 +40,6 @@
             "sInfoEmpty":    "Tampilan 0 hingga 0 dari 0 entri",
             "sInfoFiltered": "(disaring dari _MAX_ entri keseluruhan)",
             "sInfoPostFix":  "",
-        },
-        fnInitComplete:function(){
-            $('.dataTables_scrollBody').perfectScrollbar();
-        },
-        fnDrawCallback: function( oSettings ) {
-            $('.dataTables_scrollBody').perfectScrollbar('destroy').perfectScrollbar();
         }
     });
     $('#searchtextpearls').keyup(function(){

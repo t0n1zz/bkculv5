@@ -304,7 +304,7 @@ class CuprimerController extends Controller{
 
     public function input_tanggal($data)
     {
-        $date1 = Input::get('bergabung');
+        $date1 = Input::get('ultah');
         if(!empty($date1)){
             $timestamp = strtotime(str_replace('/', '-',$date1));
             $tanggal = date('Y-m-d',$timestamp);
