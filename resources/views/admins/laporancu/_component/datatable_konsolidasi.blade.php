@@ -8,7 +8,11 @@
         scrollCollapse : true,
         paging : false,
         stateSave : false,
-        order : [[ 1, 'desc']],
+        @if(Request::is('admins/laporancu/index_cu/*'))
+            order : [[ 2, 'desc']],
+        @else
+            order : [[ 1, 'desc']],
+        @endif
         buttons: [
             {
                 extend:'colvis',
@@ -87,6 +91,112 @@
         } );
     } ).draw();
 
+    @if(Request::is('admins/laporancu/index_cu/*'))
+        new $.fn.dataTable.Buttons(table_konsolidasi,{
+            buttons: [
+                @permission('create.laporancu_create')
+                {
+                    text: '<i class="fa fa-plus"></i> <u>T</u>ambah',
+                    key: {
+                        altKey: true,
+                        key: 't'
+                    },
+                    action: function(){
+                        window.location.href = "{{URL::to('admins/'.$kelas.'/create')}}";
+                    }
+                },
+                @endpermission
+                @permission('update.laporancu_update')
+                {
+                    text: '<i class="fa fa-pencil"></i> <u>U</u>bah',
+                    key: {
+                        altKey: true,
+                        key: 'u'
+                    },
+                    action: function(){
+                        var id = $.map(table_konsolidasi.rows({ selected: true }).data(),function(item){
+                            return item[1];
+                        });
+                        var kelas = "{{ $kelas }}";
+                        if(id != ""){
+                            window.location.href =  "/admins/" + kelas + "/" + id + "/edit";
+                        }else{
+                            $('#modalwarning').modal({show:true});
+                        }
+                    }
+                },
+                @endpermission
+                @permission('destroy.laporancu_destroy')
+                {
+                    text: '<i class="fa fa-trash"></i> <u>H</u>apus',
+                    key: {
+                        altKey: true,
+                        key: 'h'
+                    },
+                    action: function(){
+                        var id = $.map(table_konsolidasi.rows({ selected:true }).data(),function(item){
+                            return item[1];
+                        });
+                        if(id != ""){
+                            $('#modalhapus').modal({show:true});
+                            $('#modalhapus_judul').text('Hapus Laporan CU');
+                            $('#modalhapus_detail').text('Hapus Laporan CU');
+                            $('#modalhapus_id').attr('value',id);
+                        }else{
+                            $('#modalwarning').modal({show:true});
+                        }
+                    }
+                },
+                @endpermission
+            ]
+        });
+        table_konsolidasi.buttons( 0, null ).container().prependTo(
+                table_konsolidasi.table().container()
+        );
+
+        new $.fn.dataTable.Buttons(table_konsolidasi,{
+            buttons: [
+                @permission('upload.laporancu_upload')
+                {
+                    text: '<i class="fa fa-upload fa-fw"></i> Upload Excel',
+                    key: {
+                        altKey: true,
+                        key: 'u'
+                    },
+                    action: function(){
+                        $('#modalexcel').modal({show:true});
+                    }
+                },
+                @endpermission
+            ]
+        });
+        table_konsolidasi.buttons( 0, null ).container().prependTo(
+                table_konsolidasi.table().container()
+        );
+
+        new $.fn.dataTable.Buttons(table_konsolidasi,{
+            buttons: [
+                @if(!Request::is('admins/laporancu/index_cu/*'))
+                {
+                    text: '<i class="fa fa-database"></i> Detail',
+                    action: function(){
+                        var id = $.map(table.rows({ selected: true }).data(),function(item){
+                            return item[1];
+                        });
+                        var kelas = "{{ $kelas }}";
+                        if(id != ""){
+                            window.location.href = "/admins/" + kelas + "/detail/" + id ;
+                        }
+                    }
+                }
+                @endif
+            ]
+        });
+        table_konsolidasi.buttons( 0, null ).container().prependTo(
+                table_konsolidasi.table().container()
+        );
+    @endif
+        
     new $.fn.dataTable.Buttons(table_konsolidasi,{
         buttons: [
             {

@@ -8,57 +8,56 @@ $kelas ='laporancu';
 <div class="box box-primary">
     <div class="box-body">
         <div class="row">
-            @if(empty($data))   
-            <!--nama credit union-->
-            @if(Auth::user()->getCU() == '0')
-                <div class="col-sm-6">
-                    <div class="form-group">
-                        <h4>Nama Credit Union</h4>
-                        <div class="input-group">
-                            <div class="input-group-addon"><i class="fa fa-list"></i></div>
-                            <select class="form-control" name="no_ba" required data-error="Nama Credit Union wajib dipilih">
-                                <option selected disabled>Silahkan pilih Credit Union</option>
-                                @foreach($datas2 as $data2)
-                                    <option value="{{ $data2->no_ba }}"
-                                    @if(!empty($data))
-                                        @if($data->cu == $data2->no_ba)
-                                            {!! "selected" !!}
+                <!--nama credit union-->
+                @if(Auth::user()->getCU() == '0')
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <h4>Nama Credit Union</h4>
+                            <div class="input-group">
+                                <div class="input-group-addon"><i class="fa fa-list"></i></div>
+                                <select class="form-control" name="no_ba" required data-error="Nama Credit Union wajib dipilih"
+                                    @if(!empty($data)) {!! "readonly" !!} @endif>
+                                    <option selected disabled>Silahkan pilih Credit Union</option>
+                                    @foreach($datas2 as $data2)
+                                        <option value="{{ $data2->no_ba }}"
+                                        @if(!empty($data))
+                                            @if($data->no_ba == $data2->no_ba)
+                                                {!! "selected" !!}
+                                            @endif
                                         @endif
-                                    @endif
-                                    >{!! $data2->name !!}</option>
-                                @endforeach
-                            </select>
+                                        >{!! $data2->name !!}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+                <!--/nama credit union-->
+                <!-- dataper -->
+                @if(Auth::user()->getCU() == '0')
+                    <div class="col-sm-6">
+                @else
+                    <div class="col-sm-12">
+                @endif
+                    <div class="form-group">
+                        <h4>Periode Laporan</h4>
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                            <?php
+                            if(!empty($data->periode)){
+                                $timestamp = strtotime($data->periode);
+                                $tanggal = date('d/m/Y',$timestamp);
+                            }
+                            ?>
+                            <input type="text" name="periode" value="@if(!empty($tanggal)){{$tanggal}}@endif" class="form-control"
+                                   data-inputmask="'alias': 'date'" placeholder="dd/mm/yyyy" @if(!empty($data)) {!! "readonly" !!} @endif />
                         </div>
                     </div>
                 </div>
-            @endif
-            <!--/nama credit union-->
-            <!-- dataper -->
-            @if(Auth::user()->getCU() == '0')
-                <div class="col-sm-6">
-            @else
+                <!-- /data per-->
                 <div class="col-sm-12">
-            @endif
-                <div class="form-group">
-                    <h4>Periode Laporan</h4>
-                    <div class="input-group">
-                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                        <?php
-                        if(!empty($data->periode)){
-                            $timestamp = strtotime($data->periode);
-                            $tanggal = date('d/m/Y',$timestamp);
-                        }
-                        ?>
-                        <input type="text" name="periode" value="@if(!empty($tanggal)){{$tanggal}}@endif" class="form-control"
-                               data-inputmask="'alias': 'date'" placeholder="dd/mm/yyyy" />
-                    </div>
+                    <hr/>
                 </div>
-            </div>
-            <!-- /data per-->
-            <div class="col-sm-12">
-                <hr/>
-            </div>
-            @endif
             <!--jumlah anggota-->
             <div class="col-sm-3">
                 <div class="form-group">

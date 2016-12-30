@@ -245,7 +245,7 @@
                                     $tot_shu += $data->shu;
                                 ?>
                                 <tr @if($data->periode < $datas->first()->periode){!! 'class="highlight"'  !!} @endif>
-                                    <td class="bg-aqua disabled color-palette"></td>
+                                    <td class="bg-blue disabled color-palette"></td>
                                     <td hidden>{{ $data->id }}</td>
                                     <td hidden>{{ $data->no_ba }}</td>
                                     @if(!empty($data->cuprimer))
@@ -327,7 +327,7 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td class="bg-aqua disabled color-palette"><b>Total</b></td>
+                                <td class="bg-blue disabled color-palette"><b>Total</b></td>
                                 <td>{{ number_format($tot_l_biasa,"0",",",".") }}</td>
                                 <td>{{ number_format($tot_l_lbiasa,"0",",",".") }}</td>
                                 <td>{{ number_format($tot_p_biasa,"0",",",".") }}</td>
@@ -352,7 +352,7 @@
                                 <td>{{ number_format($tot_shu,"0",",",".") }}</td>
                             </tr>
                             <tr>
-                                <td class="bg-aqua disabled color-palette"><b>Rata - Rata</b></td>
+                                <td class="bg-blue disabled color-palette"><b>Rata - Rata</b></td>
                                 @if($tot_cu != 0)
                                     <td>{{ number_format($tot_l_biasa/$tot_cu,"0",",",".") }}</td>
                                     <td>{{ number_format($tot_l_lbiasa/$tot_cu,"0",",",".") }}</td>
@@ -432,7 +432,7 @@
                                 $data['piutangberedar'] == 0 ? $rasio_lalai = 0 : $rasio_lalai = ($data['piutanglalai_1bulan'] + $data['piutanglalai_12bulan']) / $data['piutangberedar'];
                             ?>    
                             <tr >
-                                <td class="bg-aqua disabled color-palette"></td>
+                                <td class="bg-blue disabled color-palette"></td>
                                 <td>{{ $data['nama'] }}</td>
                                 <td>{{ number_format($data['l_biasa'],"0",",",".") }}</td>
                                 <td>{{ number_format($data['l_lbiasa'],"0",",",".") }}</td>
@@ -508,7 +508,7 @@
                                 $data['piutangberedar'] == 0 ? $rasio_lalai = 0 : $rasio_lalai = ($data['piutanglalai_1bulan'] + $data['piutanglalai_12bulan']) / $data['piutangberedar'];
                             ?>
                             <tr >
-                                <td class="bg-aqua disabled color-palette"></td>
+                                <td class="bg-blue disabled color-palette"></td>
                                 <td>{{ $data['nama'] }}</td>
                                 <td>{{ number_format($data['l_biasa'],"0",",",".") }}</td>
                                 <td>{{ number_format($data['l_lbiasa'],"0",",",".")}}</td>
@@ -547,6 +547,9 @@
                         <thead class="bg-light-blue-active color-palette">
                             <tr>
                                 <th rowspan="2" data-sortable="false" >#</th>
+                                @if(Request::is('admins/laporancu/index_cu/*'))
+                                    <th rowspan="2" hidden></th>
+                                @endif
                                 <th rowspan="2" >Periode Laporan</th>
                                 @if(!Request::is('admins/laporancu/index_cu/*'))
                                     <th rowspan="2">CU</th>
@@ -654,7 +657,10 @@
                                     $shu1 = $data['shu'] - $shu2;
                                 ?>
                                 <tr >
-                                    <td class="bg-aqua disabled color-palette"></td> 
+                                    <td class="bg-blue disabled color-palette"></td>
+                                    @if(Request::is('admins/laporancu/index_cu/*'))
+                                        <td hidden>{{ $data['id'] }}</td>
+                                    @endif
                                     <td data-order="{{ $data['periode'] }}">{{ $periode }}</td>
                                     @if(!Request::is('admins/laporancu/index_cu/*'))
                                         <td>{{ $data['tot_cu'] }}</td>
@@ -663,16 +669,16 @@
                                     <td>{{ number_format($data['l_biasa'],"0",",",".") }}
                                         @if($l_biasa1 != $data['l_biasa'])
                                             @if($l_biasa1 > 0)
-                                                <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($l_biasa1,"0",",",".")}}"></i>
+                                                <i class="fa fa-caret-square-o-up fa-fw text-blue" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($l_biasa1,"0",",",".")}}"></i>
                                             @elseif($l_biasa1 < 0)
                                                 <i class="fa fa-caret-square-o-down fa-fw text-red" data-toggle="tooltip" data-placement="right" title="Berkurang {{ number_format(abs($l_biasa1),"0",",",".")}}"></i>
-                                            @endif
+                                            @endif   
                                         @endif
                                     </td>
                                     <td>{{ number_format($data['l_lbiasa'],"0",",",".")}}
                                         @if($l_lbiasa1 != $data['l_lbiasa'])
                                             @if($l_lbiasa1 > 0)
-                                                <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($l_lbiasa1,"0",",",".")}}"></i>
+                                                <i class="fa fa-caret-square-o-up fa-fw text-blue" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($l_lbiasa1,"0",",",".")}}"></i>
                                             @elseif($l_lbiasa1 < 0)
                                                 <i class="fa fa-caret-square-o-down fa-fw text-red" data-toggle="tooltip" data-placement="right" title="Berkurang {{ number_format(abs($l_lbiasa1),"0",",",".")}}"></i>
                                             @endif
@@ -681,7 +687,7 @@
                                     <td>{{ number_format($data['p_biasa'],"0",",",".") }}
                                         @if($p_biasa1 != $data['p_biasa'])
                                             @if($p_biasa1 > 0)
-                                                <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($p_biasa1,"0",",",".")}}"></i>
+                                                <i class="fa fa-caret-square-o-up fa-fw text-blue" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($p_biasa1,"0",",",".")}}"></i>
                                             @elseif($p_biasa1 < 0)
                                                 <i class="fa fa-caret-square-o-down fa-fw text-red" data-toggle="tooltip" data-placement="right" title="Berkurang {{ number_format(abs($p_biasa1),"0",",",".")}}"></i>
                                             @endif
@@ -690,7 +696,7 @@
                                     <td>{{ number_format($data['p_lbiasa'],"0",",",".") }}
                                         @if($p_lbiasa1 != $data['p_lbiasa'])
                                             @if($p_lbiasa1 > 0)
-                                                <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($p_lbiasa1,"0",",",".")}}"></i>
+                                                <i class="fa fa-caret-square-o-up fa-fw text-blue" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($p_lbiasa1,"0",",",".")}}"></i>
                                             @elseif($p_lbiasa1 < 0)
                                                 <i class="fa fa-caret-square-o-down fa-fw text-red" data-toggle="tooltip" data-placement="right" title="Berkurang {{ number_format(abs($p_lbiasa1),"0",",",".")}}"></i>
                                             @endif
@@ -699,7 +705,7 @@
                                     <td>{{ number_format($total,"0",",",".") }}
                                         @if($total1 != $total)
                                             @if($total1 > 0)
-                                                <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($total1,"0",",",".")}}"></i>
+                                                <i class="fa fa-caret-square-o-up fa-fw text-blue" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($total1,"0",",",".")}}"></i>
                                             @elseif($total1 < 0)
                                                 <i class="fa fa-caret-square-o-down fa-fw text-red" data-toggle="tooltip" data-placement="right" title="Berkurang {{ number_format(abs($total1),"0",",",".")}}"></i>
                                             @endif
@@ -708,7 +714,7 @@
                                     <td>{{ number_format($data['aset'],"0",",",".") }}
                                         @if($aset1 != $data['aset'])
                                             @if($aset1 > 0)
-                                                <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($aset1,"0",",",".")}}"></i>
+                                                <i class="fa fa-caret-square-o-up fa-fw text-blue" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($aset1,"0",",",".")}}"></i>
                                             @elseif($aset1 < 0)
                                                 <i class="fa fa-caret-square-o-down fa-fw text-red" data-toggle="tooltip" data-placement="right" title="Berkurang {{ number_format(abs($aset1),"0",",",".")}}"></i>
                                             @endif
@@ -717,7 +723,7 @@
                                     <td>{{ number_format($data['aktivalancar'],"0",",",".") }}
                                         @if($aktivalancar1 != $data['aktivalancar'])
                                             @if($aktivalancar1 > 0)
-                                                <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($aktivalancar1,"0",",",".")}}"></i>
+                                                <i class="fa fa-caret-square-o-up fa-fw text-blue" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($aktivalancar1,"0",",",".")}}"></i>
                                             @elseif($aktivalancar1 < 0)
                                                 <i class="fa fa-caret-square-o-down fa-fw text-red" data-toggle="tooltip" data-placement="right" title="Berkurang {{ number_format(abs($aktivalancar1),"0",",",".")}}"></i>
                                             @endif
@@ -726,7 +732,7 @@
                                     <td>{{ number_format($data['simpanansaham'],"0",",",".") }}
                                         @if($simpanansaham1 != $data['simpanansaham'])
                                             @if($simpanansaham1 > 0)
-                                                <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($simpanansaham1,"0",",",".")}}"></i>
+                                                <i class="fa fa-caret-square-o-up fa-fw text-blue" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($simpanansaham1,"0",",",".")}}"></i>
                                             @elseif($simpanansaham1 < 0)
                                                 <i class="fa fa-caret-square-o-down fa-fw text-red" data-toggle="tooltip" data-placement="right" title="Berkurang {{ number_format(abs($simpanansaham1),"0",",",".")}}"></i>
                                             @endif
@@ -735,7 +741,7 @@
                                     <td>{{ number_format($data['nonsaham_unggulan'],"0",",",".") }}
                                         @if($nonsaham_unggulan1 != $data['nonsaham_unggulan'])
                                             @if($nonsaham_unggulan1 > 0)
-                                                <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($nonsaham_unggulan1,"0",",",".")}}"></i>
+                                                <i class="fa fa-caret-square-o-up fa-fw text-blue" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($nonsaham_unggulan1,"0",",",".")}}"></i>
                                             @elseif($nonsaham_unggulan1 < 0)
                                                 <i class="fa fa-caret-square-o-down fa-fw text-red" data-toggle="tooltip" data-placement="right" title="Berkurang {{ number_format(abs($nonsaham_unggulan1),"0",",",".")}}"></i>
                                             @endif
@@ -744,7 +750,7 @@
                                     <td>{{ number_format($data['nonsaham_harian'],"0",",",".") }}
                                         @if($nonsaham_harian1 != $data['nonsaham_harian'])
                                             @if($nonsaham_harian1 > 0)
-                                                <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($nonsaham_harian1,"0",",",".")}}"></i>
+                                                <i class="fa fa-caret-square-o-up fa-fw text-blue" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($nonsaham_harian1,"0",",",".")}}"></i>
                                             @elseif($nonsaham_harian1 < 0)
                                                 <i class="fa fa-caret-square-o-down fa-fw text-red" data-toggle="tooltip" data-placement="right" title="Berkurang {{ number_format(abs($nonsaham_harian1),"0",",",".")}}"></i>
                                             @endif
@@ -753,7 +759,7 @@
                                     <td>{{ number_format($data['hutangspd'],"0",",",".") }}
                                         @if($hutangspd1 != $data['hutangspd'])
                                             @if($hutangspd1 > 0)
-                                                <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($hutangspd1,"0",",",".")}}"></i>
+                                                <i class="fa fa-caret-square-o-up fa-fw text-blue" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($hutangspd1,"0",",",".")}}"></i>
                                             @elseif($hutangspd1 < 0)
                                                 <i class="fa fa-caret-square-o-down fa-fw text-red" data-toggle="tooltip" data-placement="right" title="Berkurang {{ number_format(abs($hutangspd1),"0",",",".")}}"></i>
                                             @endif
@@ -762,7 +768,7 @@
                                     <td>{{ number_format($data['piutangberedar'],"0",",",".") }}
                                         @if($piutangberedar1 != $data['piutangberedar'])
                                             @if($piutangberedar1 > 0)
-                                                <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($piutangberedar1,"0",",",".")}}"></i>
+                                                <i class="fa fa-caret-square-o-up fa-fw text-blue" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($piutangberedar1,"0",",",".")}}"></i>
                                             @elseif($piutangberedar1 < 0)
                                                 <i class="fa fa-caret-square-o-down fa-fw text-red" data-toggle="tooltip" data-placement="right" title="Berkurang {{ number_format(abs($piutangberedar1),"0",",",".")}}"></i>
                                             @endif
@@ -771,7 +777,7 @@
                                     <td>{{ number_format($data['piutanglalai_1bulan'],"0",",",".") }}
                                         @if($piutanglalai_1bulan1 != $data['piutanglalai_1bulan'])
                                             @if($piutanglalai_1bulan1 > 0)
-                                                <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($piutanglalai_1bulan1,"0",",",".")}}"></i>
+                                                <i class="fa fa-caret-square-o-up fa-fw text-blue" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($piutanglalai_1bulan1,"0",",",".")}}"></i>
                                             @elseif($piutanglalai_1bulan1 < 0)
                                                 <i class="fa fa-caret-square-o-down fa-fw text-red" data-toggle="tooltip" data-placement="right" title="Berkurang {{ number_format(abs($piutanglalai_1bulan1),"0",",",".")}}"></i>
                                             @endif
@@ -780,7 +786,7 @@
                                     <td>{{ number_format($data['piutanglalai_12bulan'],"0",",",".") }}
                                         @if($piutanglalai_12bulan1 != $data['piutanglalai_12bulan'])
                                             @if($piutanglalai_12bulan1 > 0)
-                                                <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($piutanglalai_12bulan1,"0",",",".")}}"></i>
+                                                <i class="fa fa-caret-square-o-up fa-fw text-blue" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($piutanglalai_12bulan1,"0",",",".")}}"></i>
                                             @elseif($piutanglalai_12bulan1 < 0)
                                                 <i class="fa fa-caret-square-o-down fa-fw text-red" data-toggle="tooltip" data-placement="right" title="Berkurang {{ number_format(abs($piutanglalai_12bulan1),"0",",",".")}}"></i>
                                             @endif
@@ -789,7 +795,7 @@
                                     <td>{{ number_format($piutangbersih,"0",",",".") }}
                                         @if($piutangbersih1 != $piutangbersih)
                                             @if($piutangbersih1 > 0)
-                                                <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($piutangbersih1,"0",",",".")}}"></i>
+                                                <i class="fa fa-caret-square-o-up fa-fw text-blue" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($piutangbersih1,"0",",",".")}}"></i>
                                             @elseif($piutangbersih1 < 0)
                                                 <i class="fa fa-caret-square-o-down fa-fw text-red" data-toggle="tooltip" data-placement="right" title="Berkurang {{ number_format(abs($piutangbersih1),"0",",",".")}}"></i>
                                             @endif
@@ -798,7 +804,7 @@
                                     <td>{{ number_format(($rasio_beredar*100),2) }} % 
                                         @if($rasio_beredar1 != $rasio_beredar)
                                             @if($rasio_beredar1 > 0)
-                                                <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format(($rasio_beredar1*100),2) }} %"></i>
+                                                <i class="fa fa-caret-square-o-up fa-fw text-blue" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format(($rasio_beredar1*100),2) }} %"></i>
                                             @elseif($rasio_beredar1 < 0)
                                                 <i class="fa fa-caret-square-o-down fa-fw text-red" data-toggle="tooltip" data-placement="right" title="Berkurang {{ number_format((abs($rasio_beredar1)*100),2) }} %"></i>
                                             @endif
@@ -807,7 +813,7 @@
                                     <td>{{ number_format(($rasio_lalai*100),2) }} %
                                         @if($rasio_lalai1 != $rasio_lalai)
                                             @if($rasio_lalai1 > 0)
-                                                <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format(($rasio_lalai1*100),2) }} %"></i>
+                                                <i class="fa fa-caret-square-o-up fa-fw text-blue" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format(($rasio_lalai1*100),2) }} %"></i>
                                             @elseif($rasio_lalai1 < 0)
                                                 <i class="fa fa-caret-square-o-down fa-fw text-red" data-toggle="tooltip" data-placement="right" title="Berkurang {{ number_format((abs($rasio_lalai1)*100),2) }} %"></i>
                                             @endif
@@ -816,7 +822,7 @@
                                     <td>{{ number_format($data['dcr'],"0",",",".") }}
                                         @if($dcr1 != $data['dcr'])
                                             @if($dcr1 > 0)
-                                                <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($dcr1,"0",",",".")}}"></i>
+                                                <i class="fa fa-caret-square-o-up fa-fw text-blue" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($dcr1,"0",",",".")}}"></i>
                                             @elseif($dcr1 < 0)
                                                 <i class="fa fa-caret-square-o-down fa-fw text-red" data-toggle="tooltip" data-placement="right" title="Berkurang {{ number_format(abs($dcr1),"0",",",".")}}"></i>
                                             @endif
@@ -825,7 +831,7 @@
                                     <td>{{ number_format($data['dcu'],"0",",",".") }}
                                         @if($dcu1 != $data['dcu'])
                                             @if($dcu1 > 0)
-                                                <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($dcu1,"0",",",".")}}"></i>
+                                                <i class="fa fa-caret-square-o-up fa-fw text-blue" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($dcu1,"0",",",".")}}"></i>
                                             @elseif($dcu1 < 0)
                                                 <i class="fa fa-caret-square-o-down fa-fw text-red" data-toggle="tooltip" data-placement="right" title="Berkurang {{ number_format(abs($dcu1),"0",",",".")}}"></i>
                                             @endif
@@ -834,7 +840,7 @@
                                     <td>{{ number_format($data['totalpendapatan'],"0",",",".") }}
                                         @if($totalpendapatan1 != $data['totalpendapatan'])
                                             @if($totalpendapatan1 > 0)
-                                                <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($totalpendapatan1,"0",",",".")}}"></i>
+                                                <i class="fa fa-caret-square-o-up fa-fw text-blue" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($totalpendapatan1,"0",",",".")}}"></i>
                                             @elseif($totalpendapatan1 < 0)
                                                 <i class="fa fa-caret-square-o-down fa-fw text-red" data-toggle="tooltip" data-placement="right" title="Berkurang {{ number_format(abs($totalpendapatan1),"0",",",".")}}"></i>
                                             @endif
@@ -843,7 +849,7 @@
                                     <td>{{ number_format($data['totalbiaya'],"0",",",".") }}
                                         @if($totalbiaya1 != $data['totalbiaya'])
                                             @if($totalbiaya1 > 0)
-                                                <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($totalbiaya1,"0",",",".")}}"></i>
+                                                <i class="fa fa-caret-square-o-up fa-fw text-blue" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($totalbiaya1,"0",",",".")}}"></i>
                                             @elseif($totalbiaya1 < 0)
                                                 <i class="fa fa-caret-square-o-down fa-fw text-red" data-toggle="tooltip" data-placement="right" title="Berkurang {{ number_format(abs($totalbiaya1),"0",",",".")}}"></i>
                                             @endif
@@ -852,7 +858,7 @@
                                     <td>{{ number_format($data['shu'],"0",",",".") }}
                                         @if($shu1 != $data['shu'])
                                             @if($shu1 > 0)
-                                                <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($shu1,"0",",",".")}}"></i>
+                                                <i class="fa fa-caret-square-o-up fa-fw text-blue" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($shu1,"0",",",".")}}"></i>
                                             @elseif($shu1 < 0)
                                                 <i class="fa fa-caret-square-o-down fa-fw text-red" data-toggle="tooltip" data-placement="right" title="Berkurang {{ number_format(abs($shu1),"0",",",".")}}"></i>
                                             @endif
@@ -956,6 +962,8 @@
                                 $totalpendapatan2 = 0;
                                 $totalbiaya2 = 0;
                                 $shu2 = 0;
+
+                                $i = 0;
                             ?>
                             @foreach($datas2 as $data)
                                 <?php
@@ -988,42 +996,259 @@
                                     $totalpendapatan1 = $data['totalpendapatan'] - $totalpendapatan2;
                                     $totalbiaya1 = $data['totalbiaya'] - $totalbiaya2;
                                     $shu1 = $data['shu'] - $shu2;
+
+                                    $l_biasa1 = $l_biasa1 !=  $data['l_biasa'] ? $l_biasa1 : 0;
+                                    $l_lbiasa1 = $l_lbiasa1 !=  $data['l_lbiasa'] ? $l_lbiasa1 : 0;
+                                    $p_biasa1 = $p_biasa1 !=  $data['p_biasa'] ? $p_biasa1 : 0;
+                                    $p_lbiasa1 = $p_lbiasa1 !=  $data['p_lbiasa'] ? $p_lbiasa1 : 0;
+                                    $total1 = $total1 !=  $total ? $total1 : 0;
+                                    $aset1 = $aset1 !=  $data['aset'] ? $aset1 : 0;
+                                    $aktivalancar1 = $aktivalancar1 !=  $data['aktivalancar'] ? $aktivalancar1 : 0;
+                                    $simpanansaham1 = $simpanansaham1 !=  $data['simpanansaham'] ? $simpanansaham1 : 0;
+                                    $nonsaham_unggulan1 = $nonsaham_unggulan1 !=  $data['nonsaham_unggulan'] ? $nonsaham_unggulan1 : 0;
+                                    $nonsaham_harian1 = $nonsaham_harian1 !=  $data['nonsaham_harian'] ? $nonsaham_harian1 : 0;
+                                    $hutangspd1 = $hutangspd1 !=  $data['hutangspd'] ? $hutangspd1 : 0;
+                                    $piutangberedar1 = $piutangberedar1 !=  $data['piutangberedar'] ? $piutangberedar1 : 0;
+                                    $piutanglalai_1bulan1 = $piutanglalai_1bulan1 !=  $data['piutanglalai_1bulan'] ? $piutanglalai_1bulan1 : 0;
+                                    $piutanglalai_12bulan1 = $piutanglalai_12bulan1 !=  $data['piutanglalai_12bulan'] ? $piutanglalai_12bulan1 : 0;
+                                    $piutangbersih1 = $piutangbersih1 !=  $piutangbersih ? $piutangbersih1 : 0;
+                                    $rasio_beredar1 = $rasio_beredar1 !=  $rasio_beredar ? $rasio_beredar1 : 0;
+                                    $rasio_lalai1 = $rasio_lalai1 !=  $rasio_lalai ? $rasio_lalai1 : 0;
+                                    $dcr1 = $dcr1 !=  $data['dcr'] ? $dcr1 : 0;
+                                    $dcu1 = $dcu1 !=  $data['dcu'] ? $dcu1 : 0;
+                                    $totalpendapatan1 = $totalpendapatan1 !=  $data['totalpendapatan'] ? $totalpendapatan1 : 0;
+                                    $totalbiaya1 = $totalbiaya1 !=  $data['totalbiaya'] ? $totalbiaya1 : 0;
+                                    $shu1 = $shu1 !=  $data['shu'] ? $shu1 : 0;
+
+                                    $datatumbuh[$i] = array(
+                                        'nama' => $periode,
+                                        'l_biasa' => $l_biasa1,
+                                        'l_lbiasa' => $l_lbiasa1,
+                                        'p_biasa' => $p_biasa1,
+                                        'p_lbiasa' => $p_lbiasa1,
+                                        'total' => $total1,
+                                        'aset' => $aset1,
+                                        'aktivalancar' => $aktivalancar1,
+                                        'simpanansaham' => $simpanansaham1,
+                                        'nonsaham_unggulan' => $nonsaham_unggulan1,
+                                        'nonsaham_harian' => $nonsaham_harian1,
+                                        'hutangspd' => $hutangspd1,
+                                        'piutangberedar' => $piutangberedar1,
+                                        'piutanglalai_1bulan' => $piutanglalai_1bulan1,
+                                        'piutanglalai_12bulan' => $piutanglalai_12bulan1,
+                                        'piutangbersih' => $piutangbersih1,
+                                        'rasio_beredar' => $rasio_beredar1*100,
+                                        'rasio_lalai' => $rasio_lalai1*100,
+                                        'dcr' => $dcr1,
+                                        'dcu' => $dcu1,
+                                        'totalpendapatan' => $totalpendapatan1,
+                                        'totalbiaya' => $totalbiaya1,
+                                        'shu' => $shu1
+                                    );
+
+                                    $i++;
                                 ?>
                                 <tr >
-                                    <td class="bg-aqua disabled color-palette"></td> 
+                                    <td class="bg-blue disabled color-palette"></td> 
                                     <td data-order="{{ $data['periode'] }}">{{ $periode }}</td>
-                                    @if($l_biasa1 != $data['l_biasa'])
-                                        <td data-order="{{ $l_biasa1 }}">
+                                    <td data-order="{{ $l_biasa1 }}">
                                         @if($l_biasa1 > 0)
-                                            <span class="text-aqua"><i class="fa fa-caret-square-o-up"></i> {{ number_format($l_biasa1,"0",",",".")}}</span>
+                                            <span class="text-blue"><i class="fa fa-caret-square-o-up"></i> {{ number_format($l_biasa1,"0",",",".")}}</span>
                                         @elseif($l_biasa1 < 0)
                                             <span class="text-red"><i class="fa fa-caret-square-o-down"></i> {{ number_format(abs($l_biasa1),"0",",",".")}}</span>
+                                        @else
+                                            -    
                                         @endif
-                                        </td>
-                                    @else
-                                        <td>0</td>    
-                                    @endif
-                                    <td>{{ number_format($data['l_lbiasa'],"0",",",".")}}</td>
-                                    <td>{{ number_format($data['p_biasa'],"0",",",".") }}</td>
-                                    <td>{{ number_format($data['p_lbiasa'],"0",",",".") }}</td>
-                                    <td>{{ number_format($total,"0",",",".") }}</td>
-                                    <td>{{ number_format($data['aset'],"0",",",".") }}</td>
-                                    <td>{{ number_format($data['aktivalancar'],"0",",",".") }}</td>
-                                    <td>{{ number_format($data['simpanansaham'],"0",",",".") }}</td>
-                                    <td>{{ number_format($data['nonsaham_unggulan'],"0",",",".") }}</td>
-                                    <td>{{ number_format($data['nonsaham_harian'],"0",",",".") }}</td>
-                                    <td>{{ number_format($data['hutangspd'],"0",",",".") }}</td>
-                                    <td>{{ number_format($data['piutangberedar'],"0",",",".") }}</td>
-                                    <td>{{ number_format($data['piutanglalai_1bulan'],"0",",",".") }}</td>
-                                    <td>{{ number_format($data['piutanglalai_12bulan'],"0",",",".") }}</td>
-                                    <td>{{ number_format($piutangbersih,"0",",",".") }}</td>
-                                    <td>{{ number_format(($rasio_beredar*100),2) }} %</td>
-                                    <td>{{ number_format(($rasio_lalai*100),2) }} %</td>
-                                    <td>{{ number_format($data['dcr'],"0",",",".") }}</td>
-                                    <td>{{ number_format($data['dcr'],"0",",",".") }}</td>
-                                    <td>{{ number_format($data['totalpendapatan'],"0",",",".") }}</td>
-                                    <td>{{ number_format($data['totalbiaya'],"0",",",".") }}</td>
-                                    <td>{{ number_format($data['shu'],"0",",",".") }}</td>
+                                    </td>
+                                    <td data-order="{{ $l_lbiasa1 }}">
+                                        @if($l_lbiasa1 > 0)
+                                            <span class="text-blue"><i class="fa fa-caret-square-o-up"></i> {{ number_format($l_lbiasa1,"0",",",".")}}</span>
+                                        @elseif($l_lbiasa1 < 0)
+                                            <span class="text-red"><i class="fa fa-caret-square-o-down"></i> {{ number_format(abs($l_lbiasa1),"0",",",".")}}</span>
+                                        @else
+                                            - 
+                                        @endif
+                                    </td>
+                                    <td data-order="{{ $p_biasa1 }}">
+                                        @if($p_biasa1 > 0)
+                                            <span class="text-blue"><i class="fa fa-caret-square-o-up"></i> {{ number_format($p_biasa1,"0",",",".")}}</span>
+                                        @elseif($p_biasa1 < 0)
+                                            <span class="text-red"><i class="fa fa-caret-square-o-down"></i> {{ number_format(abs($p_biasa1),"0",",",".")}}</span>
+                                        @else
+                                            - 
+                                        @endif
+                                    </td>
+                                    <td data-order="{{ $p_lbiasa1 }}">
+                                        @if($p_lbiasa1 > 0)
+                                            <span class="text-blue"><i class="fa fa-caret-square-o-up"></i> {{ number_format($p_lbiasa1,"0",",",".")}}</span>
+                                        @elseif($p_lbiasa1 < 0)
+                                            <span class="text-red"><i class="fa fa-caret-square-o-down"></i> {{ number_format(abs($p_lbiasa1),"0",",",".")}}</span>
+                                        @else
+                                            - 
+                                        @endif
+                                    </td>
+                                    <td data-order="{{ $total1 }}">
+                                        @if($total1 > 0)
+                                            <span class="text-blue"><i class="fa fa-caret-square-o-up"></i> {{ number_format($total1,"0",",",".")}}</span>
+                                        @elseif($total1 < 0)
+                                            <span class="text-red"><i class="fa fa-caret-square-o-down"></i> {{ number_format(abs($total1),"0",",",".")}}</span>
+                                        @else
+                                            - 
+                                        @endif
+                                    </td>
+                                    <td data-order="{{ $aset1 }}">
+                                        @if($aset1 > 0)
+                                            <span class="text-blue"><i class="fa fa-caret-square-o-up"></i> {{ number_format($aset1,"0",",",".")}}</span>
+                                        @elseif($aset1 < 0)
+                                            <span class="text-red"><i class="fa fa-caret-square-o-down"></i> {{ number_format(abs($aset1),"0",",",".")}}</span>
+                                        @else
+                                            - 
+                                        @endif
+                                    </td>
+                                    <td data-order="{{ $aktivalancar1 }}">
+                                        @if($aktivalancar1 > 0)
+                                            <span class="text-blue"><i class="fa fa-caret-square-o-up"></i> {{ number_format($aktivalancar1,"0",",",".")}}</span>
+                                        @elseif($aktivalancar1 < 0)
+                                            <span class="text-red"><i class="fa fa-caret-square-o-down"></i> {{ number_format(abs($aktivalancar1),"0",",",".")}}</span>
+                                        @else
+                                            - 
+                                        @endif
+                                    </td>
+                                    <td data-order="{{ $simpanansaham1 }}">
+                                        @if($simpanansaham1 > 0)
+                                            <span class="text-blue"><i class="fa fa-caret-square-o-up"></i> {{ number_format($simpanansaham1,"0",",",".")}}</span>
+                                        @elseif($simpanansaham1 < 0)
+                                            <span class="text-red"><i class="fa fa-caret-square-o-down"></i> {{ number_format(abs($simpanansaham1),"0",",",".")}}</span>
+                                        @else
+                                            - 
+                                        @endif
+                                    </td>
+                                    <td data-order="{{ $nonsaham_unggulan1 }}">
+                                        @if($nonsaham_unggulan1 > 0)
+                                            <span class="text-blue"><i class="fa fa-caret-square-o-up"></i> {{ number_format($nonsaham_unggulan1,"0",",",".")}}</span>
+                                        @elseif($nonsaham_unggulan1 < 0)
+                                            <span class="text-red"><i class="fa fa-caret-square-o-down"></i> {{ number_format(abs($nonsaham_unggulan1),"0",",",".")}}</span>
+                                        @else
+                                            - 
+                                        @endif
+                                    </td>
+                                    <td data-order="{{ $nonsaham_harian1 }}">
+                                        @if($nonsaham_harian1 > 0)
+                                            <span class="text-blue"><i class="fa fa-caret-square-o-up"></i> {{ number_format($nonsaham_harian1,"0",",",".")}}</span>
+                                        @elseif($nonsaham_harian1 < 0)
+                                            <span class="text-red"><i class="fa fa-caret-square-o-down"></i> {{ number_format(abs($nonsaham_harian1),"0",",",".")}}</span>
+                                        @else
+                                            - 
+                                        @endif
+                                    </td>
+                                    <td data-order="{{ $hutangspd1 }}">
+                                        @if($hutangspd1 > 0)
+                                            <span class="text-blue"><i class="fa fa-caret-square-o-up"></i> {{ number_format($hutangspd1,"0",",",".")}}</span>
+                                        @elseif($hutangspd1 < 0)
+                                            <span class="text-red"><i class="fa fa-caret-square-o-down"></i> {{ number_format(abs($hutangspd1),"0",",",".")}}</span>
+                                        @else
+                                            - 
+                                        @endif
+                                    </td>
+                                    <td data-order="{{ $piutangberedar1 }}">
+                                        @if($piutangberedar1 > 0)
+                                            <span class="text-blue"><i class="fa fa-caret-square-o-up"></i> {{ number_format($piutangberedar1,"0",",",".")}}</span>
+                                        @elseif($piutangberedar1 < 0)
+                                            <span class="text-red"><i class="fa fa-caret-square-o-down"></i> {{ number_format(abs($piutangberedar1),"0",",",".")}}</span>
+                                        @else
+                                            - 
+                                        @endif
+                                    </td>
+                                    <td data-order="{{ $piutanglalai_1bulan1 }}">
+                                        @if($piutanglalai_1bulan1 > 0)
+                                            <span class="text-blue"><i class="fa fa-caret-square-o-up"></i> {{ number_format($piutanglalai_1bulan1,"0",",",".")}}</span>
+                                        @elseif($piutanglalai_1bulan1 < 0)
+                                            <span class="text-red"><i class="fa fa-caret-square-o-down"></i> {{ number_format(abs($piutanglalai_1bulan1),"0",",",".")}}</span>
+                                        @else
+                                            - 
+                                        @endif
+                                    </td>
+                                    <td data-order="{{ $piutanglalai_12bulan1 }}">
+                                        @if($piutanglalai_12bulan1 > 0)
+                                            <span class="text-blue"><i class="fa fa-caret-square-o-up"></i> {{ number_format($piutanglalai_12bulan1,"0",",",".")}}</span>
+                                        @elseif($piutanglalai_12bulan1 < 0)
+                                            <span class="text-red"><i class="fa fa-caret-square-o-down"></i> {{ number_format(abs($piutanglalai_12bulan1),"0",",",".")}}</span>
+                                        @else
+                                            - 
+                                        @endif
+                                    </td>
+                                    <td data-order="{{ $piutangbersih1 }}">
+                                        @if($piutangbersih1 > 0)
+                                            <span class="text-blue"><i class="fa fa-caret-square-o-up"></i> {{ number_format($piutangbersih1,"0",",",".")}}</span>
+                                        @elseif($piutangbersih1 < 0)
+                                            <span class="text-red"><i class="fa fa-caret-square-o-down"></i> {{ number_format(abs($piutangbersih1),"0",",",".")}}</span>
+                                        @else
+                                            - 
+                                        @endif
+                                    </td>
+                                    <td data-order="{{ $rasio_beredar1 }}">
+                                        @if($rasio_beredar1 > 0)
+                                            <span class="text-blue"><i class="fa fa-caret-square-o-up"></i> {{ number_format(($rasio_beredar1*100),2) }} %</span>
+                                        @elseif($rasio_beredar1 < 0)
+                                            <span class="text-red"><i class="fa fa-caret-square-o-down"></i> {{ number_format((abs($rasio_beredar1)*100),2) }} %</span>
+                                        @else
+                                            - 
+                                        @endif
+                                    </td>
+                                    <td data-order="{{ $rasio_lalai1 }}">
+                                        @if($rasio_lalai1 > 0)
+                                            <span class="text-blue"><i class="fa fa-caret-square-o-up"></i> {{ number_format(($rasio_lalai1*100),2) }} %</span>
+                                        @elseif($rasio_lalai1 < 0)
+                                            <span class="text-red"><i class="fa fa-caret-square-o-down"></i> {{ number_format((abs($rasio_lalai1)*100),2) }} %</span>
+                                        @else   
+                                            - 
+                                        @endif
+                                    </td>
+                                    <td data-order="{{ $dcr1 }}">
+                                        @if($dcr1 > 0)
+                                            <span class="text-blue"><i class="fa fa-caret-square-o-up"></i> {{ number_format($dcr1,"0",",",".")}}</span>
+                                        @elseif($dcr1 < 0)
+                                            <span class="text-red"><i class="fa fa-caret-square-o-down"></i> {{ number_format(abs($dcr1),"0",",",".")}}</span>
+                                        @else
+                                            - 
+                                        @endif
+                                    </td>
+                                    <td data-order="{{ $dcu1 }}">
+                                        @if($dcu1 > 0)
+                                            <span class="text-blue"><i class="fa fa-caret-square-o-up"></i> {{ number_format($dcu1,"0",",",".")}}</span>
+                                        @elseif($dcu1 < 0)
+                                            <span class="text-red"><i class="fa fa-caret-square-o-down"></i> {{ number_format(abs($dcu1),"0",",",".")}}</span>
+                                        @else
+                                            - 
+                                        @endif
+                                    </td>
+                                    <td data-order="{{ $totalpendapatan1 }}">
+                                        @if($totalpendapatan1 > 0)
+                                            <span class="text-blue"><i class="fa fa-caret-square-o-up"></i> {{ number_format($totalpendapatan1,"0",",",".")}}</span>
+                                        @elseif($totalpendapatan1 < 0)
+                                            <span class="text-red"><i class="fa fa-caret-square-o-down"></i> {{ number_format(abs($totalpendapatan1),"0",",",".")}}</span>
+                                        @else
+                                            - 
+                                        @endif
+                                    </td>
+                                    <td data-order="{{ $totalbiaya1 }}">
+                                        @if($totalbiaya1 > 0)
+                                            <span class="text-blue"><i class="fa fa-caret-square-o-up"></i> {{ number_format($totalbiaya1,"0",",",".")}}</span>
+                                        @elseif($totalbiaya1 < 0)
+                                            <span class="text-red"><i class="fa fa-caret-square-o-down"></i> {{ number_format(abs($totalbiaya1),"0",",",".")}}</span>
+                                        @else
+                                            - 
+                                        @endif
+                                    </td>
+                                    <td data-order="{{ $shu1 }}">
+                                        @if($shu1 > 0)
+                                            <span class="text-blue"><i class="fa fa-caret-square-o-up"></i> {{ number_format($shu1,"0",",",".")}}</span>
+                                        @elseif($shu1 < 0)
+                                            <span class="text-red"><i class="fa fa-caret-square-o-down"></i> {{ number_format(abs($shu1),"0",",",".")}}</span>
+                                        @else
+                                            - 
+                                        @endif
+                                    </td>
                                 </tr>
                                  <?php
                                    $l_biasa2= $data['l_biasa']; 
@@ -1163,7 +1388,7 @@
                                     $i++;
                                     ?>  
                                 <tr>
-                                    <td class="bg-aqua disabled color-palette"></td>
+                                    <td class="bg-blue disabled color-palette"></td>
                                     @if(!Request::is('admins/laporancu/index_cu/*'))
                                         @if(!empty($data->cuprimer))
                                             <td>{{ $data->cuprimer->name }}</td>
@@ -1227,17 +1452,20 @@
     <!--grafik-->
     <div class="nav-tabs-custom">
         <ul class="nav nav-tabs">
-            <li class="active"><a href="#tab_cu" data-toggle="tab">Grafik Perkembangan</a></li>
+            <li class="active"><a href="#tab_cu_graf" data-toggle="tab">Grafik Perkembangan</a></li>
             @if(Request::is('admins/laporancu') || Request::is('admins/laporancu/index_periode/*'))
-                <li><a href="#tab_provinsi" data-toggle="tab">Grafik Perkembangan (Provinsi)</a></li>
-                <li><a href="#tab_do" data-toggle="tab">Grafik Perkembangan (District Office)</a></li>
+                <li><a href="#tab_provinsi_graf" data-toggle="tab">Grafik Perkembangan (Provinsi)</a></li>
+                <li><a href="#tab_do_graf" data-toggle="tab">Grafik Perkembangan (District Office)</a></li>
+            @endif
+            @if(Request::is('admins/laporancu/konsolidasi') || Request::is('admins/laporancu/index_cu*'))
+                <li><a href="#tab_tumbuh_graf" data-toggle="tab">Grafik Pertumbuhan</a></li>
             @endif
             @if(!Request::is('admins/laporancu/index_bkcu')) 
-                <li><a href="#tab_pearls" data-toggle="tab">Grafik P.E.A.R.L.S</a></li>
+                <li><a href="#tab_pearls_graf" data-toggle="tab">Grafik P.E.A.R.L.S</a></li>
             @endif
         </ul>
         <div class="tab-content">
-            <div class="tab-pane active" id="tab_cu">
+            <div class="tab-pane active" id="tab_cu_graf">
                 <?php
                 $gl_biasa = array_column($dataarray,'l_biasa');
                 $gl_lbiasa = array_column($dataarray,'l_lbiasa');
@@ -1309,7 +1537,7 @@
                 </div>
             </div>
             @if(Request::is('admins/laporancu') || Request::is('admins/laporancu/index_periode/*'))
-                <div class="tab-pane" id="tab_provinsi">
+                <div class="tab-pane" id="tab_provinsi_graf">
                     <?php
                     $gperiode2 = array_column($wilayahs,'nama');
                     $gl_biasa2 = array_column($wilayahs,'l_biasa');
@@ -1380,7 +1608,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="tab-pane" id="tab_do">
+                <div class="tab-pane" id="tab_do_graf">
                     <?php
                     $gperiode3 = array_column($dos,'nama');
                     $gl_biasa3= array_column($dos,'l_biasa');
@@ -1452,8 +1680,68 @@
                     </div>
                 </div>
             @endif
+            @if(Request::is('admins/laporancu/konsolidasi') || Request::is('admins/laporancu/index_cu*'))
+                <div class="tab-pane" id="tab_tumbuh_graf">
+                    <?php
+                        if(!empty($datatumbuh)){
+                            $gperiode3 = array_column($datatumbuh,'nama');
+                            $gl_biasa3= array_column($datatumbuh,'l_biasa');
+                            $gl_lbiasa3 = array_column($datatumbuh,'l_lbiasa');
+                            $gp_biasa3 = array_column($datatumbuh,'p_biasa');
+                            $gp_lbiasa3 = array_column($datatumbuh,'p_lbiasa');
+                            $gtotalanggota3  = array_column($datatumbuh,'total');
+                            $gaset3 = array_column($datatumbuh,'aset');
+                            $gaktivalancar3 = array_column($datatumbuh,'aktivalancar');
+                            $gsimpanansaham3 = array_column($datatumbuh,'simpanansaham');
+                            $gnonsaham_unggulan3 = array_column($datatumbuh,'nonsaham_unggulan');
+                            $gnonsaham_harian3 = array_column($datatumbuh,'nonsaham_harian');
+                            $ghutangspd3 = array_column($datatumbuh,'hutangspd');
+                            $gpiutangbersih3 = array_column($datatumbuh,'piutangbersih');
+                            $gpiutangberedar3 = array_column($datatumbuh,'piutangberedar');
+                            $gpiutanglalai_1bulan3 = array_column($datatumbuh,'piutanglalai_1bulan');
+                            $gpiutanglalai_12bulan3 = array_column($datatumbuh,'piutanglalai_12bulan');
+                            $grasioberedar3 = array_column($datatumbuh,'rasio_beredar');
+                            $grasiolalai3 = array_column($datatumbuh,'rasio_lalai');
+                            $gdcr3 = array_column($datatumbuh,'dcr');
+                            $gdcu3 = array_column($datatumbuh,'dcu');
+                            $gtotalpendapatan3 = array_column($datatumbuh,'totalpendapatan');
+                            $gtotalbiaya3 = array_column($datatumbuh,'totalbiaya');
+                            $gshu3 = array_column($datatumbuh,'shu'); 
+                        }
+                    ?>
+                    <canvas id="chart3" height="100em"></canvas>
+                    <hr/>
+                    <div class="input-group">
+                        <div class="input-group-addon primary-color"><i class="fa fa-fw fa-bar-chart"></i> Grafik Laporan Berdasarkan</div>
+                        <select class="form-control" id="chart_select3">
+                            <option value="l_biasa">Anggota Lelaki Biasa</option>
+                            <option value="l_lbiasa">Anggota Lelaki Luar Biasa</option>
+                            <option value="p_biasa">Anggota Perempuan Biasa</option>
+                            <option value="p_lbiasa">Anggota Perempuan Luar Biasa</option>
+                            <option value="totalanggota">Total Anggota</option>
+                            <option value="aktivalancar">Aktiva Lancar</option>
+                            <option value="simpanansaham">Simpanan Saham</option>
+                            <option value="nonsaham_unggulan">Simpanan Non Saham Unggulan</option>
+                            <option value="nonsaham_harian">Simpanan Non Saham Harian & Deposito</option>
+                            <option value="hutangspd">Hutang SPD</option>
+                            <option value="aset">Aset</option>
+                            <option value="piutangberedar">Piutang Beredar</option>
+                            <option value="piutanglalai_1bulan">Piutang Lalai 1-12 Bulan</option>
+                            <option value="piutanglalai_12bulan">Piutang Lalai > 12 Bulan</option>
+                            <option value="piutangbersih">Piutang Bersih</option>
+                            <option value="rasioberedar">Rasio Piutang Beredar</option>
+                            <option value="rasiolalai">Rasio Piutang Lalai</option>
+                            <option value="dcr">DCR</option>
+                            <option value="dcu">DCU</option>
+                            <option value="totalpendapatan">Total Pendapatan</option>
+                            <option value="totalbiaya">Total Biaya</option>
+                            <option value="shu">SHU</option>
+                        </select>
+                    </div>
+                </div>
+            @endif
             @if(!Request::is('admins/laporancu/index_bkcu')) 
-                <div class="tab-pane" id="tab_pearls">
+                <div class="tab-pane" id="tab_pearls_graf">
                     <?php
                         if(!empty($datapearls)){
                             $gp1 = array_column($datapearls,'p1');
@@ -1568,6 +1856,9 @@
 
 @section('js')
 @include('admins._components.datatable_JS')
+<script type="text/javascript" src="{{ URL::asset('plugins/chartJS/Chart.bundle.js') }}"></script>
+@include('admins.laporancu._component.grafik_data')
+
 <script>
     $(document).ready(function() {
         $('a[data-toggle="tab"]').on( 'shown.bs.tab', function (e) {
@@ -1575,22 +1866,25 @@
         } );
     } );
 </script>
+
 @if(Request::is('admins/laporancu') || Request::is('admins/laporancu/index_periode*'))
     @include('admins.laporancu._component.datatable_semua')
     @include('admins.laporancu._component.datatable_total')
     @include('admins.laporancu._component.datatable_provinsi')
     @include('admins.laporancu._component.datatable_do')
+    @include('admins.laporancu._component.grafik_data2')
+    @include('admins.laporancu._component.grafik_data3')
 @elseif(Request::is('admins/laporancu/index_bkcu') || Request::is('admins/laporancu/index_cu*'))
     @include('admins.laporancu._component.datatable_konsolidasi')
     @include('admins.laporancu._component.datatable_do')
+    @include('admins.laporancu._component.grafik_data3')
 @endif
 
 @if(!Request::is('admins/laporancu/index_bkcu'))
     @include('admins.laporancu._component.datatable_pearls')
+    @include('admins.laporancu._component.grafik_datapearls')
 @endif
 
-<script type="text/javascript" src="{{ URL::asset('plugins/chartJS/Chart.bundle.js') }}"></script>
-@include('admins.laporancu._component.grafik_data')
 @include('admins.laporancu._component.grafik')
 @include('admins.laporancu._component.grafik_tombol')
 
