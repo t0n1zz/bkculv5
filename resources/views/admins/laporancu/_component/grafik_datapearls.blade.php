@@ -131,7 +131,7 @@
     };
 </script>
 
-{{-- <script>
+<script>
     var randomColorFactor = function() {
         return Math.round(Math.random() * 255);
     };
@@ -191,10 +191,9 @@
         dataset.pointRadius = 5;
         dataset.pointHitRadios = 10;
     });
-    window.onload = function() {
-        var ctx4 = document.getElementById("chart4").getContext("2d");
-        window.chart4 = new Chart(ctx4, config4);
-    };
+</script>
+
+<script>
     $(function(){
         $('#chart_select4').on('change', function () {
             var id = $(this).val(); // get selected value
@@ -242,4 +241,4 @@
             return false;
         });
     });
-</script> --}}
+</script>

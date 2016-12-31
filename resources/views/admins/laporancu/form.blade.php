@@ -16,7 +16,7 @@ $kelas ='laporancu';
                             <div class="input-group">
                                 <div class="input-group-addon"><i class="fa fa-list"></i></div>
                                 <select class="form-control" name="no_ba" required data-error="Nama Credit Union wajib dipilih"
-                                    @if(!empty($data)) {!! "readonly" !!} @endif>
+                                    @if(!empty($data)) {!! "disabled" !!} @endif>
                                     <option selected disabled>Silahkan pilih Credit Union</option>
                                     @foreach($datas2 as $data2)
                                         <option value="{{ $data2->no_ba }}"
@@ -50,7 +50,7 @@ $kelas ='laporancu';
                             }
                             ?>
                             <input type="text" name="periode" value="@if(!empty($tanggal)){{$tanggal}}@endif" class="form-control"
-                                   data-inputmask="'alias': 'date'" placeholder="dd/mm/yyyy" @if(!empty($data)) {!! "readonly" !!} @endif />
+                                   data-inputmask="'alias': 'date'" placeholder="dd/mm/yyyy" />
                         </div>
                     </div>
                 </div>
