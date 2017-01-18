@@ -27,20 +27,20 @@
                 {
                     extend: 'colvisGroup',
                     text: 'Anggota',
-                    show: [ 0,1,2,3,4,5,6, ],
-                    hide: [ 7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25 ]
+                    show: [ 0,1,2,3,4,5,6,7 ],
+                    hide: [ 8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26 ]
                 },
                 {
                     extend: 'colvisGroup',
                     text: 'SHU',
-                    show: [ 0,1,7,21,22,23],
-                    hide: [ 2,3,4,5,6,8,9,10,11,12,13,14,15,16,17,18,19,20,24,25 ]
+                    show: [ 0,1,2,8,22,23,24,25],
+                    hide: [ 3,4,5,6,7,9,10,11,12,13,14,15,16,17,18,19,20,21,25,26 ]
                 },
                 {
                     extend: 'colvisGroup',
                     text: 'Piutang',
-                    show: [ 0,1,13,14,15,16,17,18],
-                    hide: [ 2,3,4,5,6,7,8,9,10,11,12,19,20,21,22,23,24,25 ]
+                    show: [ 0,1,2,14,15,16,17,18,19],
+                    hide: [ 3,4,5,6,7,8,9,10,11,12,13,20,21,22,23,24,25,26 ]
                 }
             @else
                 {
@@ -52,14 +52,14 @@
                 {
                     extend: 'colvisGroup',
                     text: 'SHU',
-                    show: [ 0,1,2,3,23,24,25 ],
-                    hide: [ 4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22 ]
+                    show: [ 0,1,2,3,9,23,24,25 ],
+                    hide: [ 4,5,6,7,8,10,11,12,13,14,15,16,17,18,19,20,21,22 ]
                 },
                 {
                     extend: 'colvisGroup',
                     text: 'Piutang',
-                    show: [ 0,1,2,3,9,15,16,17,18,19,20 ],
-                    hide: [ 4,5,6,7,8,10,11,12,13,14,21,22,23,24,25 ]
+                    show: [ 0,1,2,3,15,16,17,18,19,20 ],
+                    hide: [ 4,5,6,7,8,9,10,11,12,13,14,21,22,23,24,25 ]
                 }
             @endif
         ],
@@ -168,6 +168,26 @@
                     }
                 },
                 @endpermission
+            ]
+        });
+        table_konsolidasi.buttons( 0, null ).container().prependTo(
+                table_konsolidasi.table().container()
+        );
+
+        new $.fn.dataTable.Buttons(table_konsolidasi,{
+            buttons: [
+                {
+                    text: '<i class="fa fa-database"></i> Detail',
+                    action: function(){
+                        var id = $.map(table_konsolidasi.rows({ selected: true }).data(),function(item){
+                            return item[1];
+                        });
+                        var kelas = "{{ $kelas }}";
+                        if(id != ""){
+                            window.location.href = "/admins/" + kelas + "/detail/" + id ;
+                        }
+                    }
+                }
             ]
         });
         table_konsolidasi.buttons( 0, null ).container().prependTo(

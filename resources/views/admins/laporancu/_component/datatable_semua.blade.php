@@ -32,14 +32,14 @@
             {
                 extend: 'colvisGroup',
                 text: 'SHU',
-                show: [ 0,1,2,3,7,13,27,28,29 ],
-                hide: [ 4,5,6,8,9,10,11,12,14,15,16,17,18,19,20,21,22,23,24,25,26,30,31 ]
+                show: [ 0,1,2,3,7,14,28,29,30 ],
+                hide: [ 4,5,6,8,9,10,11,12,13,15,16,17,18,19,20,21,22,23,24,25,26,27,31,32 ]
             },
             {
                 extend: 'colvisGroup',
                 text: 'Piutang',
-                show: [ 0,1,2,3,7,19,20,21,22,23,24 ],
-                hide: [ 4,5,6,8,9,10,11,12,13,14,15,16,17,18,25,26,27,28,29,30,31 ]
+                show: [ 0,1,2,3,7,20,21,22,23,24,25 ],
+                hide: [ 4,5,6,8,9,10,11,12,13,14,15,16,17,18,19,26,27,28,29,30,31,32 ]
             }],
         language: {
             buttons : {},
@@ -155,7 +155,6 @@
 
     new $.fn.dataTable.Buttons(table,{
         buttons: [
-            @if(!Request::is('admins/laporancu/index_cu/*'))
             {
                 text: '<i class="fa fa-database"></i> Detail',
                 action: function(){
@@ -168,7 +167,6 @@
                     }
                 }
             }
-            @endif
         ]
     });
     table.buttons( 0, null ).container().prependTo(

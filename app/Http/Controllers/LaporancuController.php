@@ -8,6 +8,7 @@ use Excel;
 use Redirect;
 use Validator;
 use App\Models\LaporanCu;
+use App\Models\LaporanCuDiskusi;
 use App\Models\Cuprimer;
 use App\Models\WilayahCuprimer;
 use App\Models\Excelitems;
@@ -363,15 +364,18 @@ class LaporanCuController extends Controller{
     {
         try{
             $data = LaporanCu::find($id);
-            $datas2 = Cuprimer::orderBy('name','asc')->get();
-
+            $no_ba = $data->no_ba;
+            $periode = $data->periode;
             $cu = Auth::user()->getCU();
+
             if($cu > 0){
-                if($cu != $data->no_ba)
+                if($cu != $no_ba)
                     return Redirect::back();
             }
 
-            return view('admins.'.$this->kelaspath.'.detail', compact('data','datas2'));
+            $datas2 = LaporanCuDiskusi::with('User')->where('id_laporan','=',$id)->get();
+
+            return view('admins.'.$this->kelaspath.'.detail', compact('data','no_ba','periode','datas2'));
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
         }
@@ -434,6 +438,28 @@ class LaporanCuController extends Controller{
                     return Redirect::route('admins.'.$this->kelaspath.'.index_cu',array($no_ba))->with('sucessmessage', 'Laporan CU Telah berhasil diubah.');
                 }
             }
+        }catch (Exception $e){
+            return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
+        }
+    }
+
+    public function store_diskusi()
+    {
+        try{
+            $validator = Validator::make($data = Input::all(), LaporanCuDiskusi::$rules);
+
+            if ($validator->fails())
+            {
+                return Redirect::back()->withErrors($validator)->withInput();
+            }
+
+            $id_user = Auth::user()->getId();
+            array_set($data,'id_user',$id_user);
+
+            LaporanCuDiskusi::create($data);
+
+            return Redirect::back()->with('sucessmessage','Diskusi Laporan CU Telah berhasil ditambah.');
+
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
         }
@@ -509,6 +535,25 @@ class LaporanCuController extends Controller{
         }
     }
 
+    public function update_diskusi()
+    {
+        try{
+            $validator = Validator::make($data = Input::all(), LaporanCuDiskusi::$rules);
+            if ($validator->fails())
+            {
+                return Redirect::back()->withErrors($validator)->withInput();
+            }
+            $id = Input::get('id');
+            $kelas = LaporanCuDiskusi::findOrFail($id);
+
+            //simpan
+            $kelas->update($data);
+            return Redirect::back()->with('sucessmessage', 'Diskusi laporan CU Telah berhasil diubah.');
+        }catch (Exception $e){
+            return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
+        }
+    }
+
     /**
      * Remove the specified artikel from storage.
      *
@@ -532,6 +577,22 @@ class LaporanCuController extends Controller{
                 $no_ba = $cuprimer->no_ba;
                 return Redirect::route('admins.'.$this->kelaspath.'.index_cu',array($no_ba))->with('sucessmessage','Laporan CU Telah berhasil di hapus.');
             }
+        }catch (Exception $e){
+            return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
+        }
+    }
+
+    public function destroy_diskusi()
+    {
+        try{
+            $id = Input::get('id');
+
+            LaporanCuDiskusi::destroy($id);
+
+            $cu = \Auth::user()->getCU();
+            $cuprimer = \App\Models\Cuprimer::where('no_ba','=',$cu)->select('no_ba')->first();
+            
+            return Redirect::back()->withInput()->with('sucessmessage','Diskusi Laporan CU Telah berhasil di hapus.');
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
         }

@@ -144,8 +144,8 @@
                                 <th rowspan="2">DCU</th>
                                 <th colspan="2" class="text-center">Total</th>
                                 <th rowspan="2">SHU</th>
-                                <th rowspan="2">Tanggal Masuk</th>
-                                <th rowspan="2">Tanggal Ubah</th>
+                                <th rowspan="2">Tgl. Terima</th>
+                                <th rowspan="2">Tgl. Ubah</th>
                             </tr>
                             <tr>
                                 <th>Lelaki Biasa</th>
@@ -282,8 +282,8 @@
                                     <td>{{ number_format($data->totalpendapatan,"0",",",".") }}</td>
                                     <td>{{ number_format($data->totalbiaya,"0",",",".") }}</td>
                                     <td>{{ number_format($data->shu,"0",",",".") }}</td>
-                                    <td data-order="{{ $data->created_at }}">@if(!empty($data->created_at)){{ $data->created_at->format('l, j F Y') }}@else{{ '-' }}@endif</td>
-                                    <td data-order="{{ $data->updated_at }}">@if(!empty($data->updated_at)){{ $data->updated_at->format('l, j F Y') }}@else{{ '-' }}@endif</td>
+                                    <td data-order="{{ $data->created_at }}">@if(!empty($data->created_at)){{ $data->created_at->format('d/m/Y') }}@else{{ '-' }}@endif</td>
+                                    <td data-order="{{ $data->updated_at }}">@if(!empty($data->updated_at)){{ $data->updated_at->format('d/m/Y') }}@else{{ '-' }}@endif</td>
                                 </tr>
                             @endforeach
                         </tbody>

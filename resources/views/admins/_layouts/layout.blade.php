@@ -215,6 +215,7 @@
     })
 </script>
 @yield('js')
+@yield('js2')
 <!-- custom script -->
 <script type="text/javascript" src="{{ URL::asset('admin/myscript.js') }}"></script>
 </body>

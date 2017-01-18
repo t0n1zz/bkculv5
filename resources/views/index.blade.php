@@ -10,8 +10,8 @@
         <ol class="carousel-indicators">
             <?php $i = 0; ?>
             <li data-target="#main-slide" data-slide-to="{{$i}}" class="active"></li>
-            <?php $i++; ?>
-            <li data-target="#main-slide" data-slide-to="{{$i}}"></li>
+{{--             <?php $i++; ?>
+            <li data-target="#main-slide" data-slide-to="{{$i}}"></li> --}}
             @if(!empty($ultahcu))
                 <?php $i++; ?>
                 <li data-target="#main-slide" data-slide-to="{{$i}}"></li>
@@ -50,14 +50,14 @@
                     </div>
                 </div>
             </div>
-            <div class="item">
+{{--             <div class="item">
                <div class="">
                    {{ Html::image('images/natal.jpg', 'Selamat Menunaikan Ibadah Puasa', array(
                   'class' => 'img-responsive')) }}
                </div>
                <div class="slider-content">
                </div>
-            </div>
+            </div> --}}
        {{--     <div class="item">
                 <div class="">
                     {{ Html::image('images/slider-imlek.jpg', 'Chinese New Year 2016', array(

@@ -244,6 +244,21 @@ Route::group(array('prefix' => 'admins','middleware' => 'auth'), function(){
         'uses'         => 'LaporanCuController@detail',
         'middleware'   => ['auth', 'acl'],
         'can'          => 'view.laporancu_view']);
+    Route::post('laporancu/diskusi/store', [
+        'as'           => 'admins.diskusi.store',
+        'uses'         => 'LaporanCuController@store_diskusi',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'create.laporancu_create']);
+    Route::put('laporancu/diskusi/{laporancu}', [
+        'as'           => 'admins.laporancu.update_diskusi',
+        'uses'         => 'LaporanCuController@update_diskusi',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'update.laporancu_update']);
+    Route::delete('laporancu/diskusi/{laporancu}', [
+        'as'           => 'admins.laporancu.destroy_diskusi',
+        'uses'         => 'LaporanCuController@destroy_diskusi',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'destroy.laporancu_destroy']);
 //tp CU
     Route::get('tpcu', [
         'as'           => 'admins.tpcu.index',           
