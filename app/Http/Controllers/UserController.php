@@ -6,6 +6,8 @@ use DB;
 use Auth;
 use Hash;
 use Input;
+use Image; 
+use File;
 use Redirect;
 use Validator;
 use App\Models\Cuprimer;
@@ -18,6 +20,7 @@ use Kodeine\Acl\Models\Eloquent\Permission;
 class UserController extends controller{
 
     protected $kelaspath = 'admin';
+    protected $imagepath ='images_user/';
 
     public function index()
     {
@@ -221,6 +224,41 @@ class UserController extends controller{
         }
     }
 
+    public function update_gambar()
+    {
+        try{
+            $id = Input::get('id');
+            $kelas = User::findOrFail($id);
+            $data = Input::all();
+            $name = Input::get('name');
+            $data2 = $this->upload_gambar($kelas,$data);
+
+            $kelas->update($data2);
+
+            return Redirect::back()->with('sucessmessage', 'Foto <b><i>' . $name . '</i></b> telah berhasil diubah.');
+        }catch (Exception $e){
+            return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
+        }
+    }
+
+    public function upload_gambar($kelas,$data)
+    {
+        $name = str_limit(preg_replace('/[^A-Za-z0-9\-]/', '',Input::get('name')),30);
+        $formatedname = $name.str_random(10);
+        $img = Input::file('gambar');
+        if (!is_null($img)) {
+            $filename = $formatedname.".jpg";
+
+            $this->save_image($img, $kelas, $filename);
+            array_set($data, 'gambar', $formatedname);
+        } else {
+            $filename = $kelas->gambar;
+            array_set($data, 'gambar', $filename);
+        }
+
+        return $data;
+    }
+
     public function destroy()
     {
         try{
@@ -329,6 +367,25 @@ class UserController extends controller{
             if($adminrole->can($tipe.'.'.$namaakses.'_'.$tipe)){
                 $adminrole->revokePermission($namaakses.'_'.$tipe);
             }
+        }
+    }
+
+    function save_image($img,$kelas,$filename)
+    {
+        list($width, $height) = getimagesize($img);
+
+        $path = public_path($this->imagepath);
+
+        File::delete($path . $kelas->gambar .".jpg");
+
+        if($width > 249){
+            Image::make($img->getRealPath())->resize(249, null,
+                function ($constraint) {
+                    $constraint->aspectRatio();
+                })
+                ->save($path . $filename);
+        }else{
+            Image::make($img->getRealPath())->save($path . $filename);
         }
     }
 }

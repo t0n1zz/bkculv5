@@ -167,7 +167,7 @@ return [
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         Barryvdh\Debugbar\ServiceProvider::class,
         Yajra\Datatables\DatatablesServiceProvider::class,
-        Kodeine\Acl\AclServiceProvider::class,
+        Kodeine\Acl\AclServiceProvider::class
     ],
 
     /*

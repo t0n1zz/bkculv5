@@ -1,6 +1,6 @@
 <?php
     $gambar = Auth::user()->getGambar();
-    $imagepath = 'images/';
+    $imagepath = 'images_user/';
 
     // if(Auth::user()->getLogout() != "0000-00-00 00:00:00"){
     //     $date = new Date(Auth::user()->getLogout());
@@ -79,7 +79,7 @@
                     @if(!empty($gambar) && is_file($imagepath.$gambar.".jpg"))
                             <img src="{!! asset($imagepath.$gambar.".jpg") !!}" class="user-image" alt="User Image" />
                     @else
-                            <img src="{!! asset($imagepath."user.png") !!}" class="user-image" alt="User Image" />
+                            <img src="{!! asset($imagepath."user.jpg") !!}" class="user-image" alt="User Image" />
                     @endif
 
                  {{ Auth::user()->getName() }} - {{ $name_cu }}</a></li>

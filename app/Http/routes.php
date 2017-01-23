@@ -244,21 +244,22 @@ Route::group(array('prefix' => 'admins','middleware' => 'auth'), function(){
         'uses'         => 'LaporanCuController@detail',
         'middleware'   => ['auth', 'acl'],
         'can'          => 'view.laporancu_view']);
+//laporan cu diskusi
     Route::post('laporancu/diskusi/store', [
-        'as'           => 'admins.diskusi.store',
-        'uses'         => 'LaporanCuController@store_diskusi',
+        'as'           => 'admins.laporancudiskusi.store',
+        'uses'         => 'LaporanCuDiskusiController@store',
         'middleware'   => ['auth', 'acl'],
-        'can'          => 'create.laporancu_create']);
+        'can'          => 'view.laporancu_view']);
     Route::put('laporancu/diskusi/{laporancu}', [
-        'as'           => 'admins.laporancu.update_diskusi',
-        'uses'         => 'LaporanCuController@update_diskusi',
+        'as'           => 'admins.laporancudiskusi.update',
+        'uses'         => 'LaporanCuDiskusiController@update',
         'middleware'   => ['auth', 'acl'],
-        'can'          => 'update.laporancu_update']);
+        'can'          => 'view.laporancu_view']);
     Route::delete('laporancu/diskusi/{laporancu}', [
-        'as'           => 'admins.laporancu.destroy_diskusi',
-        'uses'         => 'LaporanCuController@destroy_diskusi',
+        'as'           => 'admins.laporancudiskusi.destroy',
+        'uses'         => 'LaporanCuDiskusiController@destroy',
         'middleware'   => ['auth', 'acl'],
-        'can'          => 'destroy.laporancu_destroy']);
+        'can'          => 'view.laporancu_view']);
 //tp CU
     Route::get('tpcu', [
         'as'           => 'admins.tpcu.index',           
@@ -444,7 +445,11 @@ Route::group(array('prefix' => 'admins','middleware' => 'auth'), function(){
         'as'           => 'admins.admin.check_password',           
         'uses'         => 'UserController@check_password',
         'middleware'   => ['auth', 'acl'],
-        'can'          => 'view.admin_view']);  
+        'can'          => 'view.admin_view']); 
+    Route::post('admin/update_gambar', [
+        'as'           => 'admins.admin.update_gambar',           
+        'uses'         => 'UserController@update_gambar',
+        'middleware'   => ['auth', 'acl']]);       
 // kegiatan
      Route::get('kegiatan', [
         'as'           => 'admins.kegiatan.index',           

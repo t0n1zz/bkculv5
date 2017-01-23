@@ -1,6 +1,8 @@
 <?php
 $title = "Detail Laporan CU ";
 $kelas = "laporancu";
+$kelas2 = "laporancudiskusi";
+$imagepath = 'images_user/';
 $iduser = \Auth::user()->getId();
 $culists = App\Models\Cuprimer::orderBy('name','asc')->where('status','=','1')->get();
 $culists_non = App\Models\Cuprimer::orderBy('name','asc')->where('status','=','0')->get();
@@ -49,6 +51,7 @@ foreach ($pilihperiode as $dataperiode){
                             <?php $date = new Date($pilihperiode->periode); ?>
                             <option {{ Request::is('admins/laporancu/detail/'.$pilihperiode->id) ? 'selected' : '' }}
                                     value="/admins/laporancu/detail/{{$pilihperiode->id}}">{{ $date->format('F Y') }}</option>
+
                         @endforeach
                     </select>
                 </div>
@@ -72,7 +75,11 @@ foreach ($pilihperiode as $dataperiode){
                             @foreach($datas2 as $data2)
                                 <div class="well well-sm ">
                                     <div class="item">
-                                        <img src="" alt="user image" class="online">
+                                        @if(!empty($data2->user->gambar) && is_file($imagepath.$data2->user->gambar.".jpg"))
+                                                <img src="{!! asset($imagepath.$data2->user->gambar.".jpg") !!}" alt="user image" class="online" />
+                                        @else
+                                                <img src="{!! asset($imagepath."user.jpg") !!}" alt="user image" class="online" />
+                                        @endif
                                         <p class="message">
                                           <span class="name">
                                             <?php $date = new Date($data2->created_at); ?>
@@ -96,8 +103,9 @@ foreach ($pilihperiode as $dataperiode){
                         @if($datas2->count() > 3)
                             <hr style="margin-top: 10px;" />
                         @endif
-                        {{ Form::model($datas2,array('route' => array('admins.diskusi.store'),'method' => 'post','data-toggle' => 'validator','role' => 'form')) }}
+                        {{ Form::model($datas2,array('route' => array('admins.'.$kelas2.'.store'),'method' => 'post','data-toggle' => 'validator','role' => 'form')) }}
                             <input type="text" name="id_laporan" value="{{ $data->id }}" hidden>
+                            <input type="text" name="route" value="{{ Request::path() }}" hidden>
                             <div class="input-group">
                                 <input class="form-control" name="content" placeholder="Tuliskan pesan...." required="true" data-minlength="5">
                                 <div class="input-group-btn">
@@ -113,7 +121,7 @@ foreach ($pilihperiode as $dataperiode){
     <!--content-->
 </section>
 <div class="modal fade" id="modalubah" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    {{ Form::open(array('route' => array('admins.'.$kelas.'.update_diskusi',$kelas), 'method' => 'put','data-toggle' => 'validator','role' => 'form')) }}
+    {{ Form::open(array('route' => array('admins.'.$kelas2.'.update',$kelas2), 'method' => 'put','data-toggle' => 'validator','role' => 'form')) }}
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header bg-light-blue-active color-palette">
@@ -122,12 +130,13 @@ foreach ($pilihperiode as $dataperiode){
             </div>
             <div class="modal-body">
                 <input type="text" name="id" value="" id="modalubah_id" hidden>
+                <input type="text" name="route" value="{{ Request::path() }}" hidden>
                 <div class="form-group">
                     <h4>Mengubah diskusi</h4>
                     <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-font"></i></span>
                         {{ Form::text('content',null,array('class' => 'form-control','id'=>'modalubah_content',
-                        'placeholder' => 'Silahkan masukkan pengumuman','autocomplete'=>'off','required','data-minlength'=>'5'))}}
+                        'placeholder' => 'Silahkan masukkan diskusi','autocomplete'=>'off','required','data-minlength'=>'5'))}}
                     </div>
                 </div>
             </div>
@@ -140,7 +149,7 @@ foreach ($pilihperiode as $dataperiode){
     {{ Form::close() }}
 </div>
 <div class="modal fade" id="modalhapus" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    {{ Form::model($datas2,array('route' => array('admins.'.$kelas.'.destroy_diskusi',$kelas), 'method' => 'delete')) }}
+    {{ Form::model($datas2,array('route' => array('admins.'.$kelas2.'.destroy',$kelas2), 'method' => 'delete')) }}
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header bg-red-active color-palette">
@@ -150,6 +159,7 @@ foreach ($pilihperiode as $dataperiode){
             <div class="modal-body">
                 <h4 style="font-size: 16px" id="modalhapus_detail">Hapus Diskusi</h4>
                 <input type="text" name="id" value="" id="modalhapus_id" hidden>
+                <input type="text" name="route" value="{{ Request::path() }}" hidden>
             </div>
             <div class="modal-footer">
                 <button type="submit" class="btn btn-danger" id="modalbutton"><i class="fa fa-trash fa-fw"></i> Hapus</button>

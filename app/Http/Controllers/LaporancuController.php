@@ -389,9 +389,10 @@ class LaporanCuController extends Controller{
     public function create()
     {
         try{
-            $datas2 = Cuprimer::orderBy('name','asc')->get();;
+            $culists = Cuprimer::orderBy('name','asc')->where('status','=','1')->get();
+            $culists_non = Cuprimer::orderBy('name','asc')->where('status','=','0')->get();
 
-            return view('admins.'.$this->kelaspath.'.create', compact('datas2'));
+            return view('admins.'.$this->kelaspath.'.create', compact('culists','culists_non'));
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
         }
@@ -438,28 +439,6 @@ class LaporanCuController extends Controller{
                     return Redirect::route('admins.'.$this->kelaspath.'.index_cu',array($no_ba))->with('sucessmessage', 'Laporan CU Telah berhasil diubah.');
                 }
             }
-        }catch (Exception $e){
-            return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
-        }
-    }
-
-    public function store_diskusi()
-    {
-        try{
-            $validator = Validator::make($data = Input::all(), LaporanCuDiskusi::$rules);
-
-            if ($validator->fails())
-            {
-                return Redirect::back()->withErrors($validator)->withInput();
-            }
-
-            $id_user = Auth::user()->getId();
-            array_set($data,'id_user',$id_user);
-
-            LaporanCuDiskusi::create($data);
-
-            return Redirect::back()->with('sucessmessage','Diskusi Laporan CU Telah berhasil ditambah.');
-
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
         }
@@ -535,25 +514,6 @@ class LaporanCuController extends Controller{
         }
     }
 
-    public function update_diskusi()
-    {
-        try{
-            $validator = Validator::make($data = Input::all(), LaporanCuDiskusi::$rules);
-            if ($validator->fails())
-            {
-                return Redirect::back()->withErrors($validator)->withInput();
-            }
-            $id = Input::get('id');
-            $kelas = LaporanCuDiskusi::findOrFail($id);
-
-            //simpan
-            $kelas->update($data);
-            return Redirect::back()->with('sucessmessage', 'Diskusi laporan CU Telah berhasil diubah.');
-        }catch (Exception $e){
-            return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
-        }
-    }
-
     /**
      * Remove the specified artikel from storage.
      *
@@ -577,22 +537,6 @@ class LaporanCuController extends Controller{
                 $no_ba = $cuprimer->no_ba;
                 return Redirect::route('admins.'.$this->kelaspath.'.index_cu',array($no_ba))->with('sucessmessage','Laporan CU Telah berhasil di hapus.');
             }
-        }catch (Exception $e){
-            return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
-        }
-    }
-
-    public function destroy_diskusi()
-    {
-        try{
-            $id = Input::get('id');
-
-            LaporanCuDiskusi::destroy($id);
-
-            $cu = \Auth::user()->getCU();
-            $cuprimer = \App\Models\Cuprimer::where('no_ba','=',$cu)->select('no_ba')->first();
-            
-            return Redirect::back()->withInput()->with('sucessmessage','Diskusi Laporan CU Telah berhasil di hapus.');
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
         }

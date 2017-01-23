@@ -18,14 +18,25 @@ $kelas ='laporancu';
                                 <select class="form-control" name="no_ba" required data-error="Nama Credit Union wajib dipilih"
                                     @if(!empty($data)) {!! "disabled" !!} @endif>
                                     <option selected disabled>Silahkan pilih Credit Union</option>
-                                    @foreach($datas2 as $data2)
-                                        <option value="{{ $data2->no_ba }}"
+                                    <option disabled>-------CU Aktif-------</option>   
+                                    @foreach($culists as $culist)
+                                        <option value="{{ $culist->no_ba }}"
                                         @if(!empty($data))
-                                            @if($data->no_ba == $data2->no_ba)
+                                            @if($data->no_ba == $culist->no_ba)
                                                 {!! "selected" !!}
                                             @endif
                                         @endif
-                                        >{!! $data2->name !!}</option>
+                                        >{!! $culist->name !!}</option>
+                                    @endforeach
+                                    <option disabled>-------CU Non-Aktif-------</option>
+                                    @foreach($culists_non as $culist)
+                                        <option value="{{ $culist->no_ba }}"
+                                        @if(!empty($data))
+                                            @if($data->no_ba == $culist->no_ba)
+                                                {!! "selected" !!}
+                                            @endif
+                                        @endif
+                                        >{!! $culist->name !!}</option>
                                     @endforeach
                                 </select>
                             </div>

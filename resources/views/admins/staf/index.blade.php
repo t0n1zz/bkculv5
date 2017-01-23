@@ -281,7 +281,6 @@ $imagepath = "images_staf/";
         );
         new $.fn.dataTable.Buttons(table,{
             buttons: [
-                @permission('view.stafdetail_view')
                 {
                     text: '<i class="fa fa-database"></i> Detail',
                     action: function(){
@@ -294,10 +293,8 @@ $imagepath = "images_staf/";
                         }else{
                             $('#modalwarning').modal({show:true});
                         }
-
                     }
                 }
-                @endpermission
             ]
         });
         table.buttons( 0, null ).container().prependTo(

@@ -1,10 +1,14 @@
 <?php
 namespace App\Models;
 
+use Spatie\Sluggable\HasSlug;
+use Spatie\Sluggable\SlugOptions;
 use illuminate\Database\Eloquent\Model;
 
 class Artikel extends Model {
     
+    use HasSlug;
+
     protected $table = 'artikel';
     
     public static $rules = [
@@ -29,5 +33,15 @@ class Artikel extends Model {
 
     public function Admin(){
         return $this->belongsTo('Admin','penulis','id');
+    }
+
+      /**
+     * Get the options for generating the slug.
+     */
+    public function getSlugOptions() : SlugOptions
+    {
+        return SlugOptions::create()
+            ->generateSlugsFrom('judul')
+            ->saveSlugsTo('url');
     }
 }

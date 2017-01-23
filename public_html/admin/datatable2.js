@@ -25,12 +25,6 @@ var table2 = $('#dataTables-example2').DataTable({
         "sInfoEmpty":    "Tampilan 0 hingga 0 dari 0 entri",
         "sInfoFiltered": "(disaring dari _MAX_ entri keseluruhan)",
         "sInfoPostFix":  "",
-    },
-    fnInitComplete:function(){
-        $('.dataTables_scrollBody').perfectScrollbar();
-    },
-    fnDrawCallback: function( oSettings ) {
-        $('.dataTables_scrollBody').perfectScrollbar('destroy').perfectScrollbar();
     }
 });
 

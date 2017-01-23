@@ -1,6 +1,14 @@
 <?php
 $title = "Kelola Admin";
 $kelas = "admin";
+$imagepath = "images_user/";
+
+$file_max = ini_get('upload_max_filesize');
+$file_max_str_leng = strlen($file_max);
+$file_max_meassure_unit = substr($file_max,$file_max_str_leng - 1,1);
+$file_max_meassure_unit = $file_max_meassure_unit == 'K' ? 'kb' : ($file_max_meassure_unit == 'M' ? 'mb' : ($file_max_meassure_unit == 'G' ? 'gb' : 'unidades'));
+$file_max = substr($file_max,0,$file_max_str_leng - 1);
+$file_max = intval($file_max);
 ?>
 
 @extends('admins._layouts.layout')
@@ -42,6 +50,8 @@ $kelas = "admin";
                     <tr >
                         <th>#</th>
                         <th hidden></th>
+                        <th hidden></th>
+                        <th data-sortable="false">Foto</th>
                         <th>Username</th>
                         <th>Nama</th>
                         <th>CU</th>
@@ -55,6 +65,20 @@ $kelas = "admin";
                         <tr>
                             <td class="bg-aqua disabled color-palette"></td>
                             <td hidden>{{ $data->id }}</td>
+                            @if(!empty($data->gambar) && is_file($imagepath.$data->gambar.".jpg"))
+                                <td hidden>{{  asset($imagepath.$data->gambar.'.jpg') }}</td> 
+                            @else
+                                <td hidden>{{ asset('images/no_image_man.jpg') }}</td>
+                            @endif
+                            @if(!empty($data->gambar) && is_file($imagepath.$data->gambar.".jpg"))
+                                <td style="white-space: nowrap"><div class="modalphotos" >
+                                        {{ Html::image($imagepath.$data->gambar.'.jpg',asset($imagepath.$data->gambar."jpg"),
+                                         array('class' => 'img-responsive', 'width' => '40px')) }}
+                                    </div></td>
+                            @else
+                                <td>{{ Html::image('images/no_image_man.jpg', 'a picture', array('class' => 'img-responsive',
+                                                     'width' => '40px')) }}</td>
+                            @endif
                             <td>{{ $data->username }}</td>
                             <td>{{ $data->name }}</td>
 
@@ -178,7 +202,36 @@ $kelas = "admin";
     </div><!-- /.modal-dialog -->
     {{ Form::close() }}
 </div>
-
+<div class="modal fade" id="modalgambar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    {{ Form::model($datas, array('route' => array('admins.'.$kelas.'.update_gambar'),'files' => true, 'data-toggle'=>'validator')) }}
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-light-blue-active color-palette">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title"><i class="fa fa-picture-o"></i> Ubah Foto</h4>
+            </div>
+            <div class="modal-body">
+                <input type="text" value="" name="id" id="modalgambar_id" hidden>
+                <input type="text" value="" name="name" id="modalgambar_name" hidden>
+                <div>
+                    <h4>Foto</h4>
+                    <div class="thumbnail" >
+                            {{ Html::image('images_user/no_image.jpg', 'a picture', array('class' => 'img-responsive', 'id' => 'tampilgambar', 'width' => '200')) }}
+                        <div class="caption">
+                            {{ Form::file('gambar', array('onChange' => 'readURL(this)','required')) }}
+                        </div>
+                    </div>
+                    <div class="help-block">Ukuran maksimum file gambar adalah {!! $file_max. ' ' .$file_max_meassure_unit !!}.</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" id="modalbutton"><i class="fa fa-save"></i> Simpan</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Batal</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+    {{ Form::close() }}
+</div>
 <!-- /.modal -->
 @stop
 
@@ -232,7 +285,7 @@ $kelas = "admin";
                             return item[1];
                         });
                         var cu = $.map(table.rows({ selected:true }).data(),function(item){
-                            return item[4];
+                            return item[6];
                         });
                         if(id != ""){
                             $('input:checkbox').removeAttr('checked');
@@ -278,7 +331,7 @@ $kelas = "admin";
                             return item[1];
                         });
                         var status = $.map(table.rows({ selected:true }).data(),function(item){
-                            return item[7];
+                            return item[9];
                         });
                         if(id != ""){
                             $('#modalstatus').modal({show:true});
@@ -294,6 +347,29 @@ $kelas = "admin";
                     }
                 },
                 @endpermission
+                {
+                    text: '<i class="fa fa-picture-o"></i> Ubah Foto',
+                    action: function(){
+                        var id = $.map(table.rows({ selected:true }).data(),function(item){
+                            return item[1];
+                        });
+                        var foto = $.map(table.rows({ selected:true }).data(),function(item){
+                            return item[2];
+                        });
+                        var nama = $.map(table.rows({ selected:true }).data(),function(item){
+                            return item[5];
+                        });
+                        if(id != ""){
+                            $('#modalgambar').modal({show:true});
+                            $('#modalgambar_id').attr('value',id);
+                            $('#modalgambar_name').attr('value',nama);
+                            $('#tampilgambar').attr('src',foto);
+                            console.log(foto);
+                        }else{
+                            $('#modalwarning').modal({show:true});
+                        }
+                    }
+                },
             ]
         });
         table.buttons( 0, null ).container().prependTo(
@@ -313,7 +389,7 @@ $kelas = "admin";
                             return item[1];
                         });
                         var username = $.map(table.rows({ selected:true }).data(),function(item){
-                            return item[2];
+                            return item[5];
                         });
                         if(id != ""){
                             if(id != "1"){

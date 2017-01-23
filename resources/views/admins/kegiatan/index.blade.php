@@ -225,7 +225,6 @@ $kelas = "kegiatan";
 
         new $.fn.dataTable.Buttons(table,{
             buttons: [
-                @permission('view.kegaitandetail_view')
                 {
                     text: '<i class="fa fa-database"></i> Detail',
                     action: function(){
@@ -240,7 +239,6 @@ $kelas = "kegiatan";
                         }
                     }
                 }
-                @endpermission
             ]
         });
         table.buttons( 0, null ).container().prependTo(

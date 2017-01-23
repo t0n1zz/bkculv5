@@ -10,7 +10,7 @@ $iduser = Auth::user()->getId();
             <div class="user-panel">
                 <?php
                     $gambar = Auth::user()->getGambar();
-                    $imagepath = 'images/';
+                    $imagepath = 'images_user/';
                 ?>
                 @if(!empty($gambar) && is_file($imagepath.$gambar.".jpg"))
                     <div class="pull-left image">
@@ -18,7 +18,7 @@ $iduser = Auth::user()->getId();
                     </div>
                 @else
                     <div class="pull-left image">
-                        <img src="{!! asset($imagepath."user.png") !!}" class="img-circle" alt="User Image" />
+                        <img src="{!! asset($imagepath."user.jpg") !!}" class="img-circle" alt="User Image" />
                     </div>
                 @endif
                 <div class="pull-left info">

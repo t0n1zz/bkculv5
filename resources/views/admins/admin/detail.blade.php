@@ -1,8 +1,14 @@
 <?php
 $title = "Admin";
 $kelas = "admin";
-$imagepath = "images_cu/";
+$imagepath = "images_user/";
 
+$file_max = ini_get('upload_max_filesize');
+$file_max_str_leng = strlen($file_max);
+$file_max_meassure_unit = substr($file_max,$file_max_str_leng - 1,1);
+$file_max_meassure_unit = $file_max_meassure_unit == 'K' ? 'kb' : ($file_max_meassure_unit == 'M' ? 'mb' : ($file_max_meassure_unit == 'G' ? 'gb' : 'unidades'));
+$file_max = substr($file_max,0,$file_max_str_leng - 1);
+$file_max = intval($file_max);
 
 $datelogin = new Date($data->login);
 $datelogout= new Date($data->logout);
@@ -36,19 +42,13 @@ $datelogout= new Date($data->logout);
             <!-- Profile Image -->
             <div class="box box-primary">
                 <div class="box-body box-profile">
-                    @if(!empty($data->gambar) && is_file($imagepath.$data->gambar."n.jpg"))
+                    @if(!empty($data->gambar) && is_file($imagepath.$data->gambar.".jpg"))
                         <div class="modalphotos" >
-                            <img class="profile-user-img img-responsive img-circle"  width="100%" src="{{ asset($imagepath.$data->gambar.'n.jpg') }}"
-                                 id="tampilgambar" alt="{{ asset($imagepath.$data->gambar."jpg") }}">
-                        </div>
-                    @elseif(!empty($data->gambar) && is_file($imagepath.$data->gambar))
-                        <div class="modalphotos" >
-                            <img class="profile-user-img img-responsive img-circle" width="100% src="{{ asset($imagepath.$data->gambar) }}"
-                                 id="tampilgambar" alt="{{ asset($imagepath.$data->gambar) }}">
+                            <img class="profile-user-img img-responsive img-circle"  width="100%" src="{{ asset($imagepath.$data->gambar.'.jpg') }}"
+                                  alt="{{ asset($imagepath.$data->gambar."jpg") }}">
                         </div>
                     @else
-                        <img class="profile-user-img img-responsive img-circle" width="100%"" src="{{ asset('images/user.png') }}"
-                             id="tampilgambar" alt="cu profile">
+                        <img class="profile-user-img img-responsive img-circle" width="100%"" src="{{ asset('images_user/user.jpg') }}">
                     @endif
                     <br/>
                     <h3 class="profile-username text-center">{{ $data->name }}</h3>
@@ -79,6 +79,7 @@ $datelogout= new Date($data->logout);
             <div class="nav-tabs-custom">
                 <ul class="nav nav-tabs">
                     <li class="active"><a href="#password" data-toggle="tab">Ubah Password</a></li>
+                    <li ><a href="#foto" data-toggle="tab">Ubah Foto</a></li>
                 </ul>
                 <div class="tab-content">
                     <div class="tab-pane active" id="password">
@@ -120,6 +121,32 @@ $datelogout= new Date($data->logout);
                         </div>
                         {{ Form::close() }}
                     </div><!-- /.tab-pane -->
+                    <div class="tab-pane" id="foto">
+                        {{ Form::open(array('route' => array('admins.'.$kelas.'.update_gambar'), 'files' => true,'data-toggle'=>'validator','role'=>'form')) }}
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <input type="text" value="{{$data->id}}" name="id" hidden>
+                                <input type="text" value="{{$data->name}}" name="name" hidden>
+                                <div>
+                                    <h5>Foto</h5>
+                                    <div class="thumbnail" >
+                                        @if(!empty($data->gambar) && is_file($imagepath.$data->gambar.".jpg"))
+                                            {{ Html::image($imagepath.$data->gambar.'.jpg', 'a picture', array('class' => 'img-responsive', 'id' => 'tampilgambar', 'width' => '200')) }}
+                                        @else
+                                            {{ Html::image('images_user/user.jpg', 'a picture', array('class' => 'img-responsive', 'id' => 'tampilgambar', 'width' => '200')) }}
+                                        @endif
+                                        <div class="caption">
+                                            {{ Form::file('gambar', array('onChange' => 'readURL(this)','required')) }}
+                                        </div>
+                                    </div>
+                                    <div class="help-block">Ukuran maksimum file gambar adalah {!! $file_max. ' ' .$file_max_meassure_unit !!}.</div>
+                                </div>
+                               <hr/>
+                               <button type="submit" class="btn btn-primary" id="modalbutton"><i class="fa fa-save"></i> Simpan</button> 
+                            </div>
+                        </div>
+                        {{ Form::close() }}
+                    </div>
                 </div><!-- /.tab-content -->
             </div><!-- /.nav-tabs-custom -->
         </div><!-- /.col -->
