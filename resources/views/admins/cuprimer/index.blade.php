@@ -121,7 +121,6 @@ $imagepath = "images_cu/";
                                 <td><a href="http://{{$data->website}}" class="facebook" target="_blank"> {{ $data->website }} </a></td>
                             </tr>
                         @endforeach
-
                         </tbody>
                     </table>
                 </div>
@@ -321,10 +320,10 @@ $imagepath = "images_cu/";
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
-    {{ Form::close() }}成思母亲节
+    {{ Form::close() }}
 </div>
-<div class="modal fade" id="modalstatus" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    {{ Form::model($datas, array('route' => array('admins.'.$kelas.'.update_status'))) }}
+<div class="modal fade" id="modalnonaktif" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    {{ Form::model($datas,array('route' => array('admins.'.$kelas.'.destroy',$kelas), 'method' => 'delete')) }}
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header bg-light-blue-active color-palette">
@@ -332,8 +331,28 @@ $imagepath = "images_cu/";
                 <h4 class="modal-title"><i class="fa fa-check-square"></i> Ubah Status</h4>
             </div>
             <div class="modal-body">
-                <input type="text" name="id" value="" id="modalstatus_id" hidden>
-                <h4 id="judul"></h4>
+                <input type="text" name="id" value="" id="modalnonaktif_id" hidden>
+                <h4 id="judulnonaktif"></h4>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-warning" id="modalbutton"><i class="fa fa-check"></i> Ya</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Batal</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+    {{ Form::close() }}
+</div>
+<div class="modal fade" id="modalaktif" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    {{ Form::model($datas, array('route' => array('admins.'.$kelas.'.restore'))) }}
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-light-blue-active color-palette">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title"><i class="fa fa-check-square"></i> Ubah Status</h4>
+            </div>
+            <div class="modal-body">
+                <input type="text" name="id" value="" id="modalaktif_id" hidden>
+                <h4 id="judulaktif"></h4>
             </div>
             <div class="modal-footer">
                 <button type="submit" class="btn btn-warning" id="modalbutton"><i class="fa fa-check"></i> Ya</button>
@@ -409,13 +428,6 @@ $imagepath = "images_cu/";
                     }
                 },
                 @endpermission
-            ]
-        });
-        table.buttons( 0, null ).container().prependTo(
-                table.table().container()
-        );
-        new $.fn.dataTable.Buttons(table,{
-            buttons: [
                 @permission('update.'.$kelas.'_update')
                 {
                     text: '<i class="fa fa-ban"></i> Non-aktif',
@@ -431,26 +443,15 @@ $imagepath = "images_cu/";
                             return item[3];
                         });
                         if(id != ""){
-                            $('#modalstatus').modal({show:true});
-                            if(aktif == "0"){
-                                $('#judul').text('Aktifkan CU ini?');
-                            }else{
-                                $('#judul').text('Non-aktifkan CU ini?');
-                            }
-                            $('#modalstatus_id').attr('value',id);
+                            $('#modalnonaktif').modal({show:true});
+                            $('#judulnonaktif').text('Non-aktifkan CU ini?');
+                            $('#modalnonaktif_id').attr('value',id);
                         }else{
                             $('#modalwarning').modal({show:true});
                         }
                     }
                 },
                 @endpermission
-            ]
-        });
-        table.buttons( 0, null ).container().prependTo(
-                table.table().container()
-        );
-        new $.fn.dataTable.Buttons(table,{
-            buttons: [
                 {
                     text: '<i class="fa fa-building"></i> Profil',
                     action: function(){
@@ -517,16 +518,8 @@ $imagepath = "images_cu/";
             buttons: [
                 {
                     extend:'excelHtml5',
-                    text: '<i class="fa fa-file-excel-o"></i> Excel',
+                    text: '<i class="fa fa-download fa-fw"></i> Download Excel',
                     exportOptions: {
-                        columns: ':visible'
-                    }
-                },
-                {
-                    extend:'print',
-                    text: '<i class="fa fa-print"></i> Print',
-                    exportOptions: {
-                        stripHtml: false,
                         columns: ':visible'
                     }
                 }
@@ -564,12 +557,6 @@ $imagepath = "images_cu/";
                 "sInfoEmpty":    "Tampilan 0 hingga 0 dari 0 entri",
                 "sInfoFiltered": "(disaring dari _MAX_ entri keseluruhan)",
                 "sInfoPostFix":  "",
-            },
-            fnInitComplete:function(){
-                $('.dataTables_scrollBody').perfectScrollbar();
-            },
-            fnDrawCallback: function( oSettings ) {
-                $('.dataTables_scrollBody').perfectScrollbar('destroy').perfectScrollbar();
             }
         });
 
@@ -600,56 +587,7 @@ $imagepath = "images_cu/";
         );
         new $.fn.dataTable.Buttons(table_non,{
             buttons: [
-                @permission('update.'.$kelas.'_update')
-                {
-                    text: '<i class="fa fa-pencil"></i> <u>U</u>bah',
-                    key: {
-                        altKey: true,
-                        key: 'u'
-                    },
-                    action: function(){
-                        var id = $.map(table_non.rows({ selected: true }).data(),function(item){
-                            return item[2];
-                        });
-                        var kelas = "{{ $kelas }}";
-                        if(id != ""){
-                            window.location.href =  kelas + "/" + id + "/edit";
-                        }else{
-                            $('#modalwarning').modal({show:true});
-                        }
-                    }
-                },
-                @endpermission
                 @permission('destroy.'.$kelas.'_destroy')
-                {
-                    text: '<i class="fa fa-trash"></i> <u>H</u>apus',
-                    key: {
-                        altKey: true,
-                        key: 'h'
-                    },
-                    action: function(){
-                        var id = $.map(table_non.rows({ selected:true }).data(),function(item){
-                            return item[1];
-                        });
-                        if(id != ""){
-                            $('#modalhapus').modal({show:true});
-                            $('#modalhapus_judul').text('Hapus Data CU');
-                            $('#modalhapus_detail').text('Hapus Data CU');
-                            $('#hapus-id').attr('value',id);
-                        }else{
-                            $('#modalwarning').modal({show:true});
-                        }
-                    }
-                },
-                @endpermission
-            ]
-        });
-        table_non.buttons( 0, null ).container().prependTo(
-                table_non.table().container()
-        );
-        new $.fn.dataTable.Buttons(table_non,{
-            buttons: [
-                @permission('update.'.$kelas.'_update')
                 {
                     text: '<i class="fa fa-check"></i> Aktifkan',
                     key: {
@@ -660,109 +598,16 @@ $imagepath = "images_cu/";
                         var id = $.map(table_non.rows({ selected: true }).data(),function(item){
                             return item[1];
                         });
-                        var aktif = $.map(table_non.rows({ selected: true }).data(),function(item){
-                            return item[3];
-                        });
                         if(id != ""){
-                            $('#modalstatus').modal({show:true});
-                            if(aktif == "0"){
-                                $('#judul').text('Aktifkan CU ini?');
-                            }else{
-                                $('#judul').text('Non-aktifkan CU ini?');
-                            }
-                            $('#modalstatus_id').attr('value',id);
+                            $('#modalaktif').modal({show:true});
+                            $('#judulaktif').text('Aktifkan CU ini?');
+                            $('#modalaktif_id').attr('value',id);
                         }else{
                             $('#modalwarning').modal({show:true});
                         }
                     }
                 },
                 @endpermission
-            ]
-        });
-        table_non.buttons( 0, null ).container().prependTo(
-                table_non.table().container()
-        );
-        new $.fn.dataTable.Buttons(table_non,{
-            buttons: [
-                {
-                    text: '<i class="fa fa-building"></i> Profil',
-                    action: function(){
-                        var id = $.map(table_non.rows({ selected: true }).data(),function(item){
-                            return item[2];
-                        });
-                        var kelas = "{{ $kelas }}";
-                        if(id != ""){
-                            window.location.href =  kelas + "/detail/" + id;
-                        }else{
-                            $('#modalwarning').modal({show:true});
-                        }
-                    }
-                },
-                {
-                    text: '<i class="fa fa-home"></i> TP',
-                    action: function(){
-                        var id = $.map(table_non.rows({ selected: true }).data(),function(item){
-                            return item[2];
-                        });
-                        if(id != ""){
-                            window.location.href =  "/admins/tpcu/index_cu/" + id;
-                        }else{
-                            $('#modalwarning').modal({show:true});
-                        }
-                    }
-                },
-                @permission('view.laporancu_view')
-                {
-                    text: '<i class="fa fa-line-chart"></i> Laporan',
-                    action: function(){
-                        var id = $.map(table_non.rows({ selected: true }).data(),function(item){
-                            return item[2];
-                        });
-                        if(id != ""){
-                            window.location.href =  "/admins/laporancu/index_cu/" + id;
-                        }else{
-                            $('#modalwarning').modal({show:true});
-                        }
-                    }
-                },
-                @endpermission
-                @permission('view.staf_view')
-                {
-                    text: '<i class="fa fa-sitemap"></i> Staf',
-                    action: function(){
-                        var id = $.map(table_non.rows({ selected: true }).data(),function(item){
-                            return item[2];
-                        });
-                        if(id != ""){
-                            window.location.href =  "/admins/staf/index_cu/" + id;
-                        }else{
-                            $('#modalwarning').modal({show:true});
-                        }
-                    }
-                }
-                @endpermission
-            ]
-        });
-        table_non.buttons( 0, null ).container().prependTo(
-                table_non.table().container()
-        );
-        new $.fn.dataTable.Buttons(table_non,{
-            buttons: [
-                {
-                    extend:'excelHtml5',
-                    text: '<i class="fa fa-file-excel-o"></i> Excel',
-                    exportOptions: {
-                        columns: ':visible'
-                    }
-                },
-                {
-                    extend:'print',
-                    text: '<i class="fa fa-print"></i> Print',
-                    exportOptions: {
-                        stripHtml: false,
-                        columns: ':visible'
-                    }
-                }
             ]
         });
         table_non.buttons( 0, null ).container().prependTo(

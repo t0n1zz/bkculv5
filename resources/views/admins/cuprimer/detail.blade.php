@@ -83,7 +83,7 @@ $cu = Auth::user()->getCU();
             </div><!-- /.box -->
 
             <div class="small-box bg-aqua">
-                <?php $total_pengumuman = App\Models\TpCU::where('cu','=',$data->no_ba)->count(); $route = route('admins.tpcu.index_cu',array($data->no_ba)); ?>
+                <?php $total_pengumuman = App\TpCU::where('cu','=',$data->no_ba)->count(); $route = route('admins.tpcu.index_cu',array($data->no_ba)); ?>
                 <div class="inner">
                     <a href="{{ $route }}" style="color:white"> 
                         <h3>{{ $total_pengumuman }}</h3>
@@ -194,7 +194,7 @@ $cu = Auth::user()->getCU();
                 ['paragraph',['paragraph']],
                 ['table',['table']],
                 ['height', ['height']],
-                ['misc',['fullscreen','codeview']],
+                ['misc',['fullscreen']],
                 ['misc2',['undo','redo']]
             ]
         });

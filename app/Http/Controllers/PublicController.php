@@ -8,15 +8,15 @@ use DB;
 use Jenssegers\Date\Date;
 use Response;
 
-use App\Models\Artikel;
-use App\Models\KategoriArtikel;
-use App\Models\Cuprimer;
-use App\Models\Kegiatan;
-use App\Models\KantorPelayanan;
-use App\Models\Staf;
-use App\Models\WilayahCuprimer;
-use App\Models\Download;
-use App\Models\Pelayanan;
+use App\Artikel;
+use App\KategoriArtikel;
+use App\Cuprimer;
+use App\Kegiatan;
+use App\KantorPelayanan;
+use App\Staf;
+use App\WilayahCuprimer;
+use App\Download;
+use App\Pelayanan;
 
 
 class PublicController extends Controller{

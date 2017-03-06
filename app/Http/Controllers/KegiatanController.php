@@ -2,16 +2,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Cuprimer;
-use App\Models\Staf;
 use DB;
 use Auth;
 use Input;
 use Redirect;
 use Validator;
-use App\Models\Kegiatan;
-use App\Models\KegiatanPanitia;
-use App\Models\KegiatanPeserta;
+use App\Staf;
+use App\Cuprimer;
+use App\Kegiatan;
+use App\KegiatanPanitia;
+use App\KegiatanPeserta;
 use \DOMDocument;
 
 class KegiatanController extends Controller{

@@ -1,5 +1,7 @@
 <?php
 $kelas ='laporancu';
+$culists = App\Cuprimer::orderBy('name','asc')->get();
+$culists_non = App\Cuprimer::onlyTrashed()->orderBy('name','asc')->get();
 ?>
 <!-- Alert -->
 @include('admins._layouts.alert')
@@ -61,7 +63,7 @@ $kelas ='laporancu';
                             }
                             ?>
                             <input type="text" name="periode" value="@if(!empty($tanggal)){{$tanggal}}@endif" class="form-control"
-                                   data-inputmask="'alias': 'date'" placeholder="dd/mm/yyyy" />
+                                   data-inputmask="'alias': 'date'" placeholder="dd/mm/yyyy" required />
                         </div>
                     </div>
                 </div>
@@ -75,7 +77,7 @@ $kelas ='laporancu';
                     <h5>Anggota Laki-laki Biasa</h5>
                     <div class="input-group">
                         <span class="input-group-addon">0-9</span>
-                        {{ Form::text('l.biasa',null,array('class' => 'form-control', 'placeholder' => '0',
+                        {{ Form::text('l_biasa',null,array('class' => 'form-control', 'placeholder' => '0',
                            'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ',','autoUnmask': true, 'removeMaskOnSubmit': true")) }}
                     </div>
                 </div>
@@ -85,7 +87,7 @@ $kelas ='laporancu';
                     <h5>Anggota Laki-laki Luar Biasa</h5>
                     <div class="input-group">
                         <span class="input-group-addon">0-9</span>
-                        {{ Form::text('l.lbiasa',null,array('class' => 'form-control', 'placeholder' => '0',
+                        {{ Form::text('l_lbiasa',null,array('class' => 'form-control', 'placeholder' => '0',
                            'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ',','autoUnmask': true, 'removeMaskOnSubmit': true")) }}
                     </div>
                 </div>
@@ -95,7 +97,7 @@ $kelas ='laporancu';
                     <h5>Anggota Perempuan Biasa</h5>
                     <div class="input-group">
                         <span class="input-group-addon">0-9</span>
-                        {{ Form::text('p.biasa',null,array('class' => 'form-control', 'placeholder' => '0',
+                        {{ Form::text('p_biasa',null,array('class' => 'form-control', 'placeholder' => '0',
                            'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ',','autoUnmask': true, 'removeMaskOnSubmit': true")) }}
                     </div>
                 </div>
@@ -105,7 +107,7 @@ $kelas ='laporancu';
                     <h5>Anggota Perempuan Luar Biasa</h5>
                     <div class="input-group">
                         <span class="input-group-addon">0-9</span>
-                        {{ Form::text('p.lbiasa',null,array('class' => 'form-control', 'placeholder' => '0',
+                        {{ Form::text('p_lbiasa',null,array('class' => 'form-control', 'placeholder' => '0',
                            'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ',','autoUnmask': true, 'removeMaskOnSubmit': true")) }}
                     </div>
                 </div>
@@ -216,6 +218,18 @@ $kelas ='laporancu';
                     <div class="input-group">
                         <span class="input-group-addon">0-9</span>
                         {{ Form::text('nonsaham_harian',null,array('class' => 'form-control', 'placeholder' => '0',
+                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ',','autoUnmask': true, 'removeMaskOnSubmit': true")) }}
+                    </div>
+                </div>
+            </div>
+            <!-- /harian -->
+            <!-- harian -->
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <h5>Simpanan Saham (SP+SW) Periode Sebelumnya</h5>
+                    <div class="input-group">
+                        <span class="input-group-addon">0-9</span>
+                        {{ Form::text('simpanansaham_lalu',null,array('class' => 'form-control', 'placeholder' => '0',
                            'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ',','autoUnmask': true, 'removeMaskOnSubmit': true")) }}
                     </div>
                 </div>
@@ -440,7 +454,8 @@ $kelas ='laporancu';
                     <div class="input-group">
                         <span class="input-group-addon">0-9</span>
                         {{ Form::text('lajuinflasi',null,array('class' => 'form-control', 'placeholder' => '0',
-                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ',','autoUnmask': true, 'removeMaskOnSubmit': true")) }}
+                           'data-inputmask' => "'alias':'numeric','digits': 2")) }}
+                        <span class="input-group-addon">%</span>   
                     </div>
                 </div>
             </div>
@@ -452,7 +467,8 @@ $kelas ='laporancu';
                     <div class="input-group">
                         <span class="input-group-addon">0-9</span>
                         {{ Form::text('hargapasar',null,array('class' => 'form-control', 'placeholder' => '0',
-                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ',','autoUnmask': true, 'removeMaskOnSubmit': true")) }}
+                           'data-inputmask' => "'alias':'numeric','digits': 2")) }}
+                        <span class="input-group-addon">%</span>
                     </div>
                 </div>
             </div>

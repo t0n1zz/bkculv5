@@ -7,12 +7,16 @@ use Input;
 use Excel;
 use Redirect;
 use Validator;
-use App\Models\LaporanCu;
-use App\Models\LaporanCuDiskusi;
-use App\Models\Cuprimer;
-use App\Models\WilayahCuprimer;
-use App\Models\Excelitems;
+use App\LaporanCu;
+use App\LaporanCuDiskusi;
+use App\LaporanCuHistory;
+use App\Cuprimer;
+use App\WilayahCuprimer;
+use App\Excelitems;
 use Jenssegers\Date\Date;
+use App\User;
+use App\Notifications\notifikasi;
+use Illuminate\Support\Facades\Notification;
 
 class LaporanCuController extends Controller{
 
@@ -30,11 +34,17 @@ class LaporanCuController extends Controller{
  
             $datas = collect([]);
             foreach ($data1 as $data2){
-                if($data2->first()->cuprimer->status == "1")
+                if(!empty($data2->first()->cuprimer))
                     $datas->push($data2->first());
             }
 
             $dataarray = $datas->toArray();
+
+            $datasold = collect([]);
+            foreach ($datas as $datacunew) {
+                $dataold = LaporanCu::with('cuprimer')->where('no_ba',$datacunew->no_ba)->where('periode','<',$datacunew->periode)->orderBy('periode','DESC')->first();
+                $datasold->push($dataold);
+            }
 
             foreach ($datas as $data){
                 if(!empty($data->cuprimer)){
@@ -46,9 +56,7 @@ class LaporanCuController extends Controller{
             $wilayahs = $this->laporancu_provinsi($wilayahcuprimers,$datas);
             $dos = $this->laporancu_do($datas);
 
-            // dd($datas);
-
-            return view('admins.'.$this->kelaspath.'.index', compact('datas','dataarray','gperiode','wilayahs','wilayahcuprimers','dos'));
+            return view('admins.'.$this->kelaspath.'.index', compact('datas','datasold','dataarray','gperiode','wilayahs','wilayahcuprimers','dos'));
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
         }
@@ -59,15 +67,22 @@ class LaporanCuController extends Controller{
         try{
 
             $data = LaporanCu::with('cuprimer')->where('periode','<=',$periode)->orderBy('periode','DESC')->get();
+
             $data1 = $data->groupBy('no_ba');
 
             $datas = collect([]);
             foreach ($data1 as $data2){
-                if($data2->first()->cuprimer->status == "1")
+                if(!empty($data2->first()->cuprimer))
                     $datas->push($data2->first());
             }
 
             $dataarray = $datas->toArray();
+
+            $datasold = collect([]);
+            foreach ($datas as $datacunew) {
+                $dataold = LaporanCu::with('cuprimer')->where('no_ba',$datacunew->no_ba)->where('periode','<',$datacunew->periode)->orderBy('periode','DESC')->first();
+                $datasold->push($dataold);
+            }
 
             foreach ($datas as $datacu){
                 $gperiode[] = $datacu->cuprimer->name;
@@ -77,7 +92,7 @@ class LaporanCuController extends Controller{
             $wilayahs = $this->laporancu_provinsi($wilayahcuprimers,$datas);
             $dos = $this->laporancu_do($datas);
 
-            return view('admins.'.$this->kelaspath.'.index', compact('datas','dataarray','gperiode','wilayahs','wilayahcuprimers','dos'));
+            return view('admins.'.$this->kelaspath.'.index', compact('datas','datasold','dataarray','gperiode','wilayahs','wilayahcuprimers','dos'));
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
         }
@@ -102,7 +117,7 @@ class LaporanCuController extends Controller{
 
                 $datascu = collect([]);
                 foreach ($datacu1 as $data2){
-                    if($data2->first()->cuprimer->status == "1")
+                    if(!empty($data2->first()->cuprimer))
                         $datascu->push($data2->first());
                 }
 
@@ -212,6 +227,7 @@ class LaporanCuController extends Controller{
             }
 
             $datas = LaporanCu::where('no_ba','=',$id)->orderBy('periode','asc')->get();
+            $datashapus = LaporanCu::onlyTrashed()->where('no_ba','=',$id)->orderBy('periode','asc')->get();
 
             $dataarray = $datas->sortBy('periode')->toArray();
             $datas2 = $datas->toArray();
@@ -221,7 +237,18 @@ class LaporanCuController extends Controller{
                 $gperiode[] = date('F Y', strtotime($a));
             }
 
-            return view('admins.'.$this->kelaspath.'.index', compact('datas','datas2','dataarray','gperiode','id'));
+            return view('admins.'.$this->kelaspath.'.index', compact('datas','datashapus','datas2','dataarray','gperiode','id'));
+        }catch (Exception $e){
+            return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
+        }
+    }
+
+    public function index_hapus()
+    {
+        try{
+            $datashapus = LaporanCu::onlyTrashed()->with('cuprimer')->orderBy('periode','asc')->get();
+
+            return view('admins.'.$this->kelaspath.'.index', compact('datashapus'));
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
         }
@@ -234,7 +261,7 @@ class LaporanCuController extends Controller{
                     'id'=> $wilayahcuprimer->id,'nama'=> $wilayahcuprimer->name,'l_biasa' => 0.0,'l_lbiasa' => 0.0,'p_biasa' => 0.0,'p_lbiasa' => 0.0,'aset' => 0.0,
                     'aktivalancar' => 0.0,'simpanansaham' => 0.0,'nonsaham_unggulan' => 0.0,'nonsaham_harian' => 0.0,
                     'hutangspd' => 0.0,'piutangberedar' => 0.0,'piutanglalai_1bulan' => 0.0,'piutanglalai_12bulan' => 0.0,
-                    'dcr' => 0.0,'dcu' => 0.0,'totalpendapatan' => 0.0,'totalbiaya' => 0.0,'shu' => 0.0
+                    'dcr' => 0.0,'dcu' => 0.0,'totalpendapatan' => 0.0,'totalbiaya' => 0.0,'shu' => 0.0,'cu'=>0.0
             );
         }
         foreach($wilayahs as $wil){
@@ -259,6 +286,7 @@ class LaporanCuController extends Controller{
                         $wilayahs[$data->cuprimer->wilayah]['totalpendapatan'] += $data->totalpendapatan;
                         $wilayahs[$data->cuprimer->wilayah]['totalbiaya'] += $data->totalbiaya;
                         $wilayahs[$data->cuprimer->wilayah]['shu'] += $data->shu;
+                        $wilayahs[$data->cuprimer->wilayah]['cu'] ++;
                     }
                 }
             };
@@ -275,7 +303,7 @@ class LaporanCuController extends Controller{
                             'l_biasa' => 0.0,'l_lbiasa' => 0.0,'p_biasa' => 0.0,'p_lbiasa' => 0.0,'aset' => 0.0,
                             'aktivalancar' => 0.0,'simpanansaham' => 0.0,'nonsaham_unggulan' => 0.0,'nonsaham_harian' => 0.0,
                             'hutangspd' => 0.0,'piutangberedar' => 0.0,'piutanglalai_1bulan' => 0.0,'piutanglalai_12bulan' => 0.0,
-                            'dcr' => 0.0,'dcu' => 0.0,'totalpendapatan' => 0.0,'totalbiaya' => 0.0,'shu' => 0.0
+                            'dcr' => 0.0,'dcu' => 0.0,'totalpendapatan' => 0.0,'totalbiaya' => 0.0,'shu' => 0.0,'cu'=>0.0
                     ),
             'do_timur'=>
                     array(
@@ -283,7 +311,7 @@ class LaporanCuController extends Controller{
                             'l_biasa' => 0.0,'l_lbiasa' => 0.0,'p_biasa' => 0.0,'p_lbiasa' => 0.0,'aset' => 0.0,
                             'aktivalancar' => 0.0,'simpanansaham' => 0.0,'nonsaham_unggulan' => 0.0,'nonsaham_harian' => 0.0,
                             'hutangspd' => 0.0,'piutangberedar' => 0.0,'piutanglalai_1bulan' => 0.0,'piutanglalai_12bulan' => 0.0,
-                            'dcr' => 0.0,'dcu' => 0.0,'totalpendapatan' => 0.0,'totalbiaya' => 0.0,'shu' => 0.0
+                            'dcr' => 0.0,'dcu' => 0.0,'totalpendapatan' => 0.0,'totalbiaya' => 0.0,'shu' => 0.0,'cu'=>0.0
                     ),
             'do_tengah'=>
                     array(
@@ -291,7 +319,7 @@ class LaporanCuController extends Controller{
                             'l_biasa' => 0.0,'l_lbiasa' => 0.0,'p_biasa' => 0.0,'p_lbiasa' => 0.0,'aset' => 0.0,
                             'aktivalancar' => 0.0,'simpanansaham' => 0.0,'nonsaham_unggulan' => 0.0,'nonsaham_harian' => 0.0,
                             'hutangspd' => 0.0,'piutangberedar' => 0.0,'piutanglalai_1bulan' => 0.0,'piutanglalai_12bulan' => 0.0,
-                            'dcr' => 0.0,'dcu' => 0.0,'totalpendapatan' => 0.0,'totalbiaya' => 0.0,'shu' => 0.0
+                            'dcr' => 0.0,'dcu' => 0.0,'totalpendapatan' => 0.0,'totalbiaya' => 0.0,'shu' => 0.0,'cu'=>0.0
                     ),
         );
         foreach($datas as $data){
@@ -315,6 +343,7 @@ class LaporanCuController extends Controller{
                     $dos['do_barat']['totalpendapatan'] += $data->totalpendapatan;
                     $dos['do_barat']['totalbiaya'] += $data->totalbiaya;
                     $dos['do_barat']['shu'] += $data->shu;
+                    $dos['do_barat']['cu'] ++;
                 }else if($data->cuprimer->do == "2"){
                     $dos['do_tengah']['l_biasa'] += $data->l_biasa;
                     $dos['do_tengah']['l_lbiasa'] += $data->l_lbiasa;
@@ -334,6 +363,7 @@ class LaporanCuController extends Controller{
                     $dos['do_tengah']['totalpendapatan'] += $data->totalpendapatan;
                     $dos['do_tengah']['totalbiaya'] += $data->totalbiaya;
                     $dos['do_tengah']['shu'] += $data->shu;
+                    $dos['do_tengah']['cu'] ++;
                 }else if($data->cuprimer->do == "3"){
                     $dos['do_timur']['l_biasa'] += $data->l_biasa;
                     $dos['do_timur']['l_lbiasa'] += $data->l_lbiasa;
@@ -353,6 +383,7 @@ class LaporanCuController extends Controller{
                     $dos['do_timur']['totalpendapatan'] += $data->totalpendapatan;
                     $dos['do_timur']['totalbiaya'] += $data->totalbiaya;
                     $dos['do_timur']['shu'] += $data->shu;
+                    $dos['do_timur']['cu'] ++;
                 }
             }    
         };
@@ -363,7 +394,7 @@ class LaporanCuController extends Controller{
     public function detail($id)
     {
         try{
-            $data = LaporanCu::find($id);
+            $data = LaporanCu::withTrashed()->find($id);
             $no_ba = $data->no_ba;
             $periode = $data->periode;
             $cu = Auth::user()->getCU();
@@ -374,8 +405,9 @@ class LaporanCuController extends Controller{
             }
 
             $datas2 = LaporanCuDiskusi::with('User')->where('id_laporan','=',$id)->get();
+            $datahistories = $data->revisionHistory;
 
-            return view('admins.'.$this->kelaspath.'.detail', compact('data','no_ba','periode','datas2'));
+            return view('admins.'.$this->kelaspath.'.detail', compact('data','no_ba','periode','datas2','datahistories'));
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
         }
@@ -389,8 +421,8 @@ class LaporanCuController extends Controller{
     public function create()
     {
         try{
-            $culists = Cuprimer::orderBy('name','asc')->where('status','=','1')->get();
-            $culists_non = Cuprimer::orderBy('name','asc')->where('status','=','0')->get();
+            $culists = Cuprimer::orderBy('name','asc')->get();
+            $culists_non = Cuprimer::onlyTrashed()->orderBy('name','asc')->get();
 
             return view('admins.'.$this->kelaspath.'.create', compact('culists','culists_non'));
         }catch (Exception $e){
@@ -415,28 +447,34 @@ class LaporanCuController extends Controller{
             }
 
             $date = Input::get('periode');
+            
 	        if(!empty($date)){
 	            $timestamp2 = strtotime(str_replace('/', '-',$date));
 	            $tanggal2 = date('Y-m-d',$timestamp2);
+                $periodesave = date('F Y',$timestamp2);
 	            array_set($data,'periode',$tanggal2);
 	        }
 
             $cu = \Auth::user()->getCU();
-            if($cu != '0'){
-                $cuprimer = \App\Models\Cuprimer::where('id','=',$cu)->select('no_ba')->first();
-                $no_ba = $cuprimer->no_ba;
-                array_set($data,'no_ba',$no_ba);
-            }
 
-            LaporanCu::create($data);
+            if($cu != '0'){
+                $cuprimer = Cuprimer::withTrashed()->where('no_ba','=',$cu)->select('name')->first();
+                array_set($data,'no_ba',$cu);
+                $notifikasi = LaporanCu::create($this->input_data($data));
+                $this->notifikasi_store('0',$notifikasi->id,$cuprimer->name,$periodesave,'Menambah');
+            }else{
+                $notifikasi = LaporanCu::create($this->input_data($data));
+                $no_ba = Input::get('no_ba');
+                $this->notifikasi_store($no_ba,$notifikasi->id,'BKCU',$periodesave,'Menambah');    
+            }
 
             if(Input::Get('simpan2')){
                 return Redirect::route('admins.'.$this->kelaspath.'.create')->with('sucessmessage','Laporan CU Telah berhasil ditambah.');
             }else{
                 if($cu == '0'){
-                    return Redirect::route('admins.'.$this->kelaspath.'.index')->with('sucessmessage','Laporan CU Telah berhasil ditambah.');
+                    return Redirect::route('admins.'.$this->kelaspath.'.index_cu',array($no_ba))->with('sucessmessage','Laporan CU Telah berhasil ditambah.');
                 }else{
-                    return Redirect::route('admins.'.$this->kelaspath.'.index_cu',array($no_ba))->with('sucessmessage', 'Laporan CU Telah berhasil diubah.');
+                    return Redirect::route('admins.'.$this->kelaspath.'.index_cu',array($cu))->with('sucessmessage', 'Laporan CU Telah berhasil diubah.');
                 }
             }
         }catch (Exception $e){
@@ -485,30 +523,93 @@ class LaporanCuController extends Controller{
                 return Redirect::back()->withErrors($validator)->withInput();
             }
 
-            // dd($data);
-
     		$date = Input::get('periode');
+
 	        if(!empty($date)){
 	            $timestamp2 = strtotime(str_replace('/', '-',$date));
 	            $tanggal2 = date('Y-m-d',$timestamp2);
+                $periodesave = date('F Y',$timestamp2);
 	            array_set($data,'periode',$tanggal2);
 	        }
             
             $cu = \Auth::user()->getCU();
             if($cu != '0'){
+                $cuprimer = Cuprimer::withTrashed()->where('no_ba','=',$cu)->select('name')->first();
                 array_set($data,'no_ba',$cu);
+                $this->notifikasi_store('0',$id,$cuprimer->name,$periodesave,'Mengubah');
+            }else{
+                $no_ba = $kelas->no_ba;
+                $this->notifikasi_store($no_ba,$id,'BKCU',$periodesave,'Mengubah'); 
             }
 
-            $kelas->update($data);
+            $kelas->update($this->input_data($data));
 
             if (Input::Get('simpan2')){
                 return Redirect::route('admins.'.$this->kelaspath.'.create')->with('sucessmessage', 'Laporan CU Telah berhasil diubah.');
             }else{
                 if($cu == '0')
-                    return Redirect::route('admins.'.$this->kelaspath.'.index')->with('sucessmessage', 'Laporan CU Telah berhasil diubah.');
+                    return Redirect::route('admins.'.$this->kelaspath.'.index_cu',array($no_ba))->with('sucessmessage', 'Laporan CU Telah berhasil diubah.');
                 else
                     return Redirect::route('admins.'.$this->kelaspath.'.index_cu',array($cu))->with('sucessmessage', 'Laporan CU Telah berhasil diubah.');
             }
+        }catch (Exception $e){
+            return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
+        }
+    }
+
+    public function input_data($data)
+    {
+        if(empty($data['l_biasa'])) $data['l_biasa'] = 0;
+        if(empty($data['l_lbiasa'])) $data['l_lbiasa'] = 0;
+        if(empty($data['p_biasa'])) $data['p_biasa'] = 0;
+        if(empty($data['p_lbiasa'])) $data['p_lbiasa'] = 0;
+        if(empty($data['totalanggota_lalu'])) $data['totalanggota_lalu'] = 0;
+        if(empty($data['aset'])) $data['aset'] = 0;
+        if(empty($data['aset_lalu'])) $data['aset_lalu'] = 0;
+        if(empty($data['aset_masalah'])) $data['aset_masalah'] = 0;
+        if(empty($data['aset_tidak_menghasilkan'])) $data['aset_tidak_menghasilkan'] = 0;
+        if(empty($data['aset_likuid_tidak_menghasilkan'])) $data['aset_likuid_tidak_menghasilkan'] = 0;
+        if(empty($data['aktivalancar'])) $data['aktivalancar'] = 0;
+        if(empty($data['simpanansaham'])) $data['simpanansaham'] = 0;
+        if(empty($data['nonsaham_unggulan'])) $data['nonsaham_unggulan'] = 0;
+        if(empty($data['nonsaham_harian'])) $data['nonsaham_harian'] = 0;
+        if(empty($data['simpanansaham_lalu'])) $data['simpanansaham_lalu'] = 0;
+        if(empty($data['hutangspd'])) $data['hutangspd'] = 0;
+        if(empty($data['hutang_tidak_berbiaya_30hari'])) $data['hutang_tidak_berbiaya_30hari'] = 0;
+        if(empty($data['totalhutang_pihak3'])) $data['totalhutang_pihak3'] = 0;
+        if(empty($data['piutangberedar'])) $data['piutangberedar'] = 0;
+        if(empty($data['piutanganggota'])) $data['piutanganggota'] = 0;
+        if(empty($data['piutanglalai_1bulan'])) $data['piutanglalai_1bulan'] = 0;
+        if(empty($data['piutanglalai_12bulan'])) $data['piutanglalai_12bulan'] = 0;
+        if(empty($data['dcu'])) $data['dcu'] = 0;
+        if(empty($data['dcr'])) $data['dcr'] = 0;
+        if(empty($data['iuran_gedung'])) $data['iuran_gedung'] = 0;
+        if(empty($data['donasi'])) $data['donasi'] = 0;
+        if(empty($data['bjs_saham'])) $data['bjs_saham'] = 0;
+        if(empty($data['beban_operasional'])) $data['beban_operasional'] = 0;
+        if(empty($data['investasi_likuid'])) $data['investasi_likuid'] = 0;
+        if(empty($data['totalpendapatan'])) $data['totalpendapatan'] = 0;
+        if(empty($data['totalbiaya'])) $data['totalbiaya'] = 0;
+        if(empty($data['shu'])) $data['shu'] = 0;
+        if(empty($data['shu_lalu'])) $data['shu_lalu'] = 0;
+        if(empty($data['lajuinflasi'])) $data['lajuinflasi'] = 0;
+        if(empty($data['hargapasar'])) $data['hargapasar'] = 0;
+
+        return $data;
+    }
+
+    public function restore()
+    {
+        try{
+            $id = Input::get('id');
+            $kelas = LaporanCu::onlyTrashed()->findOrFail($id);
+            $name = $kelas->name;
+            $no_ba = $kelas->no_ba;
+
+            $kelas->restore();
+
+            return Redirect::route('admins.'.$this->kelaspath.'.index_cu',array($no_ba))->with('sucessmessage', 'Laporan CU <b><i>' . $name . '</b></i>berhasil di pulihkan.');
+
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
         }
@@ -525,20 +626,37 @@ class LaporanCuController extends Controller{
         try{
             $id = Input::get('id');
 
+            $periodesave = LaporanCu::find($id)->select('periode')->first();
+
             LaporanCu::destroy($id);
 
             $cu = \Auth::user()->getCU();
-            $cuprimer = \App\Models\Cuprimer::where('no_ba','=',$cu)->select('no_ba')->first();
+
+            if($cu != '0'){
+                $cuprimer = Cuprimer::where('no_ba','=',$cu)->select('name')->first();
+                $this->notifikasi_store('0',$id,$cuprimer->name,$periodesave,'Menghapus');
+            }else{
+                $no_ba = Input::get('no_ba');
+                $this->notifikasi_store($no_ba,$id,'BKCU',$periodesave,'Menghapus'); 
+            }
             
-              
             if($cu == '0'){
                 return Redirect::route('admins.'.$this->kelaspath.'.index')->with('sucessmessage','Laporan CU Telah berhasil di hapus.');
             }else{
-                $no_ba = $cuprimer->no_ba;
-                return Redirect::route('admins.'.$this->kelaspath.'.index_cu',array($no_ba))->with('sucessmessage','Laporan CU Telah berhasil di hapus.');
+                return Redirect::route('admins.'.$this->kelaspath.'.index_cu',array($cu))->with('sucessmessage','Laporan CU Telah berhasil di hapus.');
             }
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
+        }
+    }
+
+    public function notifikasi_store($no_ba,$id,$cu_name,$periodesave,$tipe)
+    {
+        $users = User::where('cu',$no_ba)->get();
+        foreach ($users as $user) {
+            if($user->can('view.laporancu_view')){
+                Notification::send($user, new notifikasi($id, $cu_name,$tipe.' laporan periode '.$periodesave,'',$tipe.' laporancu'));
+            }
         }
     }
 

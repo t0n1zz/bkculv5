@@ -148,6 +148,34 @@
                     }
                 },
                 @endpermission
+                {
+                    text: '<i class="fa fa-database"></i> Detail',
+                    action: function(){
+                        var id = $.map(table_konsolidasi.rows({ selected: true }).data(),function(item){
+                            return item[1];
+                        });
+                        var kelas = "{{ $kelas }}";
+                        if(id != ""){
+                            window.location.href = "/admins/" + kelas + "/detail/" + id ;
+                        }else{
+                            $('#modalwarning').modal({show:true});
+                        }
+                    }
+                }
+                @if(!Request::is('admins/laporancu/index_cu/*'))
+                {
+                    text: '<i class="fa fa-database"></i> Detail',
+                    action: function(){
+                        var id = $.map(table.rows({ selected: true }).data(),function(item){
+                            return item[1];
+                        });
+                        var kelas = "{{ $kelas }}";
+                        if(id != ""){
+                            window.location.href = "/admins/" + kelas + "/detail/" + id ;
+                        }
+                    }
+                }
+                @endif
             ]
         });
         table_konsolidasi.buttons( 0, null ).container().prependTo(
@@ -168,24 +196,11 @@
                     }
                 },
                 @endpermission
-            ]
-        });
-        table_konsolidasi.buttons( 0, null ).container().prependTo(
-                table_konsolidasi.table().container()
-        );
-
-        new $.fn.dataTable.Buttons(table_konsolidasi,{
-            buttons: [
                 {
-                    text: '<i class="fa fa-database"></i> Detail',
-                    action: function(){
-                        var id = $.map(table_konsolidasi.rows({ selected: true }).data(),function(item){
-                            return item[1];
-                        });
-                        var kelas = "{{ $kelas }}";
-                        if(id != ""){
-                            window.location.href = "/admins/" + kelas + "/detail/" + id ;
-                        }
+                    extend:'excelHtml5',
+                    text: '<i class="fa fa-download fa-fw"></i> Download Excel',
+                    exportOptions: {
+                        columns: ':visible'
                     }
                 }
             ]
@@ -193,23 +208,16 @@
         table_konsolidasi.buttons( 0, null ).container().prependTo(
                 table_konsolidasi.table().container()
         );
-
+    @elseif(Request::is('admins/laporancu/index_bkcu'))
         new $.fn.dataTable.Buttons(table_konsolidasi,{
             buttons: [
-                @if(!Request::is('admins/laporancu/index_cu/*'))
                 {
-                    text: '<i class="fa fa-database"></i> Detail',
-                    action: function(){
-                        var id = $.map(table.rows({ selected: true }).data(),function(item){
-                            return item[1];
-                        });
-                        var kelas = "{{ $kelas }}";
-                        if(id != ""){
-                            window.location.href = "/admins/" + kelas + "/detail/" + id ;
-                        }
+                    extend:'excelHtml5',
+                    text: '<i class="fa fa-download fa-fw"></i> Download Excel',
+                    exportOptions: {
+                        columns: ':visible'
                     }
                 }
-                @endif
             ]
         });
         table_konsolidasi.buttons( 0, null ).container().prependTo(
@@ -217,26 +225,5 @@
         );
     @endif
         
-    new $.fn.dataTable.Buttons(table_konsolidasi,{
-        buttons: [
-            {
-                extend:'excelHtml5',
-                text: '<i class="fa fa-file-excel-o"></i> Excel',
-                exportOptions: {
-                    columns: ':visible'
-                }
-            },
-            {
-                extend:'print',
-                text: '<i class="fa fa-print"></i> Print',
-                exportOptions: {
-                    stripHtml: false,
-                    columns: ':visible'
-                }
-            }
-        ]
-    });
-    table_konsolidasi.buttons( 0, null ).container().prependTo(
-            table_konsolidasi.table().container()
-    );
+
 </script>

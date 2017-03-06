@@ -45,7 +45,7 @@ $kelas = "kegiatan";
                 @if(Auth::user()->getCU() == '0')
                 <div class="col-sm-4" style="padding: .2em ;">
                     <?php
-                        $data = App\Models\Kegiatan::orderBy('tanggal','DESC')->groupBy('tanggal')->get(['tanggal']);
+                        $data = App\Kegiatan::orderBy('tanggal','DESC')->groupBy('tanggal')->get(['tanggal']);
                         $dataperiode = $data->groupBy('tanggal');
 
                         $dataperiode1 = collect([]);
@@ -215,16 +215,8 @@ $kelas = "kegiatan";
                             $('#modalwarning').modal({show:true});
                         }
                     }
-                }
+                },
                 @endpermission
-            ]
-        });
-        table.buttons( 0, null ).container().prependTo(
-                table.table().container()
-        );
-
-        new $.fn.dataTable.Buttons(table,{
-            buttons: [
                 {
                     text: '<i class="fa fa-database"></i> Detail',
                     action: function(){

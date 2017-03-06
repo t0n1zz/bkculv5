@@ -39,33 +39,6 @@ $file_max = intval($file_max);
                     <div class="help-block with-errors"></div>
                     {!! $errors->first('name', '<p class="text-warning">:message</p>') !!}
                 </div>
-                <div class="form-group">
-                    <h4>Credit Union</h4>
-                    <div class="input-group">
-                        <div class="input-group-addon"><i class="fa fa-list"></i></div>
-                        <select class="form-control" name="cu" required data-error="Credit Union wajib dipilih">
-                            <option selected disabled>Silahkan pilih Credit Union</option>
-                            <option value="0"
-                                @if(!empty($data))
-                                    @if($data->cu == "0")
-                                        {!! "selected" !!}
-                                            @endif
-                                        @endif
-                                        >Puskopdit BKCU Kalimantan</option>
-                                @foreach($datas2 as $data2)
-                                    <option value="{{ $data2->no_ba }}"
-                                    @if(!empty($data))
-                                        @if($data->cu == $data2->no_ba)
-                                            {!! "selected" !!}
-                                                @endif
-                                            @endif
-                                            >{!! $data2->name !!}</option>
-                                @endforeach
-                            <option value="tambah">Lembaga Lain</option>
-                        </select>
-                    </div>
-                    <div class="help-block with-errors"></div>
-                </div>
                 <div class="row" id="pilihan" style="display: none;">
                     <div class="col-sm-12">
                         <div class="form-group">
@@ -203,6 +176,10 @@ $file_max = intval($file_max);
                         </select>
                     </div>
                 </div>
+                <div class="form-group">
+                    <h4>Kontak</h4>
+                    {{ Form::textarea('kontak',null,array('class' => 'form-control','rows' => '3')) }}
+                </div>
             </div>
             <!--/nama-->
             <!--gambar-->
@@ -220,16 +197,13 @@ $file_max = intval($file_max);
                         </div>
                     </div>
                 </div>
-
-                <div class="form-group">
-                    <h4>Kontak</h4>
-                    {{ Form::textarea('kontak',null,array('class' => 'form-control','rows' => '3')) }}
-                </div>
                 <div class="form-group">
                     <h4>Alamat</h4>
                     {{ Form::textarea('content',null,array('class' => 'form-control','rows' => '3')) }}
                 </div>
             </div>
+
+            <div class="col-sm-12"><hr/></div>
         </div>
     </div>
     <div class="box-footer with-border">

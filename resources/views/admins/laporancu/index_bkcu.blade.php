@@ -259,7 +259,7 @@
 
 @section('js')
 @include('admins._components.datatable_JS')
-<script type="text/javascript" src="{{ URL::asset('plugins/chartJS/Chart.bundle.js') }}"></script>
+<script type="text/javascript" src="{{ URL::asset('plugins/chartJS/Chart.bundle.js') }}" async></script>
 {{-- datatable --}}
 <script>
     var table = $('#dataTables-info').DataTable({

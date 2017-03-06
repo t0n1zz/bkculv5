@@ -389,7 +389,7 @@ $imagepath = "images_staf/";
                         <span class="input-group-addon">
                             <input type="radio" name="radiotempat" id="radiocu" onclick="func_radiocu()" value="true">
                         </span>
-                                <?php $culists = App\Models\Cuprimer::orderBy('name','asc')->get(); ?>
+                                <?php $culists = App\Cuprimer::orderBy('name','asc')->get(); ?>
                                 <select class="form-control placeholder" name="selectcu" id="selectcu" disabled>
                                     <option hidden>Credit Union</option>
                                     <option value="PUSKOPDIT BKCU Kalimantan">PUSKOPDIT BKCU Kalimantan</option>

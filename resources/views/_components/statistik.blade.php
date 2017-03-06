@@ -14,7 +14,7 @@ $s = DB::table($tabel)
 // Kalau belum ada, simpan data user tersebut ke database
 if($s == 0){
     DB::table($tabel)->insert(
-      array('ip' => $ip, 'tanggal' => $tanggal, 'online' => $waktu)
+      array('ip' => $ip, 'tanggal' => $tanggal, 'online' => $waktu,'hits' => '0')
     );
 } else{
     DB::table($tabel)

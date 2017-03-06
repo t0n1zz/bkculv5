@@ -23,24 +23,29 @@
                 text: 'Semua',
                 show: ':hidden'
             },
-            {
-                extend: 'colvisGroup',
-                text: ' Anggota',
-                show: [ 0,1,2,3,4,8,9,10,11,12,13 ],
-                hide: [ 5,6,7,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32 ]
-            },
-            {
-                extend: 'colvisGroup',
-                text: 'SHU',
-                show: [ 0,1,2,3,7,14,28,29,30 ],
-                hide: [ 4,5,6,8,9,10,11,12,13,15,16,17,18,19,20,21,22,23,24,25,26,27,31,32 ]
-            },
-            {
-                extend: 'colvisGroup',
-                text: 'Piutang',
-                show: [ 0,1,2,3,7,20,21,22,23,24,25 ],
-                hide: [ 4,5,6,8,9,10,11,12,13,14,15,16,17,18,19,26,27,28,29,30,31,32 ]
-            }],
+            @if(Request::is('admins/laporancu/index_hapus') || Request::is('admins/laporancu/index_cu*'))
+
+            @else
+                {
+                    extend: 'colvisGroup',
+                    text: ' Anggota',
+                    show: [ 0,1,2,3,4,8,9,10,11,12,13 ],
+                    hide: [ 5,6,7,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32 ]
+                },
+                {
+                    extend: 'colvisGroup',
+                    text: 'SHU',
+                    show: [ 0,1,2,3,4,8,14,28,29,30 ],
+                    hide: [ 5,6,7,9,10,11,12,13,15,16,17,18,19,20,21,22,23,24,25,26,27,31,32 ]
+                },
+                {
+                    extend: 'colvisGroup',
+                    text: 'Piutang',
+                    show: [ 0,1,2,3,4,8,20,21,22,23,24,25 ],
+                    hide: [ 5,6,7,9,10,11,12,13,14,15,16,17,18,19,26,27,28,29,30,31,32 ]
+                }
+            @endif
+            ],
         language: {
             buttons : {},
             select:{
@@ -70,129 +75,155 @@
         } );
     } ).draw();
 
-    new $.fn.dataTable.Buttons(table,{
-        buttons: [
-            @permission('create.laporancu_create')
-            {
-                text: '<i class="fa fa-plus"></i> <u>T</u>ambah',
-                key: {
-                    altKey: true,
-                    key: 't'
+
+    @if(Request::is('admins/laporancu/index_hapus') || Request::is('admins/laporancu/index_cu*'))
+        new $.fn.dataTable.Buttons(table,{
+            buttons: [
+                @permission('update.laporancu_update')
+                {
+                    text: '<i class="fa fa-check"></i> Pulihkan',
+                    key: {
+                        altKey: true,
+                        key: 'u'
+                    },
+                    action: function(){
+                        var id = $.map(table.rows({ selected: true }).data(),function(item){
+                            return item[1];
+                        });
+                        if(id != ""){
+                            $('#modalpulih').modal({show:true});
+                            $('#modalpulih_id').attr('value',id);
+                        }else{
+                            $('#modalwarning').modal({show:true});
+                        }
+                    }
                 },
-                action: function(){
-                    window.location.href = "{{URL::to('admins/'.$kelas.'/create')}}";
-                }
-            },
-            @endpermission
-            @permission('update.laporancu_update')
-            {
-                text: '<i class="fa fa-pencil"></i> <u>U</u>bah',
-                key: {
-                    altKey: true,
-                    key: 'u'
-                },
-                action: function(){
-                    var id = $.map(table.rows({ selected: true }).data(),function(item){
-                        return item[1];
-                    });
-                    var kelas = "{{ $kelas }}";
-                    if(id != ""){
-                        window.location.href =  "/admins/" + kelas + "/" + id + "/edit";
-                    }else{
-                        $('#modalwarning').modal({show:true});
+                @endpermission
+            ]
+        });
+        table.buttons( 0, null ).container().prependTo(
+                table.table().container()
+        );
+        new $.fn.dataTable.Buttons(table,{
+            buttons: [
+                {
+                    text: '<i class="fa fa-database"></i> Detail',
+                    action: function(){
+                        var id = $.map(table.rows({ selected: true }).data(),function(item){
+                            return item[1];
+                        });
+                        var kelas = "{{ $kelas }}";
+                        if(id != ""){
+                            window.location.href = "/admins/" + kelas + "/detail/" + id ;
+                        }else{
+                            $('#modalwarning').modal({show:true});
+                        }
                     }
                 }
-            },
-            @endpermission
-            @permission('destroy.laporancu_destroy')
-            {
-                text: '<i class="fa fa-trash"></i> <u>H</u>apus',
-                key: {
-                    altKey: true,
-                    key: 'h'
+            ]
+        });
+        table.buttons( 0, null ).container().prependTo(
+                table.table().container()
+        );
+    @else
+        new $.fn.dataTable.Buttons(table,{
+            buttons: [
+                @permission('create.laporancu_create')
+                {
+                    text: '<i class="fa fa-plus"></i> <u>T</u>ambah',
+                    key: {
+                        altKey: true,
+                        key: 't'
+                    },
+                    action: function(){
+                        window.location.href = "{{URL::to('admins/'.$kelas.'/create')}}";
+                    }
                 },
-                action: function(){
-                    var id = $.map(table.rows({ selected:true }).data(),function(item){
-                        return item[1];
-                    });
-                    if(id != ""){
-                        $('#modalhapus').modal({show:true});
-                        $('#modalhapus_judul').text('Hapus Laporan CU');
-                        $('#modalhapus_detail').text('Hapus Laporan CU');
-                        $('#modalhapus_id').attr('value',id);
-                    }else{
-                        $('#modalwarning').modal({show:true});
+                @endpermission
+                @permission('update.laporancu_update')
+                {
+                    text: '<i class="fa fa-pencil"></i> <u>U</u>bah',
+                    key: {
+                        altKey: true,
+                        key: 'u'
+                    },
+                    action: function(){
+                        var id = $.map(table.rows({ selected: true }).data(),function(item){
+                            return item[1];
+                        });
+                        var kelas = "{{ $kelas }}";
+                        if(id != ""){
+                            window.location.href =  "/admins/" + kelas + "/" + id + "/edit";
+                        }else{
+                            $('#modalwarning').modal({show:true});
+                        }
+                    }
+                },
+                @endpermission
+                @permission('destroy.laporancu_destroy')
+                {
+                    text: '<i class="fa fa-trash"></i> <u>H</u>apus',
+                    key: {
+                        altKey: true,
+                        key: 'h'
+                    },
+                    action: function(){
+                        var id = $.map(table.rows({ selected:true }).data(),function(item){
+                            return item[1];
+                        });
+                        if(id != ""){
+                            $('#modalhapus').modal({show:true});
+                            $('#modalhapus_judul').text('Hapus Laporan CU');
+                            $('#modalhapus_detail').text('Hapus Laporan CU');
+                            $('#modalhapus_id').attr('value',id);
+                        }else{
+                            $('#modalwarning').modal({show:true});
+                        }
+                    }
+                },
+                @endpermission
+                {
+                    text: '<i class="fa fa-database"></i> Detail',
+                    action: function(){
+                        var id = $.map(table.rows({ selected: true }).data(),function(item){
+                            return item[1];
+                        });
+                        var kelas = "{{ $kelas }}";
+                        if(id != ""){
+                            window.location.href = "/admins/" + kelas + "/detail/" + id ;
+                        }else{
+                            $('#modalwarning').modal({show:true});
+                        }
                     }
                 }
-            },
-            @endpermission
-        ]
-    });
-    table.buttons( 0, null ).container().prependTo(
-            table.table().container()
-    );
+            ]
+        });
+        table.buttons( 0, null ).container().prependTo(
+                table.table().container()
+        );
 
 
-    new $.fn.dataTable.Buttons(table,{
-        buttons: [
-            @permission('upload.laporancu_upload')
-            {
-                text: '<i class="fa fa-upload fa-fw"></i> Upload Excel',
-                key: {
-                    altKey: true,
-                    key: 'u'
+        new $.fn.dataTable.Buttons(table,{
+            buttons: [
+                @permission('upload.laporancu_upload')
+                {
+                    text: '<i class="fa fa-upload fa-fw"></i> Upload Excel',
+                    action: function(){
+                        $('#modalexcel').modal({show:true});
+                    }
                 },
-                action: function(){
-                    $('#modalexcel').modal({show:true});
-                }
-            },
-            @endpermission
-        ]
-    });
-    table.buttons( 0, null ).container().prependTo(
-            table.table().container()
-    );
-
-    new $.fn.dataTable.Buttons(table,{
-        buttons: [
-            {
-                text: '<i class="fa fa-database"></i> Detail',
-                action: function(){
-                    var id = $.map(table.rows({ selected: true }).data(),function(item){
-                        return item[1];
-                    });
-                    var kelas = "{{ $kelas }}";
-                    if(id != ""){
-                        window.location.href = "/admins/" + kelas + "/detail/" + id ;
+                @endpermission
+                {
+                    extend:'excelHtml5',
+                    text: '<i class="fa fa-download fa-fw"></i> Download Excel',
+                    exportOptions: {
+                        columns: ':visible'
                     }
                 }
-            }
-        ]
-    });
-    table.buttons( 0, null ).container().prependTo(
-            table.table().container()
-    );
-
-    new $.fn.dataTable.Buttons(table,{
-        buttons: [
-            {
-                extend:'excelHtml5',
-                text: '<i class="fa fa-file-excel-o"></i> Excel',
-                exportOptions: {
-                    columns: ':visible'
-                }
-            },
-            {
-                extend:'print',
-                text: '<i class="fa fa-print"></i> Print',
-                exportOptions: {
-                    stripHtml: false,
-                    columns: ':visible'
-                }
-            }
-        ]
-    });
-    table.buttons( 0, null ).container().prependTo(
-            table.table().container()
-    );
+            ]
+        });
+        table.buttons( 0, null ).container().prependTo(
+                table.table().container()
+        );    
+    @endif    
 </script>

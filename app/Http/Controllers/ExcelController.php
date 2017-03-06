@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 use Input;
 use DB;
 use Excel;
-use App\Models\Excelitems;
+use App\Excelitems;
 
 class ExcelController extends Controller
 {

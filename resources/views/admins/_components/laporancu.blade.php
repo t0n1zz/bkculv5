@@ -10,7 +10,7 @@
       $periodes = array_column($periodeiode1->toArray(),'periode');
 
       foreach ($periodes as $periode) {
-          $datacu = App\Models\LaporanCu::where('periode','<=',$periode)->orderBy('periode','DESC')->get();
+          $datacu = App\LaporanCu::where('periode','<=',$periode)->orderBy('periode','DESC')->get();
           $datacu1= $datacu->groupBy('no_ba');
 
           $datascu = collect([]);
@@ -87,9 +87,9 @@
   if(Auth::user()->can('view.laporancu_view') && $cu != '0' || Request::is('admins/laporancu/detail*') ){
       
       if(Request::is('admins/laporancu/detail*')){
-        $datas = App\Models\LaporanCu::where('no_ba','=',$no_ba)->where('periode','<=',$periode)->orderBy('periode','desc')->get();
+        $datas = App\LaporanCu::where('no_ba','=',$no_ba)->where('periode','<=',$periode)->orderBy('periode','desc')->get();
       }else{
-        $datas = App\Models\LaporanCu::where('no_ba','=',$cu)->orderBy('periode','desc')->get();
+        $datas = App\LaporanCu::where('no_ba','=',$cu)->orderBy('periode','desc')->get();
       }
 
       $dataarray = $datas->sortBy('periode')->toArray();
@@ -606,8 +606,8 @@
                     @else
                       <span class="description-percentage text-yellow"><i class="fa fa-caret-left"></i>
                     @endif 
-                    {{ number_format(abs($rasio_beredar),"0",",",".") }} %</span>
-                    <h5 class="description-header">{{ number_format($rasio_beredar1,"0",",",".") }} %</h5>
+                    {{ abs($rasio_beredar) }} %</span>
+                    <h5 class="description-header">{{ $rasio_beredar1 }} %</h5>
                     <span class="description-text">Rasio Piutang Beredar</span>
                   </div>
                   <!-- /.description-block -->
@@ -622,8 +622,8 @@
                     @else
                       <span class="description-percentage text-yellow"><i class="fa fa-caret-left"></i>
                     @endif 
-                    {{ number_format(abs($rasio_lalai),"0",",",".") }} %</span>
-                    <h5 class="description-header">{{ number_format($rasio_lalai1,"0",",",".") }} %</h5>
+                    {{ abs($rasio_lalai) }} %</span>
+                    <h5 class="description-header">{{ $rasio_lalai1 }} %</h5>
                     <span class="description-text">Rasio Piutang Lalai</span>
                   </div>
                   <!-- /.description-block -->

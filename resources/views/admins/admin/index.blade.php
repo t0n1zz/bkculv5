@@ -216,7 +216,7 @@ $file_max = intval($file_max);
                 <div>
                     <h4>Foto</h4>
                     <div class="thumbnail" >
-                            {{ Html::image('images_user/no_image.jpg', 'a picture', array('class' => 'img-responsive', 'id' => 'tampilgambar', 'width' => '200')) }}
+                            {{ Html::image('images_user/user.jpg', 'a picture', array('class' => 'img-responsive', 'id' => 'tampilgambar', 'width' => '200')) }}
                         <div class="caption">
                             {{ Form::file('gambar', array('onChange' => 'readURL(this)','required')) }}
                         </div>
@@ -254,13 +254,6 @@ $file_max = intval($file_max);
                     }
                 },
                 @endpermission
-            ]
-        });
-        table.buttons( 0, null ).container().prependTo(
-                table.table().container()
-        );
-        new $.fn.dataTable.Buttons(table,{
-            buttons: [
                 @permission('update_password.'.$kelas.'_update_password')
                 {
                     text: '<i class="fa fa-key"></i> Ubah Password',
@@ -370,13 +363,6 @@ $file_max = intval($file_max);
                         }
                     }
                 },
-            ]
-        });
-        table.buttons( 0, null ).container().prependTo(
-                table.table().container()
-        );
-        new $.fn.dataTable.Buttons(table,{
-            buttons: [
                 @permission('destroy.'.$kelas.'_destroy')
                 {
                     text: '<i class="fa fa-trash"></i> <u>H</u>apus',

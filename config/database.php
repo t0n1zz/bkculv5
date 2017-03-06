@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'fetch' => PDO::FETCH_CLASS,
+    'fetch' => PDO::FETCH_OBJ,
 
     /*
     |--------------------------------------------------------------------------
@@ -53,26 +53,18 @@ return [
         ],
 
         'mysql' => [
-            'driver'    => 'mysql',
-            'host'      => 'localhost',
-            'database'  => 'puskopdi_bkcu',
-            'username'  => 'root',
-            'password'  => '',
-            'charset'   => 'utf8',
+            'driver' => 'mysql',
+            'host' => env('DB_HOST', 'localhost'),
+            'port' => env('DB_PORT', '3306'),
+            'database' => env('DB_DATABASE', 'forge'),
+            'username' => env('DB_USERNAME', 'forge'),
+            'password' => env('DB_PASSWORD', ''),
+            'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
-            'prefix'    => '',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
         ],
-
-        // 'mysql' => [
-        //     'driver'    => 'mysql',
-        //     'host'      => 'localhost',
-        //     'database'  => 'puskopdi_bkcu',
-        //     'username'  => 'puskopdi_bkcu',
-        //     'password'  => 'hhjds786jds',
-        //     'charset'   => 'utf8',
-        //     'collation' => 'utf8_unicode_ci',
-        //     'prefix'    => '',
-        // ],
 
         'pgsql' => [
             'driver' => 'pgsql',
@@ -84,6 +76,7 @@ return [
             'charset' => 'utf8',
             'prefix' => '',
             'schema' => 'public',
+            'sslmode' => 'prefer',
         ],
 
     ],

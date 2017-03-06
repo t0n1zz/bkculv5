@@ -6,7 +6,7 @@ use Auth;
 use Input;
 use Redirect;
 use Validator;
-use App\Models\Saran;
+use App\Saran;
 
 class SaranController extends Controller {
 

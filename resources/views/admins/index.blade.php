@@ -1,6 +1,6 @@
-<?php 
+<?php
 $title="Dashboard";
-$data = App\Models\LaporanCu::orderBy('periode','ASC')->groupBy('periode')->get(['periode']);
+$data = App\LaporanCu::orderBy('periode','ASC')->groupBy('periode')->get(['periode']);
 $periodeiode = $data->groupBy('periode');
 $cu = Auth::user()->getCU();
 $iduser = Auth::user()->getId();
@@ -12,9 +12,11 @@ $ultahcu = DB::select(DB::raw($query));
 ?>
 @extends('admins._layouts.layout')
 
+@permission('view.saran_view')
 @section('css')
     @include('admins._components.datatable_CSS')
 @stop
+@endpermission
 
 @section('content')
 <section class="content-header">
@@ -50,15 +52,15 @@ $ultahcu = DB::select(DB::raw($query));
         @permission('view.pengumuman_view')
             <div class="col-xs-6 col-sm-3 col-md-2">
                 <div class="small-box bg-aqua">
-                    <?php $total_pengumuman = App\Models\Pengumuman::count(); $route = route('admins.pengumuman.index'); ?>
+                    <?php $total_pengumuman = App\Pengumuman::count(); $route = route('admins.pengumuman.index'); ?>
                     <div class="inner">
-                        <a href="{{ $route }}" style="color:white"> 
+                        <a href="{{ $route }}" style="color:white">
                             <h3>{{ $total_pengumuman }}</h3>
                             <p>Pengumuman</p>
                         </a>
                     </div>
                     <div class="icon">
-                       <a href="{{ $route }}" style="color: rgba(0, 0, 0, 0.15)"> 
+                       <a href="{{ $route }}" style="color: rgba(0, 0, 0, 0.15)">
                             <i class="fa fa-comments-o"></i>
                        </a>
                     </div>
@@ -72,17 +74,17 @@ $ultahcu = DB::select(DB::raw($query));
         @permission('view.artikel_view')
             <div class="col-xs-6 col-sm-3 col-md-2">
                 <div class="small-box bg-green">
-                    <?php $total_artikel = App\Models\Artikel::count(); $route = route('admins.artikel.index');?>
+                    <?php $total_artikel = App\Artikel::count(); $route = route('admins.artikel.index');?>
                     <div class="inner">
-                        <a href="{{ $route }}" style="color:white"> 
+                        <a href="{{ $route }}" style="color:white">
                             <h3>{{ $total_artikel }}</h3>
                             <p>Artikel</p>
-                        </a>    
+                        </a>
                     </div>
                     <div class="icon">
-                        <a href="{{ $route }}" style="color: rgba(0, 0, 0, 0.15)"> 
+                        <a href="{{ $route }}" style="color: rgba(0, 0, 0, 0.15)">
                             <i class="fa fa-book"></i>
-                        </a>    
+                        </a>
                     </div>
                     <a href="{{ $route }}"
                        class="small-box-footer">Lihat <i class="fa fa-arrow-circle-right"></i></a>
@@ -94,16 +96,16 @@ $ultahcu = DB::select(DB::raw($query));
         @permission('view.kegiatan_view')
             <div class="col-xs-6 col-sm-3 col-md-2">
                 <div class="small-box bg-red">
-                    <?php $total_kegiatan = App\Models\Kegiatan::count();$route = route('admins.kegiatan.index'); ?>
+                    <?php $total_kegiatan = App\Kegiatan::count();$route = route('admins.kegiatan.index'); ?>
                     <div class="inner">
-                        <a href="{{ $route }}" style="color:white"> 
+                        <a href="{{ $route }}" style="color:white">
                             <h3>{{ $total_kegiatan }}</h3>
                             <p>Kegiatan</p>
                         </a>
                     </div>
                     <div class="icon">
-                        <a href="{{ $route }}" style="color: rgba(0, 0, 0, 0.15)"> 
-                            <i class="fa fa-suitcase"></i>  
+                        <a href="{{ $route }}" style="color: rgba(0, 0, 0, 0.15)">
+                            <i class="fa fa-suitcase"></i>
                         </a>
                     </div>
                     <a href="{{ $route }}"
@@ -116,29 +118,29 @@ $ultahcu = DB::select(DB::raw($query));
         @permission('view.cuprimer_view')
             <div class="col-xs-6 col-sm-3 col-md-2">
                 <div class="small-box bg-yellow">
-                    <?php 
+                    <?php
                       if($cu == '0'){
-                        $total_cuprimer = App\Models\Cuprimer::where('status','1')->count();
+                        $total_cuprimer = App\Cuprimer::count();
                         $route = route('admins.cuprimer.index');
                       }else{
                         $route = route('admins.cuprimer.detail',array($cu));
-                      }    
+                      }
                     ?>
                     <div class="inner">
                         <a href="{{ $route }}" style="color:white">
-                          @if($cu == '0') 
+                          @if($cu == '0')
                             <h3>{{ $total_cuprimer }}</h3>
                             <p>CU</p>
                           @else
                             <h3>&nbsp</h3>
                             <p>Profil CU</p>
                           @endif
-                        </a>    
+                        </a>
                     </div>
                     <div class="icon">
-                        <a href="{{ $route }}" style="color: rgba(0, 0, 0, 0.15)"> 
+                        <a href="{{ $route }}" style="color: rgba(0, 0, 0, 0.15)">
                             <i class="fa fa-building"></i>
-                        </a>    
+                        </a>
                     </div>
                     <a href="{{ $route }}"
                        class="small-box-footer">Lihat <i class="fa fa-arrow-circle-right"></i></a>
@@ -150,25 +152,25 @@ $ultahcu = DB::select(DB::raw($query));
         @permission('view.cuprimer_view')
             <div class="col-xs-6 col-sm-3 col-md-2">
                 <div class="small-box bg-aqua">
-                    <?php 
+                    <?php
                       if($cu == '0'){
-                        $total_tp = App\Models\TpCU::count();
+                        $total_tp = App\TpCU::count();
                         $route = route('admins.tpcu.index');
                       }else{
-                        $total_tp = App\Models\TpCU::where('cu','=',$cu)->count(); 
+                        $total_tp = App\TpCU::where('cu','=',$cu)->count();
                         $route = route('admins.tpcu.index_cu',array($cu));
-                      }    
+                      }
                     ?>
                     <div class="inner">
                         <a href="{{ $route }}" style="color:white">
                             <h3>{{ $total_tp }}</h3>
                             <p>TP CU</p>
-                        </a>    
+                        </a>
                     </div>
                     <div class="icon">
-                        <a href="{{ $route }}" style="color: rgba(0, 0, 0, 0.15)"> 
+                        <a href="{{ $route }}" style="color: rgba(0, 0, 0, 0.15)">
                             <i class="fa fa-home"></i>
-                        </a>    
+                        </a>
                     </div>
                     <a href="{{ $route }}"
                        class="small-box-footer">Lihat <i class="fa fa-arrow-circle-right"></i></a>
@@ -182,10 +184,10 @@ $ultahcu = DB::select(DB::raw($query));
                 <div class="small-box bg-green">
                     <?php
                         if($cu != 0)
-                            $total_laporan = App\Models\LaporanCu::where('no_ba','=',$cu)->count(); 
+                            $total_laporan = App\LaporanCu::where('no_ba','=',$cu)->count();
                         else
-                            $total_laporan = App\Models\LaporanCu::count(); 
-                        if(Auth::user()->can('view.laporancu_view') && $cu == '0'){ 
+                            $total_laporan = App\LaporanCu::count();
+                        if(Auth::user()->can('view.laporancu_view') && $cu == '0'){
                             $route = route('admins.laporancu.index');
                         }elseif(Auth::user()->can('view.laporancu_view') && $cu != '0'){
                             $route = route('admins.laporancu.index_cu',array($cu));
@@ -198,12 +200,12 @@ $ultahcu = DB::select(DB::raw($query));
                         </a>
                     </div>
                     <div class="icon">
-                        <a href="{{ $route }}" style="color: rgba(0, 0, 0, 0.15)"> 
+                        <a href="{{ $route }}" style="color: rgba(0, 0, 0, 0.15)">
                             <i class="fa fa-line-chart"></i>
                         </a>
-                    </div>   
+                    </div>
                         <a href="{{ $route }}"
-                           class="small-box-footer">Lihat <i class="fa fa-arrow-circle-right"></i></a> 
+                           class="small-box-footer">Lihat <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
             </div>
         @endpermission
@@ -212,19 +214,19 @@ $ultahcu = DB::select(DB::raw($query));
         @permission('view.staf_view')
             <div class="col-xs-6 col-sm-3 col-md-2">
                 <div class="small-box bg-red">
-                    <?php 
+                    <?php
                         if($cu != 0)
-                            $total_staff = App\Models\Staf::with('cuprimer')->where('cu','=',$cu)->count(); 
+                            $total_staff = App\Staf::with('cuprimer')->where('cu','=',$cu)->count();
                         else
-                            $total_staff = App\Models\Staf::count(); 
-                        
+                            $total_staff = App\Staf::count();
+
                         $route = route('admins.staf.index');
                         ?>
                     <div class="inner">
-                        <a href="{{ $route }}" style="color:white"> 
+                        <a href="{{ $route }}" style="color:white">
                             <h3>{{ $total_staff }}</h3>
                             <p>Staf</p>
-                        </a>   
+                        </a>
                     </div>
                     <div class="icon">
                         <a href="{{ $route }}" style="color: rgba(0, 0, 0, 0.15)">
@@ -241,9 +243,9 @@ $ultahcu = DB::select(DB::raw($query));
         @permission('view.download_view')
             <div class="col-xs-6 col-sm-3 col-md-2">
                 <div class="small-box bg-yellow">
-                    <?php $total_download = App\Models\Download::count(); $route = route('admins.download.index');?>
+                    <?php $total_download = App\Download::count(); $route = route('admins.download.index');?>
                     <div class="inner">
-                        <a href="{{ $route }}" style="color:white"> 
+                        <a href="{{ $route }}" style="color:white">
                             <h3>{{ $total_download }}</h3>
                             <p>Download</p>
                         </a>
@@ -251,7 +253,7 @@ $ultahcu = DB::select(DB::raw($query));
                     <div class="icon">
                         <a href="{{ $route }}" style="color: rgba(0, 0, 0, 0.15)">
                             <i class="fa fa-download"></i>
-                        </a>    
+                        </a>
                     </div>
                     <a href="{{ $route }}"
                        class="small-box-footer">Lihat <i class="fa fa-arrow-circle-right"></i></a>
@@ -263,9 +265,9 @@ $ultahcu = DB::select(DB::raw($query));
         @permission('view.admin_view|detail.admin_detail')
             <div class="col-xs-6 col-sm-3 col-md-2">
                 <div class="small-box bg-aqua">
-                    <?php 
+                    <?php
                       if($cu == '0'){
-                        $total_admin = App\Models\User::count(); 
+                        $total_admin = App\User::count();
                         $route = route('admins.admin.index');
                       }else{
                         $route = route('admins.admin.detail',array($iduser));
@@ -283,15 +285,15 @@ $ultahcu = DB::select(DB::raw($query));
                           @else
                             <h3>&nbsp</h3>
                             <p>Admin</p>
-                          @endif  
-                        </a>    
+                          @endif
+                        </a>
                     </div>
                     <div class="icon">
                         @permission('detail.admin_detail')
                             <a href="{{ route('admins.admin.detail',array($iduser)) }}" style="color: rgba(0, 0, 0, 0.15)">
                         @else
                             <a href="#" data-toggle="modal" data-target="#modalcheckpass" style="color: rgba(0, 0, 0, 0.15)">
-                        @endpermission    
+                        @endpermission
                             <i class="fa fa-user-circle-o"></i>
                         </a>
                     </div>
@@ -299,7 +301,7 @@ $ultahcu = DB::select(DB::raw($query));
                         <a href="{{ route('admins.admin.detail',array($iduser)) }}" class="small-box-footer">
                     @else
                         <a href="#" data-toggle="modal" data-target="#modalcheckpass" class="small-box-footer">
-                    @endpermission 
+                    @endpermission
                        Lihat <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
             </div>
@@ -309,9 +311,9 @@ $ultahcu = DB::select(DB::raw($query));
     <!-- /Small boxes (Stat box) -->
     <!-- Main content -->
     @if(Auth::user()->can('view.laporanbkcu_view') || Auth::user()->can('view.laporancu_view'))
-        @include('admins._components.laporancu')       
+        @include('admins._components.laporancu')
     @endif
-    <div class="row">    
+    <div class="row">
         <div class="col-lg-5">
             @permission('view.statistikweb_view')
             <!--statistik website-->
@@ -375,7 +377,7 @@ $ultahcu = DB::select(DB::raw($query));
                     </div>
                 </div><!-- /.box-header -->
                 <div class="box-body">
-                    <?php $sarans = App\Models\Saran::orderBy('created_at','desc')->take(10)->get(); ?>
+                    <?php $sarans = App\Saran::orderBy('created_at','desc')->take(10)->get(); ?>
                     <table class="table table-hover" id="dataTables-saran" width="100%">
                         <thead class="bg-light-blue-active color-palette">
                             <tr >
@@ -425,12 +427,13 @@ $ultahcu = DB::select(DB::raw($query));
             <!-- /saran -->
             @endpermission
         </div>
-    </div>    
+    </div>
 </section>
 
 @stop
-
+@permission('view.saran_view')
 @section('js')
+    @include('admins._components.datatable_JS')
     <script type="text/javascript">
         var table = $('#dataTables-saran').DataTable({
             dom: 't',
@@ -459,12 +462,6 @@ $ultahcu = DB::select(DB::raw($query));
                 "sInfoEmpty":    "Tampilan 0 hingga 0 dari 0 entri",
                 "sInfoFiltered": "(disaring dari _MAX_ entri keseluruhan)",
                 "sInfoPostFix":  "",
-            },
-            fnInitComplete:function(){
-                $('.dataTables_scrollBody').perfectScrollbar();
-            },
-            fnDrawCallback: function( oSettings ) {
-                $('.dataTables_scrollBody').perfectScrollbar('destroy').perfectScrollbar();
             }
         });
 
@@ -475,3 +472,4 @@ $ultahcu = DB::select(DB::raw($query));
         } ).draw();
     </script>
 @stop
+@endpermission

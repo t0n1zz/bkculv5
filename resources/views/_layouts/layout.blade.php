@@ -1,7 +1,7 @@
 <?php
-    $pengumumans = App\Models\Pengumuman::orderBy('urutan','asc')->get();
+    $pengumumans = App\Pengumuman::orderBy('urutan','asc')->get();
     $currentpage = $_SERVER['REQUEST_URI'];
-    $navberita = App\Models\KategoriArtikel::whereNotIn('id',array(1,4,8))->get();
+    $navberita = App\KategoriArtikel::whereNotIn('id',array(1,4,8))->get();
 /*
     if (Auth::check()) {
         Auth::logout();

@@ -7,9 +7,9 @@ use Auth;
 use Input;
 use Redirect;
 use Validator;
-use App\Models\TpCU;
-use App\Models\Cuprimer;
-use App\Models\WilayahCuprimer;
+use App\TpCU;
+use App\Cuprimer;
+use App\WilayahCuprimer;
 use \DOMDocument;
 
 class CuprimerController extends Controller{
@@ -21,12 +21,11 @@ class CuprimerController extends Controller{
     {
         try{
             $datas = Cuprimer::with('WilayahCuprimer')
-                ->where('status','=','1')
                 ->orderBy('name','asc')
                 ->get();
 
-            $datas_non = Cuprimer::with('WilayahCuprimer')
-                ->where('status','=','0')
+            $datas_non = Cuprimer::onlyTrashed()
+                ->with('WilayahCuprimer')
                 ->orderBy('name','asc')
                 ->get();
 
@@ -64,7 +63,7 @@ class CuprimerController extends Controller{
                     return Redirect::back();
             }
 
-            $data = Cuprimer::with('wilayahcuprimer')->where('no_ba','=',$id)->first();
+            $data = Cuprimer::withTrashed()->with('wilayahcuprimer')->where('no_ba','=',$id)->first();
 
             return view('admins.'.$this->kelaspath.'.detail', compact('data','id'));
         }catch (Exception $e){
@@ -221,30 +220,6 @@ class CuprimerController extends Controller{
         }
     }
 
-    public function update_status()
-    {
-        try{
-            $id = Input::get('id');
-            $kelas = Cuprimer::findOrFail($id);
-            $name = $kelas->name;
-            $status = $kelas->status;
-
-            if($status == 1) {
-                $statusname = "non-aktifkan";
-                $kelas->status = 0;
-            }else{
-                $statusname = "diaktifkan";
-                $kelas->status = 1;
-            }
-
-            $kelas->update();
-            return Redirect::route('admins.'.$this->kelaspath.'.index')->with('sucessmessage', 'Status CU  <b><i>' . $name . '</i></b> telah <b>' . $statusname . '</b>.');
-
-        }catch (Exception $e){
-            return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
-        }
-    }
-
     public function update_deskripsi($id)
     {
         try{
@@ -398,14 +373,30 @@ class CuprimerController extends Controller{
         return $data;
     }
 
+    public function restore()
+    {
+        try{
+            $id = Input::get('id');
+            $kelas = Cuprimer::onlyTrashed()->findOrFail($id);
+            $name = $kelas->name;
+            
+            $kelas->restore();
+
+            return Redirect::route('admins.'.$this->kelaspath.'.index')->with('sucessmessage', 'Status CU  <b><i>' . $name . '</i></b> telah <b>diaktifkan</b>.');
+
+        }catch (Exception $e){
+            return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
+        }
+    }
+
     public function destroy()
     {
         try{
-        $id = Input::get('id');
+            $id = Input::get('id');
 
-        Cuprimer::destroy($id);
+            Cuprimer::destroy($id);
 
-        return Redirect::route('admins.'.$this->kelaspath.'.index')->with('message', 'Informasi kegiatan telah berhasil di hapus.');
+            return Redirect::route('admins.'.$this->kelaspath.'.index')->with('sucessmessage', 'Status CU telah dinon-aktifkan.');
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
         }

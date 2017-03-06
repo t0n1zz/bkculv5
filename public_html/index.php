@@ -4,7 +4,7 @@
  * Laravel - A PHP Framework For Web Artisans
  *
  * @package  Laravel
- * @author   Taylor Otwell <taylorotwell@gmail.com>
+ * @author   Taylor Otwell <taylor@laravel.com>
  */
 
 /*
@@ -39,6 +39,7 @@ $app = require_once __DIR__.'/../bootstrap/app.php';
 $app->bind('path.public', function() {
     return __DIR__;
 });
+
 
 /*
 |--------------------------------------------------------------------------

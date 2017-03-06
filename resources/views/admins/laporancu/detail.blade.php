@@ -4,10 +4,9 @@ $kelas = "laporancu";
 $kelas2 = "laporancudiskusi";
 $imagepath = 'images_user/';
 $iduser = \Auth::user()->getId();
-$culists = App\Models\Cuprimer::orderBy('name','asc')->where('status','=','1')->get();
-$culists_non = App\Models\Cuprimer::orderBy('name','asc')->where('status','=','0')->get();
+$cu = \Auth::user()->getCU();
 
-$dataperiode = App\Models\laporancu::where('no_ba','=',$data->cuprimer->no_ba)->orderBy('periode','DESC')->groupBy('periode')->get(['id','periode']);
+$dataperiode = App\laporancu::where('no_ba','=',$data->cuprimer_all->no_ba)->orderBy('periode','DESC')->get(['id','periode']);
 $pilihperiode = $dataperiode->groupBy('periode');
 
 $pilihperiodes = collect([]);
@@ -17,21 +16,16 @@ foreach ($pilihperiode as $dataperiode){
 ?>
 @extends('admins._layouts.layout')
 
-@section('css')
-    @include('admins._components.datatable_CSS')
-    <link rel="stylesheet" type="text/css" href="{{asset('plugins/summernote/summernote.css')}}" >
-@stop
-
 @section('content')
 <!-- header -->
 <section class="content-header">
     <h1>
         <i class="fa fa-database"></i> {{ $title }}
-        <small>CU {{  $data->cuprimer->name }} </small>
+        <small>CU {{  $data->cuprimer_all->name }} </small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="{{ URL::to('admins') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li><a href="{{ URL::to('admins/laporancu') }}"><i class="fa fa-line-chart"></i> Laporan CU</a></li>
+        <li><a href="{{ URL::to('admins/laporancu/index_cu/'.$data->cuprimer_all->no_ba) }}"><i class="fa fa-line-chart"></i> Laporan CU {{ $data->cuprimer_all->name }}</a></li>
         <li class="active"><i class="fa fa-database"></i> {{ $title }}</li>
     </ol>
 </section>
@@ -41,27 +35,60 @@ foreach ($pilihperiode as $dataperiode){
     @include('admins._layouts.alert')
     <!-- /Alert -->
     <!--content-->
+    @if($data->deleted_at != null)
+        <?php $deleted_date = new Date($data->deleted_at); ?>
+        <div class="callout callout-danger ">
+            <h3 style="margin-top: 5px;"><i class="icon fa fa-trash"></i> Laporan ini telah dihapus!</h3>
+            <ul style="margin-left: -3vh;">
+                <li>Laporan ini telah dihapus pada tanggal <b>{{ $deleted_date->format('d F Y') }}</b> pukul <b>{{ $deleted_date->format('H:i') }}</b> dan <b>TIDAK MASUK</b> dalam laporan perkembangan dan laporan konsolidasi.</li>
+                <li>Apabila anda merasa laporan ini tidak seharusnya dihapus atau karena kesalahan dalam menghapus laporan,
+                    @if($cu != 0)
+                        maka silahkan hubungi staf bagian litbang PUSKOPDIT BKCU Kalimantan untuk memulihkan laporan ini.
+                    @else
+                        maka silahkan menekan tombol <b>[<i class="fa fa-check"></i> Pulihkan]</b> untuk memulihkan laporan ini.
+                    @endif
+                </li>
+            </ul>
+            @if($cu == 0)
+                <btn class="btn btn-default" data-toggle="modal" data-target="#modalpulih"><i class="fa fa-check"></i> Pulihkan</btn>
+            @endif
+        </div>
+    @endif
+
     <div class="box box-solid">
         <div class="box-body">
             <div class="col-sm-12" style="padding: .2em ;">
                 <div class="input-group">
                     <div class="input-group-addon primary-color"><i class="fa fa-clock-o fa-fw"></i> Periode Laporan</div>
                     <select class="form-control" id="dynamic_select2">
+                        @if($data->deleted_at != null)
+                            <?php $selected_date = new Date($data->periode); ?>
+                            <option selected="">{{ $selected_date->format('F Y') }}</option>
+                        @endif
                         @foreach($pilihperiodes as $pilihperiode)
                             <?php $date = new Date($pilihperiode->periode); ?>
                             <option {{ Request::is('admins/laporancu/detail/'.$pilihperiode->id) ? 'selected' : '' }}
                                     value="/admins/laporancu/detail/{{$pilihperiode->id}}">{{ $date->format('F Y') }}</option>
-
                         @endforeach
                     </select>
                 </div>
             </div>
         </div>
     </div>
+
     @include('admins._components.laporancu')
     <div class="nav-tabs-custom">
         <ul class="nav nav-tabs">
-            <li class="active"><a href="#tab_diskusi" data-toggle="tab">Diskusi</a></li>
+            <li class="active"><a href="#tab_diskusi" data-toggle="tab">Diskusi
+                @if(!empty($datas2) && count($datas2) > 0 )
+                    <small><span class="label label-primary">{{ count($datas2 ) }}</span></small>
+                @endif
+            </a></li>
+            <li><a href="#tab_revisi" data-toggle="tab">Revisi
+                @if(!empty($datahistories) && count($datahistories) > 0 )
+                    <small><span class="label label-primary" >{{ count($datahistories ) }}</span></small>
+                @endif
+            </a></li>
         </ul>
         <div class="tab-content">
             <div class="tab-pane active" id="tab_diskusi">
@@ -106,6 +133,7 @@ foreach ($pilihperiode as $dataperiode){
                         {{ Form::model($datas2,array('route' => array('admins.'.$kelas2.'.store'),'method' => 'post','data-toggle' => 'validator','role' => 'form')) }}
                             <input type="text" name="id_laporan" value="{{ $data->id }}" hidden>
                             <input type="text" name="route" value="{{ Request::path() }}" hidden>
+                            <input type="text" name="no_ba" value="{{ $data->no_ba }}" hidden>
                             <div class="input-group">
                                 <input class="form-control" name="content" placeholder="Tuliskan pesan...." required="true" data-minlength="5">
                                 <div class="input-group-btn">
@@ -116,10 +144,73 @@ foreach ($pilihperiode as $dataperiode){
                     </div>
                 </div>
             </div>
+            <div class="tab-pane" id="tab_revisi">
+                @if(!empty($datahistories) && count($datahistories) > 0 )
+                    @foreach($datahistories as $datahistory)
+                        <div class="well well-sm">
+                            <?php 
+                                  $user = App\User::find($datahistory->user_id);
+                                  $cuprimer = App\Cuprimer::where('no_ba',$user->cu)->first();
+                                  $date = new Date($datahistory->created_at); 
+                              ?>
+                            <i class="fa fa-caret-right text-muted"></i><b> {{ $user->name }} 
+                            @if($user->cu > 0)
+                                [{{ $cuprimer->name }}]
+                            @else
+                                [BKCU]
+                            @endif
+                            </b> telah mengubah nilai 
+                            <b>
+                            <?php
+                                switch($datahistory->key){
+                                    case "l_biasa":
+                                        echo "Anggota Lelaki Biasa";
+                                        break;
+                                    case "l_lbiasa":
+                                        echo "Anggota Lelaki Luar Biasa";
+                                        break;
+                                    case "p_biasa":
+                                        echo "Anggota Perempuan Biasa";
+                                        break;
+                                    case "p_lbiasa":
+                                        echo "Anggota Perempuan Luar Biasa";
+                                        break;
+                                }
+                            ?>
+                            </b>   
+                            dari <b>{{ number_format($datahistory->old_value,"0",",",".") }}</b> menjadi <b>{{ number_format($datahistory->new_value,"0",",",".") }}</b> pada <small class="text-muted">{{ $date->format('d F') }} - {{ $date->format('H:i') }}</small>
+                        </div>
+                    @endforeach
+                @else
+                    <div class="well well-sm">
+                        Tidak terdapat revisi.
+                    </div>
+                @endif
+            </div>
         </div>
     </div>
     <!--content-->
 </section>
+<div class="modal fade" id="modalpulih" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    {{ Form::model($data,array('route' => array('admins.'.$kelas.'.restore'))) }}
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-light-blue-active color-palette">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title "><i class="fa fa-check"></i> Pulihkan Laporan</h4>
+            </div>
+            <div class="modal-body">
+                <input type="text" name="id" value="{{ $data->id }}" id="modalpulih_id" hidden>
+                <h4>Memulihkan laporan ini?</h4>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" id="modalbutton"><i class="fa fa-check"></i> Pulihkan</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Batal</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+    {{ Form::close() }}
+</div>
 <div class="modal fade" id="modalubah" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     {{ Form::open(array('route' => array('admins.'.$kelas2.'.update',$kelas2), 'method' => 'put','data-toggle' => 'validator','role' => 'form')) }}
     <div class="modal-dialog">
@@ -131,6 +222,7 @@ foreach ($pilihperiode as $dataperiode){
             <div class="modal-body">
                 <input type="text" name="id" value="" id="modalubah_id" hidden>
                 <input type="text" name="route" value="{{ Request::path() }}" hidden>
+                <input type="text" name="no_ba" value="{{ $data->no_ba }}" hidden>
                 <div class="form-group">
                     <h4>Mengubah diskusi</h4>
                     <div class="input-group">
@@ -160,6 +252,7 @@ foreach ($pilihperiode as $dataperiode){
                 <h4 style="font-size: 16px" id="modalhapus_detail">Hapus Diskusi</h4>
                 <input type="text" name="id" value="" id="modalhapus_id" hidden>
                 <input type="text" name="route" value="{{ Request::path() }}" hidden>
+                <input type="text" name="no_ba" value="{{ $data->no_ba }}" hidden>
             </div>
             <div class="modal-footer">
                 <button type="submit" class="btn btn-danger" id="modalbutton"><i class="fa fa-trash fa-fw"></i> Hapus</button>

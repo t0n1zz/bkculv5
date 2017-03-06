@@ -7,7 +7,8 @@ use Auth;
 use Input;
 use Redirect;
 use Validator;
-use App\Models\Pengumuman;
+use App\Pengumuman;
+
 
 
 class PengumumanController extends Controller{
@@ -47,7 +48,11 @@ class PengumumanController extends Controller{
             }
             $name = Input::get('name');
 
-            Pengumuman::create($data);
+            $pengumuman = Pengumuman::create($data);
+
+            \Illuminate\Support\Facades\Notification::send(\App\User::where('cu','0')->get(), new \App\Notifications\notifikasi($pengumuman->id,'pesan','laporancu'));
+
+
             return Redirect::route($this->indexpath)->with('sucessmessage', 'Pengumuman <b><i>' .$name. '</i></b> Telah berhasil ditambah.');
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());

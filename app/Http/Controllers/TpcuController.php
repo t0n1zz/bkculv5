@@ -7,8 +7,8 @@ use File;
 use Image; 
 use Redirect;
 use Validator;
-use App\Models\TpCU;
-use App\Models\Cuprimer;
+use App\TpCU;
+use App\Cuprimer;
 
 class TpcuController extends Controller{
 
@@ -22,9 +22,11 @@ class TpcuController extends Controller{
     public function index()
     {
         try{
-            $datas = TpCU::with(['cuprimer' => function($query){
-                $query->where('status','1');
-            }])->orderBy('cu','desc')->get();
+            // $datas = TpCU::with(['cuprimer' => function($query){
+            //     $query->where('status','1');
+            // }])->orderBy('cu','desc')->get();
+
+            $datas = TpCU::with('cuprimer')->orderBy('cu','desc')->get();
 
             return view('admins.'.$this->kelaspath.'.index', compact('datas'));
         }catch (Exception $e){

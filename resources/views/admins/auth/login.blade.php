@@ -59,7 +59,7 @@
                         <span class="input-group-addon"><i class="fa fa-user"></i></span>
                         {{ Form::text('username',null,array('class' => 'form-control', 'placeholder' => 'Username', 'autofocus','required','data-minlength'=>'5'))}}
                         <span class="glyphicon form-control-feedback"></span>
-                    </div> 
+                    </div>
                 </div>
                 <div class="form-group has-feedback">
                     <div class="input-group">
@@ -82,7 +82,7 @@
     <!-- jquery -->
     <script type="text/javascript" src="{{ URL::asset('plugins/jQuery/jquery-1.9.1.min.js') }}"></script>
     <script type="text/javascript" src="{{ URL::asset('plugins/BootstrapFormHelper/js/bootstrap-formhelpers.min.js') }}"></script>
-    <script type="text/javascript" src="{{ URL::asset('js/myscript.js') }}"></script>
+    {{-- <script type="text/javascript" src="{{ URL::asset('js/myscript.js') }}"></script> --}}
 
     <!-- Bootstrap Core JavaScript -->
     <script type="text/javascript" src="{{ URL::asset('plugins/bootstrap/js/bootstrap.min.js') }}"></script>

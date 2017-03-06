@@ -48,8 +48,8 @@ $imagepath = 'images_tpcu/';
                     @if(Auth::user()->getCU() == '0')
                     <div class="col-sm-4" style="padding: .2em ;">
                         <?php 
-                            $culists = App\Models\Cuprimer::orderBy('name','asc')->where('status','=','1')->get();
-                            $culists_non = App\Models\Cuprimer::orderBy('name','asc')->where('status','=','0')->get();
+                            $culists = App\Cuprimer::orderBy('name','asc')->get();
+                            $culists_non = App\Cuprimer::onlyTrashed()->orderBy('name','asc')->get();
                         ?>
                         <div class="input-group tabletools">
                             <div class="input-group-addon primary-color"><i class="fa fa-building"></i> TP CU</div>

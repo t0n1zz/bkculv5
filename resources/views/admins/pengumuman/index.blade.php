@@ -92,7 +92,7 @@ $kelas = "pengumuman";
             <div class="modal-body">
                 <?php
                     if(Auth::check()) { $id = Auth::user()->getId();}
-                    $urutan = App\Models\Pengumuman::count();
+                    $urutan = App\Pengumuman::count();
                 ?>
                 <input type="text" name="penulis" value="{{ $id }}" hidden>
                 <input type="text" name="urutan" value="{{$urutan + 1}}"  hidden>
@@ -102,7 +102,7 @@ $kelas = "pengumuman";
                     <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-font"></i></span>
                         {{ Form::text('name',null,array('class' => 'form-control','id'=>'modaltambah_name',
-                        'placeholder' => 'Silahkan masukkan pengumuman','autocomplete'=>'off','required'))}}
+                        'placeholder' => 'Silahkan masukkan pengumuman','autocomplete'=>'off','required','data-minlength' => '5'))}}
                     </div>
                 </div>
             </div>
@@ -131,7 +131,7 @@ $kelas = "pengumuman";
                     <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-font"></i></span>
                         {{ Form::text('name',null,array('class' => 'form-control','id'=>'modalubah_name',
-                        'placeholder' => 'Silahkan masukkan pengumuman','autocomplete'=>'off','required'))}}
+                        'placeholder' => 'Silahkan masukkan pengumuman','autocomplete'=>'off','required','data-minlength' => '5'))}}
                     </div>
                 </div>
             </div>
@@ -249,15 +249,8 @@ $kelas = "pengumuman";
                             $('#modalwarning').modal({show:true});
                         }
                     }
-                }
+                },
                 @endpermission
-            ]
-        });
-        table.buttons( 0, null ).container().prependTo(
-                table.table().container()
-        );
-        new $.fn.dataTable.Buttons(table,{
-            buttons: [
                 @permission('update_urutan.'.$kelas.'_update_urutan')
                 {
                     text: '<i class="fa fa-ellipsis-v"></i> Urutan',
@@ -272,6 +265,8 @@ $kelas = "pengumuman";
                         if(id != ""){
                             $('#modalurutan').modal({show:true});
                             $('#modalurutan_id').attr('value',id);
+                        }else{
+                            $('#modalwarning').modal({show:true});
                         }
                     }
                 }

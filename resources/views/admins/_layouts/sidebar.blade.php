@@ -1,5 +1,5 @@
 <?php
-$cusidebars = App\Models\Cuprimer::orderBy('name','asc')->get();
+$cusidebars = App\Cuprimer::orderBy('name','asc')->get();
 $cu = Auth::user()->getCU();
 $iduser = Auth::user()->getId();
 ?>

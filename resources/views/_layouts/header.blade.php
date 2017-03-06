@@ -46,40 +46,6 @@ $currentpage = $_SERVER['REQUEST_URI'];
                     {{--</div>--}}
                 {{--</div>--}}
                 {{--search--}}
-                @if(\Request::is('cu/*') || \Request::is('cu'))
-                {{--cu--}}
-                <ul class="nav navbar-nav navbar-right">
-                    <li><a href="{{ route('home') }}" @if($currentpage == "/") {{'class="active"'}} @endif>Home</a></li>
-                    <li><a href="{{ route('cu') }}" @if($currentpage == "/cu") {{'class="active"'}} @endif>Dashboard</a></li>
-                    <li><a href="{{ route('cu.kelola_kegiatan') }}" @if($currentpage == "/cu/kelola_kegiatan") {{'class="active"'}} @endif>DIKLAT</a></li>
-                    <li>
-                        <a href="#"
-                        @if($currentpage == "/cu/edit_info" || $currentpage == "/cu/edit_deskripsi")
-                            {{'class="active"'}}
-                                @endif>CU</a>
-                        <ul class="dropdown">
-                            <li><a href="{{ route('cu.edit_deskripsi') }}" @if($currentpage == "/cu/edit_deskripsi") {{'class="active"'}} @endif
-                                        >Profil</a></li>
-                            <li><a href="{{ route('cu.edit_info') }}" @if($currentpage == "/cu/edit_info") {{'class="active"'}} @endif
-                                        >Informasi Umum</a></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#"
-                        @if($currentpage == "/cu/kelola_staf")
-                            {{'class="active"'}}
-                                @endif>Staf</a>
-                        <ul class="dropdown">
-                            <li><a href="{{ route('cu.create_staf') }}" @if($currentpage == "/cu/create_staf") {{'class="active"'}} @endif
-                                        >Tambah Staf</a></li>
-                            <li><a href="{{ route('cu.kelola_staf') }}" @if($currentpage == "/cu/kelola_staf") {{'class="active"'}} @endif
-                                        >Kelola Staf</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="{{ route('cu.logout') }}">Logout</a></li>
-                </ul>
-                {{--cu--}}
-                @else
                 {{--public--}}
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="{{ route('home') }}" @if($currentpage == "/") {{'class="active"'}} @endif>Home</a></li>
@@ -128,10 +94,8 @@ $currentpage = $_SERVER['REQUEST_URI'];
                             <li><a href="{{ route('hymnecu') }}" @if($currentpage == "/hymnecu") {{'class="active"'}} @endif>Hymne CU</a></li>
                         </ul>
                     </li>
-                    <!-- <li><a href="{{ route('cu.login') }}" @if($currentpage == "/cu/login") {{'class="active"'}} @endif>Login</a></li> -->
                 </ul>
                 {{--public--}}
-                @endif
             </div>
         </div>
 
@@ -169,7 +133,6 @@ $currentpage = $_SERVER['REQUEST_URI'];
                     <li><a href="{{ route('hymnecu') }}">Hymne CU</a></li>
                 </ul>
             </li>
-            <!-- <li><a href="{{ route('cu.login') }}">Login</a> </li> -->
         </ul>
     </div>
 

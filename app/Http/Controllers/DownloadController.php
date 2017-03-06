@@ -7,7 +7,7 @@ use Auth;
 use Input;
 use Redirect;
 use Validator;
-use App\Models\Download;
+use App\Download;
 
 class DownloadController extends Controller {
 

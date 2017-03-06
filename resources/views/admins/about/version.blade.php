@@ -21,6 +21,56 @@ $title = "Version";
     <div class="row">
         <div class="col-md-12">
             <ul class="timeline">
+              <li class="time-label">
+                <span class="bg-red">
+                  14 Februari 2017
+                </span>
+              </li>
+              <li>
+                  <i class="fa fa-gears bg-blue"></i>
+                  <div class="timeline-item">
+                      <span class="time"><i class="fa fa-clock-o"></i> 10:00</span>
+                      <h3 class="timeline-header"><a href="#">Version 2.1.1</a> Admin Site</h3>
+                      <div class="timeline-body">
+                          Penambahan fitur bagian laporan CU serta fitur diskusi pada laporan CU<br/><br/>
+                          Berikut adalah rincian perubahan pada versi ini:
+                          <br/><br/>
+                          <ul>
+                              <li>Upgrade laravel versi 5.2 ke versi 5.3 yang menawarkan:
+                                  <ul>
+                                      <li>Support Vue.js</li>
+                                      <li>Fitur sistem notifikasi</li>
+                                      <li>Penyederhanaan struktur folder project</li>
+                                      <li>Pembagian rute akses website menjadi dua yaitu untuk akses ke web dan akses melalui aplikasi selain web (API)</li>
+                                  </ul>
+                              </li>
+                              <li>Penambahan bagian laporan CU yang berfungsi:
+                                  <ul>
+                                      <li>Menampilkan pertumbuhan perakun perperiode pada masing-masing laporan</li>
+                                      <li>Menampilkan panel overview kondisi CU berdasarkan laporan terbaru</li>
+                                      <li>Penambahan fitur pada input data laporan melalui upload excel <small class="label bg-yellow">beta 2</small></li>
+                                  </ul>
+                              </li>
+                              <li>Penambahan bagian diskusi laporan CU yang berfungsi:
+                                  <ul>
+                                      <li>Memberikan masukkan kepada CU bahwa laporan telah diterima/diperiksa</li>
+                                      <li>Memberikan masukkan/pertanyaan terhadap laporan CU yang telah diterima/diperiksa</li>
+                                  </ul>
+                              </li>
+                              <li>Penambahan bagian revisi laporan CU yang berfungsi Menampilkan data apa saja yang telah diubah</li>
+                              <li>Penambahan fitur sistem notifikasi yang berfungsi:
+                                  <ul>
+                                      <li>Memberikan pemberitahuan mengenai laporan CU yang masuk, diubah, dan dihapus</li>
+                                      <li>Memberikan pemberitahuan mengenai diskusi laporan CU yang masuk, diubah, dan dihapus</li>
+                                  </ul>
+                              </li>
+                              <li>Penambahan fitur mengubah foto profil admin pada bagian admin</li>
+                              <li>Perbaikan bug dan peningkatan performa</li>
+                          </ul>
+                          <hr/>
+                      </div>
+                  </div>
+              </li>
                 <li class="time-label">
                   <span class="bg-red">
                     9 Desember 2016
@@ -30,9 +80,9 @@ $title = "Version";
                     <i class="fa fa-gears bg-blue"></i>
                     <div class="timeline-item">
                         <span class="time"><i class="fa fa-clock-o"></i> 15:00</span>
-                        <h3 class="timeline-header"><a href="#">Version 2.1.0</a> admin site</h3>
+                        <h3 class="timeline-header"><a href="#">Version 2.1.0</a> Admin Site</h3>
                         <div class="timeline-body">
-                            Penambahan fitur bagian laporan cu yang berfungsi untuk menampilkan perkembangan Credit Union diserta dengan perhitungan analisis P.E.A.R.L.S serta upgrade sistem utama aplikasi dari versi 4.2 ke versi 5.2 dan peningkatan fitur-fitur pada plugin yang dipakai.
+                            Penambahan fitur bagian laporan CU yang berfungsi untuk menampilkan perkembangan Credit Union diserta dengan perhitungan analisis P.E.A.R.L.S serta upgrade sistem utama aplikasi dari versi 4.2 ke versi 5.2 dan peningkatan fitur-fitur pada plugin yang dipakai.
                             <br/><br/>
                             Berikut adalah rincian perubahan pada versi ini:
                             <br/><br/>
@@ -45,8 +95,8 @@ $title = "Version";
                                         <li>Penambahan dukungan terhadap plugin-plugin</li>
                                         <li>Proteksi semua input terhadap serangan SQL injection</li>
                                     </ul>
-                                </li>     
-                                <li>Penambahan bagian laporan cu yang berfungsi:
+                                </li>
+                                <li>Penambahan bagian laporan CU yang berfungsi:
                                     <ul>
                                         <li>Menampung dan mengolah data laporan keuangan CU menjadi laporan perkembangan CU serta analisis P.E.A.R.L.S</li>
                                         <li>Menampilkan laporan CU dalam tabel interaktif serta grafik</li>
@@ -60,7 +110,7 @@ $title = "Version";
                                         <li>Menambah, mengubah dan menghapus data TP di CU</li>
                                         <li>Menambah, mengubah dan menghapus laporan CU</li>
                                     </ul>
-                                </li>        
+                                </li>
                                 <li>Penambahan fitur dan perubahan penggunaan pada Datatable</li>
                                 <li>Penambahan fitur text editor untuk bagian artikel</li>
                                 <li>Penambahan fitur pada bagian admin</li>
@@ -70,6 +120,7 @@ $title = "Version";
                                 <li>Penggunaan pace untuk animasi loading resource dan request ajax</li>
                                 <li>Penggantian Plugin ACL entrust dengan kodeine untuk integrasi lebih lanjut dengan laravel ACL</li>
                                 <li>Menghapus plugin flickering untuk akses ke flickr</li>
+                                <li>Perbaikan bug dan peningkatan performa</li>
                             </ul>
                             <hr/>
                         </div>
@@ -84,7 +135,7 @@ $title = "Version";
                     <i class="fa fa-gears bg-blue"></i>
                     <div class="timeline-item">
                         <span class="time"><i class="fa fa-clock-o"></i> 14:00</span>
-                        <h3 class="timeline-header"><a href="#">Version 2.0.1</a> admin site</h3>
+                        <h3 class="timeline-header"><a href="#">Version 2.0.1</a> Admin Site</h3>
                         <div class="timeline-body">
                             Pengubahan penggunaan rich text editor dari CKeditor menjadi Summernote.
                             <br/><br/>
@@ -96,6 +147,7 @@ $title = "Version";
                                 <li>Peningkatan penanganan upload gambar dengan metode baru yang diperkenalkan
                                 pada versi Intervention Image v2.x</li>
                                 <li>Penambahan halaman version</li>
+                                <li>Perbaikan bug dan peningkatan performa</li>
                             </ul>
                         </div>
                     </div>

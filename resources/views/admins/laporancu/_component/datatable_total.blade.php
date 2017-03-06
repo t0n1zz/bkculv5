@@ -61,16 +61,8 @@
         buttons: [
             {
                 extend:'excelHtml5',
-                text: '<i class="fa fa-file-excel-o"></i> Excel',
+                text: '<i class="fa fa-download fa-fw"></i> Download Excel',
                 exportOptions: {
-                    columns: ':visible'
-                }
-            },
-            {
-                extend:'print',
-                text: '<i class="fa fa-print"></i> Print',
-                exportOptions: {
-                    stripHtml: false,
                     columns: ':visible'
                 }
             }

@@ -354,7 +354,7 @@
             <div class="parallax-text-item">
                 <div class="container">
                     <div class="row">
-                        <?php $infogerakan = App\Models\InfoGerakan::find(1); ?>
+                        <?php $infogerakan = App\InfoGerakan::find(1); ?>
                         @if(!empty($infogerakan->jumlah_cu))
                         <div class="col-xs-12 col-sm-4 col-md-4">
                             <div class="counter-item">

@@ -58,14 +58,6 @@
                <div class="slider-content">
                </div>
             </div> --}}
-       {{--     <div class="item">
-                <div class="">
-                    {{ Html::image('images/slider-imlek.jpg', 'Chinese New Year 2016', array(
-                   'class' => 'img-responsive')) }}
-                </div>
-                <div class="slider-content">
-                </div>
-            </div>--}}
             @if(!empty($ultahcu))
                 <div class="item">
                     <div class="black" >

@@ -6,9 +6,9 @@ use Auth;
 use Input;
 use Redirect;
 use Validator;
-use App\Models\Staf;
-use App\Models\StafRiwayat;
-use App\Models\Cuprimer;
+use App\Staf;
+use App\StafRiwayat;
+use App\Cuprimer;
 use App\Http\Requests;
 use Yajra\Datatables\Datatables;
 

@@ -9,8 +9,8 @@ use File;
 use Redirect;
 use Datatables;
 use Validator;
-use App\Models\Artikel;
-use App\Models\KategoriArtikel;
+use App\Artikel;
+use App\KategoriArtikel;
 use \DOMDocument;
 use Jenssegers\Date\Date;
 

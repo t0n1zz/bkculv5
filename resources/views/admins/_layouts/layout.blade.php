@@ -21,6 +21,7 @@
     <link rel="apple-touch-icon" href="{{asset('images/logo.png')}}" sizes="180x180" />
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" type="text/css" href="{{asset('plugins/bootstrap/css/bootstrap.min.css')}}" >
+    {{-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> --}}
     <!-- Custom CSS -->
     <link rel="stylesheet" type="text/css" href="{{asset('admin/AdminLTE.css')}}" >
     <link rel="stylesheet" type="text/css" href="{{asset('admin/skin-blue.css')}}" >
@@ -58,7 +59,7 @@
     <footer class="main-footer">
         <!-- To the right -->
         <div class="pull-right hidden-xs">
-            <a href="{{ route('admins.version') }}"><b>Admin</b>BKCU 2.1.0</a>
+            <a href="{{ route('admins.version') }}"><b>Admin</b>BKCU 2.1.1</a>
         </div>
         <!-- Default to the left -->
         <strong>Copyright &copy; {{ date("Y") }} <a href="#">Puskopdit BKCU Kalimantan</a>.</strong> All rights reserved.
@@ -174,8 +175,10 @@
 <!-- /check -->
 <!-- jquery -->
 <script type="text/javascript" src="{{ URL::asset('plugins/jQuery/jquery-1.9.1.min.js') }}"></script>
+{{-- <script type="text/javascript" src="https://code.jquery.com/jquery-1.9.1.min.js"></script> --}}
 <!-- Bootstrap Core JavaScript -->
 <script type="text/javascript" src="{{ URL::asset('plugins/bootstrap/js/bootstrap.min.js') }}"></script>
+{{-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script> --}}
 <!-- fastclick for touch browser -->
 <script type="text/javascript" src="{{ URL::asset('plugins/fastclick/fastclick.min.js') }}"></script>
 <!-- pace -->
@@ -183,7 +186,7 @@
 <!-- APP -->
 <script type="text/javascript" src="{{ URL::asset('admin/app.js') }}"></script>
 <!-- form helper -->
-<script type="text/javascript" src="{{ URL::asset('plugins/inputmask/jquery.inputmask.bundle.min.js') }}"></script>
+<script type="text/javascript" src="{{ URL::asset('plugins/inputmask/jquery.inputmask.bundle.js') }}"></script>
 <script type="text/javascript" src="{{ URL::asset('plugins/validator/validator.min.js') }}"></script>
 <!-- Custom Theme JavaScript -->
 <script>
@@ -216,8 +219,8 @@
 </script>
 @yield('js')
 @yield('js2')
+@yield('jsnotif')
 <!-- custom script -->
 <script type="text/javascript" src="{{ URL::asset('admin/myscript.js') }}"></script>
 </body>
 </Html>
-

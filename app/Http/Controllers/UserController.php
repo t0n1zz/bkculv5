@@ -10,10 +10,10 @@ use Image;
 use File;
 use Redirect;
 use Validator;
-use App\Models\Cuprimer;
-use App\Models\User;
-use App\Http\Controllers\Controller;
+use App\Cuprimer;
+use App\User;
 
+use App\Http\Controllers\Controller;
 use Kodeine\Acl\Models\Eloquent\Role;
 use Kodeine\Acl\Models\Eloquent\Permission;
 
@@ -25,9 +25,7 @@ class UserController extends controller{
     public function index()
     {
         try{
-            $datas = User::where('id', '!=','0')->get();
-
-            // dd($datas);
+            $datas = User::where('id', '!=','1')->orderBy('cu')->get();
 
             return view('admins.'.$this->kelaspath.'.index', compact('datas'));
         }catch (Exception $e){
@@ -216,6 +214,7 @@ class UserController extends controller{
             $kelas = User::findOrFail($id);
             $name = $kelas->name;
             $adminrole = Role::where('name', '=', $kelas->username)->first();
+
             $this->hak_akses_save($adminrole);
 
             return Redirect::route('admins.'.$this->kelaspath.'.index')->with('sucessmessage', 'Hak akses <b><i>' . $name . '</i></b> telah berhasil diubah.');
@@ -294,6 +293,7 @@ class UserController extends controller{
 
     public function hak_akses_save($adminrole)
     {
+        $adminrole->revokeAllPermissions();
         $this->hak_akses('pengumuman','view',$adminrole);
         $this->hak_akses('pengumuman','create',$adminrole);
         $this->hak_akses('pengumuman','update',$adminrole);
@@ -316,10 +316,6 @@ class UserController extends controller{
         $this->hak_akses('kegiatan','create',$adminrole);
         $this->hak_akses('kegiatan','update',$adminrole);
         $this->hak_akses('kegiatan','destroy',$adminrole);
-        $this->hak_akses('kegiatandetail','view',$adminrole);
-        $this->hak_akses('kegiatandetail','peserta',$adminrole);
-        $this->hak_akses('kegiatandetail','biaya',$adminrole);
-        $this->hak_akses('kegiatandetail','evaluasi',$adminrole);
         $this->hak_akses('cuprimer','view',$adminrole);
         $this->hak_akses('cuprimer','create',$adminrole);
         $this->hak_akses('cuprimer','update',$adminrole);
@@ -342,9 +338,6 @@ class UserController extends controller{
         $this->hak_akses('staf','create',$adminrole);
         $this->hak_akses('staf','update',$adminrole);
         $this->hak_akses('staf','destroy',$adminrole);
-        $this->hak_akses('stafdetail','view',$adminrole);
-        $this->hak_akses('stafdetail','riwayat',$adminrole);
-        $this->hak_akses('stafdetail','kegiatan',$adminrole);
         $this->hak_akses('download','view',$adminrole);
         $this->hak_akses('download','create',$adminrole);
         $this->hak_akses('download','update',$adminrole);
@@ -358,15 +351,19 @@ class UserController extends controller{
         $this->hak_akses('admin','detail',$adminrole);
     }
 
-    public function hak_akses($namaakses,$tipe,$adminrole){
+    public function hak_akses($namaakses,$tipe,$adminrole)
+    {
+        // if(Input::get($namaakses.'_'.$tipe) == 1) {
+        //     if (!$adminrole->can($tipe.'.'.$namaakses.'_'.$tipe)){
+        //         $adminrole->assignPermission($namaakses.'_'.$tipe);
+        //     }
+        // }else{
+        //     if($adminrole->can($tipe.'.'.$namaakses.'_'.$tipe)){
+        //         $adminrole->revokePermission($namaakses.'_'.$tipe);
+        //     }
+        // }
         if(Input::get($namaakses.'_'.$tipe) == 1) {
-            if (!$adminrole->can($tipe.'.'.$namaakses.'_'.$tipe)){
-                $adminrole->assignPermission($namaakses.'_'.$tipe);
-            }
-        }else{
-            if($adminrole->can($tipe.'.'.$namaakses.'_'.$tipe)){
-                $adminrole->revokePermission($namaakses.'_'.$tipe);
-            }
+            $adminrole->assignPermission($namaakses.'_'.$tipe);
         }
     }
 

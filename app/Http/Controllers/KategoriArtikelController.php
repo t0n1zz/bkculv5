@@ -6,8 +6,8 @@ use Auth;
 use Input;
 use Redirect;
 use Validator;
-use App\Models\Artikel;
-use App\Models\KategoriArtikel;
+use App\Artikel;
+use App\KategoriArtikel;
 
 class KategoriArtikelController extends Controller{
 

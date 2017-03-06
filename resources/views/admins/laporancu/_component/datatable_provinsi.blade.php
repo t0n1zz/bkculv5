@@ -22,20 +22,20 @@
             {
                 extend: 'colvisGroup',
                 text: 'Anggota',
-                show: [ 0,1,2,3,4,5,6 ],
-                hide: [ 7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23 ]
+                show: [ 0,1,2,3,4,5,6,7 ],
+                hide: [ 8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24 ]
             },
             {
                 extend: 'colvisGroup',
                 text: 'SHU',
-                show: [ 0,1,7,21,22,23 ],
-                hide: [ 2,3,4,5,6,8,9,10,11,12,13,14,15,16,17,18,19,20 ]
+                show: [ 0,1,2,8,22,23,24 ],
+                hide: [ 3,4,5,7,6,9,10,11,12,13,14,15,16,17,18,19,20,21 ]
             },
             {
                 extend: 'colvisGroup',
                 text: 'Piutang',
-                show: [ 0,1,13,14,15,16,17,18 ],
-                hide: [ 2,3,4,5,6,7,8,9,10,11,12,19,20,21,22,23 ]
+                show: [ 0,1,2,14,15,16,17,18,19 ],
+                hide: [ 3,4,5,6,7,8,9,10,11,12,13,20,21,22,23,24 ]
             }
         ],
         language: {
@@ -70,16 +70,8 @@
         buttons: [
             {
                 extend:'excelHtml5',
-                text: '<i class="fa fa-file-excel-o"></i> Excel',
+                text: '<i class="fa fa-download fa-fw"></i> Download Excel',
                 exportOptions: {
-                    columns: ':visible'
-                }
-            },
-            {
-                extend:'print',
-                text: '<i class="fa fa-print"></i> Print',
-                exportOptions: {
-                    stripHtml: false,
                     columns: ':visible'
                 }
             }

@@ -1,6 +1,6 @@
 <?php
-$navberita = App\Models\KategoriArtikel::whereNotIn('id',array(1,4,8))->get();
-$infogerakan = App\Models\InfoGerakan::find(1);
+$navberita = App\KategoriArtikel::whereNotIn('id',array(1,4,8))->get();
+$infogerakan = App\InfoGerakan::find(1);
 ?>
 {{--footer--}}
 <footer>

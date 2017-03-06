@@ -345,16 +345,9 @@ $imagepath = 'images_artikel/';
                             $('#modalwarning').modal({show:true});
                         }
                     }
-                }
+                },
                 @endpermission
-            ]
-        });
-        table.buttons( 0, null ).container().prependTo(
-                table.table().container()
-        );
-        new $.fn.dataTable.Buttons(table,{
-            buttons: [
-                @permission('update_status.'.$kelas.'_update_status')
+                                @permission('update_status.'.$kelas.'_update_status')
                 {
                     text: '<i class="fa fa-check-square"></i> Penerbitan Artikel',
                     key: {

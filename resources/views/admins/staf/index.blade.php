@@ -54,8 +54,8 @@ $imagepath = "images_staf/";
                     @if(Auth::user()->getCU() == '0')
                         <div class="col-sm-4" style="padding: .2em ;">
                             <?php 
-                                $culists = App\Models\Cuprimer::orderBy('name','asc')->where('status','=','1')->get();
-                                $culists_non = App\Models\Cuprimer::orderBy('name','asc')->where('status','=','0')->get();
+                                $culists = App\Cuprimer::orderBy('name','asc')->get();
+                                $culists_non = App\Cuprimer::onlyTrashed()->orderBy('name','asc')->get();
                             ?>
                             <div class="input-group tabletools">
                                 <div class="input-group-addon primary-color"><i class="fa fa-users"></i> Staf CU</div>
@@ -102,7 +102,7 @@ $imagepath = "images_staf/";
                                     $alamat = $str;
                                 }
 
-                                $jabatans = \App\Models\StafRiwayat::where('id_staf','=',$data->id)
+                                $jabatans = \App\StafRiwayat::where('id_staf','=',$data->id)
                                                 ->where('tipe','=',3)->get();
                                 
                                 $pekerjaan = array();
@@ -272,15 +272,8 @@ $imagepath = "images_staf/";
                             $('#modalwarning').modal({show:true});
                         }
                     }
-                }
+                },
                 @endpermission
-            ]
-        });
-        table.buttons( 0, null ).container().prependTo(
-                table.table().container()
-        );
-        new $.fn.dataTable.Buttons(table,{
-            buttons: [
                 {
                     text: '<i class="fa fa-database"></i> Detail',
                     action: function(){
@@ -300,7 +293,7 @@ $imagepath = "images_staf/";
         table.buttons( 0, null ).container().prependTo(
                 table.table().container()
         );
-
+        
         $(function(){
             // bind change event to select
             $('#dynamic_select').on('change', function () {
