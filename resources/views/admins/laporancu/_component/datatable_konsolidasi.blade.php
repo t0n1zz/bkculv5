@@ -8,10 +8,10 @@
         scrollCollapse : true,
         paging : false,
         stateSave : false,
-        @if(Request::is('admins/laporancu/index_cu/*'))
+        @if(Request::is('admins/laporancu/index_cu/*') || Request::is('admins/laporancu') || Request::is('admins/laporancu/index_periode/*'))
             order : [[ 2, 'desc']],
-        @else
-            order : [[ 1, 'desc']],
+        @elseif(Request::is('admins/laporancu/index_bkcu'))
+            order : [[ 1, 'desc']],  
         @endif
         buttons: [
             {
@@ -42,7 +42,26 @@
                     show: [ 0,1,2,14,15,16,17,18,19],
                     hide: [ 3,4,5,6,7,8,9,10,11,12,13,20,21,22,23,24,25,26 ]
                 }
-            @else
+            @elseif(Request::is('admins/laporancu') || Request::is('admins/laporancu/index_periode/*'))
+                {
+                    extend: 'colvisGroup',
+                    text: 'Anggota',
+                    show: [ 0,1,2,3,4,5,6,7 ],
+                    hide: [ 8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24 ]
+                },
+                {
+                    extend: 'colvisGroup',
+                    text: 'SHU',
+                    show: [ 0,1,2,8,22,23,24 ],
+                    hide: [ 3,4,5,7,6,9,10,11,12,13,14,15,16,17,18,19,20,21 ]
+                },
+                {
+                    extend: 'colvisGroup',
+                    text: 'Piutang',
+                    show: [ 0,1,2,14,15,16,17,18,19 ],
+                    hide: [ 3,4,5,6,7,8,9,10,11,12,13,20,21,22,23,24 ]
+                }
+            @elseif(Request::is('admins/laporancu/index_bkcu'))
                 {
                     extend: 'colvisGroup',
                     text: 'Anggota',
@@ -208,7 +227,7 @@
         table_konsolidasi.buttons( 0, null ).container().prependTo(
                 table_konsolidasi.table().container()
         );
-    @elseif(Request::is('admins/laporancu/index_bkcu'))
+    @else
         new $.fn.dataTable.Buttons(table_konsolidasi,{
             buttons: [
                 {

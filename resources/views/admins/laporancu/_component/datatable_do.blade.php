@@ -81,6 +81,10 @@
         }
     });
 
+    $('#searchtextdo').keyup(function(){
+        table2.search($(this).val()).draw() ;
+    });
+
      table2.on( 'order.dt search.dt', function () {
         table2.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
             cell.innerHTML = i+1;

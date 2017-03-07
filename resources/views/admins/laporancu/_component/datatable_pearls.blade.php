@@ -42,6 +42,9 @@
             "sInfoPostFix":  "",
         }
     });
+
+    table4.$("a[rel=popover]").popover().click(function(e) {e.preventDefault();});
+
     $('#searchtextpearls').keyup(function(){
         table4.search($(this).val()).draw() ;
     });
