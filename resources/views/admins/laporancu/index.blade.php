@@ -19,6 +19,9 @@
 @section('css')
 @include('admins._components.datatable_CSS')
 {{-- <link rel="stylesheet" type="text/css" href="{{asset('plugins/dataTables/extension/FixedColumns/css/fixedColumns.bootstrap.min.css')}}" > --}}
+@if(!Request::is('admins/laporancu/index_bkcu') && !Request::is('admins/laporancu/index_hapus'))
+    <script type="text/javascript" data-cfasync="false" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_CHTML"></script>
+@endif
 @stop
 
 @section('content')
@@ -1834,16 +1837,23 @@
 
                                     $p1 = $data->piutanglalai_12bulan != 0 ? $data->dcr / $data->piutanglalai_12bulan : $data->dcr / 0.01;
                                     $p2 = $data->piutanglalai_1bulan != 0 ? ($data->dcr - $data->piutanglalai_12bulan) / $data->piutanglalai_1bulan : ($data->dcr - $data->piutanglalai_12bulan) / 0.01;
+
                                     if($p1 == 1 && $p2 > 0.35){
                                         $e1 = $data->aset != 0 ? ($data->piutanganggota - (($data->piutanglalai_12bulan) + ((35/100) * $data->piutanglalai_1bulan))) / $data->aset : ($data->piutanganggota - (($data->piutanglalai_12bulan) + ((35/100) * $data->piutanglalai_1bulan))) / 0.01;
                                     }else{
                                         $e1 = $data->aset != 0 ? ($data->piutangberedar - $data->dcr) / $data->aset : ($data->piutangberedar - $data->dcr) / 0.01;
                                     }
+
                                     $e5 = $data->aset != 0 ? ($data->nonsaham_unggulan + $data->nonsaham_harian) / $data->aset : ($data->nonsaham_unggulan + $data->nonsaham_harian) / 0.01;
                                     $e6 = $data->aset != 0 ? $data->totalhutang_pihak3 / $data->aset : $data->totalhutang_pihak3 / 0.01;
 
-                                    $e9 = $data->aset != 0 ? (($data->dcr + $data->dcu + $data->iuran_gedung + $data->donasi + $data->shu_lalu) - ($data->piutanglalai_12bulan + ((35/100) * $data->piutanglalai_1bulan) + $data->aset_masalah)) / $data->aset : (($data->dcr + $data->dcu + $data->iuran_gedung + $data->donasi + $data->shu_lalu) - ($data->piutanglalai_12bulan + ((35/100) * $data->piutanglalai_1bulan) + $data->aset_masalah)) / 0.01;
-                                    
+                                    $piutang_bersih = $data->dcr + $data->dcu + $data->iuran_gedung + $data->donasi + $data->shu_lalu;
+                                    if($p1 == 1 && $p2 > 0.35){ 
+                                        $e9 = $data->aset != 0 ? (($piutang_bersih) - ($data->piutanglalai_12bulan + ((35/100) * $data->piutanglalai_1bulan) + $data->aset_masalah)) / $data->aset : (($data->dcr + $data->dcu + $data->iuran_gedung + $data->donasi + $data->shu_lalu) - ($data->piutanglalai_12bulan + ((35/100) * $data->piutanglalai_1bulan) + $data->aset_masalah)) / 0.01;
+                                    }else{
+                                        $e9 = $data->aset != 0 ? ($piutang_bersih) / $data->aset : ($data->dcr + $data->aset_masalah) / 0.01;
+                                    }
+
                                     $a1 = $data->piutangberedar != 0 ? ($data->piutanglalai_1bulan + $data->piutanglalai_12bulan) / $data->piutangberedar : ($data->piutanglalai_1bulan + $data->piutanglalai_12bulan) / 0.01;
                                     $a2 = $data->aset != 0 ? $data->aset_tidak_menghasilkan / $data->aset : $data->aset_tidak_menghasilkan / 0.01;
                                     $r7 = $data->ratasaham != 0 ? $data->bjs_saham / $data->ratasaham : $data->bjs_saham / 0.01;
@@ -1939,72 +1949,215 @@
                                     <td>{{ $ideal }}</td>
 
                                     <td>{{ 13 - $ideal }}</td>
-
-                                    <td @if($p1 < 100) {!! 'class="bg-red disabled color-palette"' !!} @endif
+{{-- p1  --}}
+                                    <td @if($p1 < 100) {!! 'class="bg-red disabled color-palette"' !!} @else {!! 'class="bg-aqua disabled color-palette"' !!}@endif
                                     ><span data-toggle="modal" data-target="#modalformula"style="cursor:pointer;"
                                         data-judul ='P1 - Provisi pinjaman lalai di atas 12 bulan'
                                         data-cu ='CU {{ $data->cuprimer->name }}' 
-                                        data-formula='`sf"P1" = sf"DCR"/sf"Piutang Lalai lebih dari 12 Bulan" = 100 sf"% (IDEAL)"`'
                                         data-keterangan='100% provisi tersedia untuk pinjaman lalai di atas 12 bulan dan setiap triwulan dilakukan charge off secara konsisten.'
+                                        data-formula='`sf"P1" = sf"DCR"/sf"Piutang Lalai > 12 Bulan" xx 100 % = 100 % sf"(IDEAL)"`'
                                         data-nilai='`sf"P1" = sf"{{ number_format($data->dcr,"0",",",".") }}"/
                                         @if($data->piutanglalai_12bulan != 0)
                                             sf"{{ number_format($data->piutanglalai_12bulan,"0",",",".") }}"
                                         @else
                                             sf"[tidak ditemukan data]"
                                         @endif
-                                        = {{ $p1 }} sf"% @if($p1 < 100) (TIDAK IDEAL) @else (IDEAL) @endif"`'
-                                        > {{ $p1 }} % </span></td>
-
-                                    <td @if($p2 < 35) {!! 'class="bg-red disabled color-palette"' !!} @endif
+                                        xx 100 % = {{ $p1 }}% @if($p1 < 100) sf"(TIDAK IDEAL)" @else sf"(IDEAL)" @endif`'
+                                        >{{ $p1 }} % <i class="fa fa-external-link-square pull-right"></i></span></td>
+{{-- p2 --}}
+                                    <td @if($p2 < 35) {!! 'class="bg-red disabled color-palette"' !!} @else {!! 'class="bg-aqua disabled color-palette"' !!}@endif
                                     ><span data-toggle="modal" data-target="#modalformula"style="cursor:pointer;"
                                         data-judul ='P2 - Provisi pinjaman lalai 1 - 12 bulan'
                                         data-cu ='CU {{ $data->cuprimer->name }}' 
-                                        data-formula='`sf"P2" = sf"Saldo DCR setelah P1 [DCR - Piutang Lalai lebih dari 12 Bulan]"/sf"Piutang Lalai 1 - 12 Bulan" = >35 sf"% (IDEAL)"`'
                                         data-keterangan='35% provisi tersedia untuk pinjaman lalai 1 – 12 bulan dan setiap triwulan dilakukan charge off dari waktu ke waktu.'
+                                        data-formula='`sf"P2" = sf"Saldo DCR setelah P1 [DCR - Piutang Lalai > 12 Bulan]"/sf"Piutang Lalai 1 - 12 Bulan" xx 100 % = >35 % sf"(IDEAL)"`'
                                         data-nilai='`sf"P2" = (sf"{{ number_format($data->dcr,"0",",",".") }}"-sf"{{ number_format($data->piutanglalai_12bulan,"0",",",".") }}")/
                                         @if($data->piutanglalai_1bulan != 0)
                                             sf"{{ number_format($data->piutanglalai_1bulan,"0",",",".") }}"
                                         @else
                                             sf"[tidak ditemukan data]"
                                         @endif
-                                        = {{ $p2 }} sf"% @if($p2 < 35) (TIDAK IDEAL) @else (IDEAL) @endif"`'
-                                        >{{ $p2 }} % </span></td>
-
-                                    <td @if($e1 < 70 || $e1 > 80) {!! 'class="bg-red disabled color-palette"' !!} @endif
-                                    >{{ $e1 }} %</td>
-
-                                    <td @if($e5 < 70 || $e5 > 80) {!! 'class="bg-red disabled color-palette"' !!} @endif
-                                    >{{ $e5 }} %</td>
-
-                                    <td @if($e6 > 5) {!! 'class="bg-red disabled color-palette"' !!} @endif
-                                    >{{ $e6 }} %</td>
-
-                                    <td @if($e9 < 10) {!! 'class="bg-red disabled color-palette"' !!} @endif
-                                    >{{ $e9 }} %</td>
-
-                                    <td @if($a1 > 5) {!! 'class="bg-red disabled color-palette"' !!} @endif
-                                    >{{ $a1 }} %</td>
-
-                                    <td @if($a2 > 5) {!! 'class="bg-red disabled color-palette"' !!} @endif
-                                    >{{ $a2 }} %</td>
-
-                                    <td @if($r7 != $data->hargapasar) {!! 'class="bg-red disabled color-palette"' !!} @endif
-                                    >{{ $r7 }} %</td>
-
-                                    <td @if($r9 != 5) {!! 'class="bg-red disabled color-palette"' !!} @endif
-                                    >{{ $r9 }} %</td>
-
-                                    <td @if($l1 < 15 || $l1 > 20) {!! 'class="bg-red disabled color-palette"' !!} @endif
-                                    >{{ $l1 }} %</td>
-
-                                    <td @if($s10 < 12) {!! 'class="bg-red disabled color-palette"' !!} @endif
-                                    >{{ $s10 }} %</td>
-
-                                    <td @if($s11 < $data->lajuinflasi + 10) {!! 'class="bg-red disabled color-palette"' !!} @endif
-                                    >{{ $s11 }} %</td>
-
+                                        xx 100 % = {{ $p2 }}% @if($p2 < 35) sf"(TIDAK IDEAL)" @else sf"(IDEAL)" @endif`'>
+                                        {{ $p2 }} % <i class="fa fa-external-link-square pull-right"></i></span></td>
+{{-- e1 --}}
+                                    <td @if($e1 < 70 || $e1 > 80) {!! 'class="bg-red disabled color-palette"' !!} @else {!! 'class="bg-aqua disabled color-palette"' !!}@endif
+                                    ><span data-toggle="modal" data-target="#modalformula"style="cursor:pointer;"
+                                        data-judul ='E1 - Piutang Bersih / Total Aset'
+                                        data-cu ='CU {{ $data->cuprimer->name }}'
+                                        data-keterangan='Rasio Piutang Bersih adalah 70% – 80% dari total aset dan portofolio pinjaman beragam dengan setidaknya 5 macam produk pinjaman yang berbeda.'
+                                        @if($p1 == 100 && $p2 > 35) 
+                                            data-formula='`sf"E1" = (sf"Piutang Beredar" - ((sf"100%" xx sf"Piutang Lalai > 12 Bulan") + (sf"35%" xx sf"Piutang lalai 1 - 12 Bulan")))/sf"Aset" xx 100 % = sf"70 % - 80 % (IDEAL)`'
+                                            data-nilai='`sf"E1" = (sf"{{ number_format($data->piutangberedar,"0",",",".") }}"-((100% xx sf"{{ number_format($data->piutanglalai_12bulan,"0",",",".") }}")+(35% xx sf"{{ number_format($data->piutangberedar,"0",",",".") }}")))/
+                                             @if($data->aset != 0)
+                                                sf"{{ number_format($data->aset,"0",",",".") }}"
+                                            @else
+                                                sf"[tidak ditemukan data]"
+                                            @endif
+                                            xx 100 % = {{ $e1 }} %  @if($e1 < 70 || $e1 > 80) sf"(TIDAK IDEAL)" @else sf"(IDEAL)" @endif`'
+                                        @else
+                                            data-formula='`sf"E1" = (sf"Piutang Beredar"-sf"DCR")/sf"Aset" xx 100 % = sf"70 %- 80 % (IDEAL)"`'
+                                            data-nilai='`sf"E1" = (sf"{{ number_format($data->piutangberedar,"0",",",".") }}"-sf"{{ number_format($data->dcr,"0",",",".") }}")/
+                                             @if($data->aset != 0)
+                                                sf"{{ number_format($data->aset,"0",",",".") }}"
+                                            @else
+                                                sf"[tidak ditemukan data]"
+                                            @endif
+                                            xx 100 % = {{ $e1 }}% @if($e1 < 70 || $e1 > 80) sf"(TIDAK IDEAL)" @else sf"(IDEAL)" @endif`'
+                                        @endif
+                                        >
+                                        {{ $e1 }} % <i class="fa fa-external-link-square pull-right"></i></span></td>
+{{-- e5 --}}
+                                    <td @if($e5 < 70 || $e5 > 80) {!! 'class="bg-red disabled color-palette"' !!} @else {!! 'class="bg-aqua disabled color-palette"' !!}@endif
+                                    ><span data-toggle="modal" data-target="#modalformula"style="cursor:pointer;"
+                                        data-judul ='E5 - Simpanan Non Saham / Total Aset'
+                                        data-cu ='CU {{ $data->cuprimer->name }}' 
+                                        data-keterangan='Rasio 70% – 80% dari total aset dan memiliki beragam jenis simpanan minimal 5 jenis produk simpanan yang berbeda.'
+                                        data-formula='`sf"E5" = (sf"Simpanan Non Saham Unggulan"+sf"Simpanan Non Saham Harian")/sf"Aset" xx 100 % = sf"70 % - 80 % (IDEAL)"`'
+                                        data-nilai='`sf"E5" = (sf"{{ number_format($data->nonsaham_unggulan,"0",",",".") }}"+sf"{{ number_format($data->nonsaham_harian,"0",",",".") }}")/
+                                        @if($data->aset != 0)
+                                            sf"{{ number_format($data->aset,"0",",",".") }}"
+                                        @else
+                                            sf"[tidak ditemukan data]"
+                                        @endif
+                                        xx 100 % = {{ $e5 }}% @if($e5 < 70 || $e5 > 80) sf"(TIDAK IDEAL)" @else sf"(IDEAL)" @endif`'>
+                                        {{ $e5 }} % <i class="fa fa-external-link-square pull-right"></i></span></td>
+{{-- e6 --}}
+                                    <td @if($e6 > 5) {!! 'class="bg-red disabled color-palette"' !!} @else {!! 'class="bg-aqua disabled color-palette"' !!}@endif
+                                    ><span data-toggle="modal" data-target="#modalformula"style="cursor:pointer;"
+                                        data-judul ='E6 - Pinjaman kepada pihak luar terhadap total aset'
+                                        data-cu ='CU {{ $data->cuprimer->name }}' 
+                                        data-keterangan='Jumlah pinjaman kepada pihak eksternal 1% – 19% dari total aset.'
+                                        data-formula='`sf"E6" = sf"Total Hutang Pihak Ke-3"/sf"Aset" xx 100 % = sf"&le; 5 % (IDEAL)"`'
+                                        data-nilai='`sf"E6" = sf"{{ number_format($data->totalhutang_pihak3,"0",",",".") }}"/
+                                        @if($data->aset != 0)
+                                            sf"{{ number_format($data->aset,"0",",",".") }}"
+                                        @else
+                                            sf"[tidak ditemukan data]"
+                                        @endif
+                                        xx 100 % = {{ $e6 }}% @if($e6 > 5) sf"(TIDAK IDEAL)" @else sf"(IDEAL)" @endif`'>
+                                        {{ $e6 }} % <i class="fa fa-external-link-square pull-right"></i></span></td>
+{{-- e9 --}}
+                                    <td @if($e9 < 10) {!! 'class="bg-red disabled color-palette"' !!} @else {!! 'class="bg-aqua disabled color-palette"' !!}@endif
+                                    ><span data-toggle="modal" data-target="#modalformula"style="cursor:pointer;"
+                                        data-judul ='E9 - Pinjaman kepada pihak luar terhadap total aset'
+                                        data-cu ='CU {{ $data->cuprimer->name }}'
+                                        data-keterangan='Modal lembaga bersih sebesar 10% dari total aset.'
+                                        @if($p1 == 100 && $p2 > 35) 
+                                            data-formula='`sf"E9" = (sf"Modal Lembaga Bersih"(sf"DCR" + sf"DCU" + sf"Iuran Gedung" + sf"Donasi" + sf"SHU Tahun Lalu") - ((100% xx sf"Piutang Lalai > 12 Bulan") + (35% xx sf"Piutang lalai 1 - 12 Bulan") + sf"Aset Bermasalah")) / sf"Aset" xx 100 % = sf"&ge; 10% (IDEAL)`'
+                                            data-nilai='`sf"E9" = ((sf"{{ number_format($data->dcr,"0",",",".") }}" + sf"{{ number_format($data->dcu,"0",",",".") }}" + sf"{{ number_format($data->iuran_gedung,"0",",",".") }}" + sf"{{ number_format($data->donasi,"0",",",".") }}" + sf"{{ number_format($data->shu_lalu,"0",",",".") }}")-(sf"{{ number_format($data->aset_masalah,"0",",",".") }}"+(100% xx sf"{{ number_format($data->piutanglalai_12bulan,"0",",",".") }}")(35% xx sf"{{ number_format($data->piutanglalai_1bulan,"0",",",".") }}")))/sf"{{ number_format($data->aset,"0",",",".") }}" xx 100 % = {{ $e9 }}% @if($e9 < 10) sf"(TIDAK IDEAL)" @else sf"(IDEAL)" @endif`'
+                                        @else
+                                            data-formula='`sf"E9" = (sf"Modal Lembaga Bersih (DCR + DCU + Iuran Gedung + Donasi + SHU Tahun Lalu)"-sf"Aset Bermasalah")/ sf"Aset" xx 100 % = sf"&le; 10% (IDEAL)"`'
+                                            data-nilai='`sf"E9" =((sf"{{ number_format($data->dcr,"0",",",".") }}" + sf"{{ number_format($data->dcu,"0",",",".") }}" + sf"{{ number_format($data->iuran_gedung,"0",",",".") }}" + sf"{{ number_format($data->donasi,"0",",",".") }}" + sf"{{ number_format($data->shu_lalu,"0",",",".") }}")-sf"{{ number_format($data->aset_masalah,"0",",",".") }}")/sf"{{ number_format($data->aset,"0",",",".") }}" xx 100 % = {{ $e9 }}% @if($e9 < 10) sf"(TIDAK IDEAL)" @else sf"(IDEAL)" @endif`'
+                                        @endif
+                                        >
+                                        {{ $e9 }} % <i class="fa fa-external-link-square pull-right"></i></span></td>
+{{-- a1 --}}
+                                    <td @if($a1 > 5) {!! 'class="bg-red disabled color-palette"' !!} @else {!! 'class="bg-aqua disabled color-palette"' !!}@endif
+                                    ><span data-toggle="modal" data-target="#modalformula"style="cursor:pointer;"
+                                        data-judul ='A1 - Total Pinjaman Lalai / Total Pinjaman Beredar'
+                                        data-cu ='CU {{ $data->cuprimer->name }}' 
+                                        data-keterangan='Total pinjaman lalai < 5% dari total pinjaman beredar.'
+                                        data-formula='`sf"A1" = (sf"Piutang Lalai" (sf"Piutang Lalai 1-12 Bulan" + sf"Piutang Lalai > 12 Bulan"))/sf"Piutang Beredar" xx 100 % = sf"&le; 5 % (IDEAL)"`'
+                                        data-nilai='`sf"A1" = (sf"{{ number_format($data->piutanglalai_1bulan,"0",",",".") }}"+sf"{{ number_format($data->piutanglalai_12bulan,"0",",",".") }}")/
+                                        @if($data->piutangberedar != 0)
+                                            sf"{{ number_format($data->piutangberedar,"0",",",".") }}"
+                                        @else
+                                            sf"[tidak ditemukan data]"
+                                        @endif
+                                        xx 100 % = {{ $a1 }}% @if($a1 > 5) sf"(TIDAK IDEAL)" @else sf"(IDEAL)" @endif`'>
+                                        {{ $a1 }} % <i class="fa fa-external-link-square pull-right"></i></span></td>
+{{-- a2 --}}
+                                    <td @if($a2 > 5) {!! 'class="bg-red disabled color-palette"' !!} @else {!! 'class="bg-aqua disabled color-palette"' !!}@endif
+                                    ><span data-toggle="modal" data-target="#modalformula"style="cursor:pointer;"
+                                        data-judul ='A2 - Aset-aset yang tidak menghasilkan / Total aset'
+                                        data-cu ='CU {{ $data->cuprimer->name }}' 
+                                        data-keterangan='Aset-aset tidak menghasilkan 5% dari total aset.'
+                                        data-formula='`sf"A2" = sf"Aset Tidak Menghasilkan"/sf"Aset" xx 100 % = sf"<5% (IDEAL)"`'
+                                        data-nilai='`sf"A2" = (sf"{{ number_format($data->piutanglalai_1bulan,"0",",",".") }}"+sf"{{ number_format($data->piutanglalai_12bulan,"0",",",".") }}")/
+                                        @if($data->piutangberedar != 0)
+                                            sf"{{ number_format($data->piutangberedar,"0",",",".") }}"
+                                        @else
+                                            sf"[tidak ditemukan data]"
+                                        @endif
+                                        xx 100 % = {{ $a2 }}% @if($a2 > 5) sf"(TIDAK IDEAL)" @else sf"(IDEAL)" @endif`'>
+                                        {{ $a2 }} % <i class="fa fa-external-link-square pull-right"></i></span></td>
+{{-- r7 --}}
+                                    <td @if($r7 != $data->hargapasar) {!! 'class="bg-red disabled color-palette"' !!} @else {!! 'class="bg-aqua disabled color-palette"' !!}@endif
+                                    ><span data-toggle="modal" data-target="#modalformula"style="cursor:pointer;"
+                                        data-judul ='R7 - BJS Saham terhadap rata-rata aset'
+                                        data-cu ='CU {{ $data->cuprimer->name }}' 
+                                        data-keterangan='Dividen saham dibayar 1% lebih tinggi daripada suku bunga pasar.'
+                                        data-formula='`sf"R7" = sf"BJS Saham"/sf"Simpanan Saham Rata-rata" xx 100 % = sf"harga pasar (IDEAL)"`'
+                                        data-nilai='`sf"R7" = sf"{{ number_format($data->bjs_saham,"0",",",".") }}"/
+                                        @if($data->ratasaham != 0)
+                                            sf"{{ number_format($data->ratasaham,"0",",",".") }}"
+                                        @else
+                                            sf"[tidak ditemukan data]"
+                                        @endif
+                                        xx 100 % = {{ $r7 }}% @if($r7 != $data->hargapasar) sf"(TIDAK IDEAL)" @else sf"(IDEAL)" @endif`'>
+                                        {{ $r7 }} % <i class="fa fa-external-link-square pull-right"></i></span></td>
+{{-- r9 --}}
+                                    <td @if($r9 != 5) {!! 'class="bg-red disabled color-palette"' !!} @else {!! 'class="bg-aqua disabled color-palette"' !!}@endif
+                                    ><span data-toggle="modal" data-target="#modalformula"style="cursor:pointer;"
+                                        data-judul ='R9 - Biaya operasional terhadap rata-rata aset'
+                                        data-cu ='CU {{ $data->cuprimer->name }}' 
+                                        data-keterangan='Beban Operasional terhadap rata-rata aset sebesar 5%.'
+                                        data-formula='`sf"R9" = sf"Beban Operasional"/sf"Rata-rata Aset" xx 100 % = sf"5 % (IDEAL)"`'
+                                        data-nilai='`sf"A1" = sf"{{ number_format($data->beban_operasional,"0",",",".") }}"/
+                                        @if($data->rataaset != 0)
+                                            sf"{{ number_format($data->rataaset,"0",",",".") }}"
+                                        @else
+                                            sf"[tidak ditemukan data]"
+                                        @endif
+                                        xx 100 % = {{ $r9 }}% @if($r9 != 5) sf"(TIDAK IDEAL)" @else sf"(IDEAL)" @endif`'>
+                                        {{ $r9 }} % <i class="fa fa-external-link-square pull-right"></i></span></td>
+{{-- l1 --}}
+                                    <td @if($l1 < 15 || $l1 > 20) {!! 'class="bg-red disabled color-palette"' !!} @else {!! 'class="bg-aqua disabled color-palette"' !!}@endif
+                                    ><span data-toggle="modal" data-target="#modalformula"style="cursor:pointer;"
+                                        data-judul ='L1 - (Investasi likuid + Aset-aset Likuid – Hutang Jangka Pendek < 30 hari )/ Simpanan Non Saham'
+                                        data-cu ='CU {{ $data->cuprimer->name }}' 
+                                        data-keterangan='Likuiditas sebesar 15% dari total simpanan non saham tetapi tidak melampaui 20% dari total aset.'
+                                        data-formula='`sf"L1" = ((sf"Investasi Likuid" + sf"Aset Likuid Tidak Menghasilkan") - sf"Hutang Tidak Berbiaya < 30 Hari")/sf"Total Simpanan Non-Saham" xx 100 % = sf"5 % (IDEAL)"`'
+                                        data-nilai='`sf"L1" = ((sf"{{ number_format($data->investasi_likuid,"0",",",".") }}" + sf"{{ number_format($data->aset_likuid_tidak_menghasilkan,"0",",",".") }}") - sf"{{ number_format($data->hutang_tidak_berbiaya_30hari,"0",",",".") }}")/
+                                        @if($tot_nonsaham != 0)
+                                            sf"{{ number_format($tot_nonsaham,"0",",",".") }}"
+                                        @else
+                                            sf"[tidak ditemukan data]"
+                                        @endif
+                                        xx 100 % = {{ $l1 }}% @if($l1 < 15 || $l1 > 20) sf"(TIDAK IDEAL)" @else sf"(IDEAL)" @endif`'>
+                                        {{ $l1 }} % <i class="fa fa-external-link-square pull-right"></i></span></td>
+{{-- s10 --}}
+                                    <td @if($s10 < 12) {!! 'class="bg-red disabled color-palette"' !!} @else {!! 'class="bg-aqua disabled color-palette"' !!}@endif
+                                    ><span data-toggle="modal" data-target="#modalformula"style="cursor:pointer;"
+                                        data-judul ='S10 - Pertumbuhan Anggota'
+                                        data-cu ='CU {{ $data->cuprimer->name }}' 
+                                        data-keterangan='Pertumbuhan anggota 12% per tahun.'
+                                        data-formula='`sf"S10" = (sf"Total Anggota Tahun Ini" - sf"Total Anggota Tahun Lalu")/sf"Total Anggota Tahun Lalu" xx 100 % = sf"> 12 % (IDEAL)"`'
+                                        data-nilai='`sf"S10" = (sf"{{ number_format($tot_anggota,"0",",",".") }}" - sf"{{ number_format($data->totalanggota_lalu,"0",",",".") }}")/
+                                        @if($data->totalanggota_lalu != 0)
+                                            sf"{{ number_format($data->totalanggota_lalu,"0",",",".") }}"
+                                        @else
+                                            sf"[tidak ditemukan data]"
+                                        @endif
+                                        xx 100 % = {{ $s10 }}% @if($s10 < 12) sf"(TIDAK IDEAL)" @else sf"(IDEAL)" @endif`'>
+                                        {{ $s10 }} % <i class="fa fa-external-link-square pull-right"></i></span></td>
+{{-- s11 --}}
+                                    <td @if($s11 < $data->lajuinflasi + 10) {!! 'class="bg-red disabled color-palette"' !!} @else {!! 'class="bg-aqua disabled color-palette"' !!}@endif
+                                    ><span data-toggle="modal" data-target="#modalformula"style="cursor:pointer;"
+                                        data-judul ='S11 - Pertumbuhan Anggota'
+                                        data-cu ='CU {{ $data->cuprimer->name }}' 
+                                        data-keterangan='Pertumbuhan anggota 12% per tahun.'
+                                        data-formula='`sf"S11" = (sf"Total Anggota Tahun Ini" - sf"Total Anggota Tahun Lalu")/sf"Total Anggota Tahun Lalu" xx 100 % = sf"> 12 % (IDEAL)"`'
+                                        data-nilai='`sf"S11" = (sf"{{ number_format($data->aset,"0",",",".") }}" - sf"{{ number_format($data->aset_lalu,"0",",",".") }}")/
+                                        @if($data->aset_lalu != 0)
+                                            sf"{{ number_format($data->aset_lalu,"0",",",".") }}"
+                                        @else
+                                            sf"[tidak ditemukan data]"
+                                        @endif
+                                        xx 100 % = {{ $s11 }}% @if($s11 < $data->lajuinflasi + 10) sf"(TIDAK IDEAL)" @else sf"(IDEAL)" @endif`'>
+                                        {{ $s11 }} % <i class="fa fa-external-link-square pull-right"></i></span></td>
+            
                                     <td>{{ number_format($data->hargapasar,2) }} %</td>
-
                                     <td>{{ number_format($data->lajuinflasi,2) }} %</td>
                                 </tr>
                             @endforeach
@@ -2480,12 +2633,12 @@
             </div>
             <div class="modal-body">
                 <h4>Rumus</h4>
-                <div class="well"><div class="row-fluid"><p style="margin-bottom: 0px;" id="formula" class="text-center"></p></div></div>
+                <div class="well pre-scrollable"><p style="margin-bottom: 0px;" id="formula" class="text-center"></p></div>
                 <b><u>Indikator:</u></b>
                 <p id='keterangan'></p>
                 <hr/>
                 <h4>Perhitungan <span id='cu'></span></h4>
-                <div class="well" style="margin-bottom: 5px;"><p style="margin-bottom: 0px;" id="nilai" class="text-center"></p></div>
+                <div class="well pre-scrollable" style="margin-bottom: 5px;"><p style="margin-bottom: 0px;" id="nilai" class="text-center"></p></div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-check"></i> Ok</button>
@@ -2499,6 +2652,7 @@
 @section('js')
 @include('admins._components.datatable_JS')
 <script type="text/javascript" src="{{ URL::asset('plugins/chartJS/Chart.bundle.js') }}"></script>
+
 
 @if(!Request::is('admins/laporancu/index_hapus'))
     @include('admins.laporancu._component.grafik_data')
@@ -2563,16 +2717,8 @@
 @include('admins.laporancu._component.grafik_tombol')
  --}}
 
-<script type="text/javascript" async
-  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_CHTML"></script>
-</head>
-
 {{--common function--}}
 <script>
-    $(function () {
-        $('[data-toggle="popover"]').popover()
-    })
-
     $('#modalformula').on('show.bs.modal', function (event) {
       var button = $(event.relatedTarget);
       var judul = button.data('judul');
