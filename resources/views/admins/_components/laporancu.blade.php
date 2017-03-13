@@ -117,8 +117,13 @@
       $e9 = $data1['aset'] != 0 ? (($data1['dcr'] + $data1['dcu'] + $data1['iuran_gedung'] + $data1['donasi'] + $data1['shu_lalu']) - ($data1['piutanglalai_12bulan'] + ((35/100) * $data1['piutanglalai_1bulan']) + $data1['aset_masalah'])) / $data1['aset'] : (($data1['dcr'] + $data1['dcu'] + $data1['iuran_gedung'] + $data1['donasi'] + $data1['shu_lalu']) - ($data1['piutanglalai_12bulan'] + ((35/100) * $data1['piutanglalai_1bulan']) + $data1['aset_masalah'])) / 0.01;
       $a1 = $data1['piutangberedar'] != 0 ? ($data1['piutanglalai_1bulan'] + $data1['piutanglalai_12bulan']) / $data1['piutangberedar'] : ($data1['piutanglalai_1bulan'] + $data1['piutanglalai_12bulan']) / 0.01; 
       $a2 = $data1['aset'] != 0 ? $data1['aset_tidak_menghasilkan'] / $data1['aset'] : $data1['aset_tidak_menghasilkan'] / 0.01;
-      $r7 = $data1['ratasaham'] != 0 ? $data1['bjs_saham'] / $data1['ratasaham'] : $data1['bjs_saham'] / 0.01;
-      $r9 = $data1['rataaset'] != 0 ? $data1['beban_operasional'] / $data1['rataaset'] : $data1['beban_operasional'] / 0.01;
+      $ratasaham1 = ((($data1['simpanansaham_des']+ $data1['simpanansaham'])/2)/$date->format('m'))*12;
+      $r7 = $data1['bjs_saham'] / $ratasaham1;
+      $r7_2 = $data1['bjs_saham'] / (($data1['simpanansaham_lalu']+ $data1['simpanansaham'])/2);
+      if($data1['simpanansaham_des'] == 0 && $data1['simpanansaham_lalu'] != 0){
+          $r7 = $r7_2;
+      }
+      $r9 = $data1['beban_operasional'] / (($data1['shu'] + $data1['shu_lalu'])/ 2);
       $l1 = $tot_nonsaham != 0 ? (($data1['investasi_likuid'] + $data1['aset_likuid_tidak_menghasilkan']) - $data1['hutang_tidak_berbiaya_30hari']) / $tot_nonsaham : (($data1['investasi_likuid'] + $data1['aset_likuid_tidak_menghasilkan']) - $data1['hutang_tidak_berbiaya_30hari']) / 0.01;
       $s10 = $data1['totalanggota_lalu'] != 0 ? ($tot_anggota - $data1['totalanggota_lalu']) / $data1['totalanggota_lalu'] : ($tot_anggota - $data1['totalanggota_lalu']) / 0.01;
       $s11 = $data1['aset_lalu'] != 0 ? ($data1['aset'] - $data1['aset_lalu']) / $data1['aset_lalu'] : ($data1['aset'] - $data1['aset_lalu']) / 0.01;
@@ -132,9 +137,24 @@
       $a1 = $a1 > 1 ? 1 : $a1;
       $a2 = $a2 > 1 ? 1 : $a2;
       $r7 = $r7 > 1 ? 1 : $r7;
+      $r7_2 = $r7_2 > 1 ? 1 : $r7_2;
       $l1 = $l1 > 1 ? 1 : $l1;
       $s10 = $s10 > 1 ? 1 : $s10;
       $s11 = $s11 > 1 ? 1 : $s11;
+
+      $p1 = $p1 < 0 ? 0 : $p1;
+      $p2 = $p2 < 0 ? 0 : $p2;
+      $e1 = $e1 < 0 ? 0 : $e1;
+      $e5 = $e5 < 0 ? 0 : $e5;
+      $e6 = $e6 < 0 ? 0 : $e6;
+      $e9 = $e9 < 0 ? 0 : $e9;
+      $a1 = $a1 < 0 ? 0 : $a1;
+      $a2 = $a2 < 0 ? 0 : $a2;
+      $r7 = $r7 < 0 ? 0 : $r7;
+      $r7_2 = $r7 < 0 ? 0 : $r7_2;
+      $l1 = $l1 < 0 ? 0 : $l1;
+      $s10 = $s10 < 0 ? 0 : $s10;
+      $s11 = $s11 < 0 ? 0 : $s11;
 
       $p1 = number_format($p1*100,0);
       $p2 = number_format($p2*100,0);
@@ -145,6 +165,7 @@
       $a1 = number_format($a1*100,0);
       $a2 = number_format($a2*100,0);
       $r7 = number_format($r7*100,0);
+      $r7_2 = number_format($r7_2*100,2);
       $r9 = number_format($r9*100,0);
       $l1 = number_format($l1*100,0);
       $s10 = number_format($s10*100,0);

@@ -23,6 +23,32 @@ $title = "Version";
             <ul class="timeline">
               <li class="time-label">
                 <span class="bg-red">
+                  11 Maret 2017
+                </span>
+              </li>
+              <li>
+                  <i class="fa fa-gears bg-blue"></i>
+                  <div class="timeline-item">
+                      <span class="time"><i class="fa fa-clock-o"></i> 05:14</span>
+                      <h3 class="timeline-header"><a href="#">Version 2.1.2</a> Admin Site</h3>
+                      <div class="timeline-body">
+                          Penambahan fitur bagian laporan P.E.A.R.L.S <br/><br/>
+                          Berikut adalah rincian perubahan pada versi ini:
+                          <br/><br/>
+                          <ul>
+                              <li>Upgrade template AdminLte ke versi 2.3.12</li>
+                              <li>Perubahan model navigasi panel samping</li>
+                              <li>Penambahan plugin Mathjax untuk menampilkan kalkulasi perhitungan</li>
+                              <li>Penambahan fitur melihat detail perhitungan laporan P.E.A.R.L.S</li>
+                              <li>Perbaikan rumus perhitungan laporan P.E.A.R.L.S</li>
+                              <li>Perbaikan bug dan peningkatan performa</li>
+                          </ul>
+                          <hr/>
+                      </div>
+                  </div>
+              </li>
+              <li class="time-label">
+                <span class="bg-red">
                   14 Februari 2017
                 </span>
               </li>

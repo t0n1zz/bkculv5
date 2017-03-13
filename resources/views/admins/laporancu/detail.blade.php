@@ -153,14 +153,14 @@ foreach ($pilihperiode as $dataperiode){
                                   $cuprimer = App\Cuprimer::where('no_ba',$user->cu)->first();
                                   $date = new Date($datahistory->created_at); 
                               ?>
-                            <i class="fa fa-caret-right text-muted"></i><b> {{ $user->name }} 
+                            <i class="fa fa-caret-right text-muted"></i><b> {{ $user->name }} -
                             @if($user->cu > 0)
-                                [{{ $cuprimer->name }}]
+                                {{ $cuprimer->name }}
                             @else
-                                [BKCU]
+                                BKCU
                             @endif
                             </b> telah mengubah nilai 
-                            <b>
+                            <b>[
                             <?php
                                 switch($datahistory->key){
                                     case "l_biasa":
@@ -175,10 +175,106 @@ foreach ($pilihperiode as $dataperiode){
                                     case "p_lbiasa":
                                         echo "Anggota Perempuan Luar Biasa";
                                         break;
+                                    case "totalanggota_lalu":
+                                        echo "Total Anggota Tahun Lalu";
+                                        break;
+                                    case "aset":
+                                        echo "Aset";
+                                        break;
+                                    case "aset_lalu":
+                                        echo "Aset Tahun Lalu";
+                                        break;
+                                    case "aset_masalah":
+                                        echo "Aset Masalah";
+                                        break;
+                                    case "aset_tidak_menghasilkan":
+                                        echo "Aset Tidak Menghasilkan";
+                                        break;
+                                    case "aset_likuid_tidak_menghasilkan":
+                                        echo "Aset Likuid Tidak Menghasilkan";
+                                        break;
+                                    case "aktivalancar":
+                                        echo "Aktiva Lancar";
+                                        break;
+                                    case "simpanansaham":
+                                        echo "Simpanan Saham";
+                                        break;
+                                    case "simpanansaham_lalu":
+                                        echo "Simpanan Saham Tahun Lalu";
+                                        break;
+                                    case "simpanansaham_des":
+                                        echo "Simpanan Saham Tahun Lalu Bulan Desember";
+                                        break;
+                                    case "nonsaham_unggulan":
+                                        echo "Simpanan Non Saham Unggulan";
+                                        break;
+                                    case "nonsaham_harian":
+                                        echo "Simpanan Non Saham Harian";
+                                        break;
+                                    case "hutangspd":
+                                        echo "Hutang SPD";
+                                        break;
+                                    case "hutang_tidak_berbiaya_30hari":
+                                        echo "Hutang Tidak Berbiaya Lebih Dari 30 Hari";
+                                        break;
+                                    case "piutangberedar":
+                                        echo "Piutang Beredar";
+                                        break;
+                                    case "piutanganggota":
+                                        echo "Piutang Anggota";
+                                        break;
+                                    case "piutanglalai_1bulan":
+                                        echo "Piutang Lalai 1-12 Bulan";
+                                        break;
+                                    case "piutanglalai_12bulan":
+                                        echo "Piutang Lalai > 12 Bulan";
+                                        break;
+                                    case "dcr":
+                                        echo "DCR";
+                                        break;
+                                    case "dcu":
+                                        echo "DCU";
+                                        break;
+                                    case "totalhutang_pihak3":
+                                        echo "Total Hutang Pihak Ke-3";
+                                        break;
+                                    case "iuran_gedung":
+                                        echo "Iuran Gedung";
+                                        break;
+                                    case "donasi":
+                                        echo "Donasi";
+                                        break;
+                                    case "bjs_saham":
+                                        echo "BJS Saham";
+                                        break;
+                                    case "beban_operasional":
+                                        echo "Beban Operasional";
+                                        break;
+                                    case "investasi_likuid":
+                                        echo "Investasi Likuid";
+                                        break;
+                                    case "totalpendapatan":
+                                        echo "Total Pendapatan";
+                                        break;
+                                    case "totalbiaya":
+                                        echo "Total Biaya";
+                                        break;
+                                    case "shu":
+                                        echo "SHU";
+                                        break;
+                                    case "shu_lalu":
+                                        echo "SHU Tahun Lalu";
+                                        break;
+                                    case "lajuinflasi":
+                                        echo "Laju Inflasi";
+                                        break;
+                                    case "hargapasar":
+                                        echo "Harga Pasar";
+                                        break;
                                 }
                             ?>
-                            </b>   
-                            dari <b>{{ number_format($datahistory->old_value,"0",",",".") }}</b> menjadi <b>{{ number_format($datahistory->new_value,"0",",",".") }}</b> pada <small class="text-muted">{{ $date->format('d F') }} - {{ $date->format('H:i') }}</small>
+                            ]</b>   
+                            dari <b>[{{ number_format($datahistory->old_value,"0",",",".") }}]</b> menjadi <b>[{{ number_format($datahistory->new_value,"0",",",".") }}]</b> pada <small class="text-muted">{{ $date->format('d F') }} - {{ $date->format('H:i') }}</small>
                         </div>
                     @endforeach
                 @else

@@ -223,10 +223,10 @@ $culists_non = App\Cuprimer::onlyTrashed()->orderBy('name','asc')->get();
                 </div>
             </div>
             <!-- /harian -->
-            <!-- harian -->
+            <!-- bulan lalu -->
             <div class="col-sm-3">
                 <div class="form-group">
-                    <h5>Simpanan Saham (SP+SW) Periode Sebelumnya</h5>
+                    <h5>Simpanan Saham (SP+SW) Tahun Lalu Bulan Ini</h5>
                     <div class="input-group">
                         <span class="input-group-addon">0-9</span>
                         {{ Form::text('simpanansaham_lalu',null,array('class' => 'form-control', 'placeholder' => '0',
@@ -234,7 +234,19 @@ $culists_non = App\Cuprimer::onlyTrashed()->orderBy('name','asc')->get();
                     </div>
                 </div>
             </div>
-            <!-- /harian -->
+            <!-- /bulan lalu -->
+            <!-- bulan lalu -->
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <h5>Simpanan Saham (SP+SW) Bulan Desember</h5>
+                    <div class="input-group">
+                        <span class="input-group-addon">0-9</span>
+                        {{ Form::text('simpanansaham_des',null,array('class' => 'form-control', 'placeholder' => '0',
+                           'data-inputmask' => "'alias':'numeric','groupSeparator': ',', 'autoGroup': true,'digits': 0,'radixPoint': ',','autoUnmask': true, 'removeMaskOnSubmit': true")) }}
+                    </div>
+                </div>
+            </div>
+            <!-- /bulan lalu -->
              <div class="col-sm-12">
                 <hr/>
             </div>

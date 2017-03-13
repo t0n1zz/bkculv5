@@ -59,7 +59,7 @@
     <footer class="main-footer">
         <!-- To the right -->
         <div class="pull-right hidden-xs">
-            <a href="{{ route('admins.version') }}"><b>Admin</b>BKCU 2.1.1</a>
+            <a href="{{ route('admins.version') }}"><b>Admin</b>BKCU 2.1.2</a>
         </div>
         <!-- Default to the left -->
         <strong>Copyright &copy; {{ date("Y") }} <a href="#">Puskopdit BKCU Kalimantan</a>.</strong> All rights reserved.
