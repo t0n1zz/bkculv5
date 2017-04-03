@@ -108,7 +108,7 @@
       $p1 = $data1['piutanglalai_12bulan'] != 0 ? $data1['dcr']/$data1['piutanglalai_12bulan'] : $data1['dcr']/ 0.01;
       $p2 = $data1['piutanglalai_1bulan'] != 0 ? ($data1['dcr'] - $data1['piutanglalai_12bulan'])/$data1['piutanglalai_1bulan'] : ($data1['dcr'] - $data1['piutanglalai_12bulan'])/ 0.01 ;
       if($p1 == 1 && $p2 > 0.35){
-          $e1 = $data1['aset'] != 0 ? ($data1['piutanganggota'] - (($data1['piutanglalai_12bulan']) + ((35/100) * $data1['piutanglalai_1bulan']))) / $data1['aset'] : ($data1['piutanganggota'] - (($data1['piutanglalai_12bulan']) + ((35/100) * $data1['piutanglalai_1bulan']))) / 0.01;
+          $e1 = $data1['aset'] != 0 ? ($data1['piutangberedar'] - (($data1['piutanglalai_12bulan']) + ((35/100) * $data1['piutanglalai_1bulan']))) / $data1['aset'] : ($data1['piutangberedar'] - (($data1['piutanglalai_12bulan']) + ((35/100) * $data1['piutanglalai_1bulan']))) / 0.01;
       }else{
           $e1 = $data1['aset'] != 0 ? ($data1['piutangberedar'] - $data1['dcr']) / $data1['aset'] : ($data1['piutangberedar'] - $data1['dcr']) / 0.01;
       }
@@ -123,7 +123,7 @@
       if($data1['simpanansaham_des'] == 0 && $data1['simpanansaham_lalu'] != 0){
           $r7 = $r7_2;
       }
-      $r9 = $data1['beban_operasional'] / (($data1['shu'] + $data1['shu_lalu'])/ 2);
+      $r9 = ($data1['totalbiaya'] - $data1['beban_penyisihandcr']) / (($data1['shu'] + $data1['shu_lalu'])/ 2);
       $l1 = $tot_nonsaham != 0 ? (($data1['investasi_likuid'] + $data1['aset_likuid_tidak_menghasilkan']) - $data1['hutang_tidak_berbiaya_30hari']) / $tot_nonsaham : (($data1['investasi_likuid'] + $data1['aset_likuid_tidak_menghasilkan']) - $data1['hutang_tidak_berbiaya_30hari']) / 0.01;
       $s10 = $data1['totalanggota_lalu'] != 0 ? ($tot_anggota - $data1['totalanggota_lalu']) / $data1['totalanggota_lalu'] : ($tot_anggota - $data1['totalanggota_lalu']) / 0.01;
       $s11 = $data1['aset_lalu'] != 0 ? ($data1['aset'] - $data1['aset_lalu']) / $data1['aset_lalu'] : ($data1['aset'] - $data1['aset_lalu']) / 0.01;

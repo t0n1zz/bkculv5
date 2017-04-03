@@ -574,6 +574,7 @@ class LaporanCuController extends Controller{
         if(empty($data['nonsaham_unggulan'])) $data['nonsaham_unggulan'] = 0;
         if(empty($data['nonsaham_harian'])) $data['nonsaham_harian'] = 0;
         if(empty($data['simpanansaham_lalu'])) $data['simpanansaham_lalu'] = 0;
+        if(empty($data['simpanansaham_des'])) $data['simpanansaham_des'] = 0;
         if(empty($data['hutangspd'])) $data['hutangspd'] = 0;
         if(empty($data['hutang_tidak_berbiaya_30hari'])) $data['hutang_tidak_berbiaya_30hari'] = 0;
         if(empty($data['totalhutang_pihak3'])) $data['totalhutang_pihak3'] = 0;
@@ -586,7 +587,7 @@ class LaporanCuController extends Controller{
         if(empty($data['iuran_gedung'])) $data['iuran_gedung'] = 0;
         if(empty($data['donasi'])) $data['donasi'] = 0;
         if(empty($data['bjs_saham'])) $data['bjs_saham'] = 0;
-        if(empty($data['beban_operasional'])) $data['beban_operasional'] = 0;
+        if(empty($data['beban_penyisihandcr'])) $data['beban_penyisihandcr'] = 0;
         if(empty($data['investasi_likuid'])) $data['investasi_likuid'] = 0;
         if(empty($data['totalpendapatan'])) $data['totalpendapatan'] = 0;
         if(empty($data['totalbiaya'])) $data['totalbiaya'] = 0;
@@ -706,7 +707,7 @@ class LaporanCuController extends Controller{
                                 'iuran_gedung' => $value->iuran_gedung,
                                 'donasi' => $value->donasi,
                                 'bjs_saham' => $value->bjs_saham,
-                                'beban_operasional' => $value->beban_operasional,
+                                'beban_penyisihandcr' => $value->beban_penyisihandcr,
                                 'investasi_likuid' => $value->investasi_likuid,
                                 'shu_lalu' => $value->shu_lalu,
                                 'lajuinflasi' => $value->lajuinflasi,

@@ -21,13 +21,10 @@ $imagepath = "images_staf/";
         <li class="active"><i class="fa fa-database"></i> {{ $title }}</li>
     </ol>
 </section>
-
 <!-- Main content -->
 <section class="content">
-
     <div class="row">
         <div class="col-md-3">
-
             <!-- Profile Image -->
             <div class="box box-primary">
                 <div class="box-body box-profile">
@@ -54,17 +51,34 @@ $imagepath = "images_staf/";
                     <ul class="list-group list-group-unbordered">
                         <?php 
                             $pekerjaan = array();
-                            foreach ($riwayats2 as $j){
-                                if($j->keterangan2 == 'Manajemen'){
-                                    if($j->sekarang == "1"){
-                                        $pekerjaan[] = '<b>'.$j->name.' '.$j->keterangan.'</b>';
+                            foreach ($riwayatpekerjaan as $j){
+                                $tempat = "";
+                                if($j->tipe == 1){
+                                    foreach($culists as $cu){
+                                        if($j->tempat == $cu->id){
+                                            $tempat = "CU " .$cu->name;
+                                        }
                                     }
                                 }else{
-                                    $mulai = \Carbon\Carbon::createFromFormat('Y-m-d', $j->mulai)->format('Y');
-                                    $selesai = \Carbon\Carbon::createFromFormat('Y-m-d', $j->selesai)->format('Y');
-                                    $now =   \Carbon\Carbon::now()->format('Y');
-                                    if($selesai >= $now){
-                                        $pekerjaan[] = '<b>'.$j->name.' '.$j->keterangan.'</b><br/> periode '.$mulai.' - '.$selesai;
+                                    foreach($lembagas as $lembaga){
+                                        if($j->tempat == $lembaga->id){
+                                            $tempat = $lembaga->name;
+                                        }
+                                    }
+                                }
+                                if($j->tingkat != 'Pengurus' && $j->tingkat != 'Pengawas'){
+                                    if($j->sekarang == "1"){
+                                        $pekerjaan[] = '<b>'.$j->name.' '.$tempat.'</b>';
+                                    }
+                                }else{
+                                    if(!empty($j->mulai))
+                                        $mulai = \Carbon\Carbon::createFromFormat('Y-m-d', $j->mulai)->format('Y');
+                                    if(!empty($j->selesai)){
+                                        $selesai = \Carbon\Carbon::createFromFormat('Y-m-d', $j->selesai)->format('Y');
+                                        $now =   \Carbon\Carbon::now()->format('Y');
+                                        if($selesai >= $now){
+                                            $pekerjaan[] = '<b>'.$j->name.' '.$tempat.'</b><br/> periode '.$mulai.' - '.$selesai;
+                                        }
                                     }
                                 }
                             }
@@ -112,14 +126,14 @@ $imagepath = "images_staf/";
             <!-- /Alert -->
             <div class="nav-tabs-custom">
                 <ul class="nav nav-tabs">
-                    <li class="active"><a href="#info" data-toggle="tab">Informasi Umum</a></li>
+                    <li class="active"><a href="#info" data-toggle="tab">Biodata</a></li>
                     <li><a href="#kegiatan_ikut" data-toggle="tab">Kegiatan sudah diikuti</a></li>
                     <li><a href="#kegiatan_belumikut" data-toggle="tab">Kegiatan belum diikuti</a></li>
                 </ul>
                 <div class="tab-content">
                     <div class="tab-pane fade in active" id="info">
                         <section id="informasi">
-                            <h4 class="page-header color1">Biodata</h4>
+                            <h4 class="page-header color1">Identitas</h4>
                             <div class="row">
                                 <div class="col-lg-4">
                                     <b>No. Identitas</b>: @if(!empty($data->noid)){{ $data->noid }}@else{{ "-" }}@endif
@@ -148,15 +162,17 @@ $imagepath = "images_staf/";
                                     <br/>
                                     <b>Agama</b>: @if(!empty($data->agama)){{ $data->agama }}@else{{ "-" }}@endif
                                     <br/><br/>
-                                    <b>No. Telepon</b>: @if(!empty($data->telp)){{ $data->telp }}@else{{ "-" }}@endif
-                                    <br/>
-                                    <b>No. Handphone</b>: @if(!empty($data->hp)){{ $data->hp }}@else{{ "-" }}@endif
-                                    <br/>
-                                    <b>E-mail</b>: @if(!empty($data->email)){{ $data->email }}@else{{ "-" }}@endif
+                                    <b>Kontak</b><br/>
+                                    @if(!empty($data->kontak))
+                                        <?php $newarr = explode("\n",$data->kontak); ?>
+                                        @foreach($newarr as $str)
+                                            <p>{{ $str }}</p>
+                                        @endforeach
+                                    @else
+                                        <p>{{ "-" }}</p>
+                                    @endif
                                 </div>
                                 <div class="col-lg-4">
-                                    <b>Kota</b>: @if(!empty($data->kota)){{ $data->kota }}@else{{ "-" }}@endif
-                                    <br/><br/>
                                     <b>Alamat</b><br/>
                                     @if(!empty($data->alamat))
                                         <?php $newarr = explode("\n",$data->alamat); ?>
@@ -170,65 +186,78 @@ $imagepath = "images_staf/";
                             </div>
                             <hr/>
                         </section>
-                        <section id="jabatan">
+                        <section id="riwayatpekerjaan">
                             <br/>
                             <h4 class="page-header color1">Riwayat Pekerjaan</h4>
                             <table class="table table-hover " id="dataTables-pekerjaan">
                                 <thead>
                                 <tr class="bg-light-blue-active color-palette">
                                     <th hidden></th>
-                                    <th>Nama Pekerjaan</th>
+                                    <th hidden></th>
+                                    <th hidden></th>
+                                    <th>Jabatan</th>
                                     <th>Tempat</th>
                                     <th>Tingkat</th>
+                                    <th>Bidang</th>
                                     <th>Tanggal Mulai</th>
                                     <th>Tanggal Selesai</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($riwayats2 as $riwayat2)
+                                @foreach($riwayatpekerjaan as $riwayat2)
                                     <tr
                                     @if(!empty($riwayat2->sekarang) && $riwayat2->sekarang != '0')
                                         {!! 'class="highlight"'  !!}
                                     @endif>
                                         <td hidden>{{ $riwayat2->id }}</td>
+                                        <td hidden>{{ $riwayat2->tipe }}</td>
+                                        <td hidden>{{ $riwayat2->tempat }}</td>
                                         @if(!empty($riwayat2->name))
                                             <td>{{ $riwayat2->name }}</td>
                                         @else
                                             <td>-</td>
                                         @endif
-                                        @if(!empty($riwayat2->keterangan))
-                                            @if($riwayat2->keterangan == "bkcu")
+                                        @if(!empty($riwayat2->tempat))
+                                            @if($riwayat2->tipe == 1)
+                                                @if($riwayat2->tempat == "bkcu")
                                                 <td>PUSKOPDIT BKCU Kalimantan</td>
-                                            @else
-                                                @if(!empty($riwayat2->cuprimer))
-                                                    <td>{{ $riwayat2->cuprimer->name}}</td>
                                                 @else
-                                                    <td>{{ $riwayat2->keterangan }}</td>
+                                                    @foreach($culists as $cu)
+                                                        @if($riwayat2->tempat == $cu->id)
+                                                            <td>CU {{ $cu->name }}</td>   
+                                                        @endif
+                                                    @endforeach
                                                 @endif
+                                            @else
+                                                @foreach($lembagas as $lembaga)
+                                                    @if($riwayat2->tempat == $lembaga->id)
+                                                        <td>{{ $lembaga->name }}</td> 
+                                                    @endif
+                                                @endforeach
                                             @endif
                                         @else
                                             <td>-</td>
                                         @endif
-                                        @if(!empty($riwayat2->keterangan2))
-                                            <td>{{ $riwayat2->keterangan2}}</td>
-                                        @else
-                                            <td>-</td>
-                                        @endif
+
+                                        <td>{{ $riwayat2->tingkat }}</td>
+
+                                        <td>{{ $riwayat2->bidang }}</td>
+
                                         @if(!empty($riwayat2->mulai ))
                                             <?php $date = new Date($riwayat2->mulai); ?>
                                             <td data-order="{{$riwayat2->mulai}}"> {{ $date->format('d/m/Y') }}</td>
                                         @else
                                             <td>-</td>
                                         @endif
-                                        @if(!empty($riwayat2->selesai ))
-                                            @if(!empty($riwayat2->sekarang) && $riwayat2->sekarang != '0')
-                                                <td data-order="Masih Aktif">Masih Aktif</td>
-                                            @else
+                                        @if(!empty($riwayat2->sekarang) && $riwayat2->sekarang != '0')
+                                            <td data-order="Masih Bekerja">Masih Bekerja</td>
+                                        @else
+                                            @if(!empty($riwayat2->selesai))
                                                 <?php $date2 = new Date($riwayat2->selesai);  ?>
                                                 <td data-order="{{$riwayat2->selesai}}"> {{ $date2->format('d/m/Y') }}</td>
+                                            @else
+                                                <td>-</td>
                                             @endif
-                                        @else
-                                            <td>-</td>
                                         @endif
                                     </tr>
                                 @endforeach
@@ -236,36 +265,36 @@ $imagepath = "images_staf/";
                             </table>
                             <hr/>
                         </section>
-                        <section id="pendidikan">
+                        <section id="riwayatpendidikan">
                             <br/>
                             <h4 class="page-header color1">Riwayat Pendidikan</h4>
                             <table class="table table-hover " id="dataTables-pendidikan">
                                 <thead>
                                 <tr class="bg-light-blue-active color-palette">
                                     <th hidden></th>
-                                    <th>Nama Pendidikan</th>
+                                    <th>Tingkat</th>
+                                    <th>Jurusan/Bidang</th>
                                     <th>Tempat</th>
-                                    <th>Tipe</th>
                                     <th>Tanggal Mulai</th>
                                     <th>Tanggal Selesai</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($riwayats1 as $riwayat1)
+                                @foreach($riwayatpendidikan as $riwayat1)
                                     <tr>
                                         <td hidden>{{ $riwayat1->id }}</td>
+                                        @if(!empty($riwayat1->tingkat))
+                                            <td>{{ $riwayat1->tingkat }}</td>
+                                        @else
+                                            <td>-</td>
+                                        @endif
                                         @if(!empty($riwayat1->name))
                                             <td>{{ $riwayat1->name }}</td>
                                         @else
                                             <td>-</td>
                                         @endif
-                                        @if(!empty($riwayat1->keterangan))
-                                            <td>{{ $riwayat1->keterangan }}</td>
-                                        @else
-                                            <td>-</td>
-                                        @endif
-                                        @if(!empty($riwayat1->keterangan2))
-                                            <td>{{ $riwayat1->keterangan2}}</td>
+                                        @if(!empty($riwayat1->tempat))
+                                            <td>{{ $riwayat1->tempat}}</td>
                                         @else
                                             <td>-</td>
                                         @endif
@@ -275,15 +304,15 @@ $imagepath = "images_staf/";
                                         @else
                                             <td>-</td>
                                         @endif
-                                        @if(!empty($riwayat1->selesai ))
-                                            @if(!empty($riwayat1->sekarang) && $riwayat1->sekarang != '0')
-                                                <td data-order="Masih Aktif">Masih Aktif</td>
-                                            @else
+                                        @if(!empty($riwayat1->sekarang) && $riwayat1->sekarang != '0')
+                                            <td data-order="Masih Belajar">Masih Belajar</td>
+                                        @else
+                                            @if(!empty($riwayat1->selesai))
                                                 <?php $date2 = new Date($riwayat1->selesai);  ?>
                                                 <td data-order="{{$riwayat1->selesai}}"> {{ $date2->format('d/m/Y') }}</td>
+                                            @else
+                                                <td>-</td>
                                             @endif
-                                        @else
-                                            <td>-</td>
                                         @endif
                                     </tr>
                                 @endforeach
@@ -291,7 +320,7 @@ $imagepath = "images_staf/";
                             </table>
                             <hr/>
                         </section>
-                        <section id="organisasi">
+                        <section id="riwayatorganisasi">
                             <br/>
                             <h4 class="page-header color1">Riwayat Berorganisasi</h4>
                             <table class="table table-hover " id="dataTables-organisasi">
@@ -300,12 +329,13 @@ $imagepath = "images_staf/";
                                     <th hidden></th>
                                     <th>Nama Organisasi</th>
                                     <th>Jabatan</th>
+                                    <th>Tempat</th>
                                     <th>Tanggal Mulai</th>
                                     <th>Tanggal Selesai</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($riwayats3 as $riwayat3)
+                                @foreach($riwayatorganisasi as $riwayat3)
                                     <tr>
                                         <td hidden>{{ $riwayat3->id }}</td>
                                         @if(!empty($riwayat3->name))
@@ -313,8 +343,13 @@ $imagepath = "images_staf/";
                                         @else
                                             <td>-</td>
                                         @endif
-                                        @if(!empty($riwayat3->keterangan))
-                                            <td>{{ $riwayat3->keterangan }}</td>
+                                        @if(!empty($riwayat3->jabatan))
+                                            <td>{{ $riwayat3->jabatan }}</td>
+                                        @else
+                                            <td>-</td>
+                                        @endif
+                                        @if(!empty($riwayat3->tempat))
+                                            <td>{{ $riwayat3->tempat }}</td>
                                         @else
                                             <td>-</td>
                                         @endif
@@ -324,15 +359,15 @@ $imagepath = "images_staf/";
                                         @else
                                             <td>-</td>
                                         @endif
-                                        @if(!empty($riwayat3->selesai ))
-                                            @if(!empty($riwayat3->sekarang) && $riwayat3->sekarang != '0')
-                                                <td>Masih Aktif</td>
-                                            @else
+                                        @if(!empty($riwayat3->sekarang) && $riwayat3->sekarang != '0')
+                                            <td data-order="Masih Organisasi">Masih Organisasi</td>
+                                        @else
+                                            @if(!empty($riwayat3->selesai))
                                                 <?php $date2 = new Date($riwayat3->selesai);  ?>
                                                 <td data-order="{{$riwayat3->selesai}}"> {{ $date2->format('d/m/Y') }}</td>
+                                            @else
+                                                <td>-</td>
                                             @endif
-                                        @else
-                                            <td>-</td>
                                         @endif
                                     </tr>
                                 @endforeach
@@ -355,124 +390,60 @@ $imagepath = "images_staf/";
 </section><!-- /.content -->
 
 <!-- modalriwayat -->
-<div class="modal fade" id="modalriwayat" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    {{ Form::open(array('route' => array('admins.'.$kelas.'.riwayat'),'data-toggle'=>'validator','role'=>'form')) }}
+<div class="modal fade" id="modalriwayatpekerjaan" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    {{ Form::open(array('route' => array('admins.'.$kelas.'.save_riwayat'),'data-toggle'=>'validator','role'=>'form')) }}
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header bg-light-blue-active color-palette">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title "><i class="fa fa-plus"></i> <span id="modaljudul"></span></h4>
+                <h4 class="modal-title"><i id="iconpekerjaan"></i> <span  id="judulpekerjaan"></span></h4>
             </div>
             <div class="modal-body">
-                <input type="text" name="id" id="id" value="" hidden>
                 <input type="text" name="id_staf" value="{{ $data->id }}" hidden>
-                <input type="text" name="tipe" id="idtipe" value="" hidden>
-                <input type="text" name="sekarang" id="sekarang" value="" hidden>
-                <input type="text" name="tiperadio" id="tiperadio" value="" hidden>
-
-                <div class="form-group">
-                    <h4 id="judulnama"></h4>
-                    <div class="input-group">
-                        <span class="input-group-addon"><i class="fa fa-font"></i></span>
-                        {{ Form::text('name',null,array('class' => 'form-control','id'=>'textnama',
-                          'placeholder' => 'Silahkan masukkan nama','autocomplete'=>'off', 'required'))}}
-                        <span class="glyphicon form-control-feedback" aria-hidden="true"></span>  
-                    </div>
-                    <div class="help-block">Harus diisi.</div>
-                </div>
-
-                <div class="form-group" id="tempat">
-                    <h4>Tempat</h4>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="input-group">
-                        <span class="input-group-addon">
-                            <input type="radio" name="radiotempat" id="radiocu" onclick="func_radiocu()" value="true">
-                        </span>
-                                <?php $culists = App\Cuprimer::orderBy('name','asc')->get(); ?>
-                                <select class="form-control placeholder" name="selectcu" id="selectcu" disabled>
-                                    <option hidden>Credit Union</option>
-                                    <option value="PUSKOPDIT BKCU Kalimantan">PUSKOPDIT BKCU Kalimantan</option>
-                                        @foreach($culists as $culist)
-                                            <option value="{{ $culist->id }}">{{ $culist->name }}</option>
-                                        @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="input-group">
-                                <span class="input-group-addon">
-                                    <input type="radio" name="radiotempat" id="radiolembaga" onclick="func_radiolembaga()" value="true">
-                                </span>
-                                {{ Form::text('textlembaga',null,array('class' => 'form-control','id'=>'textlembaga',
-                                    'placeholder' => 'Bukan Credit Union','autocomplete'=>'off','disabled'))}}
-                                <span class=""></span>    
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group" id="tingkat">
-                    <h4>Tingkatan</h4>
-                    <div class="input-group">
-                        <span class="input-group-addon"><i class="fa fa-list"></i></span>
-                        <select class="form-control placeholder" name="selecttingkat" id="selecttingkat">
-                            <option value="0" hidden>Silahkan pilih tingkat</option>
-                            <option value="Manajemen">Manajemen</option>
-                            <option value="Pengurus">Pengurus</option>
-                            <option value="Pengawas">Pengawas</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-group" id="keterangan">
-                    <h4 id="judulketerangan"></h4>
-                    <div class="input-group">
-                        <span class="input-group-addon"><i class="fa fa-font"></i></span>
-                        {{ Form::text('keterangan',null,array('class' => 'form-control','id'=>'textketerangan',
-                            'autocomplete'=>'off'))}}
-                    </div>
-                </div>
-
-                <div class="form-group" id="tipependidikan">
-                    <h4>Tipe</h4>
-                    <div class="input-group">
-                        <span class="input-group-addon"><i class="fa fa-list"></i></span>
-                        <select class="form-control" name="tipependidikan" id="selecttipe">
-                            <option value="0" hidden>Silahkan pilih tipe pendidikan</option>
-                            <option value="Utama">Utama</option>
-                            <option value="Tambahan">Tambahan</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <h4>Tanggal Mulai</h4>
-                    <div class="input-group">
-                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                        {{ Form::text('mulai',null,array('class' => 'form-control','id'=>'mulai',
-                            'autocomplete'=>'off', 'data-inputmask'=>"'alias':'date'",'placeholder'=>'dd/mm/yyyy'))}}
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <h4>Tanggal Selesai</h4>
-                    <div class="input-group" id="groupselesai">
-                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                        {{ Form::text('selesai',null,array('class' => 'form-control','id'=>'selesai',
-                            'autocomplete'=>'off', 'data-inputmask'=>"'alias':'date'",'placeholder'=>'dd/mm/yyyy'))}}
-                        <div class="input-group-btn">
-                            <button type="button" class="btn btn-default" onclick="masihaktif()" >Masih Aktif</button>
-                        </div>
-                    </div>
-                    <div class="input-group" id="masihbekerja" style="display: none;">
-                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                        <input type="text" value="Masih Aktif" readonly class="form-control" />
-                        <div class="input-group-btn">
-                            <button type="button" class="btn btn-default" onclick="nonaktif()" ><i class="fa fa-times"></i></button>
-                        </div>
-                    </div>
-                </div>
-
+                <input type="text" name="id_pekerjaan" id="id_pekerjaan" value="" hidden>
+                @include('admins.staf._components.pekerjaan')
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" id="modalbutton"><i class="fa fa-save"></i> Simpan</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Batal</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+    {{ Form::close() }}
+</div>
+<div class="modal fade" id="modalriwayatpendidikan" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    {{ Form::open(array('route' => array('admins.'.$kelas.'.save_riwayat'),'data-toggle'=>'validator','role'=>'form')) }}
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-light-blue-active color-palette">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title"><i id="iconpendidikan"></i> <span  id="judulpendidikan"></span></h4>
+            </div>
+            <div class="modal-body">
+                <input type="text" name="id_staf" value="{{ $data->id }}" hidden>
+                <input type="text" name="id_pendidikan" id="id_pendidikan" value="" hidden>
+                @include('admins.staf._components.pendidikan')
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" id="modalbutton"><i class="fa fa-save"></i> Simpan</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Batal</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+    {{ Form::close() }}
+</div>
+<div class="modal fade" id="modalriwayatorganisasi" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    {{ Form::open(array('route' => array('admins.'.$kelas.'.save_riwayat'),'data-toggle'=>'validator','role'=>'form')) }}
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-light-blue-active color-palette">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title"><i id="iconorganisasi"></i> <span  id="judulorganisasi"></span></h4>
+            </div>
+            <div class="modal-body">
+                <input type="text" name="id_staf" value="{{ $data->id }}" hidden>
+                <input type="text" name="id_organisasi" id="id_organisasi" value="" hidden>
+                @include('admins.staf._components.organisasi')
             </div>
             <div class="modal-footer">
                 <button type="submit" class="btn btn-primary" id="modalbutton"><i class="fa fa-save"></i> Simpan</button>
@@ -490,12 +461,12 @@ $imagepath = "images_staf/";
         <div class="modal-content">
             <div class="modal-header bg-red-active color-palette">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title"><i class="fa fa-trash"></i> Hapus <span id="hapus-modal"></span></h4>
+                <h4 class="modal-title"><i class="fa fa-trash"></i> <span id="judulhapus"></span></h4>
             </div>
             <div class="modal-body">
-                <h4>Menghapus <span id="hapus-nama"></span> ini?</h4>
-                <input type="text" name="tipe" id="hapus-idtipe" value="" hidden>
-                <input type="text" name="id"  id="hapus-id" value="" hidden>
+                <h4>Menghapus <span id="namahapus"></span> ini?</h4>
+                <input type="text" name="tipehapus" id="tipehapus" value="" hidden>
+                <input type="text" name="id"  id="idhapus" value="" hidden>
                 <input type="text" name="id_staf" value="{{ $data->id }}" hidden>
             </div>
             <div class="modal-footer">
@@ -510,39 +481,9 @@ $imagepath = "images_staf/";
 @stop
 
 @section('js')
+@include('admins.staf._components.formjs')
 @include('admins._components.datatable_JS')
 <script type="text/javascript" src="{{ URL::asset('admin/datatable.js') }}"></script>
-<script>
-    $('#modalriwayat').on('shown.bs.modal', function () {
-        $('#name').focus();
-    });
-
-    function masihaktif(){
-        $('#sekarang').val('1');
-        $('#masihbekerja').show();
-        $('#groupselesai').hide();
-    }
-    function nonaktif() {
-        $('#sekarang').val('0');
-        $('#masihbekerja').hide();
-        $('#groupselesai').show();
-    }
-    function func_radiocu(){
-        $('#selectcu').prop('disabled',false);
-        $('#textlembaga').prop('disabled',true);
-        $('#textlembaga').val('');
-        $('#tingkat').show();
-        $('#tiperadio').val('1');
-    }
-    function func_radiolembaga(){
-        $('#selectcu').prop('disabled',true);
-        $('#selectcu').val($('#selectcu option:first').val());
-        $('#textlembaga').prop('disabled',false);
-        $('#textlembaga').focus();
-        $('#tingkat').hide();
-        $('#tiperadio').val('2');
-    }
-</script>
 {{--table pekerjaan--}}
 <script>
     var tablepekerjaan = $('#dataTables-pekerjaan').DataTable({
@@ -579,36 +520,43 @@ $imagepath = "images_staf/";
             "sInfoPostFix":  "",
         }
     });
-    var tipeid_pekerjaan = '3';
     new $.fn.dataTable.Buttons(tablepekerjaan,{
         buttons: [
             {
                 text: '<i class="fa fa-plus"></i> Tambah',
                 action: function(){
-                    $('#modalriwayat').modal({show:true});
+                    $('#modalriwayatpekerjaan').modal({show:true});
+                    $('#judulpekerjaan').text('Tambah Pekerjaan');
+                    $('#iconpekerjaan').attr('class','fa fa-plus');
 
-                    $('#groupmasihbekerja').hide();
-                    $('#groupselesai').show();
-                    $('#tempat').show();
-                    $('#tingkat').hide();
-                    $('#tipependidikan').hide();
-                    $('#keterangan').hide();
-                    $('#masihbekerja').hide();
-                    $('#groupselesai').show();
+                    $('#id_pekerjaan').val('');
+                    $('#tipepekerjaan').val('');
+                    $('#namapekerjaan').val('');
+                    $('#sekarangpekerjaan').val('0');
+                    $('#mulaipekerjaan').val('');
+                    $('#selesaipekerjaan').val('');
 
-                    $('#modaljudul').text('Tambah Pekerjaan');
-                    $('#judulketerangan').text('Tempat');
-                    $('#judulnama').text('Nama Jabatan');
-                    $('#textketerangan').attr('placeholder','Silahkan masukkan tempat bekerja');
-                    $('#textnama').attr('placeholder','Silahkan masukkan nama jabatan');
-                    $('#idtipe').val(tipeid_pekerjaan);
-                    $('#sekarang').val('0');
-                    $('#id').val('');
-                    $('#textnama').val('');
-                    $('#textketerangan').val('');
-                    $('#selecttipe').val('0');
-                    $('#mulai').val('');
-                    $('#selesai').val('');
+                    $('#jabatan').hide();
+                    $('#waktupekerjaan').hide();
+                    $('#lembagabaru').hide();
+                    $('#tingkatcu').hide();
+                    $('#tingkatlembaga').hide();
+                    $('#bidang').hide();
+
+                    $("#radiocu").prop("checked", false);
+                    $("#radiolembaga").prop("checked", false);
+
+                    $('#selectcu').prop('disabled',true);
+                    $('#selectlembaga').prop('disabled',true);
+
+                    $('#selectcu').val($('#selectcu option:first').val());
+                    $('#selectlembaga').val($('#selectlembaga option:first').val());
+                    $('#selecttingkatcu').val($('#selecttingkatcu option:first').val());
+                    $('#selecttingkatlembaga').val($('#selecttingkatlembaga option:first').val());
+                    $('#selectbidangcu').val($('#selectbidangcu option:first').val());
+
+                    $('#masihpekerjaan').hide();
+                    $('#groupselesaipekerjaan').show();
                 }
             },
             {
@@ -617,72 +565,85 @@ $imagepath = "images_staf/";
                     var id = $.map(tablepekerjaan.rows({ selected: true }).data(),function(item){
                         return item[0];
                     });
-                    var nama = $.map(tablepekerjaan.rows({ selected: true }).data(),function(item){
+                    var tipe = $.map(tablepekerjaan.rows({ selected: true }).data(),function(item){
                         return item[1];
                     });
                     var tempat = $.map(tablepekerjaan.rows({ selected: true }).data(),function(item){
                         return item[2];
                     });
-                    var tingkat = $.map(tablepekerjaan.rows({ selected: true }).data(),function(item){
+                    var name = $.map(tablepekerjaan.rows({ selected: true }).data(),function(item){
                         return item[3];
                     });
+                    var tingkat = $.map(tablepekerjaan.rows({ selected: true }).data(),function(item){
+                        return item[5];
+                    });
+                    var bidang = $.map(tablepekerjaan.rows({ selected: true }).data(),function(item){
+                        return item[6];
+                    });
                     var mulai = $.map(tablepekerjaan.rows({ selected: true }).data(),function(item){
-                        return item[4].display;
+                        return item[7].display;;
                     });
                     var selesai = $.map(tablepekerjaan.rows({ selected: true }).data(),function(item){
-                        return item[5].display;
+                        return item[8].display;;
                     });
+
                     if(id != ""){
-                        $('#modalriwayat').modal({show:true});
+                        $('#modalriwayatpekerjaan').modal({show:true});
+                        $('#judulpekerjaan').text('Ubah Pekerjaan');
+                        $('#iconpekerjaan').attr('class','fa fa-pencil');
 
-                        $('#tipependidikan').hide();
-                        $('#keterangan').hide();
-                        $('#tempat').show();
+                        $('#jabatan').show();
+                        $('#waktupekerjaan').show();
+                        $('#lembagabaru').hide();
 
-                        $('#modaljudul').text('Ubah Pekerjaan');
-                        $('#judulnama').text('Nama Jabatan');
-                        $('#textnama').attr('placeholder','Silahkan masukkan nama jabatan');
+                        $('#id_pekerjaan').val(id);
+                        $('#tipepekerjaan').val(tipe);
+                        $('#namapekerjaan').val(name);
 
-                        $('#idtipe').val(tipeid_pekerjaan);
-                        $('#mulai').val(mulai);
-                        $('#id').val(id);
-                        $('#textnama').val(nama);
+                        if(tipe == "1"){ //cu
+                            $('#tingkatcu').show();
+                            $('#tingkatlembaga').hide();
+                            $('#selecttingkatcu').val(tingkat);
 
-                        if(tingkat == "-"){
-                            $('#tingkat').hide();
+                            if(tingkat == "Pengurus" ||tingkat == "Pengawas" || tingkat == "Komite"){
+                                $('#bidang').hide();
+                            }else{
+                                $('#bidang').show();
+                                
+                                $('#selectbidangcu').val(bidang);
+                            }
 
-                            $("#radiolembaga").prop("checked", true);
+                            $("#radiocu").prop("checked", true);
+                            $('#selectcu').prop('disabled',false);
+                            $('#selectcu').val(tempat);
+
+                            $("#radiolembaga").prop("checked", false);
+                            $('#selectlembaga').prop('disabled',false);
+                            $('#selectlembaga').val($('#selectlembaga option:first').val());
+                        }else{ //lembaga
+                            $('#tingkatlembaga').show();
+                            $('#selecttingkatlembaga').val(tingkat);
+
                             $("#radiocu").prop("checked", false);
                             $('#selectcu').prop('disabled',true);
                             $('#selectcu').val($('#selectcu option:first').val());
-                            $('#textlembaga').prop('disabled',false);
-                            $('#textlembaga').focus();
-                            
-                            $('#textlembaga').val(tempat);
-                            $('#tiperadio').val('2');
-                        }else{
-                            $('#tingkat').show();
 
-                            $("#radiolembaga").prop("checked", false);
-                            $("#radiocu").prop("checked", true);
-                            $('#selectcu').prop('disabled',false);
-                            $('#textlembaga').prop('disabled',true);
-                            $('#textlembaga').val('');
-
-                            $('#selectcu').val(tempat);
-                            $('#selecttingkat').val(tingkat);
-                            $('#tiperadio').val('1');
+                            $("#radiolembaga").prop("checked", true);
+                            $('#selectlembaga').prop('disabled',false);
+                            $('#selectlembaga').val(tempat);
                         }
 
-                        if(selesai == "Masih Aktif"){
-                            $('#sekarang').val('1');
-                            $('#masihbekerja').show();
-                            $('#groupselesai').hide();
+                        $('#mulaipekerjaan').val(mulai);
+
+                        if(selesai == "Masih Bekerja"){
+                            $('#sekarangpekerjaan').val('1');
+                            $('#masihpekerjaan').show();
+                            $('#groupselesaipekerjaan').hide();
                         }else{
-                            $('#sekarang').val('0');
-                            $('#masihbekerja').hide();
-                            $('#groupselesai').show();
-                            $('#selesai').val(selesai);
+                            $('#sekarangpekerjaan').val('0');
+                            $('#masihpekerjaan').hide();
+                            $('#groupselesaipekerjaan').show();
+                            $('#selesaipekerjaan').val(selesai);
                         }
                     }else{
                         $('#modalwarning').modal({show:true});
@@ -697,10 +658,11 @@ $imagepath = "images_staf/";
                     });
                     if(id != ""){
                         $('#modalhapus').modal({show:true});
-                        $('#hapus-tipe').text('Hapus Pekerjaan');
-                        $('#hapus-nama').text('Hapus Pekerjaan');
-                        $('#hapus-id').attr('value',id);
-                        $('#hapus-idtipe').attr('value',tipeid_pekerjaan);
+                        $('#judulhapus').text('Pekerjaan');
+                        $('#namahapus').text('Hapus Pekerjaan');
+
+                        $('#tipehapus').val('Pekerjaan');
+                        $('#idhapus').val(id);
                     }else{
                         $('#modalwarning').modal({show:true});
                     }
@@ -714,8 +676,6 @@ $imagepath = "images_staf/";
 </script>
 {{--table pendidikan--}}
 <script>
-    var tipeid_pendidikan = '1';
-
     var tablependidikan = $('#dataTables-pendidikan').DataTable({
         dom: 'Bt',
         select: true,
@@ -756,30 +716,16 @@ $imagepath = "images_staf/";
             {
                 text: '<i class="fa fa-plus"></i> Tambah',
                 action: function(){
-                    $('#modalriwayat').modal({show:true});
+                    $('#modalriwayatpendidikan').modal({show:true});
+                    $('#judulpendidikan').text('Tambah Pendidikan');
+                    $('#iconpendidikan').attr('class','fa fa-plus');
 
-                    $('#groupmasihbekerja').hide();
-                    $('#groupselesai').show();
-                    $('#tempat').hide();
-                    $('#tingkat').hide();
-                    $('#tipependidikan').show();
-                    $('#keterangan').show();
-                    $('#masihbekerja').hide();
-                    $('#groupselesai').show();
+                    $('#selectpendidikan').val($('#selectpendidikan option:first').val());
+                    $('#jurusan').hide();
+                    $('#pendidikangroup').hide();
 
-                    $('#modaljudul').text('Tambah Pendidikan');
-                    $('#judulketerangan').text('Tempat');
-                    $('#judulnama').text('Nama Tingkat Pendidikan');
-                    $('#textketerangan').attr('placeholder','Silahkan masukkan tempat bekerja');
-                    $('#textnama').attr('placeholder','Silahkan masukkan nama tingkat pendidikan');
-                    $('#idtipe').val(tipeid_pendidikan);
-                    $('#sekarang').val('0');
-                    $('#id').val('');
-                    $('#textnama').val('');
-                    $('#textketerangan').val('');
-                    $('#selecttipe').val('0');
-                    $('#mulai').val('');
-                    $('#selesai').val('');
+                    $('#masihpendidikan').hide();
+                    $('#groupselesaipendidikan').show();
                 }
             },
             {
@@ -788,13 +734,13 @@ $imagepath = "images_staf/";
                     var id = $.map(tablependidikan.rows({ selected: true }).data(),function(item){
                         return item[0];
                     });
-                    var nama = $.map(tablependidikan.rows({ selected: true }).data(),function(item){
+                    var tingkat = $.map(tablependidikan.rows({ selected: true }).data(),function(item){
                         return item[1];
                     });
-                    var keterangan = $.map(tablependidikan.rows({ selected: true }).data(),function(item){
+                    var jurusan = $.map(tablependidikan.rows({ selected: true }).data(),function(item){
                         return item[2];
                     });
-                    var tipe = $.map(tablependidikan.rows({ selected: true }).data(),function(item){
+                    var tempat = $.map(tablependidikan.rows({ selected: true }).data(),function(item){
                         return item[3];
                     });
                     var mulai = $.map(tablependidikan.rows({ selected: true }).data(),function(item){
@@ -804,36 +750,38 @@ $imagepath = "images_staf/";
                         return item[5].display;
                     });
                     if(id != ""){
-                        $('#modalriwayat').modal({show:true});
+                        $('#modalriwayatpendidikan').modal({show:true});
+                        $('#judulpendidikan').text('Ubah Pendidikan');
+                        $('#iconpendidikan').attr('class','fa fa-pencil');
+                        $('#pendidikangroup').show();
 
-                        $('#tempat').hide();
-                        $('#tingkat').hide();
-                        $('#tipependidikan').show();
-                        $('#keterangan').show();
-
-                        $('#modaljudul').text('Ubah Pendidikan');
-                        $('#judulketerangan').text('Tempat');
-                        $('#judulnama').text('Nama Jabatan');
-                        $('#textketerangan').attr('placeholder','Silahkan masukkan tempat pendidikan');
-                        $('#textnama').attr('placeholder','Silahkan masukkan nama jabatan');
-                        $('#idtipe').val(tipeid_pendidikan);
-                        $('#mulai').val(mulai);
-                        $('#id').val(id);
-                        $('#textnama').val(nama);
-                        $('#textketerangan').val(keterangan);
-                        $('#selecttipe').val(tipe);
-
-                        if(selesai == "Masih Aktif"){
-                            $('#sekarang').val('1');
-                            $('#masihbekerja').show();
-                            $('#groupselesai').hide();
+                        if(tingkat == "SD" || tingkat =="SMP"){
+                            $('#jurusan').hide();
+                            $('#namapendidikan').val('');
+                            $("#namapendidikan").prop('required',false); 
                         }else{
-                            $('#sekarang').val('0');
-                            $('#masihbekerja').hide();
-                            $('#groupselesai').show();
-                            $('#selesai').val(selesai);
+                            $('#jurusan').show();
+                            $('#namapendidikan').val(jurusan);
+                            $("#namapendidikan").prop('required',true); 
                         }
-                        console.log(selesai);
+
+                        $("#tempatpendidikan").prop('required',true);
+                        
+                        $("#id_pendidikan").val(id);
+                        $("#mulaipendidikan").val(mulai);
+                        $('#selectpendidikan').val(tingkat);
+                        $('#tempatpendidikan').val(tempat);
+
+                        if(selesai == "Masih Belajar"){
+                            $('#sekarangpendidikan').val('1');
+                            $('#masihpendidikan').show();
+                            $('#groupselesaipendidikan').hide();
+                        }else{
+                            $('#sekarangpendidikan').val('0');
+                            $('#masihpendidikan').hide();
+                            $('#groupselesaipendidikan').show();
+                            $('#selesaipendidikan').val(selesai);
+                        }
                     }else{
                         $('#modalwarning').modal({show:true});
                     }
@@ -847,10 +795,11 @@ $imagepath = "images_staf/";
                     });
                     if(id != ""){
                         $('#modalhapus').modal({show:true});
-                        $('#hapus-tipe').text('Hapus Pendidikan');
-                        $('#hapus-nama').text('Pendidikan');
-                        $('#hapus-id').val(id);
-                        $('#hapus-idtipe').val(tipeid_pendidikan);
+                        $('#judulhapus').text('Pendidikan');
+                        $('#namahapus').text('Hapus Pendidikan');
+
+                        $('#tipehapus').val('Pendidikan');
+                        $('#idhapus').val(id);
                     }else{
                         $('#modalwarning').modal({show:true});
                     }
@@ -905,30 +854,16 @@ $imagepath = "images_staf/";
             {
                 text: '<i class="fa fa-plus"></i> Tambah',
                 action: function(){
-                    $('#modalriwayat').modal({show:true});
+                    $('#modalriwayatorganisasi').modal({show:true});
+                    $('#id_organisasi').val('');
+                    $('#namaorganisasi').val('');
+                    $('#jabatanorganisasi').val('');
+                    $('#tempatorganisasi').val('');
+                    $('#mulaiorganisasi').val('');
+                    $('#selesaiorganisasi').val('');
 
-                    $('#groupmasihbekerja').hide();
-                    $('#groupselesai').show();
-                    $('#tempat').hide();
-                    $('#tingkat').hide();
-                    $('#tipependidikan').hide();
-                    $('#keterangan').show();
-                    $('#masihbekerja').hide();
-                    $('#groupselesai').show();
-
-                    $('#modaljudul').text('Tambah Organisasi');
-                    $('#judulketerangan').text('Jabatan');
-                    $('#judulnama').text('Nama Organisasi');
-                    $('#textketerangan').attr('placeholder','Silahkan masukkan keterangan');
-                    $('#textnama').attr('placeholder','Silahkan masukkan nama organisasi');
-                    $('#idtipe').val(tipeid_organisasi);
-                    $('#sekarang').val('0');
-                    $('#id').val('');
-                    $('#textnama').val('');
-                    $('#textketerangan').val('');
-                    $('#selecttipe').val('0');
-                    $('#mulai').val('');
-                    $('#selesai').val('');
+                    $('#masihorganisasin').hide();
+                    $('#groupselesaiorganisasi').show();
                 }
             },
             {
@@ -940,43 +875,35 @@ $imagepath = "images_staf/";
                     var nama = $.map(tableorganisasi.rows({ selected: true }).data(),function(item){
                         return item[1];
                     });
-                    var keterangan = $.map(tableorganisasi.rows({ selected: true }).data(),function(item){
+                    var jabatan = $.map(tableorganisasi.rows({ selected: true }).data(),function(item){
                         return item[2];
                     });
-                    var mulai = $.map(tableorganisasi.rows({ selected: true }).data(),function(item){
-                        return item[3].display;
+                    var tempat = $.map(tableorganisasi.rows({ selected: true }).data(),function(item){
+                        return item[3];
                     });
-                    var selesai = $.map(tableorganisasi.rows({ selected: true }).data(),function(item){
+                    var mulai = $.map(tableorganisasi.rows({ selected: true }).data(),function(item){
                         return item[4].display;
                     });
+                    var selesai = $.map(tableorganisasi.rows({ selected: true }).data(),function(item){
+                        return item[5].display;
+                    });
                     if(id != ""){
-                        $('#modalriwayat').modal({show:true});
-
-                        $('#tempat').hide();
-                        $('#tingkat').hide();
-                        $('#tipependidikan').hide();
-                        $('#keterangan').show();
-
-                        $('#modaljudul').text('Ubah Organisasi');
-                        $('#judulketerangan').text('Keterangan');
-                        $('#judulnama').text('Nama Organisasi');
-                        $('#textketerangan').attr('placeholder','Silahkan masukkan keterangan');
-                        $('#textnama').attr('placeholder','Silahkan masukkan nama organisasi');
-                        $('#idtipe').val(tipeid_organisasi);
-                        $('#mulai').val(mulai);
-                        $('#id').val(id);
-                        $('#textnama').val(nama);
-                        $('#textketerangan').val(keterangan);
+                        $('#modalriwayatorganisasi').modal({show:true});
+                        $('#id_organisasi').val(id);
+                        $('#namaorganisasi').val(nama);
+                        $('#jabatanorganisasi').val(jabatan);
+                        $('#tempatorganisasi').val(tempat);
+                        $('#mulaiorganisasi').val(mulai);
 
                         if(selesai == "Masih Aktif"){
-                            $('#sekarang').val('1');
-                            $('#masihbekerja').show();
-                            $('#groupselesai').hide();
+                            $('#sekarangorganisasi').val('1');
+                            $('#masihorganisasi').show();
+                            $('#groupselesaiorganisasi').hide();
                         }else{
-                            $('#sekarang').val('0');
-                            $('#masihbekerja').hide();
-                            $('#groupselesai').show();
-                            $('#selesai').val(selesai);
+                            $('#sekarangorganisasi').val('0');
+                            $('#masihorganisasi').hide();
+                            $('#groupselesaiorganisasi').show();
+                            $('#selesaiorganisasi').val(selesai);
                         }
                     }else{
                         $('#modalwarning').modal({show:true});
@@ -991,10 +918,11 @@ $imagepath = "images_staf/";
                     });
                     if(id != ""){
                         $('#modalhapus').modal({show:true});
-                        $('#hapus-tipe').text('Hapus Organisasi');
-                        $('#hapus-nama').text('Hapus Organisasi');
-                        $('#hapus-id').attr('value',id);
-                        $('#hapus-idtipe').attr('value',tipeid_organisasi);
+                        $('#judulhapus').text('Organisasi');
+                        $('#namahapus').text('Hapus Organisasi');
+
+                        $('#tipehapus').val('Organisasi');
+                        $('#idhapus').val(id);
                     }else{
                         $('#modalwarning').modal({show:true});
                     }

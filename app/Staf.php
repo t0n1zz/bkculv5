@@ -8,17 +8,14 @@ class Staf extends Model {
     protected $table = 'staf';
     
     public static $rules = [
+        'nid'=>'required|unique:staf',
         'name'=>'required',
-        'jabatan'=>'required',
-        'tingkat'=>'required',
-        'cu'=>'required',
         'email' =>  'email'
     ];
     
     protected $fillable = [
-        'name','jabatan','tingkat','cu','periode1','periode2','tempat_lahir','tanggal_lahir','kelamin',
-        'agama','pendidikan','status','alamat','kota','gambar',
-        'telp','hp','email'
+        'nim','nid','name','cu','tempat_lahir','tanggal_lahir','kelamin',
+        'agama','status','alamat','kontak','gambar'
     ];
 
     public function getNameAttribute($value){

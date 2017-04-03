@@ -3,12 +3,12 @@ namespace App;
 
 use illuminate\Database\Eloquent\Model;
 
-class StafRiwayat extends Model {
+class StafPendidikan extends Model {
 
-    protected $table = 'staf_riwayat';
+    protected $table = 'staf_pendidikan';
 
     protected $fillable = [
-        'id_staf','tipe','name','keterangan','keterangan2','mulai','selesai','sekarang'
+        'id_staf','tipe','name','tingkat','tempat','mulai','selesai','sekarang'
     ];
 
     public function getNameAttribute($value){

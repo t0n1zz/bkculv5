@@ -325,13 +325,13 @@ Route::group(['prefix' => 'admins','middleware' => 'auth'], function(){
     Route::get('staf/index_cu/{id}',array(
         'as' => 'admins.staf.index_cu',
         'uses' => 'StafController@index_cu'));
-    Route::get('staf/{id}/detail',array(
+    Route::get('staf/detail/{id}',array(
         'as' => 'admins.staf.detail',
         'uses' => 'StafController@detail'
     ));
-    Route::post('staf/riwayat',array(
-        'as' => 'admins.staf.riwayat',
-        'uses' => 'StafController@riwayat'
+    Route::post('staf/save_riwayat',array(
+        'as' => 'admins.staf.save_riwayat',
+        'uses' => 'StafController@save_riwayat'
     ));
     Route::post('staf/update_riwayat',array(
         'as' => 'admins.staf.update_riwayat',
@@ -482,6 +482,9 @@ Route::group(['prefix' => 'admins','middleware' => 'auth'], function(){
         'as' => 'admins.kegiatan.getselect2',
         'uses' => 'KegiatanController@getselect2'
     ));
+    Route::post('kegiatan/store_panitia', [
+    'as'           => 'admins.kegiatan.store_panitia',
+    'uses'         => 'KegiatanController@store_panitia']);
 // statisitik
     Route::get('statistik',array('as' => 'statistik', function()
     {

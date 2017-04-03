@@ -77,6 +77,30 @@ foreach ($pilihperiode as $dataperiode){
     </div>
 
     @include('admins._components.laporancu')
+    
+    <div class="nav-tabs-custom">
+        <ul class="nav nav-tabs"><li class="active"><a href="#tab_table" data-toggle="tab">Tabel</a></li></ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="tab_table">
+                <table class="table table-hover table-bordered" id="dataTables-all" cellspacing="0" width="100%" >
+                    <thead class="bg-light-blue-active color-palette">
+                        <tr>
+                            <th>Akun</th>
+                            @foreach($datas2 as $data)
+                                <?php $date = new Date($data->periode); $periode = $date->format('F Y'); ?>
+                                <th>{{ $periode }}</th>
+                            @endforeach
+                        </tr>
+                    </thead>
+                        <tr><td>a</td></tr>
+                        <tr><td>a</td></tr>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
     <div class="nav-tabs-custom">
         <ul class="nav nav-tabs">
             <li class="active"><a href="#tab_diskusi" data-toggle="tab">Diskusi
@@ -247,8 +271,8 @@ foreach ($pilihperiode as $dataperiode){
                                     case "bjs_saham":
                                         echo "BJS Saham";
                                         break;
-                                    case "beban_operasional":
-                                        echo "Beban Operasional";
+                                    case "beban_penyisihandcr":
+                                        echo "Beban Penyisihan DCR";
                                         break;
                                     case "investasi_likuid":
                                         echo "Investasi Likuid";

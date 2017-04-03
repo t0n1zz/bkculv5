@@ -7,8 +7,11 @@ use Input;
 use Redirect;
 use Validator;
 use App\Staf;
-use App\StafRiwayat;
+use App\StafPekerjaan;
+use App\StafPendidikan;
+use App\StafOrganisasi;
 use App\Cuprimer;
+use App\Lembaga;
 use App\Http\Requests;
 use Yajra\Datatables\Datatables;
 
@@ -21,8 +24,7 @@ class StafController extends Controller{
     {
         try{
             $id = 'PUSKOPDIT BKCU Kalimantan';
-            $datas = Staf::with('cuprimer')->where('cu','=',$id)
-                    ->orderBy('cu','asc')->get();;
+            $datas = Staf::with('cuprimer')->get();;
             $datas2 = Cuprimer::select('id','name')->get();
             return view('admins.'.$this->kelaspath.'.index', compact('datas','datas2','id'));
         }catch (Exception $e){
@@ -47,54 +49,16 @@ class StafController extends Controller{
         }
     }
 
-    public function index_public()
-    {
-        try{
-            $datas = Staf::with('cuprimer')->where('cu','=',Auth::user()->cuprimer->id)
-                ->orderBy('cu','asc')->get();;
-            $datas2 = Cuprimer::all();
-            $isall = false;
-
-            return view('cu.kelola_staf', compact('datas','datas2','isall'));
-        }catch (Exception $e){
-            return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
-        }
-    }
-
     public function detail($id)
     {
         try{
             $data = Staf::with('cuprimer')->find($id);
-            $riwayats1 = StafRiwayat::where('id_staf','=',$id)->where('tipe','=',1)
-                ->orderBy('selesai','dsc')->get();
-            $riwayats2 = StafRiwayat::with('cuprimer')->where('id_staf','=',$id)->where('tipe','=',3)
-                ->orderBy('selesai','dsc')->get();
-            $riwayats3 = StafRiwayat::where('id_staf','=',$id)->where('tipe','=',2)
-                ->orderBy('selesai','dsc')->get();
-            return view('admins.'.$this->kelaspath.'.detail', compact('data','riwayats1',
-                'riwayats2','riwayats3'));
-        }catch (Exception $e){
-            return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
-        }
-    }
-
-    public function detail_public($id)
-    {
-        try{
-            $idcu = Auth::user()->cuprimer->id;
-            $data = Staf::with('cuprimer')->where('cu',$idcu)->find($id);
-            if(!empty($data)) {
-                $riwayats1 = StafRiwayat::where('id_staf', '=', $id)->where('tipe', '=', 1)
-                    ->orderBy('selesai', 'dsc')->get();
-                $riwayats2 = StafRiwayat::where('id_staf', '=', $id)->where('tipe', '=', 2)
-                    ->orderBy('selesai', 'dsc')->get();
-                $riwayats3 = StafRiwayat::where('id_staf', '=', $id)->where('tipe', '=', 3)
-                    ->orderBy('selesai', 'dsc')->get();
-                return view('cu.detail_staf', compact('data', 'riwayats1',
-                    'riwayats2', 'riwayats3'));
-            }else{
-
-            }
+            $riwayatpekerjaan = StafPekerjaan::where('id_staf','=',$id)->orderBy('selesai','dsc')->get();
+            $riwayatpendidikan = StafPendidikan::with('cuprimer')->where('id_staf','=',$id)->orderBy('selesai','dsc')->get();
+            $riwayatorganisasi = StafOrganisasi::where('id_staf','=',$id)->orderBy('selesai','dsc')->get();
+            $culists = Cuprimer::select('id','name')->orderBy('name','asc')->get();
+            $lembagas = Lembaga::select('id','name')->orderBy('name','asc')->get();
+            return view('admins.'.$this->kelaspath.'.detail', compact('data','riwayatpekerjaan','riwayatpendidikan','riwayatorganisasi','culists','lembagas'));
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
         }
@@ -103,18 +67,9 @@ class StafController extends Controller{
     public function create()
     {
         try{
-            $datas2 = Cuprimer::orderBy('name','asc')->get();;
-            return view('admins.'.$this->kelaspath.'.create',compact('datas2'));
-        }catch (Exception $e){
-            return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
-        }
-    }
-
-    public function create_public()
-    {
-        try{
-            $datas2 = Cuprimer::orderBy('name','asc')->get();;
-            return view('cu.create_staf',compact('datas2'));
+            $culists = Cuprimer::orderBy('name','asc')->get();
+            $lembagas = Lembaga::orderBy('name','asc')->get();
+            return view('admins.'.$this->kelaspath.'.create',compact('culists','lembagas'));
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
         }
@@ -133,8 +88,27 @@ class StafController extends Controller{
 
             $kelas = new Staf();
             $data2 = $this->input_data($kelas,$data);
+            $tiperadio = Input::get('tiperadio');
+            $no_tipe = 0;
+            $savedata = Staf::create($data2);
+            $namaorganisasi = Input::get('namaorganisasi');
 
-            Staf::create($data2);
+            // riwayat
+            $no_tipe = $this->input_pekerjaan($savedata->id,null);
+            $this->input_pendidikan($savedata->id,null);
+
+            if(!empty($namaorganisasi))
+                $this->input_organisasi($savedata->id,null);
+            
+            //nim
+            $no_bkcu = sprintf("%'.03d", 15); //999
+            $no_cu = sprintf("%'.03d", $lembaga); //999
+            $no_id = sprintf("%'.06d", $savedata->id); //999999
+            $nim = $no_bkcu . $no_cu . $no_tipe . $no_id;
+
+            $kelasdata2 = Staf::find($savedata->id);
+            $kelasdata2->nim = $nim;
+            $kelasdata2->save();
 
             if(Input::Get('simpan2'))
                 return Redirect::route('admins.'.$this->kelaspath.'.create')->with('sucessmessage', 'Staff <b><i>' .$name. '</i></b> Telah berhasil ditambah.');
@@ -145,79 +119,215 @@ class StafController extends Controller{
         }
     }
 
-    public function riwayat()
+    public function store_lembaga()
+    {
+        $kelaslembaga = new Lembaga();
+        $kelaslembaga->name = Input::get('namalembaga');
+        $kelaslembaga->alamat = Input::get('alamatlembaga');
+        $kelaslembaga->email = Input::get('emaillembaga');
+        $kelaslembaga->telp = Input::get('telplembaga');
+        $kelaslembaga->save();
+
+        return $kelaslembaga->id;
+    }
+
+    public function save_riwayat()
     {
         try{
+            $id_staf = Input::get('id_staf');
+            $id_pekerjaan = Input::get('id_pekerjaan');
+            $id_pendidikan = Input::get('id_pendidikan');
+            $id_organisasi = Input::get('id_organisasi');
+            $namapekerjaan = Input::get('namapekerjaan');
+            $selectpendidikan = Input::get('selectpendidikan');
+            $namaorganisasi = Input::get('namaorganisasi');
+            $keterangan = "";
+            $keterangan2 = "";
 
-            $id = Input::get('id');
-            $tipe = Input::get('tipe');
-            $date1 = Input::get('mulai');
-            $date2 = Input::get('selesai');
-
-            if($id == "")
-                $kelas = new StafRiwayat();
-            else
-                $kelas = StafRiwayat::findOrFail($id);
-
-            $kelas->id_staf = Input::get('id_staf');
-            $kelas->tipe = $tipe;
-            $kelas->name = Input::get('name');
-            $kelas->sekarang = Input::get('sekarang');
-
-            if($tipe == '1'){
-                $kelas->keterangan = Input::get('keterangan');
-                $kelas->keterangan2 = Input::get('tipependidikan');
-            }elseif($tipe == '2'){
-                $kelas->keterangan = Input::get('keterangan');
-            }elseif ($tipe == '3') {
-                $tiperadio = Input::get('tiperadio');
-
-                if($tiperadio == '1'){
-                    $kelas->keterangan = Input::get('selectcu');
-                    $kelas->keterangan2 = Input::get('selecttingkat');
-                }elseif($tiperadio == '2'){
-                    $kelas->keterangan = Input::get('textlembaga');
-                    $kelas->keterangan2 = '-';
-                }
+            if(!empty($id_pekerjaan)){
+                $keterangan2 = "diubah";
+            }else{
+                $keterangan2 = "ditambah";
             }
 
-            if(!empty($date1)){
-                $timestamp = strtotime(str_replace('/', '-',$date1));
-                $tanggal = date('Y-m-d',$timestamp);
-                $kelas->mulai = $tanggal;
+            if(!empty($namapekerjaan)){
+                $this->input_pekerjaan($id_staf,$id_pekerjaan);
+                $keterangan = "pekerjaan";
             }
 
-            if(!empty($date2)){
-                $timestamp = strtotime(str_replace('/', '-',$date2));
-                $tanggal = date('Y-m-d',$timestamp);
-                $kelas->selesai = $tanggal;
+            if(!empty($selectpendidikan)){
+                $this->input_pendidikan($id_staf,$id_pendidikan);
+                $keterangan = "pendidikan";
             }
 
-            $kelas->save();
+            if(!empty($namaorganisasi)){
+                $this->input_organisasi($id_staf,$id_organisasi);
+                $keterangan = "organisasi";
+            }
 
-            return Redirect::route('admins.'.$this->kelaspath.'.detail',array(Input::get('id_staf')))->with('sucessmessage', 'Riwayat telah berhasil ditambah');
+            return Redirect::route('admins.'.$this->kelaspath.'.detail',array(Input::get('id_staf')))->with('sucessmessage', 'Riwayat '.$keterangan.' telah berhasil ' .$keterangan2);
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
         }
     }
+
+    public function input_data($kelas,$data)
+    {
+        //gambar
+        try {
+            $img = Input::file('gambar');
+            $name = preg_replace('/[^A-Za-z0-9\-]/', '',Input::get('name'));
+            $formatedname = $name.str_random(5).date('Y-m-d');
+            if (!is_null($img)) {
+                $filename = $formatedname.".jpg";
+
+                if ($this->save_image($img, $kelas, $filename))
+                    array_set($data,'gambar',$formatedname);
+                else
+                    return false;
+            }else{
+                $filename = $kelas->gambar;
+                array_set($data,'gambar',$filename);
+            }
+        } catch (Exception $e) {
+            $this->status = $e->getMessage();
+        }
+
+        return $data;
+    }
+
+
+    public function input_pekerjaan($id_staf,$id_pekerjaan)
+    {
+        $tipepekerjaan = Input::get('tipepekerjaan');
+        $sekarang = Input::get('sekarangpekerjaan');
+        $kelamin = Input::get('kelamin');
+        
+        if(!empty($id_pekerjaan)){
+            $kelasriwayat = StafPekerjaan::findOrFail($id_pekerjaan);
+        }else{
+            $kelasriwayat = new StafPekerjaan();
+        }
+        
+        $kelasriwayat->id_staf = $id_staf;
+        $kelasriwayat->tipe = $tipepekerjaan;
+        $kelasriwayat->name = Input::get('namapekerjaan');
+
+        $no_tipe = 0;
+        if($tipepekerjaan == "1"){//cu
+            $kelasriwayat->bidang = Input::get('selectbidangcu');
+            $kelasriwayat->tingkat = Input::get('selecttingkatcu');
+            $kelasriwayat->tempat = Input::get('selectcu');
+
+            if($kelamin == 'Pria')//no tipe utk nim
+                $no_tipe = 1;
+            else
+                $no_tipe = 2;
+        }else{//lembaga lain
+            $kelasriwayat->bidang = "";
+            $kelasriwayat->tingkat = Input::get('selecttingkatlembaga');
+
+            $selectlembaga = Input::get('selectlembaga');
+            if($selectlembaga == "tambah"){// tambah lembaga
+                $lembaga = $this->store_lembaga();
+            }else{
+                $lembaga = $selectlembaga;
+            }
+            $kelasriwayat->tempat = $lembaga;
+
+            if($kelamin == 'Pria')//no tipe utk nim
+                $no_tipe = 3;
+            else
+                $no_tipe = 4; 
+        }
+
+        $kelasriwayat->sekarang = $sekarang;
+
+        $date1 = Input::get('mulaipekerjaan');
+        $date2 = Input::get('selesaipekerjaan');
+        if(!empty($date1)){
+            $timestamp = strtotime(str_replace('/', '-',$date1));
+            $tanggal = date('Y-m-d',$timestamp);
+            $kelasriwayat->mulai = $tanggal;
+        }
+        if($sekarang != 1){
+            if(!empty($date2)){
+                $timestamp = strtotime(str_replace('/', '-',$date2));
+                $tanggal = date('Y-m-d',$timestamp);
+                $kelasriwayat->selesai = $tanggal;
+            }
+        }
+        
+        $kelasriwayat->save();
+
+        return $no_tipe;
+    }
+
+    public function input_pendidikan($id_staf,$id_pendidikan)
+    {
+        if(!empty($id_pendidikan)){
+            $kelasriwayat = StafPendidikan::findOrFail($id_pendidikan);
+        }else{
+            $kelasriwayat = new StafPendidikan();
+        }
+
+        $kelasriwayat->id_staf = $id_staf;
+        $kelasriwayat->name = Input::get('namapendidikan');
+        $kelasriwayat->tingkat = Input::get('selectpendidikan');
+        $kelasriwayat->tempat = Input::get('tempatpendidikan');
+        
+        $kelasriwayat->sekarang = Input::get('sekarangpendidikan');
+        $date1 = Input::get('mulaipendidikan');
+        $date2 = Input::get('selesaipendidikan');
+        if(!empty($date1)){
+            $timestamp = strtotime(str_replace('/', '-',$date1));
+            $tanggal = date('Y-m-d',$timestamp);
+            $kelasriwayat->mulai = $tanggal;
+        }
+        if(!empty($date2)){
+            $timestamp = strtotime(str_replace('/', '-',$date2));
+            $tanggal = date('Y-m-d',$timestamp);
+            $kelasriwayat->selesai = $tanggal;
+        }
+        $kelasriwayat->save();
+    }
+
+    public function input_organisasi($id_staf,$id_organisasi)
+    {
+        if(!empty($id_organisasi)){
+            $kelasriwayat = StafOrganisasi::findOrFail($id_organisasi);
+        }else{
+            $kelasriwayat = new StafOrganisasi();
+        }
+        
+        $kelasriwayat->id_staf = $id_staf;
+        $kelasriwayat->name = Input::get('namaorganisasi');
+        $kelasriwayat->jabatan = Input::get('jabatanorganisasi');
+        $kelasriwayat->tempat = Input::get('tempatorganisasi');
+
+        $kelasriwayat->sekarang = Input::get('sekarangorganisasi');
+        $date1 = Input::get('mulaiorganisasi');
+        $date2 = Input::get('selesaiorganisasi');
+        if(!empty($date1)){
+            $timestamp = strtotime(str_replace('/', '-',$date1));
+            $tanggal = date('Y-m-d',$timestamp);
+            $kelasriwayat->mulai = $tanggal;
+        }
+        if(!empty($date2)){
+            $timestamp = strtotime(str_replace('/', '-',$date2));
+            $tanggal = date('Y-m-d',$timestamp);
+            $kelasriwayat->selesai = $tanggal;
+        }
+        $kelasriwayat->save();
+}
 
     public function edit($id)
     {
         try{
             $data = Staf::find($id);
-            $datas2 = Cuprimer::orderBy('name','asc')->get();;
-            return view('admins.'.$this->kelaspath.'.edit', compact('data','datas2'));
-        }catch (Exception $e){
-            return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
-        }
-    }
-
-    public function edit_public()
-    {
-        try{
-            $data = Staf::find(Auth::user()->cuprimer->id);
-            $datas2 = Cuprimer::orderBy('name','asc')->get();;
-            return view('cu.edit_staf', compact('data','datas2'));
+            $culists = Cuprimer::orderBy('name','asc')->get();
+            $lembagas = Lembaga::orderBy('name','asc')->get();
+            return view('admins.'.$this->kelaspath.'.edit', compact('data','culists','lembagas'));
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
         }
@@ -249,66 +359,6 @@ class StafController extends Controller{
         }
     }
 
-    public function update_riwayat()
-    {
-        try{
-            $id = Input::get('id');
-            $kelas = StafRiwayat::findOrFail($id);
-            $kelas->id_staf = Input::get('id_staf');
-            $kelas->tipe = Input::get('tipe');
-            $kelas->name = Input::get('name');
-            $kelas->keterangan = Input::get('keterangan');
-            $kelas->keterangan2 = Input::get('keterangan2');
-            $kelas->sekarang = Input::get('sekarang');
-            $date1 = Input::get('mulai');
-
-
-
-            if(!empty($date1)){
-                $timestamp = strtotime(str_replace('/', '-',$date1));
-                $tanggal = date('Y-m-d',$timestamp);
-                $kelas->mulai = $tanggal;
-            }
-            $date2 = Input::get('selesai');
-            if(!empty($date2)){
-                $timestamp = strtotime(str_replace('/', '-',$date2));
-                $tanggal = date('Y-m-d',$timestamp);
-                $kelas->selesai = $tanggal;
-            }
-
-            $kelas->save();
-
-            return Redirect::route('admins.'.$this->kelaspath.'.detail',array(Input::get('id_staf')))->with('sucessmessage', 'Riwayat telah berhasil diubah');
-        }catch (Exception $e){
-            return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
-        }
-    }
-
-    public function input_data($kelas,$data)
-    {
-        //gambar
-        try {
-            $img = Input::file('gambar');
-            $name = preg_replace('/[^A-Za-z0-9\-]/', '',Input::get('name'));
-            $formatedname = $name.str_random(5).date('Y-m-d');
-            if (!is_null($img)) {
-                $filename = $formatedname.".jpg";
-
-                if ($this->save_image($img, $kelas, $filename))
-                    array_set($data,'gambar',$formatedname);
-                else
-                    return false;
-            }else{
-                $filename = $kelas->gambar;
-                array_set($data,'gambar',$filename);
-            }
-        } catch (Exception $e) {
-            $this->status = $e->getMessage();
-        }
-
-        return $data;
-    }
-
     public function destroy()
     {
         try{
@@ -329,31 +379,19 @@ class StafController extends Controller{
         }
     }
 
-    public function destroy_public()
-    {
-        try{
-            $id = Input::get('id');
-            $kelas = Staf::findOrFail($id);
-            $path = public_path($this->imagepath);
-
-
-            File::delete($path . $kelas->gambar);
-            File::delete($path. $kelas->gambar.".jpg");
-            File::delete($path. $kelas->gambar."n.jpg");
-
-            Staf::destroy($id);
-
-            return Redirect::route('cu.kelola_staf')->with('sucessmessage', 'Staff Telah berhasil di hapus.');
-        }catch (Exception $e){
-            return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
-        }
-    }
-
     public function destroy_riwayat()
     {
         try{
             $id = Input::get('id');
-            StafRiwayat::destroy($id);
+            $tipe = Input::get('tipehapus');
+
+            if($tipe == "Pekerjaan"){
+                StafPekerjaan::destroy($id);
+            }elseif($tipe == "Pendidikan"){
+                StafPendidikan::destroy($id);
+            }elseif($tipe == "Organisasi"){
+                StafOrganisasi::destroy($id);
+            }
 
             return Redirect::route('admins.'.$this->kelaspath.'.detail',array(Input::get('id_staf')))->with('sucessmessage', 'Riwayat telah berhasil dihapus');
         }catch (Exception $e){

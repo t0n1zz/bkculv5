@@ -117,6 +117,27 @@ class KegiatanController extends Controller{
         }
     }
 
+    public function store_panitia()
+    {
+        try{
+
+            $data = Input::all();
+            dd($data);
+
+            $data2 = $this->input_data($data);
+
+            Kegiatan::create($data2);
+
+            if (Input::Get('simpan2'))
+                return Redirect::route('admins.'.$this->kelaspath.'.create')->with('sucessmessage', 'Kegiatan <b><i>' . $name . '</i></b> Telah berhasil ditambah.');
+            else
+                return Redirect::route('admins.'.$this->kelaspath.'.index')->with('sucessmessage', 'Kegiatan <b><i>' . $name . '</i></b> Telah berhasil ditambah.');
+            return Redirect::back()->withInput()->with('errormessage','Terjadi kesalahan dalam penambahan kegiatan.');
+        }catch (Exception $e){
+            return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
+        }
+    }
+
     public function edit($id)
     {
         try{

@@ -25,7 +25,7 @@ class LaporanCu extends Model {
         'aset_masalah','aset_tidak_menghasilkan','aset_likuid_tidak_menghasilkan',
         'aktivalancar','simpanansaham','simpanansaham_lalu','simpanansaham_des','nonsaham_unggulan','nonsaham_harian',
         'hutangspd','hutang_tidak_berbiaya_30hari','piutangberedar','piutanganggota','piutanglalai_1bulan','piutanglalai_12bulan',
-        'dcr','dcu','totalhutang_pihak3','iuran_gedung','donasi','bjs_saham','beban_operasional','investasi_likuid',
+        'dcr','dcu','totalhutang_pihak3','iuran_gedung','donasi','bjs_saham','beban_penyisihandcr','investasi_likuid',
         'totalpendapatan','totalbiaya','shu','shu_lalu','lajuinflasi','hargapasar','periode'
     ];
 

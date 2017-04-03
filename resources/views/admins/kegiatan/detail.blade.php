@@ -185,7 +185,7 @@ $kelas = "kegiatan";
 </section>
 <div class="clearfix"></div>
 <div class="modal  fade" id="modal2show"  role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <form id="pokok" action="#">
+    {{ Form::open(array('route' => array('admins.'.$kelas.'.store_panitia'),'data-toggle' => 'validator','role' => 'form')) }}
     <div class="modal-dialog modal-lg">
         <div class="modal-content large">
             <div class="modal-header bg-light-blue-active color-palette">
@@ -195,9 +195,7 @@ $kelas = "kegiatan";
             <div class="modal-body">
                 <h4>Fasilitator atau Panitia</h4>
                 <input type="text" name="id" value="" id="modal2id" hidden>
-                <select class="form-control select2" name="fasilitator" id="selectdata" style="width: 100%">
-                    <option disabled selected>Pilih fasilitator atau panitia</option>
-                </select>
+                <select class="form-control select2" name="fasilitator[]" id="selectdata" style="width: 100%" multiple></select>
                 <h4>Tugas</h4>
                 <select class="form-control" name="tugas">
                     <option value="0" hidden>Silahkan pilih tugas</option>
@@ -213,7 +211,7 @@ $kelas = "kegiatan";
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
-    </form>
+    {{ Form::close() }}
 </div>
 <div class="modal fade" id="modal1show" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     {{ Form::open(array('route' => array('admins.'.$kelas.'.destroy',$kelas), 'method' => 'delete')) }}
@@ -268,10 +266,8 @@ $kelas = "kegiatan";
             cache: true
         },
         escapeMarkup: function (markup) { return markup; },
-        minimumInputLength: 1,
-        placeholder: function(){
-            $(this).data('placeholder');
-        },
+        minimumInputLength: 2,
+        placeholder: "Silahkan pilih fasilitator atau panitia",
         templateResult: formatTemplate,
         templateSelection: selectionTemplate
     });
@@ -311,7 +307,6 @@ $kelas = "kegiatan";
             markup += "</div>";
         markup += "</div>";   
 
-        console.log(data);
         return markup;
     }
 

@@ -37,11 +37,10 @@ $file_max = intval($file_max);
                             <h4>No. Identitas</h4>
                             <div class="input-group">
                                 <span class="input-group-addon">0-9</span>
-                                {{ Form::text('noid',null,array('class' => 'form-control', 'placeholder' => 'Silahkan masukkan nomor identitas',
-                                    'required','data-error' => 'Nomor identitas wajib di isi',
-                                    'autocomplete'=>'off'))}}
+                                {{ Form::text('nid',null,array('class' => 'form-control', 'placeholder' => 'Silahkan masukkan nomor identitas',
+                                    'required','autocomplete'=>'off'))}}
                             </div>
-                            <div class="help-block with-errors"></div>
+                            <div class="help-block">No. Identitas harus diisi.</div>
                             {!! $errors->first('name', '<p class="text-warning">:message</p>') !!}
                         </div>
                     </div>
@@ -51,10 +50,9 @@ $file_max = intval($file_max);
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-font"></i></span>
                                 {{ Form::text('name',null,array('class' => 'form-control', 'placeholder' => 'Silahkan masukkan nama staf',
-                                    'required','data-error' => 'Nama staf wajib diisi',
-                                    'autocomplete'=>'off'))}}
+                                    'required','autocomplete'=>'off'))}}
                             </div>
-                            <div class="help-block with-errors"></div>
+                            <div class="help-block">Nama harus diisi.</div>
                             {!! $errors->first('name', '<p class="text-warning">:message</p>') !!}
                         </div>
                     </div>
@@ -70,6 +68,7 @@ $file_max = intval($file_max);
                                         {{ Form::text('tempat_lahir',null,array('class' => 'form-control', 'placeholder' => 'Tempat'))}}
                                         {{ $errors->first('tempat_lahir', '<p class="text-warning">:message</p>') }}
                                     </div>
+                                    <div class="help-block">Tempat lahir harus diisi.</div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="input-group">
@@ -83,6 +82,7 @@ $file_max = intval($file_max);
                                         <input type="text" name="bergabung" value="@if(!empty($tanggal)){{$tanggal}}@endif" class="form-control"
                                                data-inputmask="'alias': 'date'" placeholder="dd/mm/yyyy" />
                                     </div>
+                                    <div class="help-block">Tanggal lahir harus diisi.</div>
                                 </div>
                             </div>
                         </div>
@@ -92,7 +92,7 @@ $file_max = intval($file_max);
                             <h4>Gender</h4>
                             <div class="input-group">
                                 <div class="input-group-addon"><i class="fa fa-list"></i></div>
-                                <select class="form-control" name="kelamin">
+                                <select class="form-control" name="kelamin" required>
                                     <option selected disabled>Jenis kelamin</option>
                                     <option value="Pria"
                                     @if(!empty($data))
@@ -110,6 +110,7 @@ $file_max = intval($file_max);
                                             >Wanita</option>
                                 </select>
                             </div>
+                            <div class="help-block">Gender harus diisi.</div>
                             {{ $errors->first('kelamin', '<p class="text-warning">:message</p>') }}
                         </div>
                     </div>
@@ -118,7 +119,7 @@ $file_max = intval($file_max);
                             <h4>Status Pernikahan</h4>
                             <div class="input-group">
                                 <div class="input-group-addon"><i class="fa fa-list"></i></div>
-                                <select class="form-control" name="status">
+                                <select class="form-control" name="status" required>
                                     <option selected disabled>Status</option>
                                     <option value="Menikah"
                                     @if(!empty($data))
@@ -136,6 +137,7 @@ $file_max = intval($file_max);
                                     >Belum Menikah</option>
                                 </select>
                             </div>
+                            <div class="help-block">Status Pernikahan harus diisi.</div>
                         </div>
                     </div>
                     <div class="col-sm-2">
@@ -143,7 +145,7 @@ $file_max = intval($file_max);
                             <h4>Agama</h4>
                             <div class="input-group">
                                 <div class="input-group-addon"><i class="fa fa-list"></i></div>
-                                <select class="form-control" name="agama">
+                                <select class="form-control" name="agama" required>
                                     <option selected disabled>Agama</option>
                                     <option value="Khatolik"
                                     @if(!empty($data))
@@ -151,7 +153,7 @@ $file_max = intval($file_max);
                                             {{ "selected" }}
                                                 @endif
                                             @endif
-                                    >Khatolik</option>
+                                    >Katolik</option>
                                     <option value="Protestan"
                                     @if(!empty($data))
                                         @if($data->agama == "Protestan")
@@ -189,6 +191,7 @@ $file_max = intval($file_max);
                                     >Islam</option>
                                 </select>
                             </div>
+                            <div class="help-block">Agama harus diisi.</div>
                         </div>
                     </div>
                 </div>
@@ -216,25 +219,25 @@ $file_max = intval($file_max);
         <h3 class="box-title">Pekerjaan</h3>
     </div>
     <div class="box-body">
-        
+        @include('admins.staf._components.pekerjaan')
     </div>
 </div>
 {{-- pendidikan --}}
 <div class="box box-solid">
     <div class="box-header bg-light-blue-active color-palette  with-border">
-        <h3 class="box-title">Riwayat Pendidikan</h3>
+        <h3 class="box-title">Pendidikan Terakhir</h3>
     </div>
     <div class="box-body">
-        
+        @include('admins.staf._components.pendidikan')
     </div>
 </div>
 {{-- organisasi --}}
 <div class="box box-solid">
     <div class="box-header bg-light-blue-active color-palette  with-border">
-        <h3 class="box-title">Riwayat Organisasi</h3>
+        <h3 class="box-title">Organisasi Yang Di ikuti</h3>
     </div>
     <div class="box-body">
-        
+        @include('admins.staf._components.organisasi')
     </div>
 </div>
 {{-- tombol --}}
@@ -250,3 +253,7 @@ $file_max = intval($file_max);
         </div>
     </div>
 </div>
+
+@section('js')
+@include('admins.staf._components.formjs')
+@stop

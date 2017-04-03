@@ -87,10 +87,6 @@ $imagepath = "images_staf/";
                                 <th>Jabatan</th>
                                 <th>Status</th>
                                 <th>Agama</th>
-                                <th>Pendidikan</th>
-                                <th>No. Telepon</th>
-                                <th>No. Handphone</th>
-                                <th>E-mail</th>
                                 <th>Alamat</th>
                             </tr>
                         </thead>
@@ -102,7 +98,7 @@ $imagepath = "images_staf/";
                                     $alamat = $str;
                                 }
 
-                                $jabatans = \App\StafRiwayat::where('id_staf','=',$data->id)
+                                $jabatans = \App\StafPekerjaan::where('id_staf','=',$data->id)
                                                 ->where('tipe','=',3)->get();
                                 
                                 $pekerjaan = array();
@@ -162,10 +158,6 @@ $imagepath = "images_staf/";
                                 </td>
                                 <td>{{ $data->status }}</td>
                                 <td>{{ $data->agama }}</td>
-                                <td>{{ $data->pendidikan }}</td>
-                                <td>{{ $data->telp }}</td>
-                                <td>{{ $data->handphone }}</td>
-                                <td>{{ $data->email }}</td>
                                 <td>{{ $alamat }}</td>
                             </tr>
                         @endforeach
@@ -282,7 +274,7 @@ $imagepath = "images_staf/";
                         });
                         var kelas = "{{ $kelas }}";
                         if(id != ""){
-                            window.location.href = "/admins/" + kelas + "/" + id + "/detail";
+                            window.location.href = "/admins/" + kelas + "/detail/"+ id ;
                         }else{
                             $('#modalwarning').modal({show:true});
                         }
