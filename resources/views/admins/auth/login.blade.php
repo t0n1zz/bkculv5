@@ -10,7 +10,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Puskopdit BKCU Kalimantan Admin Site -- Login</title>
+    <title>SIMO - Login</title>
     <link rel="shortcut icon" href="{{ asset('images/logo.png') }}">
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" type="text/css" href="{{asset('plugins/bootstrap/css/bootstrap.min.css')}}" >
@@ -48,7 +48,7 @@
                 <img src="{{ asset('images/logo.png') }}" width="30%" alt="logo" >
             </div>
             <p class="login-box-msg">
-                <b>PUSKOPDIT BKCU KALIMANTAN ADMIN SITE</b>
+                <b>Sistem Informasi Manajemen Organisasi</b>
             </p>
 
             {{ Form::open(array('route' => array('admins.login.post'), 'data-toggle'=>'validator','role'=>'form')) }}

@@ -33,8 +33,6 @@
     // pekerjaan
     function func_radiocu(){
         $('#selectcu').prop('disabled',false);
-        $("#selectcu").prop('required',true);
-        $("#selectlembaga").prop('required',false);
         $('#selectlembaga').prop('disabled',true);
         $('#selectlembaga').val($('#selectlembaga option:first').val()); 
         $('#tipepekerjaan').val('1');
@@ -50,9 +48,7 @@
     function func_radiolembaga(){
         $('#selectcu').prop('disabled',true);
         $('#selectcu').val($('#selectcu option:first').val());
-        $("#selectcu").prop('required',false);
         $('#selectlembaga').prop('disabled',false);
-        $("#selectlembaga").prop('required',true);
         $('#tipepekerjaan').val('2');
 
         $('#jabatan').hide();
@@ -66,16 +62,16 @@
     function func_selectcu($i) { //cu
         $('#jabatan').show();
         $('#tingkatcu').show();
+
+        if($i == "bkcu"){
+            $('#tipepekerjaan').val('3');
+        }else{
+            $('#tipepekerjaan').val('1');
+        }
          
         $('#namapekerjaan').val('');
         $('#selecttingkatcu').val($('#selecttingkatcu option:first').val());
-        $('#selectbidangcu').val($('#selectbidangcu option:first').val());
-        $('#selecttingkatlembaga').val($('#selecttingkatlembaga option:first').val());
-
-        $("#namapekerjaan").prop('required',true);
-        $("#selecttingkatcu").prop('required',true);
-        $("#selectbidangcu").prop('required',true);
-        $("#selecttingkatlembaga").prop('required',false);
+        $('#selecttingkatlembaga').val($('#selecttingkatlembaga option:first').val()); 
     }
 
     function func_selectlembaga($i) { // lembaga
@@ -96,17 +92,11 @@
 
         $('#namapekerjaan').val('');
         $('#selecttingkatcu').val($('#selecttingkatcu option:first').val());
-        $('#selectbidangcu').val($('#selectbidangcu option:first').val());
         $('#selecttingkatlembaga').val($('#selecttingkatlembaga option:first').val());
-
-        $("#namapekerjaan").prop('required',true);
-        $("#selecttingkatlembaga").prop('required',true);
-        $("#selecttingkatcu").prop('required',false);
-        $("#selectbidangcu").prop('required',false);
     }
 
     function func_selecttingkatan($i){
-        if($i == "Pengurus" || $i == "Pengawas" || $i == "Komite"){
+        if($i == "Pengawas" || $i == "Senior Manajer"){
             $('#bidang').hide();
             $('#btnsekarang').hide();
             $('#sekarangpekerjaan').val('0');
@@ -115,6 +105,15 @@
             $('#btnsekarang').show();
         }
         $('#waktupekerjaan').show();
+    }
+
+    function cekbidang(checkbox) {
+        if(checkbox.checked == true){
+            $('#tambahbidang').show();
+        }else{
+            $('#tambahbidang').hide();
+       }
+       $('#bidangbaru').val('');
     }
 
     // pendidikan
@@ -130,20 +129,12 @@
             $('#jurusan').show(); 
             $("#namapendidikan").prop('required',true);
         }
-
-        $("#tempatpendidikan").prop('required',true);
-        $("#mulaipendidikan").prop('required',true);
     }
 
     // organisasi
     function func_organsasiyes(){
         $('#tipeorganisasi').val('1');
         $('#organisasi').show();
-
-        $("#namaorganisasi").prop('required',true);
-        $("#jabatanorganisasi").prop('required',true);
-        $("#tempatorganisasi").prop('required',true);
-        $("#mulaiorganisasi").prop('required',true);
     }
     
     function func_organsasino(){
@@ -151,9 +142,45 @@
         $('#organisasi').hide();
 
         $('#namaorganisasi').val('');
-        $("#namaorganisasi").prop('required',false);
-        $("#jabatanorganisasi").prop('required',false);
-        $("#tempatorganisasi").prop('required',false);
-        $("#mulaiorganisasi").prop('required',false);
+    }
+
+        function func_selectstatus($i){
+        if($i == "Belum Menikah"){
+            $('#pasangan').hide();
+            $('#anak').hide();
+        }else{
+             $('#pasangan').show();
+             $('#anak').show();
+        }
+    }
+
+    var counteranak = 0;
+    function func_anaktambah(){
+        $('#anaktambah').before("<div class='form-group' id='formanak"+ counteranak +"'><h4>Nama Anak</h4><div class='input-group'><span class='input-group-addon'><i class='fa fa-font'></i></span><input type='text' class='form-control' name='nameanak[]' placeholder='Silahkan masukkan nama anak' /><div class='input-group-btn'><button type='button' class='btn btn-default' onclick='func_anakkurang()' ><i class='fa fa-times'></i></button></div></div></div>");
+        $('#anaktambah').text('Tambah Anak');
+        counteranak++;
+    }
+
+    function func_anakkurang(){
+        counteranak--;
+        $('#formanak'+counteranak).remove();
+        if(counteranak == 0){
+            $('#anaktambah').text('Punya Anak');
+        }
+    }
+
+    var countercu = 0;
+    function func_cutambah(){
+        $('#cutambah').before("<div class='form-group' id='formcu"+ countercu +"'><div class='input-group'><span class='input-group-addon'><i class='fa fa-font'></i></span><input type='text' class='form-control' name='namecu[]' placeholder='Silahkan masukkan nama CU' /><span class='input-group-addon'>0-9</span><input type='text' class='form-control' name='nocu[]' placeholder='Silahkan masukkan no anggota CU' /><div class='input-group-btn'><button type='button' class='btn btn-default' onclick='func_cukurang()' ><i class='fa fa-times'></i></button></div></div></div>");
+        $('#cutambah').text('Tambah Keanggotaan di CU');
+        countercu++;
+    }
+
+    function func_cukurang(){
+        countercu--;
+        $('#formcu'+countercu).remove();
+        if(countercu == 0){
+            $('#cutambah').text('Punya keanggotaan di CU');
+        }
     }
 </script>

@@ -21,7 +21,7 @@ $file_max = intval($file_max);
         <div class="row">
             <div class="col-sm-12">
                 <h4>Foto</h4>
-                <div class="thumbnail" >
+                <div class="thumbnail">
                     @if(!empty($data->gambar) && is_file($imagepath.$data->gambar."n.jpg"))
                         {{ Html::image($imagepath.$data->gambar.'n.jpg', 'a picture', array('class' => 'img-responsive', 'id' => 'tampilgambar', 'width' => '200')) }}
                     @else
@@ -68,7 +68,6 @@ $file_max = intval($file_max);
                                         {{ Form::text('tempat_lahir',null,array('class' => 'form-control', 'placeholder' => 'Tempat'))}}
                                         {{ $errors->first('tempat_lahir', '<p class="text-warning">:message</p>') }}
                                     </div>
-                                    <div class="help-block">Tempat lahir harus diisi.</div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="input-group">
@@ -79,20 +78,19 @@ $file_max = intval($file_max);
                                             $tanggal = date('d/m/Y',$timestamp);
                                         }
                                         ?>
-                                        <input type="text" name="bergabung" value="@if(!empty($tanggal)){{$tanggal}}@endif" class="form-control"
+                                        <input type="text" name="tanggal_lahir" value="@if(!empty($tanggal)){{$tanggal}}@endif" class="form-control"
                                                data-inputmask="'alias': 'date'" placeholder="dd/mm/yyyy" />
                                     </div>
-                                    <div class="help-block">Tanggal lahir harus diisi.</div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-2">
+                    <div class="col-sm-3">
                         <div class="form-group">
                             <h4>Gender</h4>
                             <div class="input-group">
                                 <div class="input-group-addon"><i class="fa fa-list"></i></div>
-                                <select class="form-control" name="kelamin" required>
+                                <select class="form-control" name="kelamin">
                                     <option selected disabled>Jenis kelamin</option>
                                     <option value="Pria"
                                     @if(!empty($data))
@@ -110,42 +108,14 @@ $file_max = intval($file_max);
                                             >Wanita</option>
                                 </select>
                             </div>
-                            <div class="help-block">Gender harus diisi.</div>
-                            {{ $errors->first('kelamin', '<p class="text-warning">:message</p>') }}
                         </div>
                     </div>
-                    <div class="col-sm-2">
-                        <div class="form-group">
-                            <h4>Status Pernikahan</h4>
-                            <div class="input-group">
-                                <div class="input-group-addon"><i class="fa fa-list"></i></div>
-                                <select class="form-control" name="status" required>
-                                    <option selected disabled>Status</option>
-                                    <option value="Menikah"
-                                    @if(!empty($data))
-                                        @if($data->status == "Menikah")
-                                            {{ "selected" }}
-                                                @endif
-                                            @endif
-                                    >Menikah</option>
-                                    <option value="Belum Menikah"
-                                    @if(!empty($data))
-                                        @if($data->status == "Belum Menikah")
-                                            {{ "selected" }}
-                                                @endif
-                                            @endif
-                                    >Belum Menikah</option>
-                                </select>
-                            </div>
-                            <div class="help-block">Status Pernikahan harus diisi.</div>
-                        </div>
-                    </div>
-                    <div class="col-sm-2">
+                    <div class="col-sm-3">
                         <div class="form-group">
                             <h4>Agama</h4>
                             <div class="input-group">
                                 <div class="input-group-addon"><i class="fa fa-list"></i></div>
-                                <select class="form-control" name="agama" required>
+                                <select class="form-control" name="agama">
                                     <option selected disabled>Agama</option>
                                     <option value="Khatolik"
                                     @if(!empty($data))
@@ -191,10 +161,10 @@ $file_max = intval($file_max);
                                     >Islam</option>
                                 </select>
                             </div>
-                            <div class="help-block">Agama harus diisi.</div>
                         </div>
                     </div>
                 </div>
+                
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="form-group">
@@ -205,7 +175,7 @@ $file_max = intval($file_max);
                     <div class="col-sm-6">
                         <div class="form-group">
                             <h4>Alamat</h4>
-                            {{ Form::textarea('content',null,array('class' => 'form-control','rows' => '3','placeholder' => 'Silahkan masukkan alamat tempat tinggal anda saat ini')) }}
+                            {{ Form::textarea('alamat',null,array('class' => 'form-control','rows' => '3','placeholder' => 'Silahkan masukkan alamat tempat tinggal anda saat ini')) }}
                         </div>
                     </div>
                 </div>
@@ -213,6 +183,93 @@ $file_max = intval($file_max);
         </div>
     </div>
 </div>
+{{-- keluarga --}}
+<div class="box box-solid">
+    <div class="box-header bg-light-blue-active color-palette  with-border">
+        <h3 class="box-title">Keluarga</h3>
+    </div>
+    <div class="box-body">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <h4>Nama Ayah</h4>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-font"></i></span>
+                        {{ Form::text('nameayah',null,array('class' => 'form-control', 'placeholder' => 'Silahkan masukkan nama ayah','autocomplete'=>'off'))}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <h4>Nama Ibu</h4>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-font"></i></span>
+                        {{ Form::text('nameibu',null,array('class' => 'form-control', 'placeholder' => 'Silahkan masukkan nama ibu','autocomplete'=>'off'))}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <h4>Status Pernikahan</h4>
+                    <div class="input-group">
+                        <div class="input-group-addon"><i class="fa fa-list"></i></div>
+                        <select class="form-control" name="status" onChange="func_selectstatus(value);">
+                            <option selected disabled>Status</option>
+                            <option value="Menikah"
+                            @if(!empty($data))
+                                @if($data->status == "1")
+                                    {{ "selected" }}
+                                        @endif
+                                    @endif
+                            >Menikah</option>
+                            <option value="Belum Menikah"
+                            @if(!empty($data))
+                                @if($data->status == "2")
+                                    {{ "selected" }}
+                                        @endif
+                                    @endif
+                            >Belum Menikah</option>
+                            <option value="Duda/Janda"
+                            @if(!empty($data))
+                                @if($data->status == "3")
+                                    {{ "selected" }}
+                                        @endif
+                                    @endif
+                            >Duda/Janda</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12" id="pasangan" style="display: none;">
+                <div class="form-group">
+                    <h4>Nama Pasangan</h4>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-font"></i></span>
+                        {{ Form::text('namepasangan',null,array('class' => 'form-control', 'placeholder' => 'Silahkan masukkan nama pasangan','autocomplete'=>'off'))}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12" id="anak" style="display: none;">
+                <button type="button" class="btn btn-default btn-block" id="anaktambah" onclick="func_anaktambah()">Punya Anak</button>
+            </div>
+        </div> 
+    </div>
+</div>
+{{-- keluarga --}}
+{{-- keanggotaan --}}
+<div class="box box-solid">
+    <div class="box-header bg-light-blue-active color-palette  with-border">
+        <h3 class="box-title">Keanggotaan Di CU</h3>
+    </div>
+    <div class="box-body">
+    <div class="row">
+        <div class="col-sm-12">
+            <button type="button" class="btn btn-default btn-block" id="cutambah" onclick="func_cutambah()">Punya keanggotaan di CU</button>
+        </div>
+    </div> 
+    </div>
+</div>
+{{-- keanggotaan --}}
 {{-- pekerjaan --}}
 <div class="box box-solid">
     <div class="box-header bg-light-blue-active color-palette  with-border">

@@ -2,6 +2,7 @@
 namespace App;
 
 use illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Staf extends Model {
     
@@ -14,19 +15,23 @@ class Staf extends Model {
     ];
     
     protected $fillable = [
-        'nim','nid','name','cu','tempat_lahir','tanggal_lahir','kelamin',
+        'nim','nid','name','tempat_lahir','tanggal_lahir','kelamin',
         'agama','status','alamat','kontak','gambar'
     ];
+
+    /**
+     * Accessor for Age.
+     */
+    public function getAgeAttribute()
+    {
+        return Carbon::parse($this->attributes['tanggal_lahir'])->age;
+    }
 
     public function getNameAttribute($value){
         return !empty($value) ? $value : '-';
     }
 
-    public function cuprimer(){
-        return $this->belongsTo('App\Cuprimer','cu','id');
-    }
-
-    public function riwayat(){
-        return $this->hasMany('App\StafRiwayat','id_staf','id');
+    public function pekerjaan(){
+        return $this->hasMany('App\StafPekerjaan','id','id_staf');
     }
 }

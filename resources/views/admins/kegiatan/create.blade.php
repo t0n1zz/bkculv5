@@ -27,7 +27,6 @@ $kelas="kegiatan";
 	{{ Form::open(array('route' => array('admins.'.$kelas.'.store'), 'files' => true,
 	    'data-toggle' => 'validator','role' => 'form')) }}
         <?php if(Auth::check()) { $id = Auth::user()->getId();} ?>
-        <input type="text" name="penulis" value="{{ $id }}" hidden>
 		@include('admins.'.$kelas.'.form')
 	{{ Form::close() }}
 </section>

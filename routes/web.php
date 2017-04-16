@@ -41,6 +41,12 @@ Route::group(array('prefix' => 'admins'), function(){
     Route::get('logout',array('as' => 'admins.logout','uses' => 'AuthController@getLogout'));
 });
 
+Route::get('panduan',array('as' => 'panduan', function()
+{
+    return view('admins.panduan.index');
+}));
+
+
 Route::get('admins',array('as' => 'admins','middleware' => 'auth', function()
 {
     return view('admins.index');
@@ -333,13 +339,25 @@ Route::group(['prefix' => 'admins','middleware' => 'auth'], function(){
         'as' => 'admins.staf.save_riwayat',
         'uses' => 'StafController@save_riwayat'
     ));
-    Route::post('staf/update_riwayat',array(
-        'as' => 'admins.staf.update_riwayat',
-        'uses' => 'StafController@update_riwayat'
+    Route::post('staf/save_keluarga',array(
+        'as' => 'admins.staf.save_keluarga',
+        'uses' => 'StafController@save_keluarga'
+    ));
+    Route::post('staf/save_anggotacu',array(
+        'as' => 'admins.staf.save_anggotacu',
+        'uses' => 'StafController@save_anggotacu'
     ));
     Route::post('staf/destroy_riwayat',array(
         'as' => 'admins.staf.destroy_riwayat',
         'uses' => 'StafController@destroy_riwayat'
+    ));
+    Route::post('staf/destroy_keluarga',array(
+        'as' => 'admins.staf.destroy_keluarga',
+        'uses' => 'StafController@destroy_keluarga'
+    ));
+    Route::post('staf/destroy_anggotacu',array(
+        'as' => 'admins.staf.destroy_anggotacu',
+        'uses' => 'StafController@destroy_anggotacu'
     ));
     Route::post('staf/update_jabatan',array(
         'as' => 'admins.staf.update_jabatan',
@@ -482,6 +500,9 @@ Route::group(['prefix' => 'admins','middleware' => 'auth'], function(){
         'as' => 'admins.kegiatan.getselect2',
         'uses' => 'KegiatanController@getselect2'
     ));
+    Route::post('kegiatan/store_peserta', [
+    'as'           => 'admins.kegiatan.store_peserta',
+    'uses'         => 'KegiatanController@store_peserta']);
     Route::post('kegiatan/store_panitia', [
     'as'           => 'admins.kegiatan.store_panitia',
     'uses'         => 'KegiatanController@store_panitia']);

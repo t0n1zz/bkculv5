@@ -6,14 +6,14 @@
         <div class="col-sm-6">
             <div class="input-group">
         <span class="input-group-addon">
-            <input type="radio" name="radiotempat" id="radiocu" onclick="func_radiocu()" value="true" required>
+            <input type="radio" name="radiotempat" id="radiocu" onclick="func_radiocu()" value="true">
         </span>
                 <select class="form-control placeholder" onChange="func_selectcu(value);" name="selectcu" id="selectcu" disabled>
                     <option hidden>Credit Union</option>
-                    <option value="PUSKOPDIT BKCU Kalimantan">PUSKOPDIT BKCU Kalimantan</option>
+                    <option value="bkcu">PUSKOPDIT BKCU Kalimantan</option>
                     <option disabled>--------------</option>
                         @foreach($culists as $culist)
-                            <option value="{{ $culist->id }}">{{ $culist->name }}</option>
+                            <option value="{{ $culist->no_ba }}">{{ $culist->name }}</option>
                         @endforeach
                 </select>
             </div>
@@ -21,7 +21,7 @@
         <div class="col-sm-6">
             <div class="input-group">
                 <span class="input-group-addon">
-                    <input type="radio" name="radiotempat" id="radiolembaga" onclick="func_radiolembaga()" value="true" required>
+                    <input type="radio" name="radiotempat" id="radiolembaga" onclick="func_radiolembaga()" value="true">
                 </span>
                 <select class="form-control" onChange="func_selectlembaga(value);" name="selectlembaga" id="selectlembaga" disabled>
                     <option hidden>Bukan Credit Union</option>
@@ -105,7 +105,7 @@
             <option value="Pengurus">Pengurus</option>
             <option value="Pengawas">Pengawas</option>
             <option value="Komite">Komite</option>
-            <option value="Senior Manajer">Senior Manajer (General Manager/CEO, Deputy)</option>
+            <option value="Senior Manajer">Senior Manajer (General Manager, CEO, Deputy)</option>
             <option value="Manajer">Manajer</option>
             <option value="Supervisor">Supervisor (Kepala Bagian, Kepala Divisi, Kepala/Koordinator TP, Kepala Bidang)</option>
             <option value="Staf">Staf</option>
@@ -130,20 +130,32 @@
 </div>
 
 <div class="form-group" id="bidang" style="display: none;">
+    <?php $bidangs = App\StafBidang::all(); ?>
     <h4>Bidang</h4>
-    <div class="input-group">
-        <span class="input-group-addon"><i class="fa fa-list"></i></span>
-        <select class="form-control placeholder" name="selectbidangcu" id="selectbidangcu">
-            <option value="0" hidden>Silahkan pilih bidang</option>
-            <option value="Keuangan">Keuangan/Usaha</option>
-            <option value="Di
-            klat">Diklat</option>
-            <option value="Kredit">Kredit</option>
-            <option value="Organisasi">Organisasi</option>
-            <option value="Teknologi Informasi">Teknologi Informasi</option>
-        </select>
+    <div class="table-responsive">
+        <table class="table table-condensed" style="margin-bottom: 0px;">
+            <tr>
+                @foreach($bidangs as $bidang)
+                    <td style="border-bottom: 1px solid #f4f4f4">
+                        <div class="checkbox">
+                            <label><input name="bidang[]" type="checkbox" id="bidang{{$bidang->id}}" value="{{ $bidang->id }}" /> {{ $bidang->name }}</label>
+                        </div>
+                    </td>
+                @endforeach
+                <td style="border-bottom: 1px solid #f4f4f4">
+                    <div class="checkbox">
+                        <label><input type="checkbox" id="bidanglain" onchange='cekbidang(this);' /> Lain-lain</label>
+                    </div>
+                </td>
+            </tr>
+        </table>
     </div>
-     <div class="help-block">Bidang harus diisi.</div>
+    <div class="input-group" id="tambahbidang" style="display: none;margin-top: 10px;">
+        <span class="input-group-addon"><i class="fa fa-font"></i></span>
+        {{ Form::text('bidangbaru',null,array('class' => 'form-control','id'=>'bidangbaru',
+            'placeholder' => 'Silahkan masukkan bidang baru','autocomplete'=>'off'))}}
+    </div>
+     <div class="help-block">Bidang harus dipilih.</div>
 </div>
 
 <div class="row" id="waktupekerjaan" style="display: none;">
@@ -152,11 +164,9 @@
             <h4>Tanggal Mulai</h4>
             <div class="input-group">
                 <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                {{ Form::text('mulaipekerjaan',null,array('class' => 'form-control','id'=>'mulaipekerjaan','required',
-                    'autocomplete'=>'off', 'data-inputmask'=>"'alias':'date'",'placeholder'=>'dd/mm/yyyy'))}}
+                {{ Form::text('mulaipekerjaan',null,array('class' => 'form-control','id'=>'mulaipekerjaan','autocomplete'=>'off', 'data-inputmask'=>"'alias':'date'",'placeholder'=>'dd/mm/yyyy'))}}
             </div>
         </div>
-        <div class="help-block">Tanggal mulai harus diisi.</div>
     </div>
     <div class="col-sm-6">
         <div class="form-group">
@@ -171,12 +181,11 @@
             </div>
             <div class="input-group" id="masihpekerjaan" style="display: none;">
                 <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                <input type="text" value="Masih Aktif" readonly class="form-control" />
+                <input type="text" value="Masih Bekerja" readonly class="form-control" />
                 <div class="input-group-btn">
                     <button type="button" class="btn btn-default" onclick="nonaktifpekerjaan()" ><i class="fa fa-times"></i></button>
                 </div>
             </div>
-            <div class="help-block">Tanggal selesai harus diisi.</div>
         </div>
     </div>
 </div>

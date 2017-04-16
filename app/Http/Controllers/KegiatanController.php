@@ -4,19 +4,27 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use DB;
 use Auth;
+use File;
+use Image; 
 use Input;
 use Redirect;
 use Validator;
+use App\StafPekerjaan;
+use App\KegiatanTempat;
+use App\KegiatanSasaran;
+use App\KegiatanSasaranHub;
 use App\Staf;
 use App\Cuprimer;
 use App\Kegiatan;
 use App\KegiatanPanitia;
 use App\KegiatanPeserta;
 use \DOMDocument;
+use App\Http\Requests;
 
 class KegiatanController extends Controller{
 
     protected $kelaspath = 'kegiatan';
+    protected $imagepath = "images_tempat/";
 
     public function index()
     {
@@ -51,7 +59,7 @@ class KegiatanController extends Controller{
                 ->orderBy('cu','asc')->get();
             return view('cu.daftar_kegiatan', compact('data','datas'));
         }catch (Exception $e){
-            return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
+        return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
         }
     }
 
@@ -59,11 +67,13 @@ class KegiatanController extends Controller{
     {
         try{
             $data = Kegiatan::find($id);
+            $datasasaran = KegiatanSasaranHub::with('sasaran')->where('id_kegiatan',$id)->get();
+            $datatempat = KegiatanTempat::find($data->tempat);
             $datapanitia = KegiatanPanitia::with('staf')->where('id_kegiatan','=',$id)->get();
             $datapeserta = KegiatanPeserta::with('staf')->where('id_kegiatan','=',$id)->get();
-            $datastafs = Cuprimer::with('staf')->get();
-            
-            return view('admins.'.$this->kelaspath.'.detail',compact('data','datapanitia','datapeserta','datastafs'));
+            $datastaf = StafPekerjaan::with('staf')->get();
+
+            return view('admins.'.$this->kelaspath.'.detail',compact('data','datasasaran','datatempat','datapanitia','datapeserta','datastaf'));
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
         }
@@ -73,7 +83,7 @@ class KegiatanController extends Controller{
     {
         try{
             $q = Input::get('q');
-            $repo = Staf::with('cuprimer')->where('name','LIKE','%'.$q.'%')->get();
+            $repo = Staf::with('pekerjaan')->where('name','LIKE','%'.$q.'%')->get();
 
             return \Response::json($repo);
         }catch (Exception $e){
@@ -84,7 +94,9 @@ class KegiatanController extends Controller{
     public function create()
     {
         try{
-            return view('admins.'.$this->kelaspath.'.create');
+            $tempats = KegiatanTempat::get();
+            $sasarans = KegiatanSasaran::get();
+            return view('admins.'.$this->kelaspath.'.create',compact('sasarans','tempats'));
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
         }
@@ -100,12 +112,15 @@ class KegiatanController extends Controller{
             {
                 return Redirect::back()->withErrors($validator)->withInput();
             }
-
             $name = Input::get('name');
 
             $data2 = $this->input_data($data);
 
-            Kegiatan::create($data2);
+            //dd($data2);
+
+            $savedata = Kegiatan::create($data2);
+
+            $this->input_sasaran($savedata->id);
 
             if (Input::Get('simpan2'))
                 return Redirect::route('admins.'.$this->kelaspath.'.create')->with('sucessmessage', 'Kegiatan <b><i>' . $name . '</i></b> Telah berhasil ditambah.');
@@ -120,22 +135,64 @@ class KegiatanController extends Controller{
     public function store_panitia()
     {
         try{
+            $kegiatan = Input::get('id_kegiatan');
 
-            $data = Input::all();
-            dd($data);
+            $kelas = new KegiatanPanitia();
+            $kelas->id_kegiatan = $kegiatan;
+            $kelas->id_panitia = Input::get('panitia');
+            $kelas->tugas = Input::get('selecttugas');
+            $kelas->status = 1;
 
-            $data2 = $this->input_data($data);
-
-            Kegiatan::create($data2);
-
-            if (Input::Get('simpan2'))
-                return Redirect::route('admins.'.$this->kelaspath.'.create')->with('sucessmessage', 'Kegiatan <b><i>' . $name . '</i></b> Telah berhasil ditambah.');
-            else
-                return Redirect::route('admins.'.$this->kelaspath.'.index')->with('sucessmessage', 'Kegiatan <b><i>' . $name . '</i></b> Telah berhasil ditambah.');
-            return Redirect::back()->withInput()->with('errormessage','Terjadi kesalahan dalam penambahan kegiatan.');
+            $kelas->save();    
+            
+            return Redirect::route('admins.'.$this->kelaspath.'.detail',array($kegiatan))->with('sucessmessage', 'Peserta telah berhasil didaftarkan');
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
         }
+    }
+
+    public function store_peserta()
+    {
+        try{
+            $kegiatan = Input::get('id_kegiatan');
+            $peserta = Input::get('peserta');
+
+            foreach ($peserta as $p){
+                $kelas = new KegiatanPeserta();
+                $kelas->id_kegiatan = $kegiatan;
+                $kelas->id_peserta = $p;
+                $kelas->status = 1;
+
+                $kelas->save();    
+            }
+            
+            return Redirect::route('admins.'.$this->kelaspath.'.detail',array($kegiatan))->with('sucessmessage', 'Peserta telah berhasil didaftarkan');
+        }catch (Exception $e){
+            return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
+        }
+    }
+
+    public function store_tempat()
+    {
+        $kelas = new KegiatanTempat();
+        $kelas->name = Input::get('nametempat');
+        $kelas->keterangan = Input::get('keterangantempat');
+        $kelas->kota = Input::get('kota');
+
+        $img = Input::file('gambar');
+        if (!is_null($img)) {
+            $name = preg_replace('/[^A-Za-z0-9\-]/', '',Input::get('nametempat'));
+            $formatedname = $name.str_random(5).date('Y-m-d');
+            $filename = $formatedname.".jpg";
+            $filename2 = $formatedname."n.jpg";
+
+            $this->save_image($img, $kelas, $filename, $filename2);
+            $kelas->gambar = $formatedname;
+        }
+
+        $kelas->save();
+
+        return $kelas->id;
     }
 
     public function edit($id)
@@ -241,8 +298,22 @@ class KegiatanController extends Controller{
         $tanggal2=  date('Y-m-d', strtotime($date2));
         array_set($data,'tanggal2',$tanggal2);
 
-        $tujuan = Input::get('tujuan');
-        $pokok = Input::get('pokok');
+        $tujuan = Input::get('texttujuan');
+        $pokok = Input::get('textpokok');
+        $keterangan = Input::get('textketerangan');
+
+        $periode = Input::get('periode');
+        array_set($data,'periode',$periode);
+
+
+        $selecttempat = Input::get('selecttempat');
+        if($selecttempat == "tambah"){
+            $tempat = $this->store_tempat();
+        }else{
+            $tempat = $selecttempat;
+        }
+        if(!empty($tempat))
+            array_set($data,'tempat',$tempat);
 
         if(!empty($tujuan)){
             $dom = new DomDocument();
@@ -258,8 +329,31 @@ class KegiatanController extends Controller{
             array_set($data, 'pokok', $dom->saveHTML()); 
         }
 
+        if(!empty($keterangan)){
+            $dom = new DomDocument();
+            libxml_use_internal_errors(true);
+            $dom->loadHTML(mb_convert_encoding($keterangan, 'HTML-ENTITIES', "UTF-8"),LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+            array_set($data, 'keterangan', $dom->saveHTML()); 
+        }
+
         return $data;
     }
+
+    public function input_sasaran($id_kegiatan)
+    {
+        $sasarans = Input::get('sasaran');
+        if(!empty($sasarans) && !empty($id_kegiatan)){
+            KegiatanSasaranHub::where('id_kegiatan',$id_kegiatan);
+        }
+
+        foreach($sasarans as $sasaran){
+            $kelassasaran = new KegiatanSasaranHub();
+            $kelassasaran->id_kegiatan = $id_kegiatan;
+            $kelassasaran->id_sasaran = $sasaran;
+            $kelassasaran->save();
+        }
+    }
+
 
     public function destroy()
     {
@@ -273,5 +367,27 @@ class KegiatanController extends Controller{
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
         }
+    }
+
+    function save_image($img,$kelas,$filename,$filename2)
+    {
+        list($width, $height) = getimagesize($img);
+
+        $path = public_path($this->imagepath);
+
+        File::delete($path . $kelas->gambar .".jpg");
+        File::delete($path . $kelas->gambar ."n.jpg");
+
+        if($width > 720){
+            Image::make($img->getRealPath())->resize(720, null,
+                function ($constraint) {
+                    $constraint->aspectRatio();
+                })
+                ->save($path . $filename);
+        }else{
+            Image::make($img->getRealPath())->save($path . $filename);
+        }
+
+        Image::make($img->getRealPath())->fit(288,200)->save($path . $filename2);
     }
 }

@@ -72,9 +72,12 @@ $kelas = "kegiatan";
                         <th hidden></th>
                         <th hidden></th>
                         <th>Nama </th>
-                        <th>Wilayah</th>
+                        <th>Kota</th>
                         <th>Tempat</th>
                         <th>Sasaran</th>
+                        <th>Peserta Min</th>
+                        <th>Peserta Max</th>
+                        <th>Tot. Peserta</th>
                         <th>Mulai</th>
                         <th>Selesai</th>
                         <th>Lama</th>
@@ -83,33 +86,33 @@ $kelas = "kegiatan";
                     </thead>
                     <tbody>
                     @foreach($datas as $data)
+                        <?php 
+                            $datatempat = App\KegiatanTempat::find($data->tempat);
+                            $datasasaranhub = App\KegiatanSasaranHub::where('id_kegiatan',$data->id)->get();
+                        ?>
                         <tr>
                             <td class="bg-aqua disabled color-palette"></td>
                             <td hidden>{{ $data->id }}</td>
                             <td hidden>{{ $data->status }}</td>
-                            @if(!empty($data->name))
-                                <td class="warptext">{{ $data->name }}</td>
+                            
+                            <td class="warptext">{{ $data->name }}</td>
+                            @if(!empty($datatempat))
+                                <td>{{ $datatempat->kota }}</td>
+                                <td>{{ $datatempat->name }} <br/> {{ $datatempat->keterangan }}</td>
                             @else
+                                <td>-</td>
                                 <td>-</td>
                             @endif
 
-                            @if(!empty($data->wilayah))
-                                <td>{{ $data->wilayah }}</td>
-                            @else
-                                <td>-</td>
-                            @endif
+                            <td><p>
+                            @foreach($datasasaranhub as $datasasaran)
+                                <span class="label label-info">{{ $datasasaran->sasaran->name }}</span>
+                            @endforeach
+                            </p></td>
 
-                            @if(!empty($data->tempat))
-                                <td>{{ $data->tempat }}</td>
-                            @else
-                                <td>-</td>
-                            @endif
-
-                            @if(!empty($data->sasaran))
-                                <td class="warptext">{{ $data->sasaran }}</td>
-                            @else
-                                <td>-</td>
-                            @endif
+                            <td>{{ $data->min }}</td>
+                            <td>{{ $data->max }}</td>
+                            <td>{{ $data->max }}</td>
 
                             @if(!empty($data->tanggal))
                                 <?php $date = new Date($data->tanggal); ?>
@@ -136,8 +139,10 @@ $kelas = "kegiatan";
                                 {{ $numberDays }} Hari
                             </td>
                             <td>
-                                @if($data->status == "0")
+                                @if($data->status == "1")
                                     <a href="#" class="btn btn-warning"><i class="fa fa-check"></i></a>
+                                @elseif($data->status == "2")
+                                    <a href="#" class="btn btn-danger"><i class="fa fa-times"></i></a>
                                 @else
                                     <a href="#" class="btn btn-default"><i class="fa fa-ban"></i></a>
                                 @endif

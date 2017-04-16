@@ -5,7 +5,7 @@ use illuminate\Database\Eloquent\Model;
 
 class KegiatanPeserta extends Model {
 
-    protected $table = 'kegiatan_panitia';
+    protected $table = 'kegiatan_peserta';
 
     protected $fillable = [
         'id_kegiatan','id_peserta','status'
@@ -15,4 +15,7 @@ class KegiatanPeserta extends Model {
         return !empty($value) ? $value : '-';
     }
 
+    public function staf(){
+    	return $this->belongsTo('App\Staf','id_peserta','id');
+    }
 }

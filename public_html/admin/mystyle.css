@@ -158,3 +158,10 @@ thead th{
 .table > tbody > tr > td {
      vertical-align: middle;
 }
+
+
+.modal-full {
+  width: 98%;
+  height: 92%;
+  padding: 0;
+}

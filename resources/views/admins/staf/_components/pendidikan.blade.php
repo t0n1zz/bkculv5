@@ -9,6 +9,10 @@
             <option value="SD">SD</option>
             <option value="SMP">SMP</option>
             <option value="SMA/SMK">SMA/SMK</option>
+            <option value="D1">D1</option>
+            <option value="D2">D2</option>
+            <option value="D3">D3</option>
+            <option value="D4">D4</option>
             <option value="S1">S1</option>
             <option value="S2">S2</option>
             <option value="S3">S3</option>
@@ -26,7 +30,7 @@
     </div>
     <div class="help-block">Jurusan/bidang harus diisi.</div>
 </div>
-<div id="pendidikangroup">
+<div id="pendidikangroup" style="display: none;">
     <div class="form-group">
         <h4>Tempat</h4>
         <div class="input-group">
@@ -42,11 +46,10 @@
                 <h4>Tanggal Mulai</h4>
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                    {{ Form::text('mulaipendidikan',null,array('class' => 'form-control','id'=>'mulaipendidikan','required',
+                    {{ Form::text('mulaipendidikan',null,array('class' => 'form-control','id'=>'mulaipendidikan',
                         'autocomplete'=>'off', 'data-inputmask'=>"'alias':'date'",'placeholder'=>'dd/mm/yyyy'))}}
                 </div>
             </div>
-            <div class="help-block">Tanggal mulai harus diisi.</div>
         </div>
         <div class="col-sm-6">
             <div class="form-group">
@@ -61,12 +64,11 @@
                 </div>
                 <div class="input-group" id="masihpendidikan" style="display: none;">
                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                    <input type="text" value="Masih Aktif" readonly class="form-control" />
+                    <input type="text" value="Masih Belajar" readonly class="form-control" />
                     <div class="input-group-btn">
                         <button type="button" class="btn btn-default" onclick="nonaktifpendidikan()" ><i class="fa fa-times"></i></button>
                     </div>
                 </div>
-                <div class="help-block">Tanggal selesai harus diisi.</div>
             </div>
         </div>
     </div>

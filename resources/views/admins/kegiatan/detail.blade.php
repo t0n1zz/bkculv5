@@ -1,14 +1,13 @@
 <?php
 $title = "Detail Kegiatan";
 $kelas = "kegiatan";
+$imagepath = "images_tempat/";
 ?>
 @extends('admins._layouts.layout')
 
 @section('css')
 @include('admins._components.datatable_CSS')
-<link rel="stylesheet" type="text/css" href="{{asset('plugins/summernote/summernote.css')}}" >
-<link rel="stylesheet" type="text/css" href="{{asset('plugins/select/dist/css/select2.min.css')}}" >
-<link rel="stylesheet" type="text/css" href="{{asset('plugins/select/dist/css/select2-bootstrap.min.css')}}" >
+<link rel="stylesheet" type="text/css" href="{{asset('plugins/dataTables/extension/Responsive/css/responsive.bootstrap.min.css')}}" >
 @stop
 
 @section('content')
@@ -36,12 +35,9 @@ $kelas = "kegiatan";
             <div class="box box-primary">
                 <div class="box-body box-profile">
                     <h2 class="profile-username text-center">{{ $data->name }}</h2>
-                    @if(!empty($data->wilayah))
-                        <p class="text-muted text-center">{{ $data->wilayah }}</p>
-                    @else
-                        <p class="text-muted text-center">-</p>
-                    @endif
-
+                    @if(!empty($datatempat->kota))
+                        <p class="text-muted text-center">{{ $datatempat->kota }}</p>
+                    @endif        
                     <ul class="list-group list-group-unbordered">
                         <li class="list-group-item">
                             @if(!empty($data->tanggal))
@@ -60,121 +56,327 @@ $kelas = "kegiatan";
                             @endif
                         </li>
                         <li class="list-group-item">
-                            <b>Periode Kegiatan</b> <a class="pull-right">2016</a>
+                            <b>Periode Kegiatan</b> <a class="pull-right">{{ $data->periode }}</a>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Peserta Minimal</b> <a class="pull-right">{{ $data->min }}</a>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Peserta Maximal</b> <a class="pull-right">{{ $data->max }}</a>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Peserta Terdaftar</b> <a class="pull-right">{{ $datapeserta->count() }}</a>
                         </li>
                     </ul>
-                    @if($data->status == "0")
-                        <a href="#" class="btn btn-default btn-block"><b><i class="fa fa-ban"></i> Belum Dilaksanakan</b></a>
-                    @else
+                    @if($data->status == "1")
                         <a href="#" class="btn btn-warning btn-block"><b><i class="fa fa-check"></i> Sudah Terlaksana</b></a>
+                    @elseif($data->status == "2")
+                        <a href="#" class="btn btn-danger btn-block"><b><i class="fa fa-times"></i> Tidak Terlaksana</b></a>
                     @endif
                 </div>
                 <!-- /.box-body -->
             </div>
             <!-- /.box -->
-            <div class="small-box bg-aqua">
-                <div class="inner">
-                    <h3>44</h3>
-
-                    <p>Peserta Terdaftar</p>
-                </div>
-                <div class="icon">
-                    <i class="fa fa-users"></i>
-                </div>
-                <a href="#2" data-toggle="tab" class="small-box-footer">
-                    Detail <i class="fa fa-arrow-circle-right"></i>
-                </a>
-            </div>
             <div class="box box-primary">
                 <div class="box-header with-border">
-                    <h3 class="box-title"><i class="fa fa-map-marker margin-r-5"></i> Tempat</h3>
+                    <h3 class="box-title">Sasaran</h3>
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body">
-                    <strong></strong>
-                    <p class="text-muted">{{ $data->tempat }}</p>
+                    <p>
+                    @foreach($datasasaran as $key)
+                       <span class="label label-info" style="font-size: 100%;">{{ $key->sasaran->name }}</span>
+                    @endforeach
+                    </p>
                 </div>
                 <!-- /.box-body -->
             </div>
+            @if(!empty($datatempat))
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Tempat</h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    @if(!empty($datatempat->gambar) && is_file($imagepath.$datatempat->gambar."n.jpg"))
+                        <div class="modalphotos">
+                        <img class="img-responsive " src="{{ asset($imagepath.$datatempat->gambar.'n.jpg') }}"
+                             id="tampilgambar" alt="{{ asset($imagepath.$datatempat->gambar."jpg") }}">
+                        </div>
+                    @endif
+                    <h4>{{ $datatempat->name }}</h4>
+                    <p class="text-muted">{{ $datatempat->keterangan }}</p>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            @endif
         </div>
         <!-- /.col -->
         <div class="col-md-9">
             <div class="nav-tabs-custom">
                 <ul class="nav nav-tabs">
-                    <li class="active"><a href="#tujuan" data-toggle="tab">Tujuan & Pokok Bahasan</a></li>
-                    <li><a href="#peserta" data-toggle="tab">Peserta, Fasilitator & Panitia</a></li>
-                    <li><a href="#biaya" data-toggle="tab">Biaya</a></li>
-                    <li><a href="#evaluasi" data-toggle="tab">Evaluasi & Saran</a></li>
+                    <li class="active"><a href="#peserta" data-toggle="tab">Panitia & Peserta</a></li>
+                    <li><a href="#tujuan" data-toggle="tab">Informasi Umum</a></li>
                 </ul>
                 <div class="tab-content">
-                    <div class="fade in active tab-pane" id="tujuan">
-                        <div class="post">
-                            <h3>Tujuan</h3>
-                            {!! $data->tujuan !!}
-                        </div>
-                        <div class="post">
-                            <h3>Pokok Bahasan</h3>
-                            {!! $data->pokok !!}  
-                        </div>
-                    </div>
-                    <!-- /.tab-pane -->
-                    <div class="fade tab-pane" id="peserta">
-                        <div class="post">
-                            <h3>Fasilitator & Panitia</h3>
-                            <table class="table  table-hover" id="datatablepanitia">
+                    <div class="fade in active  tab-pane" id="peserta">
+                        <section id="panitia">
+                            <h4 class="page-header color1">Fasilitator & Panitia</h4>
+                            <table class="table table-hover dt-responsive nowarp" id="datatablepanitia" cellspacing="0" width="100%">
                                 <thead>
                                 <tr class="bg-light-blue-active color-palette">
+                                    <th data-sortable="false">#</th>
                                     <th hidden></th>
-                                    <th>Nama</th>
-                                    <th>Jenis Kelamin</th>
-                                    <th>Asal</th>
+                                    <th data-sortable="false"><i class="fa fa-picture-o"></i></th>
+                                    <th>Nama </th>
+                                    <th class="none">NIM</tH>
+                                    <th class="none">NID</tH>
+                                    <th>Lembaga</th>
+                                    <th>Jabatan</th>
                                     <th>Tugas</th>
+                                    <th>Tgl. Daftar</th>
+                                    <th class="none">Pendidikan</th>
+                                    <th class="none">Agama</th>
+                                    <th class="none">Status</th>
+                                    <th class="none">Tgl. Lahir</th>
+                                    <th class="none">Umur</th>
+                                    <th class="none">Alamat</th>
+                                    <th class="none">Kontak</th>
+                                    <th>Detail</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($datapanitia as $data)
+                                @foreach($datapanitia as $datap)
+                                    <?php
+                                        $date = new Date($data->tanggal_lahir);
+
+                                        $datapekerjaan = App\StafPekerjaan::where('id_staf',$datap->id_peserta);
+                                        $newarr = explode("\n",$datap->staf->alamat);
+                                        foreach($newarr as $str){
+                                            $alamat = $str;
+                                        }
+
+                                        $newarr2 = explode("\n",$datap->staf->kontak);
+                                        foreach($newarr2 as $str2){
+                                            $kontak = $str2;
+                                        }
+
+                                        if($datap->staf->status == 1){
+                                            $status = "Menikah";
+                                        }elseif($datap->staf->status == 2){
+                                            $status = "Belum Menikah";
+                                        }elseif($datap->staf->status == 3){
+                                            $status = "Duda/Janda";
+                                        }else{
+                                            $status = "";
+                                        }
+
+                                        if(!empty($datapekerjaan->tipe))
+                                        {
+                                            if($datapekerjaan->tipe == 1){
+                                                $tempat = App\Cuprimer::where('no_ba',$datapekerjaan->tempat)->first();
+                                                $tempat = 'CU ' .$tempat->name;
+                                            }elseif($datapekerjaan->tipe == 2){
+                                                $tempat = App\Lembaga::where('id',$datapekerjaan->tempat)->first();
+                                                $tempat = $tempat->name;
+                                            }elseif($datapekerjaan->tipe == 3){
+                                                $tempat = "Puskopdit BKCU Kalimantan";
+                                            }
+                                        }else{
+                                            $tempat = '';
+                                        }
+                                        
+
+                                        $pendidikan = App\StafPendidikan::where('id_staf',$datap->id_peserta)->first();
+                                    ?>
                                     <tr>
-                                        <td hidden>{{ $data->id }}</td>
-                                        @if(!empty($data->staf->nama))<td>{{ $data->staf->nama }}</td>@else<td>-</td>@endif
-                                        @if(!empty($data->staf->kelamin))<td>{{ $data->staf->kelamin }}</td>@else<td>-</td>@endif
-                                        @if(!empty($data->staf->cu))<td>{{ $data->staf->cu }}</td>@else<td>-</td>@endif
-                                        @if(!empty($data->tugas))<td>{{ $data->tugas }}</td>@else<td>-</td>@endif
-                                    </tr>
+                                        <td class="bg-aqua disabled color-palette"></td>
+                                        <td hidden>{{ $datap->id }}</td>
+                                        @if(!empty($datap->staf->gambar) && is_file($imagepath.$datap->staf->gambar."n.jpg"))
+                                            <td style="white-space: nowrap"><div class="modalphotos" >
+                                                    {{ Html::image($imagepath.$datap->staf->gambar.'n.jpg',asset($imagepath.$datap->staf->gambar."jpg"),
+                                                     array('class' => 'img-responsive',
+                                                    'id' => 'tampilgambar', 'width' => '40px')) }}
+                                                </div></td>
+                                        @else
+                                            @if($datap->staf->kelamin == "Wanita")
+                                                <td>{{ Html::image('images/no_image_woman.jpg', 'a picture', array('class' => 'img-responsive',
+                                                                    'id' => 'tampilgambar', 'width' => '40px')) }}</td>
+                                            @else
+                                                <td>{{ Html::image('images/no_image_man.jpg', 'a picture', array('class' => 'img-responsive',
+                                                                    'id' => 'tampilgambar', 'width' => '40px')) }}</td>
+                                            @endif
+                                        @endif
+                                        <td>{{ $datap->staf->name }}</td>
+                                        <td>{{ $datap->staf->nim }}</td>
+                                        <td>{{ $datap->staf->nid }}</td>
+                                        <td> {{ $tempat }}</td>
+                                        @if(!empty($datapekerjaan->name))
+                                            <td>{{ $datapekerjaan->name }}</td>
+                                        @else
+                                            <td></td>
+                                        @endif
+                                        <td>{{ $datap->tugas }}</td>
+                                        @if(!empty($pendidikan))
+                                            <td>{{ $pendidikan->tingkat }} di {{ $pendidikan->tempat }}</td>
+                                        @else
+                                            <td></td>    
+                                        @endif
+                                        <td data-order="{{ $datap->created_at }}">@if(!empty($datap->created_at)){{ $datap->created_at->format('d/m/Y') }}@else{{ '-' }}@endif</td>
+                                        <td>{{ $status }}</td>
+                                        <td>{{ $datap->staf->agama }}</td>
+                                        <td data-order="{{ $data->tanggal_lahir }}">{{ $date->format('d M Y') }}</td>
+                                        <td>{{ $datap->staf->age }} Tahun</td>
+                                        <td>{{ $alamat }}</td>
+                                        <td>{{ $kontak }}</td>
+                                        <td></td>
+                                    </tr>   
                                 @endforeach
                                 </tbody>
                             </table>
-                        </div>
-                        <div class="post">
-                            <h3>Peserta</h3>
-                            <table class="table table-hover" id="datatablepeserta">
+                        </section>
+                        <section id="peserta">
+                             <br/><br/>
+                            <h4 class="page-header color1">Peserta</h4>
+                            <table class="table table-hover dt-responsive nowarp" id="datatablepeserta" cellspacing="0" width="100%">
                                 <thead>
                                 <tr class="bg-light-blue-active color-palette">
+                                    <th data-sortable="false">#</th>
                                     <th hidden></th>
-                                    <th>Nama</th>
-                                    <th>Jenis Kelamin</th>
-                                    <th>Asal CU</th>
+                                    <th data-sortable="false"><i class="fa fa-picture-o"></i></th>
+                                    <th>Nama </th>
+                                    <th class="none">NIM</tH>
+                                    <th class="none">NID</tH>
+                                    <th>Lembaga</th>
+                                    <th>Jabatan</th>
+                                    <th>Tgl. Daftar</th>
+                                    <th class="none">Pendidikan</th>
+                                    <th class="none">Agama</th>
+                                    <th class="none">Status</th>
+                                    <th class="none">Tgl. Lahir</th>
+                                    <th class="none">Umur</th>
+                                    <th class="none">Alamat</th>
+                                    <th class="none">Kontak</th>
+                                    <th>Detail</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($datapeserta as $data)
+                                @foreach($datapeserta as $datap)
+                                    <?php
+                                        $date = new Date($data->tanggal_lahir);
+
+                                        $datapekerjaan = App\StafPekerjaan::where('id_staf',$datap->id_peserta);
+                                        $newarr = explode("\n",$datap->staf->alamat);
+                                        foreach($newarr as $str){
+                                            $alamat = $str;
+                                        }
+
+                                        $newarr2 = explode("\n",$datap->staf->kontak);
+                                        foreach($newarr2 as $str2){
+                                            $kontak = $str2;
+                                        }
+
+                                        if($datap->staf->status == 1){
+                                            $status = "Menikah";
+                                        }elseif($datap->staf->status == 2){
+                                            $status = "Belum Menikah";
+                                        }elseif($datap->staf->status == 3){
+                                            $status = "Duda/Janda";
+                                        }else{
+                                            $status = "";
+                                        }
+
+                                        if(!empty($datapekerjaan->tipe))
+                                        {
+                                            if($datapekerjaan->tipe == 1){
+                                                $tempat = App\Cuprimer::where('no_ba',$datapekerjaan->tempat)->first();
+                                                $tempat = 'CU ' .$tempat->name;
+                                            }elseif($datapekerjaan->tipe == 2){
+                                                $tempat = App\Lembaga::where('id',$datapekerjaan->tempat)->first();
+                                                $tempat = $tempat->name;
+                                            }elseif($datapekerjaan->tipe == 3){
+                                                $tempat = "Puskopdit BKCU Kalimantan";
+                                            }
+                                        }else{
+                                            $tempat = '';
+                                        }
+                                        
+
+                                        $pendidikan = App\StafPendidikan::where('id_staf',$datap->id_peserta)->first();
+                                    ?>
                                     <tr>
-                                        <td hidden>{{ $data->id }}</td>
-                                        @if(!empty($data->staf->nama))<td>{{ $data->staf->nama }}</td>@else<td>-</td>@endif
-                                        @if(!empty($data->staf->kelamin))<td>{{ $data->staf->kelamin }}</td>@else<td>-</td>@endif
-                                        @if(!empty($data->staf->cu))<td>{{ $data->staf->cu }}</td>@else<td>-</td>@endif
-                                    </tr>
+                                        <td class="bg-aqua disabled color-palette"></td>
+                                        <td hidden>{{ $datap->id }}</td>
+                                        @if(!empty($datap->staf->gambar) && is_file($imagepath.$datap->staf->gambar."n.jpg"))
+                                            <td style="white-space: nowrap"><div class="modalphotos" >
+                                                    {{ Html::image($imagepath.$datap->staf->gambar.'n.jpg',asset($imagepath.$datap->staf->gambar."jpg"),
+                                                     array('class' => 'img-responsive',
+                                                    'id' => 'tampilgambar', 'width' => '40px')) }}
+                                                </div></td>
+                                        @else
+                                            @if($datap->staf->kelamin == "Wanita")
+                                                <td>{{ Html::image('images/no_image_woman.jpg', 'a picture', array('class' => 'img-responsive',
+                                                                    'id' => 'tampilgambar', 'width' => '40px')) }}</td>
+                                            @else
+                                                <td>{{ Html::image('images/no_image_man.jpg', 'a picture', array('class' => 'img-responsive',
+                                                                    'id' => 'tampilgambar', 'width' => '40px')) }}</td>
+                                            @endif
+                                        @endif
+                                        <td>{{ $datap->staf->name }}</td>
+                                        <td>{{ $datap->staf->nim }}</td>
+                                        <td>{{ $datap->staf->nid }}</td>
+                                        <td> {{ $tempat }}</td>
+                                        @if(!empty($datapekerjaan->name))
+                                            <td>{{ $datapekerjaan->name }}</td>
+                                        @else
+                                            <td></td>
+                                        @endif
+                                        <td data-order="{{ $datap->created_at }}">@if(!empty($datap->created_at)){{ $datap->created_at->format('d/m/Y') }}@else{{ '-' }}@endif</td>
+                                        @if(!empty($pendidikan))
+                                            <td>{{ $pendidikan->tingkat }} di {{ $pendidikan->tempat }}</td>
+                                        @else
+                                            <td></td>    
+                                        @endif
+                                        <td>{{ $status }}</td>
+                                        <td>{{ $datap->staf->agama }}</td>
+                                        <td data-order="{{ $data->tanggal_lahir }}">{{ $date->format('d M Y') }}</td>
+                                        <td>{{ $datap->staf->age }} Tahun</td>
+                                        <td>{{ $alamat }}</td>
+                                        <td>{{ $kontak }}</td>
+                                        <td></td>
+                                    </tr>   
                                 @endforeach
                                 </tbody>
                             </table>
-                        </div>
+                        </section>
                     </div>
                     <!-- /.tab-pane -->
-                    <div class="fade tab-pane" id="biaya">
+                    <div class="fade tab-pane" id="tujuan">
+                        @if(!empty($data->tujuan))
+                            <section id="tujuan">
+                                <h4 class="page-header color1">Tujuan</h4>
+                                {!! $data->tujuan !!}
+                                 <br/>
+                            </section>
+                        @endif
+                        @if(!empty($data->pokok))
+                            <section id="pokok">
+                                <h4 class="page-header color1">Pokok Bahasan</h4>
+                                {!! $data->pokok !!}
+                                 <br/>
+                            </section>
+                        @endif
+                        @if(!empty($data->keterangan))
+                            <section id="informasi">
+                                <h4 class="page-header color1">Informasi Tambahan</h4>
+                                {!! $data->keterangan !!}
+                                 <br/>
+                            </section> 
+                            </div>
+                        @endif    
                     </div>
                     <!-- /.tab-pane -->
-                    <div class="fade tab-pane" id="evaluasi">
-                    </div>
-                    <!-- /.tab-pane -->
+                    
                 </div>
                 <!-- /.tab-content -->
             </div>
@@ -183,51 +385,291 @@ $kelas = "kegiatan";
         <!-- /.col -->
     </div>
 </section>
-<div class="clearfix"></div>
-<div class="modal  fade" id="modal2show"  role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    {{ Form::open(array('route' => array('admins.'.$kelas.'.store_panitia'),'data-toggle' => 'validator','role' => 'form')) }}
+<div class="modal fade" id="modalpanitia" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    {{ Form::open(array('route' => array('admins.'.$kelas.'.store_panitia'),'role' => 'form')) }}
     <div class="modal-dialog modal-lg">
-        <div class="modal-content large">
+        <div class="modal-content">
             <div class="modal-header bg-light-blue-active color-palette">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 clasas="modal-title"><i class="fa fa-plus"></i> Tambah Fasilitator atau Panitia</h4>
+                <h4 clasas="modal-title"><i class="fa fa-plus"></i> Tambah Panitia</h4>
             </div>
             <div class="modal-body">
-                <h4>Fasilitator atau Panitia</h4>
-                <input type="text" name="id" value="" id="modal2id" hidden>
-                <select class="form-control select2" name="fasilitator[]" id="selectdata" style="width: 100%" multiple></select>
-                <h4>Tugas</h4>
-                <select class="form-control" name="tugas">
-                    <option value="0" hidden>Silahkan pilih tugas</option>
-                    <option value="1">Fasilitator</option>
-                    <option value="2">Co-Fasilitator</option>
-                    <option value="3">Trainee</option>
-                    <option value="4">Panitia</option>
-                </select>
+                <input type="text" name="id_kegiatan" value="{{ $data->id }}" hidden>
+                <div class="row">
+                    <div id="areapanitia"></div>
+                    <div class="col-sm-12" id="tugaspanitia" style="display: none;">
+                        <div class="input-group">
+                            <div class="input-group-addon primary-color">Sebagai</div>
+                            <select class="form-control" name="selecttugas">
+                                <option value="0" hidden>Silahkan pilih tugas</option>
+                                <option value="Fasilitator">Fasilitator</option>
+                                <option value="Co-Fasilitator">Co-Fasilitator</option>
+                                <option value="Trainee">Trainee</option>
+                                <option value="Panitia">Panitia</option>
+                            </select>
+                        </div> 
+                    </div>
+                    <div class="col-sm-12"><hr/></div>
+                    <div class="col-sm-12">
+                        <div class="input-group tabletools">
+                            <div class="input-group-addon"><i class="fa fa-search"></i></div>
+                            <input type="text" id="searchpanitia" class="form-control" placeholder="Kata kunci pencarian..." autofocus>
+                        </div>
+                        <table class="table table-hover dt-responsive nowarp" id="datatabletambahpanitia" cellspacing="0" width="100%">
+                            <thead>
+                            <tr class="bg-light-blue-active color-palette">
+                                <th data-sortable="false">#</th>
+                                <th hidden></th>
+                                <th data-sortable="false"></th>
+                                <th hidden></th>
+                                <th data-sortable="false"><i class="fa fa-picture-o"></i></th>
+                                <th>Nama </th>
+                                <th class="none">NIM</tH>
+                                <th class="none">NID</tH>
+                                <th>Lembaga</th>
+                                <th>Jabatan</th>
+                                <th class="none">Pendidikan</th>
+                                <th class="none">Agama</th>
+                                <th class="none">Status</th>
+                                <th class="none">Tgl. Lahir</th>
+                                <th class="none">Umur</th>
+                                <th class="none">Alamat</th>
+                                <th class="none">Kontak</th>
+                                <th>Detail</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach($datastaf as $dataf)
+                                <?php
+                                    $date = new Date($dataf->tanggal_lahir);
+
+                                    $newarr = explode("\n",$dataf->staf->alamat);
+                                    foreach($newarr as $str){
+                                        $alamat = $str;
+                                    }
+
+                                    $newarr2 = explode("\n",$dataf->staf->kontak);
+                                    foreach($newarr2 as $str2){
+                                        $kontak = $str2;
+                                    }
+
+                                    if($dataf->staf->status == 1){
+                                        $status = "Menikah";
+                                    }elseif($dataf->staf->status == 2){
+                                        $status = "Belum Menikah";
+                                    }elseif($dataf->staf->status == 3){
+                                        $status = "Duda/Janda";
+                                    }else{
+                                        $status = "";
+                                    }
+
+                                    if($dataf->tipe == 1){
+                                        $tempat = App\Cuprimer::where('no_ba',$dataf->tempat)->first();
+                                        $tempat = 'CU ' .$tempat->name;
+                                    }elseif($dataf->tipe == 2){
+                                        $tempat = App\Lembaga::where('id',$dataf->tempat)->first();
+                                        $tempat = $tempat->name;
+                                    }elseif($dataf->tipe == 3){
+                                        $tempat = "Puskopdit BKCU Kalimantan";
+                                    }
+
+                                    $pendidikan = App\StafPendidikan::where('id_staf',$dataf->id_staf)->first();
+
+                                    $date = new Date($dataf->mulai); 
+                                    $date2 = new Date($dataf->selesai); 
+                                ?>
+                                <tr>
+                                    <td class="bg-aqua disabled color-palette"></td>
+                                    <td hidden>{{ $dataf->id_staf }}</td>
+                                    <td></td>
+                                    @if(!empty($dataf->staf->gambar) && is_file($imagepath.$dataf->staf->gambar."n.jpg"))
+                                        <td hidden>{{ asset($imagepath.$dataf->staf->gambar.'n.jpg') }}</td>
+                                        <td style="white-space: nowrap"><div class="modalphotos" >
+                                                {{ Html::image($imagepath.$dataf->staf->gambar.'n.jpg',asset($imagepath.$dataf->staf->gambar."jpg"),
+                                                 array('class' => 'img-responsive',
+                                                'id' => 'tampilgambar', 'width' => '40px')) }}
+                                            </div></td>
+                                    @else
+                                        @if($dataf->staf->kelamin == "Wanita")
+                                            <td hidden>{{ asset('images/no_image_woman.jpg') }}</td>
+                                            <td>{{ Html::image('images/no_image_woman.jpg', 'a picture', array('class' => 'img-responsive',
+                                                                'id' => 'tampilgambar', 'width' => '40px')) }}</td>
+                                        @else
+                                            <td hidden>{{ asset('images/no_image_man.jpg') }}</td>
+                                            <td>{{ Html::image('images/no_image_man.jpg', 'a picture', array('class' => 'img-responsive',
+                                                                'id' => 'tampilgambar', 'width' => '40px')) }}</td>
+                                        @endif
+                                    @endif
+                                    <td>{{ $dataf->staf->name }}</td>
+                                    <td>{{ $dataf->staf->nim }}</td>
+                                    <td>{{ $dataf->staf->nid }}</td>
+                                    <td> {{ $tempat }}</td>
+                                    @if(!empty($datapekerjaan->name))
+                                        <td>{{ $datapekerjaan->name }}</td>
+                                    @else
+                                        <td></td>
+                                    @endif
+                                    @if(!empty($pendidikan))
+                                        <td>{{ $pendidikan->tingkat }} di {{ $pendidikan->tempat }}</td>
+                                    @else
+                                        <td></td>    
+                                    @endif
+                                    <td>{{ $status }}</td>
+                                    <td>{{ $dataf->staf->agama }}</td>
+                                    <td data-order="{{ $dataf->tanggal_lahir }}">{{ $date->format('d F Y') }}</td>
+                                    <td>{{ $dataf->staf->age }} Tahun</td>
+                                    <td>{{ $alamat }}</td>
+                                    <td>{{ $kontak }}</td>
+                                    <td></td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                 </div>   
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-warning" id="modalbutton"><i class="fa fa-check"></i> Iya</button>
-                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i> Batal</button>
+                <button type="submit" class="btn btn-primary" id="modalbutton"><i class="fa fa-save"></i> Simpan</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Batal</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
     {{ Form::close() }}
 </div>
-<div class="modal fade" id="modal1show" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    {{ Form::open(array('route' => array('admins.'.$kelas.'.destroy',$kelas), 'method' => 'delete')) }}
-    <div class="modal-dialog">
+<div class="modal fade" id="modalpeserta" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    {{ Form::open(array('route' => array('admins.'.$kelas.'.store_peserta'),'role' => 'form')) }}
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header bg-light-blue-active color-palette">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 clasas="modal-title"><i class="fa fa-trash"></i> Hapus Fasilitator Atau Panitia</h4>
+                <h4 clasas="modal-title"><i class="fa fa-plus"></i> Tambah Peserta</h4>
             </div>
             <div class="modal-body">
-                <strong>Menghapus fasilitator atau panitia ini ?</strong>
-                <input type="text" name="id" value="" id="modal1id" hidden>
+                <input type="text" name="id_kegiatan" value="{{ $data->id }}" hidden>
+                <div class="row">
+                    <div id="areapeserta"></div> 
+                    <div class="col-sm-12"><hr/></div>
+                    <div class="col-sm-12">
+                        <div class="input-group tabletools">
+                            <div class="input-group-addon"><i class="fa fa-search"></i></div>
+                            <input type="text" id="searchstaf" class="form-control" placeholder="Kata kunci pencarian..." autofocus>
+                        </div>
+                        <table class="table table-hover dt-responsive nowarp" id="datatabletambahstaf" cellspacing="0" width="100%">
+                            <thead>
+                            <tr class="bg-light-blue-active color-palette">
+                                <th data-sortable="false">#</th>
+                                <th hidden></th>
+                                <th data-sortable="false"></th>
+                                <th hidden></th>
+                                <th data-sortable="false"><i class="fa fa-picture-o"></i></th>
+                                <th>Nama </th>
+                                <th class="none">NIM</tH>
+                                <th class="none">NID</tH>
+                                <th>Lembaga</th>
+                                <th>Jabatan</th>
+                                <th class="none">Pendidikan</th>
+                                <th class="none">Agama</th>
+                                <th class="none">Status</th>
+                                <th class="none">Tgl. Lahir</th>
+                                <th class="none">Umur</th>
+                                <th class="none">Alamat</th>
+                                <th class="none">Kontak</th>
+                                <th>Detail</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach($datastaf as $dataf)
+                                <?php
+                                    $date = new Date($dataf->tanggal_lahir);
+                                    
+                                    $newarr = explode("\n",$dataf->staf->alamat);
+                                    foreach($newarr as $str){
+                                        $alamat = $str;
+                                    }
+
+                                    $newarr2 = explode("\n",$dataf->staf->kontak);
+                                    foreach($newarr2 as $str2){
+                                        $kontak = $str2;
+                                    }
+
+                                    if($dataf->staf->status == 1){
+                                        $status = "Menikah";
+                                    }elseif($dataf->staf->status == 2){
+                                        $status = "Belum Menikah";
+                                    }elseif($dataf->staf->status == 3){
+                                        $status = "Duda/Janda";
+                                    }else{
+                                        $status = "";
+                                    }
+
+                                    if($dataf->tipe == 1){
+                                        $tempat = App\Cuprimer::where('no_ba',$dataf->tempat)->first();
+                                        $tempat = 'CU ' .$tempat->name;
+                                    }elseif($dataf->tipe == 2){
+                                        $tempat = App\Lembaga::where('id',$dataf->tempat)->first();
+                                        $tempat = $tempat->name;
+                                    }elseif($dataf->tipe == 3){
+                                        $tempat = "Puskopdit BKCU Kalimantan";
+                                    }
+
+                                    $pendidikan = App\StafPendidikan::where('id_staf',$dataf->id_staf)->first();
+
+                                    $date = new Date($dataf->mulai); 
+                                    $date2 = new Date($dataf->selesai); 
+                                ?>
+                                <tr>
+                                    <td class="bg-aqua disabled color-palette"></td>
+                                    <td hidden>{{ $dataf->id_staf }}</td>
+                                    <td></td>
+                                    @if(!empty($dataf->staf->gambar) && is_file($imagepath.$dataf->staf->gambar."n.jpg"))
+                                        <td hidden>{{ asset($imagepath.$dataf->staf->gambar.'n.jpg') }}</td>
+                                        <td style="white-space: nowrap"><div class="modalphotos" >
+                                                {{ Html::image($imagepath.$dataf->staf->gambar.'n.jpg',asset($imagepath.$dataf->staf->gambar."jpg"),
+                                                 array('class' => 'img-responsive',
+                                                'id' => 'tampilgambar', 'width' => '40px')) }}
+                                            </div></td>
+                                    @else
+                                        @if($dataf->staf->kelamin == "Wanita")
+                                            <td hidden>{{ asset('images/no_image_woman.jpg') }}</td>
+                                            <td>{{ Html::image('images/no_image_woman.jpg', 'a picture', array('class' => 'img-responsive',
+                                                                'id' => 'tampilgambar', 'width' => '40px')) }}</td>
+                                        @else
+                                            <td hidden>{{ asset('images/no_image_man.jpg') }}</td>
+                                            <td>{{ Html::image('images/no_image_man.jpg', 'a picture', array('class' => 'img-responsive',
+                                                                'id' => 'tampilgambar', 'width' => '40px')) }}</td>
+                                        @endif
+                                    @endif
+                                    <td>{{ $dataf->staf->name }}</td>
+                                    <td>{{ $dataf->staf->nim }}</td>
+                                    <td>{{ $dataf->staf->nid }}</td>
+                                    <td> {{ $tempat }}</td>
+                                    @if(!empty($datapekerjaan->name))
+                                        <td>{{ $datapekerjaan->name }}</td>
+                                    @else
+                                        <td></td>
+                                    @endif
+                                    @if(!empty($pendidikan))
+                                        <td>{{ $pendidikan->tingkat }} di {{ $pendidikan->tempat }}</td>
+                                    @else
+                                        <td></td>    
+                                    @endif
+                                    <td>{{ $status }}</td>
+                                    <td>{{ $dataf->staf->agama }}</td>
+                                    <td data-order="{{ $dataf->tanggal_lahir }}">{{ $date->format('d F Y') }}</td>
+                                    <td>{{ $dataf->staf->age }} Tahun</td>
+                                    <td>{{ $alamat }}</td>
+                                    <td>{{ $kontak }}</td>
+                                    <td></td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                 </div>   
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-warning" id="modalbutton"><i class="fa fa-check"></i> Iya</button>
-                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i> Batal</button>
+                <button type="submit" class="btn btn-primary" id="modalbutton"><i class="fa fa-save"></i> Simpan</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Batal</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
@@ -237,89 +679,34 @@ $kelas = "kegiatan";
 
 @section('js')
 @include('admins._components.datatable_JS')
-<script type="text/javascript" src="{{ URL::asset('plugins/summernote/summernote.js') }}"></script>
-<script type="text/javascript" src="{{ URL::asset('plugins/select/dist/js/select2.full.min.js') }}"></script>
+<script type="text/javascript" src="{{ URL::asset('plugins/dataTables/extension/Responsive/js/dataTables.responsive.min.js') }}"></script>
+<script type="text/javascript" src="{{ URL::asset('plugins/dataTables/extension/Responsive/js/responsive.bootstrap.min.js') }}"></script>
 <script>
-    //select fasilitator
-    $('#selectdata').select2({
-        theme: "bootstrap",
-        ajax: {
-            url: "/admins/kegiatan/getselect2",
-            dataType: 'json',
-            delay: 250,
-            data: function (params) {
-                return{
-                    q: params.term,
-                    page: params.page
-                };
-            },
-            processResults: function (data,params) {
-                params.page = params.page || 1;
-                return{
-                    results: data,
-                    pagination:{
-                        more: (params.page * 30) < data.total_count
-                    }
-                };
-
-            },
-            cache: true
-        },
-        escapeMarkup: function (markup) { return markup; },
-        minimumInputLength: 2,
-        placeholder: "Silahkan pilih fasilitator atau panitia",
-        templateResult: formatTemplate,
-        templateSelection: selectionTemplate
+    $(document).ready(function(){
+        $('a[data-toggle="tab"]').on( 'shown.bs.tab', function (e) {
+            $.fn.dataTable.tables( {visible: true, api: true} ).columns.adjust();
+        } );
     });
-
-    function formatTemplate(data) {
-        if(data.loading) return data.text;
-
-        var markup = "<div class='select2-result-repository clearfix'>";
-            markup += "<div class='select2-result-repository__avatar'>";
-                if(data.gambar) {
-                   markup += "<img class='media-object' id='imagesearch'  width='50px'  src=/images_staf/'" + data.gambar + "' />";
-                }else{
-                   if(data.kelamin == "Pria"){
-                       markup += "<img class='media-object' width='50px' src='/images/no_image_man.jpg' />";
-                   }else{
-                       markup += "<img class='media-object' width='50px'   src='/images/no_image_woman.jpg' />";
-                   }
-                }
-            markup += "</div>";
-            markup += "<div class='select2-result-repository__meta'>"
-                markup += "<div class='select2-result-repository__title'>" + data.name + "</div>";
-                markup += "<div class='select2-result-repository__description'>";
-                    if(data.cu == '0'){
-                        markup += "<i class='fa fa-building'></i> PUSKOPDIT BKCU KALIMANTAN" ;
-                    }else{
-                        markup += "<i class='fa fa-building'></i> CU " + data.cuprimer.name;
-                    }
-                markup +="</div>";
-                markup +="<div class='select2-result-repository__statistics'>";
-                    markup +="<div class='select2-result-repository__forks'>";
-                        if(data.kelamin == "Pria")
-                            markup += "<i class='fa fa-male'></i> " + data.kelamin;
-                        else
-                            markup += "<i class='fa fa-female'></i> " + data.kelamin;
-                    markup +="</div>";
-                markup +="</div>";    
-            markup += "</div>";
-        markup += "</div>";   
-
-        return markup;
-    }
-
-    function selectionTemplate(data) {
-        return data.name || data.text; // I think its either text or label, not sure.
-    }
-    //table fasiliator dan panitia
+</script>
+{{-- panitia dan peserta --}}
+<script>
     var tablepanitia = $('#datatablepanitia').DataTable({
-        dom: 'Bf',
+        dom: 'Bft',
         select: true,
         scrollY: '50vh',
-        "autoWidth": false,
+        autoWidth: true,
         scrollCollapse : true,
+        responsive:{
+            details:{
+                type: 'column',
+                target: -1
+            }
+        },
+        columnDefs: [ {
+            className: 'control',
+            orderable: false,
+            targets:   -1
+        } ],
         paging : false,
         stateSave : true,
         order : [[ 1, "asc" ]],
@@ -327,20 +714,7 @@ $kelas = "kegiatan";
             {
                 text: '<i class="fa fa-plus"></i> Tambah',
                 action: function () {
-                    $('#modal2show').modal({show:true});
-                    $('#modal2id').attr('value',"{{ $data->id }}");
-                }
-            },
-            {
-                text: '<i class="fa fa-pencil"></i> Ubah',
-                action: function () {
-                    var id = $.map(tablepanitia.rows({ selected: true }).data(),function(item){
-                        return item[0];
-                    });
-                    if(id != ""){
-                        $('#modal2show').modal({show:true});
-                        $('#modal2id').attr('value',id);
-                    }
+                    $('#modalpanitia').modal({show:true});
                 }
             },
             {
@@ -379,34 +753,37 @@ $kelas = "kegiatan";
             "zeroRecords": "Tidak ditemukan data yang sesuai",
         }
     });
+    tablepanitia.on( 'order.dt search.dt', function () {
+        tablepanitia.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw(); 
     //table peserta
     var tablepeserta = $('#datatablepeserta').DataTable({
-        dom: 'Bf',
+        dom: 'Bft',
         select: true,
         scrollY: '50vh',
-        "autoWidth": false,
+        autoWidth: true,
         scrollCollapse : true,
+        responsive:{
+            details:{
+                type: 'column',
+                target: -1
+            }
+        },
+        columnDefs: [ {
+            className: 'control',
+            orderable: false,
+            targets:   -1
+        } ],
         paging : false,
-        stateSave : true,
-        order : [[ 1, "asc" ]],
+        stateSave : false,
         buttons: [
             {
                 text: '<i class="fa fa-plus"></i> Tambah',
                 action: function () {
-                    $('#modal2show').modal({show:true});
+                    $('#modalpeserta').modal({show:true});
                     $('#modal2id').attr('value',"{{ $data->id }}");
-                }
-            },
-            {
-                text: '<i class="fa fa-pencil"></i> Ubah',
-                action: function () {
-                    var id = $.map(tablepeserta.rows({ selected: true }).data(),function(item){
-                        return item[0];
-                    });
-                    if(id != ""){
-                        $('#modal2show').modal({show:true});
-                        $('#modal2id').attr('value',id);
-                    }
                 }
             },
             {
@@ -423,9 +800,61 @@ $kelas = "kegiatan";
             }
         ],
         language: {
-            buttons : {
-                colvis: "<i class='fa fa-columns'></i> Kolom",
+            buttons : {},
+            select:{
+                rows:{
+                    _: "",
+                    0: "",
+                    1: ""
+                }
             },
+            "sProcessing":   "Sedang proses...",
+            "sLengthMenu":   "Tampilan _MENU_ entri",
+            "sZeroRecords":  "Tidak ditemukan data yang sesuai",
+            "sInfo":         "Tampilan _START_ sampai _END_ dari _TOTAL_ entri",
+            "sInfoEmpty":    "Tampilan 0 hingga 0 dari 0 entri",
+            "sInfoFiltered": "(disaring dari _MAX_ entri keseluruhan)",
+            "sInfoPostFix":  "",
+        }
+    });
+    tablepeserta.on( 'order.dt search.dt', function () {
+        tablepeserta.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw(); 
+</script>
+{{-- daftar panitia --}}
+<script>
+    var areapanitia = $('#areapanitia');
+
+    var tabletambahpanitia = $('#datatabletambahpanitia').DataTable({
+        dom: 't',
+        select: {
+            style:    'os',
+            selector: 'td:nth-child(3)'
+        },
+        scrollY: '50vh',
+        autoWidth: true,
+        scrollCollapse : true,
+        responsive:{
+            details:{
+                type: 'column',
+                target: -1
+            }
+        },
+        columnDefs: [ {
+            className: 'control',
+            orderable: false,
+            targets:   -1
+        },
+        {
+            orderable: false,
+            className: 'select-checkbox',
+            targets:   2
+        } ],
+        paging : false,
+        stateSave : false ,
+        language: {
             select:{
                 rows:{
                     _: "",
@@ -445,5 +874,151 @@ $kelas = "kegiatan";
             "zeroRecords": "Tidak ditemukan data yang sesuai",
         }
     });
+    tabletambahpanitia.on( 'order.dt search.dt', function () {
+        tabletambahpanitia.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw(); 
+
+    $('#searchpanitia').keyup(function(){
+        tabletambahpanitia.search($(this).val()).draw() ;
+    });
+
+    tabletambahpanitia
+        .on( 'select', function ( e, dt, type, indexes ) {
+            var id = $.map(tabletambahpanitia.rows({ selected: true }).data(),function(item){
+                        return item[1];
+                    });
+            var foto = $.map(tabletambahpanitia.rows({ selected: true }).data(),function(item){
+                        return item[3];
+                    });
+            var name = $.map(tabletambahpanitia.rows({ selected: true }).data(),function(item){
+                        return item[5];
+                    });
+            var tempat = $.map(tabletambahpanitia.rows({ selected: true }).data(),function(item){
+                        return item[8];
+                    });
+            var htmlpanitia = '<div class="col-sm-12" id="widgetpeserta">';
+                htmlpanitia += '<div class="box box-widget widget-user-2"">';
+                    htmlpanitia += '<div class="widget-user-header bg-aqua">' ;
+                        htmlpanitia += '<div class="widget-user-image">';
+                            htmlpanitia += '<img class="img-thumbnail" src="'+foto+'" alt="User Image">';
+                        htmlpanitia += '</div>';
+                        htmlpanitia += '<input type="text" name="panitia" style="display:none;" value="'+id+'"/>'
+                        htmlpanitia += '<h3 class="widget-user-username">'+name+'</h3>';
+                        htmlpanitia += '<h5 class="widget-user-desc">'+tempat+'</h5>';  
+                    htmlpanitia += '</div>';            
+                htmlpanitia += '</div>';                
+                htmlpanitia += '</div>';
+
+            areapanitia.prepend(htmlpanitia);
+            $('#tugaspanitia').show();
+        } )
+        .on('deselect',function(e, dt, type, indexes){
+            $('#widgetpeserta').remove();
+            $('#tugaspanitia').hide();
+        });
+</script>
+{{-- daftar peserta --}}
+<script>
+    var areapeserta = $('#areapeserta');
+    var counterpeserta = 0;
+
+    var tabletambahstaf = $('#datatabletambahstaf').DataTable({
+        dom: 't',
+        select: {
+            style:    'os',
+            selector: 'td:nth-child(3)'
+        },
+        scrollY: '50vh',
+        autoWidth: true,
+        scrollCollapse : true,
+        responsive:{
+            details:{
+                type: 'column',
+                target: -1
+            }
+        },
+        columnDefs: [ {
+            className: 'control',
+            orderable: false,
+            targets:   -1
+        },
+        {
+            orderable: false,
+            className: 'select-checkbox',
+            targets:   2
+        } ],
+        paging : false,
+        stateSave : false ,
+        language: {
+            select:{
+                rows:{
+                    _: "",
+                    0: "",
+                    1: ""
+                }
+            },
+            "emptyTable": "Tidak terdapat data di tabel",
+            "info": "",
+            "infoEmpty": "",
+            "infoFiltered":   "",
+            "search": "<i class='fa fa-search'></i> Cari:",
+            "paginate": {
+                "next":       ">",
+                "previous":   "<"
+            },
+            "zeroRecords": "Tidak ditemukan data yang sesuai",
+        }
+    });
+    tabletambahstaf.on( 'order.dt search.dt', function () {
+        tabletambahstaf.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw(); 
+
+    $('#searchstaf').keyup(function(){
+        tabletambahstaf.search($(this).val()).draw() ;
+    });
+
+    tabletambahstaf
+        .on( 'select', function ( e, dt, type, indexes ) {
+            var id = $.map(tabletambahstaf.rows({ selected: true }).data(),function(item){
+                        return item[1];
+                    });
+            var foto = $.map(tabletambahstaf.rows({ selected: true }).data(),function(item){
+                        return item[3];
+                    });
+            var name = $.map(tabletambahstaf.rows({ selected: true }).data(),function(item){
+                        return item[5];
+                    });
+            var tempat = $.map(tabletambahstaf.rows({ selected: true }).data(),function(item){
+                        return item[8];
+                    }); 
+            var htmlstaf = '<div class="col-sm-4" id="widgetpeserta'+counterpeserta+'">';
+                htmlstaf += '<div class="box box-widget">';
+                    htmlstaf += '<div class="box-header with-border">' ;
+                        htmlstaf += '<div class="user-block">';
+                            htmlstaf += '<img class="img-circle" src="'+foto+'" alt="User Image">';
+                            htmlstaf += '<input type="text" name="peserta[]" style="display:none;" value="'+id+'"/>'
+                            htmlstaf += '<span class="username"><a href="#">'+name+'</a></span>';
+                            htmlstaf += '<span class="description"><small>'+tempat+'</small></span>';
+                        htmlstaf += '</div>';
+                        htmlstaf += '<div class="box-tools">';   
+                            htmlstaf += '<button type="button" class="btn btn-box-tool" onclick="func_pesertakurang()"><i class="fa fa-times"></i></button>';
+                        htmlstaf += '</div>';          
+                    htmlstaf += '</div>';            
+                htmlstaf += '</div>';                
+                htmlstaf += '</div>';
+
+            areapeserta.prepend(htmlstaf);
+            counterpeserta++;
+        } );
+
+        function func_pesertakurang()
+        {
+            counterpeserta--;
+            $('#widgetpeserta'+counterpeserta).remove();
+        }
 </script>
 @stop

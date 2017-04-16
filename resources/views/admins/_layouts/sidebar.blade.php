@@ -149,6 +149,12 @@ $iduser = Auth::user()->getId();
                 </li>
             @endpermission
             <!-- /saran -->
+            {{-- panduan --}}
+            <li>
+                <a href="{{ route('panduan') }}"
+                   target="_blank"><i class="fa fa-question-circle-o"></i> <span>Panduan</span></a>
+            </li>
+            {{-- panduan --}}
         </ul>
     </section>
 </aside>

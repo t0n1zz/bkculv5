@@ -15,7 +15,7 @@ class StafPekerjaan extends Model {
         return !empty($value) ? $value : '-';
     }
 
-    public function cuprimer(){
-        return $this->belongsTo('App\Cuprimer','keterangan','id');
+    public function staf(){
+        return $this->belongsTo('App\Staf','id_staf','id');
     }
 }

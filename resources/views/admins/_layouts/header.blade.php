@@ -22,7 +22,7 @@
     <!-- logo -->
     <a class="logo" href="{!! route('admins') !!}" >
         <span class="logo-mini"><img src="{!! asset('images/logo.png') !!}" width="30" alt="logo"></span>
-        <span class="logo-lg"><b>Admin</b>BKCU</span>
+        <span class="logo-lg"><b>SIMO</b></span>
     </a>
     <!-- /logo -->
     <!-- header navbar -->

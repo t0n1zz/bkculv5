@@ -67,10 +67,9 @@
             <h4>Tanggal Mulai</h4>
             <div class="input-group">
                 <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                {{ Form::text('mulaiorganisasi',null,array('class' => 'form-control','id'=>'mulaiorganisasi','required',
+                {{ Form::text('mulaiorganisasi',null,array('class' => 'form-control','id'=>'mulaiorganisasi',
                     'autocomplete'=>'off', 'data-inputmask'=>"'alias':'date'",'placeholder'=>'dd/mm/yyyy'))}}
             </div>
-            <div class="help-block">Tanggal mulai harus diisi.</div>
         </div>
     </div>
     <div class="col-sm-6">
@@ -91,7 +90,6 @@
                     <button type="button" class="btn btn-default" onclick="nonaktiforganisasi()" ><i class="fa fa-times"></i></button>
                 </div>
             </div>
-            <div class="help-block">Tanggal selesai harus diisi.</div>
         </div>
     </div>
 </div>

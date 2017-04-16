@@ -101,6 +101,7 @@
 
       $data1 = array_last($dataarray);
       $data2 = array_last(array_slice($dataarray,-2,1));
+      $date = new Date($data1['periode']);
 
       $tot_nonsaham = $data1['nonsaham_harian'] + $data1['nonsaham_unggulan'];
       $tot_anggota =  $data1['l_biasa'] + $data1['p_biasa'] + $data1['l_lbiasa'] + $data1['p_lbiasa'];

@@ -194,7 +194,7 @@ class ArtikelController extends Controller{
             return Redirect::route('admins.'.$this->kelaspath.'.index')->with('sucessmessage', 'Kategori artikel  <b><i>' .$name.
                                                                             '</i></b> Telah berhasil diubah.');
         }catch (Exception $e){
-            return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
+            return Redirect::back()->withInput()->with('errormessage',$e->ygetMessage());
         }
     }
 

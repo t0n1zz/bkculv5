@@ -9,6 +9,7 @@ else
 
 $kelas = "staf";
 $imagepath = "images_staf/";
+$id_old="";
 ?>
 @extends('admins._layouts.layout')
 
@@ -83,64 +84,59 @@ $imagepath = "images_staf/";
                                 <th hidden></th>
                                 <th data-sortable="false">Foto</th>
                                 <th>Nama </th>
-                                <th>Jenis Kelamin</th>
-                                <th>Jabatan</th>
+                                <th>NIM</tH>
+                                <th>NID</tH>
+                                <th>Umur</th>
                                 <th>Status</th>
                                 <th>Agama</th>
+                                <th>Jabatan</th>
+                                <th>Pendidikan</th>
                                 <th>Alamat</th>
+                                <th>Kontak</th>
                             </tr>
                         </thead>
                         <tbody>
                         @foreach($datas as $data)
                             <?php
-                                $newarr = explode("\n",$data->alamat);
+                                if($id_old == $data->id_staf)
+                                    break;
+
+                                $newarr = explode("\n",$data->staf->alamat);
                                 foreach($newarr as $str){
                                     $alamat = $str;
                                 }
 
-                                $jabatans = \App\StafPekerjaan::where('id_staf','=',$data->id)
-                                                ->where('tipe','=',3)->get();
-                                
-                                $pekerjaan = array();
-                                $i = 0;
-                                foreach ($jabatans as $j){
-                                    if($i < 1){
-                                        if($j->keterangan == $id){
-                                            if($j->keterangan2 == 'Manajemen'){
-                                                if($j->sekarang == "1"){
-                                                    $pekerjaan[] = $j->name;
-                                                    $i++;
-                                                }
-                                            }else{
-                                                $mulai = \Carbon\Carbon::createFromFormat('Y-m-d', $j->mulai)->format('Y');
-                                                $selesai = \Carbon\Carbon::createFromFormat('Y-m-d', $j->selesai)->format('Y');
-                                                $now =   \Carbon\Carbon::now()->format('Y');
-                                                if($selesai >= $now){
-                                                    $pekerjaan[] = $j->name.' periode '.$mulai.' - '.$selesai;
-                                                    $i++;
-                                                }
-                                            }
-                                        }
-                                    }
+                                $newarr2 = explode("\n",$data->staf->kontak);
+                                foreach($newarr2 as $str2){
+                                    $kontak = $str2;
                                 }
+
+                                if($data->staf->status == 1){
+                                    $status = "Menikah";
+                                }elseif($data->staf->status == 2){
+                                    $status = "Belum Menikah";
+                                }elseif($data->staf->status == 3){
+                                    $status = "Duda/Janda";
+                                }else{
+                                    $status = "";
+                                }
+
+                                $pendidikan = App\StafPendidikan::where('id_staf',$data->id_staf)->first();
+
+                                $date = new Date($data->mulai); 
+                                $date2 = new Date($data->selesai); 
                             ?>
                             <tr >
                                 <td class="bg-aqua disabled color-palette"></td>    
-                                <td hidden>{{$data->id}}</td>
-                                @if(!empty($data->gambar) && is_file($imagepath.$data->gambar."n.jpg"))
+                                <td hidden>{{$data->staf->id}}</td>
+                                @if(!empty($data->staf->gambar) && is_file($imagepath.$data->staf->gambar."n.jpg"))
                                     <td style="white-space: nowrap"><div class="modalphotos" >
-                                            {{ Html::image($imagepath.$data->gambar.'n.jpg',asset($imagepath.$data->gambar."jpg"),
+                                            {{ Html::image($imagepath.$data->staf->gambar.'n.jpg',asset($imagepath.$data->staf->gambar."jpg"),
                                              array('class' => 'img-responsive',
                                             'id' => 'tampilgambar', 'width' => '40px')) }}
                                         </div></td>
-                                @elseif(!empty($data->gambar) && is_file($imagepath.$data->gambar))
-                                    <td style="white-space: nowrap"><div class="modalphotos" >
-                                            {{ Html::image($imagepath.$data->gambar,asset($imagepath.$data->gambar),
-                                                array('class' => 'img-responsive ',
-                                                'id' => 'tampilgambar', 'width' => '40px')) }}
-                                        </div></td>
                                 @else
-                                    @if($data->kelamin == "Wanita")
+                                    @if($data->staf->kelamin == "Wanita")
                                         <td>{{ Html::image('images/no_image_woman.jpg', 'a picture', array('class' => 'img-responsive',
                                                             'id' => 'tampilgambar', 'width' => '40px')) }}</td>
                                     @else
@@ -149,19 +145,30 @@ $imagepath = "images_staf/";
                                     @endif
                                 @endif
                                 
-                                <td>{{ $data->name }}</td>
-                                <td>{{ $data->kelamin }}</td>
+                                <td>{{ $data->staf->name }}</td>
+                                <td>{{ $data->staf->nim }}</td>
+                                <td>{{ $data->staf->nid }}</td>
+                                <td>{{ $data->staf->age }} Tahun</td>
+                                <td>{{ $status }}</td>
+                                <td>{{ $data->staf->agama }}</td>
                                 <td>
-                                @foreach($pekerjaan as $p)
-                                    {{ $p  }}<br/>
-                                @endforeach
+                                    {{ $data->name }}                                     
+                                    @if($data->sekarang != 0)
+                                        periode {{ $date->format('d/m/Y') }} - {{ $date2->format('d/m/Y') }}
+                                    @else
+                                        sejak {{ $date->format('d/m/Y') }} 
+                                    @endif
                                 </td>
-                                <td>{{ $data->status }}</td>
-                                <td>{{ $data->agama }}</td>
+                                @if(!empty($pendidikan))
+                                    <td>{{ $pendidikan->tingkat }} di {{ $pendidikan->tempat }}</td>
+                                @else
+                                    <td>-</td>    
+                                @endif
                                 <td>{{ $alamat }}</td>
+                                <td>{{ $kontak }}</td>
                             </tr>
+                            <?php $id_old = $data->id_staf; ?>
                         @endforeach
-
                         </tbody>
                     </table>
                 </div>
@@ -220,27 +227,6 @@ $imagepath = "images_staf/";
                     },
                     action: function(){
                         window.location.href = "{{URL::to('admins/'.$kelas.'/create')}}";
-                    }
-                },
-                @endpermission
-                @permission('update.'.$kelas.'_update')
-                {
-                    text: '<i class="fa fa-pencil"></i> <u>U</u>bah',
-                    key: {
-                        altKey: true,
-                        key: 'u'
-                    },
-                    action: function(){
-                        var id = $.map(table.rows({ selected: true }).data(),function(item){
-                            return item[1];
-                        });
-                        var kelas = "{{ $kelas }}";
-                        if(id != ""){
-                            window.location.href = "/admins/" + kelas + "/" + id + "/edit";
-                        }else{
-                            $('#modalwarning').modal({show:true});
-                        }
-
                     }
                 },
                 @endpermission
