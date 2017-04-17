@@ -26,8 +26,4 @@ class Cuprimer extends Model {
     public function WilayahCuprimer(){
         return $this->belongsTo('App\WilayahCuprimer','wilayah','id');
     }
-
-    // public function staf(){
-    //     return $this->hasMany('App\Staf','cu','id');
-    // }
 }

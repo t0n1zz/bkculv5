@@ -26,7 +26,7 @@
     <link rel="stylesheet" type="text/css" href="{{asset('admin/AdminLTE.css')}}" >
     <link rel="stylesheet" type="text/css" href="{{asset('admin/skin-blue.css')}}" >
     <!-- pace -->
-    <link rel="stylesheet" type="text/css" href="{{asset('plugins/pace/pace.css')}}" >
+    {{-- <link rel="stylesheet" type="text/css" href="{{asset('plugins/pace/pace.css')}}" > --}}
     <!-- Custom Fonts -->
     <link rel="stylesheet" type="text/css" href="{{asset('plugins/font-awesome/css/font-awesome.min.css')}}" >
     @yield('css')
@@ -182,7 +182,7 @@
 <!-- fastclick for touch browser -->
 <script type="text/javascript" src="{{ URL::asset('plugins/fastclick/fastclick.min.js') }}"></script>
 <!-- pace -->
-<script type="text/javascript" src="{{ URL::asset('plugins/pace/pace.min.js') }}"></script>
+{{-- <script type="text/javascript" src="{{ URL::asset('plugins/pace/pace.min.js') }}"></script> --}}
 <!-- APP -->
 <script type="text/javascript" src="{{ URL::asset('admin/app.js') }}"></script>
 <!-- form helper -->

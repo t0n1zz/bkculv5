@@ -347,7 +347,7 @@ $imagepath = 'images_artikel/';
                     }
                 },
                 @endpermission
-                                @permission('update_status.'.$kelas.'_update_status')
+                @permission('update_status.'.$kelas.'_update_status')
                 {
                     text: '<i class="fa fa-check-square"></i> Penerbitan Artikel',
                     key: {

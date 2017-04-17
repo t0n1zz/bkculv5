@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>AdminBKCU</title>
+    <title>SIMO - Panduan</title>
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <!-- icon-->
     <link rel="icon" href="{{asset('images/logo.png')}}" sizes="16x16">
@@ -46,7 +46,7 @@
         <!-- Logo -->
         <a class="logo" href="{!! route('panduan') !!}" >
             <span class="logo-mini"><img src="{!! asset('images/logo.png') !!}" width="30" alt="logo"></span>
-            <span class="logo-lg"><b>Admin</b>BKCU</span>
+            <span class="logo-lg"><b>SIMO</b></span>
         </a>
         <!-- Header Navbar: style can be found in header.less -->
         <nav class="navbar navbar-static-top" role="navigation">
@@ -73,7 +73,7 @@
         <!-- Content Header (Page header) -->
         <div class="content-header">
           <h1>
-            Panduan AdminBKCU
+            Panduan <b>SIMO</b>
             <small>Versi {{ $versi }}</small>
           </h1>
         </div>
@@ -87,7 +87,7 @@
     <footer class="main-footer">
         <!-- To the right -->
         <div class="pull-right hidden-xs">
-            <a href="{{ route('admins.version') }}"><b>Admin</b>BKCU {{ $versi }}</a>
+            <a href="{{ route('admins.version') }}"><b>SIMO</b> {{ $versi }}</a>
         </div>
         <!-- Default to the left -->
         <strong>Copyright &copy; {{ date("Y") }} <a href="#">Puskopdit BKCU Kalimantan</a>.</strong> All rights reserved.

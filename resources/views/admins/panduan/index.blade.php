@@ -1,5 +1,5 @@
 <?php 
-$appname = "AdminBKCU";
+$appname = "SIMO";
 $versi = "2.1.2";
 $imagepath = "images_panduan/";
 ?>

@@ -501,11 +501,19 @@ Route::group(['prefix' => 'admins','middleware' => 'auth'], function(){
         'uses' => 'KegiatanController@getselect2'
     ));
     Route::post('kegiatan/store_peserta', [
-    'as'           => 'admins.kegiatan.store_peserta',
-    'uses'         => 'KegiatanController@store_peserta']);
+        'as'           => 'admins.kegiatan.store_peserta',
+        'uses'         => 'KegiatanController@store_peserta']);
     Route::post('kegiatan/store_panitia', [
-    'as'           => 'admins.kegiatan.store_panitia',
-    'uses'         => 'KegiatanController@store_panitia']);
+        'as'           => 'admins.kegiatan.store_panitia',
+        'uses'         => 'KegiatanController@store_panitia']);
+    Route::post('kegiatan/destroy_peserta',array(
+        'as'            => 'admins.kegiatan.destroy_peserta',
+        'uses'          => 'KegiatanController@destroy_peserta'
+    ));
+    Route::post('kegiatan/destroy_panitia',array(
+        'as'            => 'admins.kegiatan.destroy_panitia',
+        'uses'          => 'KegiatanController@destroy_panitia'
+    ));
 // statisitik
     Route::get('statistik',array('as' => 'statistik', function()
     {

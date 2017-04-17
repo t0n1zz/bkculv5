@@ -3,6 +3,11 @@
     cursor: hand;
 }
 
+.nopointer {
+    pointer-events:none; 
+    cursor:default;
+}
+
 td {
     white-space: nowrap;
 }

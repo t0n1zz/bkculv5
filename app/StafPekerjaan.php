@@ -18,4 +18,12 @@ class StafPekerjaan extends Model {
     public function staf(){
         return $this->belongsTo('App\Staf','id_staf','id');
     }
+
+    public function lembaga(){
+        return $this->belongsTo('App\Lembaga','tempat','id');
+    }
+
+    public function cuprimer(){
+        return $this->belongsTo('App\Cuprimer','tempat','no_ba');
+    }
 }

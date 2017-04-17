@@ -29,9 +29,8 @@ class KegiatanController extends Controller{
     public function index()
     {
         try{
-            $datas = Kegiatan::orderBy('status', 'asc')
-                        ->orderBy('name','asc')
-                        ->get();;
+            $datas = Kegiatan::with('tempat','sasaranhub.sasaran','total_peserta')->get();
+            // dd($datas[52]->sasaranhub);
             return view('admins.'.$this->kelaspath.'.index', compact('datas'));
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
@@ -68,10 +67,11 @@ class KegiatanController extends Controller{
         try{
             $data = Kegiatan::find($id);
             $datasasaran = KegiatanSasaranHub::with('sasaran')->where('id_kegiatan',$id)->get();
-            $datatempat = KegiatanTempat::find($data->tempat);
-            $datapanitia = KegiatanPanitia::with('staf')->where('id_kegiatan','=',$id)->get();
-            $datapeserta = KegiatanPeserta::with('staf')->where('id_kegiatan','=',$id)->get();
+            $datatempat = KegiatanTempat::find($data->id_tempat);
+            $datapanitia = KegiatanPanitia::with('staf','staf.pekerjaan')->where('id_kegiatan','=',$id)->get();
+            $datapeserta = KegiatanPeserta::with('staf.pekerjaan_aktif.cuprimer')->where('id_kegiatan','=',$id)->get();
             $datastaf = StafPekerjaan::with('staf')->get();
+
 
             return view('admins.'.$this->kelaspath.'.detail',compact('data','datasasaran','datatempat','datapanitia','datapeserta','datastaf'));
         }catch (Exception $e){
@@ -198,9 +198,10 @@ class KegiatanController extends Controller{
     public function edit($id)
     {
         try{
-            $data = Kegiatan::find($id);
-
-            return view('admins.'.$this->kelaspath.'.edit', compact('data'));
+            $data = Kegiatan::with('sasaranhub','tempat')->find($id);
+            $tempats = KegiatanTempat::get();
+            $sasarans = KegiatanSasaran::get();
+            return view('admins.'.$this->kelaspath.'.edit', compact('data','tempats','sasarans'));
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
         }
@@ -358,12 +359,48 @@ class KegiatanController extends Controller{
     public function destroy()
     {
         try{
-        $id = Input::get('id');
+            $id = Input::get('id');
 
-        Kegiatan::destroy($id);
+            Kegiatan::destroy($id);
 
         return Redirect::route('admins.'.$this->kelaspath.'.index')->with('sucessmessage', 'Informasi kegiatan telah berhasil di hapus.');
 
+        }catch (Exception $e){
+            return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
+        }
+    }
+
+    public function destroy_panitia()
+    {
+        try{
+            $id = Input::get('idhapus');
+            $kegiatan = Input::get('id_kegiatan');
+
+            $kelas = KegiatanPanitia::find($id);
+            $kelas->deleted_ket = Input::get('deleted_ket');
+            $kelas->save();
+
+            KegiatanPanitia::destroy($id);
+
+        return Redirect::route('admins.'.$this->kelaspath.'.detail',array($kegiatan))->with('sucessmessage', 'Panitia telah berhasil dihapus dari kegiatan');
+        }catch (Exception $e){
+            return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
+        }
+    }
+
+    public function destroy_peserta()
+    {
+        try{
+            $id = Input::get('idhapus');
+            $kegiatan = Input::get('id_kegiatan');
+            
+            $kelas = KegiatanPeserta::find($id);
+            $kelas->deleted_ket = Input::get('deleted_ket');
+            $kelas->save();
+
+            Kegiatan::destroy($id);
+
+        return Redirect::route('admins.'.$this->kelaspath.'.detail',array($kegiatan))->with('sucessmessage', 'Peserta telah berhasil dihapus dari kegiatan');
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
         }

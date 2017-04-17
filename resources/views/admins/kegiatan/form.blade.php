@@ -42,7 +42,22 @@ $kelas ='kegiatan';
                     <div class="help-block">Jumlah peserta maksimal harus diisi.</div>
                 </div>
             </div>
-            <div class="col-sm-4">
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <h4>Tipe Kegiatan</h4>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-font"></i></span>
+                        <select class="form-control" name="tipe" required>
+                            <option hidden>Pilih tempat kegiatan</option>
+                            <option value="1" >Diklat Puskopdit BKCU Kalimantan</option>
+                            <option value="2" >Diklat Lembaga lain</option>
+                            <option value="3" >Rapat</option>
+                        </select>
+                    </div>
+                    <div class="help-block">Tipe kegiatan harus dipilih.</div>
+                </div>
+            </div>
+            <div class="col-sm-3">
                 <div class="form-group">
                     <h4>Periode Kegiatan</h4>
                     <div class="input-group">
@@ -53,7 +68,7 @@ $kelas ='kegiatan';
                     <div class="help-block">Periode kegiatan selesai harus diisi.</div>
                 </div>
             </div>
-            <div class="col-sm-4">
+            <div class="col-sm-3">
                 <div class="form-group">
                     <h4>Tanggal Kegiatan Dimulai</h4>
                     <div class="input-group">
@@ -70,7 +85,7 @@ $kelas ='kegiatan';
                     <div class="help-block">Tanggal kegiatan dimulai harus diisi.</div>
                 </div>
             </div>
-            <div class="col-sm-4">
+            <div class="col-sm-3">
                 <div class="form-group">
                     <h4>Tanggal Kegiatan Selesai</h4>
                     <div class="input-group">
@@ -95,7 +110,11 @@ $kelas ='kegiatan';
                         <select class="form-control" onChange="func_selecttempat(value);" name="selecttempat" id="selecttempat">
                             <option hidden>Pilih tempat kegiatan</option>
                             @foreach($tempats as $tempat)
-                                <option value="{{ $tempat->id }}">{{ $tempat->name }}</option>
+                                <option value="{{ $tempat->id }}"
+                                @if(!empty($data->tempat) && $tempat->id == $data->tempat->id)
+                                    selected
+                                @endif
+                                >{{ $tempat->name }}</option>
                             @endforeach    
                             <option disabled>--------------</option> 
                             <option value="tambah" >Tambah Tempat Kegiatan</option>
@@ -151,7 +170,17 @@ $kelas ='kegiatan';
                                 @foreach($sasarans as $sasaran)
                                 <td style="border-bottom: 1px solid #f4f4f4">
                                     <div class="checkbox">
-                                        <label><input name="sasaran[]" type="checkbox" value="{{$sasaran->id}}" />{{$sasaran->name}}</label>
+                                        <label>
+                                        <input name="sasaran[]" type="checkbox" value="{{$sasaran->id}}"
+                                            @if(!empty($data))
+                                                @foreach($data->sasaranhub as $sasaranhub)
+                                                    @if($sasaran->id == $sasaranhub->id_sasaran)
+                                                        checked
+                                                    @endif
+                                                @endforeach
+                                            @endif 
+                                        />
+                                        {{$sasaran->name}}</label>
                                     </div>
                                 </td>
                                 @endforeach

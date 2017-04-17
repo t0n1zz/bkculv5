@@ -32,6 +32,10 @@ class Staf extends Model {
     }
 
     public function pekerjaan(){
-        return $this->hasMany('App\StafPekerjaan','id','id_staf');
+        return $this->hasMany('App\StafPekerjaan','id_staf','id');
+    }
+
+    public function pekerjaan_aktif(){
+        return $this->pekerjaan()->where('sekarang','1')->orwhere('selesai','<=',date('Y-m-d').' 00:00:00');
     }
 }

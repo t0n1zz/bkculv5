@@ -1,12 +1,25 @@
 var table = $('#dataTables-example').DataTable({
     dom: 'Bti',
-    select: true,
     scrollY: '70vh',
-    scrollX: true,
     autoWidth: true,
     scrollCollapse : true,
     paging : false,
-    stateSave : false,
+    stateSave : false ,
+    select: {
+        style:    'os',
+        selector: 'td:not(:last-child)'
+    },
+    responsive:{
+        details:{
+            type: 'column',
+            target: -1
+        }
+    },
+    columnDefs: [ {
+        className: 'control',
+        orderable: false,
+        targets:   -1
+    }],
     buttons: [
         {
             extend:'colvis',
@@ -35,7 +48,7 @@ var table = $('#dataTables-example').DataTable({
         "sInfoFiltered": "(disaring dari _MAX_ entri keseluruhan)",
         "sInfoPostFix":  "",
     }
-});
+}); 
 
 table.on( 'order.dt search.dt', function () {
     table.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
@@ -46,4 +59,3 @@ table.on( 'order.dt search.dt', function () {
 $('#searchtext').keyup(function(){
     table.search($(this).val()).draw() ;
 });
-

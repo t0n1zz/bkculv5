@@ -6,6 +6,7 @@ $kelas = "kegiatan";
 
 @section('css')
     @include('admins._components.datatable_CSS')
+    <link rel="stylesheet" type="text/css" href="{{asset('plugins/dataTables/extension/Responsive/css/responsive.bootstrap.min.css')}}" >
 @stop
 
 @section('content')
@@ -32,40 +33,21 @@ $kelas = "kegiatan";
         </ul>
         <div class="tab-content"> 
             <div class="tab-pane active" id="tab_kegiatan">
-                @if(Auth::user()->getCU() == '0')
-                    <div class="col-sm-8" style="padding: .2em ;">
-                @else
-                    <div class="col-sm-12" style="padding: .2em ;">
-                @endif
+                <div class="col-sm-9" style="padding: .2em ;">
                     <div class="input-group tabletools">
                         <div class="input-group-addon"><i class="fa fa-search"></i></div>
                         <input type="text" id="searchtext" class="form-control" placeholder="Kata kunci pencarian..." autofocus>
                     </div>
                 </div>
-                @if(Auth::user()->getCU() == '0')
-                <div class="col-sm-4" style="padding: .2em ;">
-                    <?php
-                        $data = App\Kegiatan::orderBy('tanggal','DESC')->groupBy('tanggal')->get(['tanggal']);
-                        $dataperiode = $data->groupBy('tanggal');
-
-                        $dataperiode1 = collect([]);
-                        foreach ($dataperiode as $data){
-                            $dataperiode1->push($data->first());
-                        }
-                        $periodes = array_column($dataperiode1->toArray(),'tanggal');
-                    ?>
+                <div class="col-sm-3" style="padding: .2em ;">
                     <div class="input-group tabletools">
                         <div class="input-group-addon primary-color"><i class="fa fa-clock-o fa-fw"></i> Periode Kegiatan</div>
                         <select class="form-control"  id="">
-                            @foreach($periodes as $periode)
-                                <?php $date = new Date($periode); ?>
-                                <option value="">{{ $date->format('Y') }}</option>
-                            @endforeach
+                                <option value="">2017</option>
                         </select>
                     </div>
                 </div>
-                @endif
-                <table class="table table-hover" id="dataTables-example" width="100%">
+                <table class="table table-hover dt-responsive nowarp" id="dataTables-example" cellspacing="0" width="100%">
                     <thead class="bg-light-blue-active color-palette">
                     <tr>
                         <th data-sortable="false">#</th>
@@ -74,21 +56,28 @@ $kelas = "kegiatan";
                         <th>Nama </th>
                         <th>Kota</th>
                         <th>Tempat</th>
-                        <th>Sasaran</th>
-                        <th>Peserta Min</th>
-                        <th>Peserta Max</th>
-                        <th>Tot. Peserta</th>
                         <th>Mulai</th>
                         <th>Selesai</th>
-                        <th>Lama</th>
-                        <th>Terlaksana</th>
+                        <th class="none">Durasi</th>
+                        <th>Sasaran</th>
+                        <th class="none">Min</th>
+                        <th class="none">Maks</th>
+                        <th class="none">Total</th>
+                        <th>Status</th>
+                        <th>Detail</th>
                     </tr>
                     </thead>
                     <tbody>
                     @foreach($datas as $data)
                         <?php 
-                            $datatempat = App\KegiatanTempat::find($data->tempat);
-                            $datasasaranhub = App\KegiatanSasaranHub::where('id_kegiatan',$data->id)->get();
+                            $date = new Date($data->tanggal);
+                            $date2 = new Date($data->tanggal2);  
+
+                            $startTimeStamp = strtotime($data->tanggal);
+                            $endTimeStamp = strtotime($data->tanggal2);
+                            $timeDiff = abs($endTimeStamp - $startTimeStamp);
+                            $numberDays = $timeDiff/86400;
+                            $numberDays = intval($numberDays);
                         ?>
                         <tr>
                             <td class="bg-aqua disabled color-palette"></td>
@@ -96,57 +85,52 @@ $kelas = "kegiatan";
                             <td hidden>{{ $data->status }}</td>
                             
                             <td class="warptext">{{ $data->name }}</td>
-                            @if(!empty($datatempat))
-                                <td>{{ $datatempat->kota }}</td>
-                                <td>{{ $datatempat->name }} <br/> {{ $datatempat->keterangan }}</td>
+                            @if(!empty($data->tempat))
+                                <td>{{ $data->tempat->kota }}</td>
+                                <td>{{ $data->tempat->name }}</td>
                             @else
                                 <td>-</td>
                                 <td>-</td>
                             @endif
 
-                            <td><p>
-                            @foreach($datasasaranhub as $datasasaran)
-                                <span class="label label-info">{{ $datasasaran->sasaran->name }}</span>
-                            @endforeach
-                            </p></td>
-
-                            <td>{{ $data->min }}</td>
-                            <td>{{ $data->max }}</td>
-                            <td>{{ $data->max }}</td>
-
                             @if(!empty($data->tanggal))
-                                <?php $date = new Date($data->tanggal); ?>
-                                <td><i hidden="true">{{ $data->tanggal }}</i> {{  $date->format('d/n/Y') }}</td>
+                                <td data-order="{{ $data->tanggal }}"><i hidden="true">{{ $data->tanggal }}</i> {{  $date->format('d F Y') }}</td>
                             @else
                                 <td>-</td>
                             @endif
 
                             @if(!empty($data->tanggal2))
-                                <?php $date2 = new Date($data->tanggal2); ?>
-                                <td><i hidden="true">{{ $data->tanggal2 }}</i> {{ $date2->format('d/n/Y') }}</td>
+                                <td data-order="{{ $data->tanggal2 }}"><i hidden="true">{{ $data->tanggal2 }}</i> {{ $date2->format('d F Y') }}</td>
                             @else
                                 <td>-</td>
                             @endif
+                            
+                            <td>{{ $numberDays }} Hari</td>
+
+                            @if(!empty($data->sasaranhub))
+                                <td><p>
+                                @foreach($data->sasaranhub as $datasasaran)
+                                    <a class="btn btn-info btn-sm">{{ $datasasaran->sasaran->name }}</a>
+                                @endforeach
+                                </p></td>
+                            @else
+                                <td></td>    
+                            @endif
+                            
+                            <td>{{ $data->min }} Orang</td>
+                            <td>{{ $data->max }} Orang</td>
+                            <td>{{ $data->total_peserta->count() }} Orang</td>
 
                             <td>
-                                <?php
-                                    $startTimeStamp = strtotime($data->tanggal);
-                                    $endTimeStamp = strtotime($data->tanggal2);
-                                    $timeDiff = abs($endTimeStamp - $startTimeStamp);
-                                    $numberDays = $timeDiff/86400;
-                                    $numberDays = intval($numberDays);
-                                ?>
-                                {{ $numberDays }} Hari
-                            </td>
-                            <td>
                                 @if($data->status == "1")
-                                    <a href="#" class="btn btn-warning"><i class="fa fa-check"></i></a>
+                                    <a href="#" class="btn btn-warning btn-sm " data-toggle="tooltip" data-placement="left" title="Kegiatan sudah dilaksanakan"><i class="fa fa-check"></i></a>
                                 @elseif($data->status == "2")
-                                    <a href="#" class="btn btn-danger"><i class="fa fa-times"></i></a>
+                                    <a href="#" class="btn btn-danger btn-sm " data-toggle="tooltip" data-placement="left" title="Kegiatan batal dilaksanakan"><i class="fa fa-times"></i></a>
                                 @else
-                                    <a href="#" class="btn btn-default"><i class="fa fa-ban"></i></a>
+                                    <a href="#" class="btn btn-default btn-sm " data-toggle="tooltip" data-placement="left" title="Kegiatan belum dilaksanakan"><i class="fa fa-ban"></i></a>
                                 @endif
-                            </tr>
+                            </td>
+                            <td></td>
                         </tr>
                     @endforeach
                     </tbody>
@@ -161,7 +145,9 @@ $kelas = "kegiatan";
 
 @section('js')
     @include('admins._components.datatable_JS')
-    <script type="text/javascript" src="{{ URL::asset('admin/datatable.js') }}"></script>
+    <script type="text/javascript" src="{{ URL::asset('plugins/dataTables/extension/Responsive/js/dataTables.responsive.min.js') }}"></script>
+    <script type="text/javascript" src="{{ URL::asset('plugins/dataTables/extension/Responsive/js/responsive.bootstrap.min.js') }}"></script>
+    <script type="text/javascript" src="{{ URL::asset('admin/datatable_responsive.js') }}"></script>
     <script>
         new $.fn.dataTable.Buttons(table,{
             buttons: [

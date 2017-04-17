@@ -15,6 +15,7 @@ use App\StafBidangHub;
 use App\StafPekerjaan;
 use App\StafPendidikan;
 use App\StafOrganisasi;
+use App\KegiatanPeserta;
 use App\Cuprimer;
 use App\Lembaga;
 use App\Http\Requests;
@@ -64,7 +65,18 @@ class StafController extends Controller{
             $anggotacus = StafAnggotaCU::where('id_staf',$id)->get();
             $culists = Cuprimer::select('no_ba','name')->orderBy('name','asc')->get();
             $lembagas = Lembaga::select('id','name')->orderBy('name','asc')->get();
-            return view('admins.'.$this->kelaspath.'.detail', compact('data','riwayatpekerjaan','riwayatpendidikan','riwayatorganisasi','culists','lembagas','keluargas','anggotacus'));
+
+            $diklatbkcus = KegiatanPeserta::with(array('kegiatan'=> function($query){
+                $query->where('kegiatan.tipe',1);
+            },'kegiatan.tempat'))->where('id_peserta',$id)->get();
+            $diklatlembagas = KegiatanPeserta::with(array('kegiatan'=> function($query){
+                $query->where('kegiatan.tipe',2);
+            },'kegiatan.tempat'))->where('id_peserta',$id)->get();
+            $rapats = KegiatanPeserta::with(array('kegiatan'=> function($query){
+                $query->where('kegiatan.tipe',3);
+            },'kegiatan.tempat'))->where('id_peserta',$id)->get();
+
+            return view('admins.'.$this->kelaspath.'.detail', compact('data','riwayatpekerjaan','riwayatpendidikan','riwayatorganisasi','culists','lembagas','keluargas','anggotacus','diklatbkcus','diklatlembagas','rapats'));
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
         }

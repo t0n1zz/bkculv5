@@ -152,7 +152,7 @@ foreach ($riwayatpekerjaan as $j){
             <div class="nav-tabs-custom">
                 <ul class="nav nav-tabs">
                     <li class="active"><a href="#riwayat" data-toggle="tab">Riwayat</a></li>
-                    <li><a href="#kegiatan" data-toggle="tab">Kegiatan Puskopdit BKCU Kalimantan</a></li>
+                    <li><a href="#kegiatan" data-toggle="tab">Kegiatan</a></li>
                     <li ><a href="#info" data-toggle="tab">Info Lain</a></li>
                 </ul>
                 <div class="tab-content">
@@ -347,6 +347,138 @@ foreach ($riwayatpekerjaan as $j){
                         </section>
                     </div>
                     <div class="tab-pane fade" id="kegiatan">
+                        @if(!empty($diklatbkcus))
+                            <section id="diklatbkcu">
+                                <h4 class="page-header color1">Diklat Puskopdit BKCU Kalimantan</h4>
+                                <table class="table table-hover " id="dataTables-diklatbkcu">
+                                    <thead>
+                                    <tr class="bg-light-blue-active color-palette">
+                                        <th>Nama Kegiatan</th>
+                                        <th>Tempat</th>
+                                        <th>Tanggal Mulai</th>
+                                        <th>Tanggal Selesai</th>
+                                        <th>Status</th>
+                                        <th>Keterangan</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    @foreach($diklatbkcus as $diklatbkcu)
+                                        <?php 
+                                            if($diklatbkcu->status == 1){
+                                                $diklatbkcustatus = "Sudah diikuti";
+                                            }elseif($diklatbkcu->status == 2){
+                                                $diklatbkcustatus = "Batal diikuti";
+                                            }else{
+                                                $diklatbkcustatus = "Belum dilaksanakan";
+                                            }
+                                        ?>
+                                        <tr>
+                                        @if(!empty($diklatbkcu->kegiatan))
+                                            <td>{{ $diklatbkcu->kegiatan->name }}</td>
+                                            @if(!empty($diklatbkcu->kegiatan->tempat))
+                                                <td>{{ $diklatbkcu->kegiatan->tempat->name }}</td>
+                                            @else
+                                                <td></td>
+                                            @endif
+                                            <td data-order="{{ $diklatbkcu->kegiatan->mulai }}">@if(!empty($diklatbkcu->kegiatan->mulai )){{ $diklatbkcu->kegiatan->mulai ->format('d/m/Y') }}@else{{ '-' }}@endif</td>
+                                            <td data-order="{{ $diklatbkcu->kegiatan->selesai }}">@if(!empty($diklatbkcu->kegiatan->selesai )){{ $diklatbkcu->kegiatan->selesai ->format('d/m/Y') }}@else{{ '-' }}@endif</td>
+                                            <td>{{ $diklatbkcustatus }}</td>
+                                            <td class="warptext">{{ $diklatbkcu->keterangan }}</td>
+                                        @endif
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                            </section>
+                        @endif
+                        @if(!empty($diklatlembaga))
+                            <section id="diklatlembaga">
+                                <h4 class="page-header color1">Diklat Lembaga Lain</h4>
+                                <table class="table table-hover " id="dataTables-diklatlembaga">
+                                    <thead>
+                                    <tr class="bg-light-blue-active color-palette">
+                                        <th>Nama Kegiatan</th>
+                                        <th>Tempat</th>
+                                        <th>Tanggal Mulai</th>
+                                        <th>Tanggal Selesai</th>
+                                        <th>Status</th>
+                                        <th>Keterangan</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    @foreach($diklatlembagas as $diklatlembaga)
+                                        <?php 
+                                            if($diklatlembaga->status == 1){
+                                                $diklatlembagastatus = "Sudah diikuti";
+                                            }elseif($diklatlembaga->status == 2){
+                                                $diklatlembagastatus = "Batal diikuti";
+                                            }else{
+                                                $diklatlembagastatus = "Belum dilaksanakan";
+                                            }
+                                        ?>
+                                        <tr>
+                                        @if(!empty($diklatlembaga->kegiatan))
+                                            <td>{{ $diklatlembaga->kegiatan->name }}</td>
+                                            @if(!empty($diklatlembaga->kegiatan->tempat))
+                                                <td>{{ $diklatlembaga->kegiatan->tempat->name }}</td>
+                                            @else
+                                                <td></td>
+                                            @endif
+                                            <td data-order="{{ $diklatlembaga->kegiatan->mulai }}">@if(!empty($diklatlembaga->kegiatan->mulai )){{ $diklatlembaga->kegiatan->mulai ->format('d/m/Y') }}@else{{ '-' }}@endif</td>
+                                            <td data-order="{{ $diklatlembaga->kegiatan->selesai }}">@if(!empty($diklatlembaga->kegiatan->selesai )){{ $diklatlembaga->kegiatan->selesai ->format('d/m/Y') }}@else{{ '-' }}@endif</td>
+                                            <td>{{ $diklatlembagastatus }}</td>
+                                            <td class="warptext">{{ $diklatlembaga->keterangan }}</td>
+                                        @endif
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                            </section>
+                        @endif
+                        @if(!empty($rapat))
+                            <section id="rapat">
+                                <h4 class="page-header color1">Diklat Puskopdit BKCU Kalimantan</h4>
+                                <table class="table table-hover " id="dataTables-rapat">
+                                    <thead>
+                                    <tr class="bg-light-blue-active color-palette">
+                                        <th>Nama Kegiatan</th>
+                                        <th>Tempat</th>
+                                        <th>Tanggal Mulai</th>
+                                        <th>Tanggal Selesai</th>
+                                        <th>Status</th>
+                                        <th>Keterangan</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    @foreach($rapats as $rapat)
+                                        <?php 
+                                            if($rapat->status == 1){
+                                                $rapatstatus = "Sudah diikuti";
+                                            }elseif($rapat->status == 2){
+                                                $rapatstatus = "Batal diikuti";
+                                            }else{
+                                                $rapatstatus = "Belum dilaksanakan";
+                                            }
+                                        ?>
+                                        <tr>
+                                        @if(!empty($rapat->kegiatan))
+                                            <td>{{ $rapat->kegiatan->name }}</td>
+                                            @if(!empty($rapat->kegiatan->tempat))
+                                                <td>{{ $rapat->kegiatan->tempat->name }}</td>
+                                            @else
+                                                <td></td>
+                                            @endif
+                                            <td data-order="{{ $rapat->kegiatan->mulai }}">@if(!empty($rapat->kegiatan->mulai )){{ $rapat->kegiatan->mulai ->format('d/m/Y') }}@else{{ '-' }}@endif</td>
+                                            <td data-order="{{ $rapat->kegiatan->selesai }}">@if(!empty($rapat->kegiatan->selesai )){{ $rapat->kegiatan->selesai ->format('d/m/Y') }}@else{{ '-' }}@endif</td>
+                                            <td>{{ $rapatstatus }}</td>
+                                            <td class="warptext">{{ $rapat->keterangan }}</td>
+                                        @endif
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                            </section>
+                        @endif
                     </div><!-- /.tab-pane -->
                     <div class="tab-pane fade" id="info">
                         <section id="keluarga">
