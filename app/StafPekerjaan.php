@@ -8,7 +8,7 @@ class StafPekerjaan extends Model {
     protected $table = 'staf_pekerjaan';
 
     protected $fillable = [
-        'id_staf','tipe','name','bidang','tingkat','tempat','mulai','selesai','sekarang'
+        'id_staf','id_bidang','id_tempat','tipe','name','tingkat','mulai','selesai','sekarang'
     ];
 
     public function getNameAttribute($value){
@@ -20,10 +20,14 @@ class StafPekerjaan extends Model {
     }
 
     public function lembaga(){
-        return $this->belongsTo('App\Lembaga','tempat','id');
+        return $this->belongsTo('App\Lembaga','id_tempat','id')->select(array('id','name'));
     }
 
     public function cuprimer(){
-        return $this->belongsTo('App\Cuprimer','tempat','no_ba');
+        return $this->belongsTo('App\Cuprimer','id_tempat','no_ba')->select(array('id','no_ba','name'));
+    }
+
+    public function bidanghub(){
+        return $this->hasMany('App\StafBidangHub','id_pekerjaan','id_bidang');
     }
 }

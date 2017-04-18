@@ -62,7 +62,7 @@ $now = Date::now()->format('Y-m-d');
                         <th>Sasaran</th>
                         <th class="none">Min</th>
                         <th class="none">Maks</th>
-                        <th class="none">Total</th>
+                        <th class="none">Terdaftar</th>
                         <th>Status</th>
                         <th>Detail</th>
                     </tr>

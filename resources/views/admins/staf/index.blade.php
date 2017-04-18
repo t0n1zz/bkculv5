@@ -15,6 +15,7 @@ $id_old="";
 
 @section('css')
     @include('admins._components.datatable_CSS')
+    <link rel="stylesheet" type="text/css" href="{{asset('plugins/dataTables/extension/Responsive/css/responsive.bootstrap.min.css')}}" >
 @stop
 
 @section('content')
@@ -59,10 +60,10 @@ $id_old="";
                                 $culists_non = App\Cuprimer::onlyTrashed()->orderBy('name','asc')->get();
                             ?>
                             <div class="input-group tabletools">
-                                <div class="input-group-addon primary-color"><i class="fa fa-users"></i> Staf CU</div>
+                                <div class="input-group-addon primary-color"><i class="fa fa-building-o"></i> Lembaga</div>
                                 <select class="form-control"  id="dynamic_select">
                                     <option {{ Request::is('admins/staf/') ? 'selected' : '' }}
-                                            value="/admins/staf/"><b>PUSKOPDIT BKCU Kalimantan</b></option>
+                                            value="/admins/staf/"><b>Puskopdit BKCU Kalimantan</b></option>
                                     <option disabled>-------CU Aktif-------</option>       
                                     @foreach($culists as $culist)
                                         <option {{ Request::is('admins/staf/index_cu/'.$culist->no_ba) ? 'selected' : '' }}
@@ -80,19 +81,20 @@ $id_old="";
                     <table class="table table-hover" id="dataTables-example"  width="100%">
                         <thead class="bg-light-blue-active color-palette">
                             <tr>
-                                <th data-sortable="false">#</th>
                                 <th hidden></th>
                                 <th data-sortable="false">Foto</th>
-                                <th>Nama </th>
-                                <th>NIM</tH>
-                                <th>NID</tH>
-                                <th>Umur</th>
-                                <th>Status</th>
-                                <th>Agama</th>
+                                <th class="sort" data-priority="1">Nama </th>
+                                <th>NIM</th>
+                                <th>No.Identitas</th>
                                 <th>Jabatan</th>
-                                <th>Pendidikan</th>
-                                <th>Alamat</th>
-                                <th>Kontak</th>
+                                <th>Pendidikan Tertinggi</th>
+                                <th>Agama</th>
+                                <th>Status</th>
+                                <th>Tgl. Lahir</th>
+                                <th>Umur</th>
+                                <th class="none">Alamat</th>
+                                <th class="none">Kontak</th>
+                                <th>Detail</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -100,6 +102,30 @@ $id_old="";
                             <?php
                                 if($id_old == $data->id_staf)
                                     break;
+
+                                $pekerjaan ='';
+                                $i = 0;
+                                $date = new Date($data->tanggal_lahir);
+
+                                if(!empty($data->staf->pekerjaan_aktif)){
+                                    foreach($data->staf->pekerjaan_aktif as $p){
+                                        $i++;
+                                        if($p->tipe == "1"){
+                                            $pekerjaan .= $p->name . ' CU ' . $p->cuprimer->name;
+                                        }elseif($p->tipe == "2"){
+                                            $pekerjaan .= $p->name . ' ' . $p->lembaga->name;
+                                        }elseif($p->tipe == "3"){
+                                            $pekerjaan .=$p->name . ' Puskopdit BKCU Kalimantan';
+                                        }
+                                        if($i < $data->staf->pekerjaan_aktif->count()){
+                                            $pekerjaan .= ', ';
+                                        }
+                                    }
+                                }
+
+                                if(!empty($data->staf->pendidikan)){
+                                    $pendidikan = $data->staf->pendidikan->first();
+                                }
 
                                 $newarr = explode("\n",$data->staf->alamat);
                                 foreach($newarr as $str){
@@ -120,14 +146,8 @@ $id_old="";
                                 }else{
                                     $status = "";
                                 }
-
-                                $pendidikan = App\StafPendidikan::where('id_staf',$data->id_staf)->first();
-
-                                $date = new Date($data->mulai); 
-                                $date2 = new Date($data->selesai); 
                             ?>
-                            <tr >
-                                <td class="bg-aqua disabled color-palette"></td>    
+                            <tr >  
                                 <td hidden>{{$data->staf->id}}</td>
                                 @if(!empty($data->staf->gambar) && is_file($imagepath.$data->staf->gambar."n.jpg"))
                                     <td style="white-space: nowrap"><div class="modalphotos" >
@@ -148,24 +168,19 @@ $id_old="";
                                 <td>{{ $data->staf->name }}</td>
                                 <td>{{ $data->staf->nim }}</td>
                                 <td>{{ $data->staf->nid }}</td>
-                                <td>{{ $data->staf->age }} Tahun</td>
-                                <td>{{ $status }}</td>
-                                <td>{{ $data->staf->agama }}</td>
-                                <td>
-                                    {{ $data->name }}                                     
-                                    @if($data->sekarang != 0)
-                                        periode {{ $date->format('d/m/Y') }} - {{ $date2->format('d/m/Y') }}
-                                    @else
-                                        sejak {{ $date->format('d/m/Y') }} 
-                                    @endif
-                                </td>
+                                <td class="warptext">{!! $pekerjaan !!}</td>
                                 @if(!empty($pendidikan))
-                                    <td>{{ $pendidikan->tingkat }} di {{ $pendidikan->tempat }}</td>
+                                    <td class="warptext">{{ $pendidikan->tingkat . ' ' . $pendidikan->name . ' di ' . $pendidikan->tempat}}</td>
                                 @else
-                                    <td>-</td>    
+                                    <td></td>    
                                 @endif
+                                <td>{{ $data->staf->agama }}</td>
+                                <td>{{ $status }}</td>
+                                <td data-order="{{ $data->tanggal_lahir }}">{{ $date->format('d F Y') }}</td>
+                                <td>{{ $data->staf->age }} Tahun</td>
                                 <td>{{ $alamat }}</td>
                                 <td>{{ $kontak }}</td>
+                                <td></td>
                             </tr>
                             <?php $id_old = $data->id_staf; ?>
                         @endforeach
@@ -202,7 +217,9 @@ $id_old="";
 
 @section('js')
     @include('admins._components.datatable_JS')
-    <script type="text/javascript" src="{{ URL::asset('admin/datatable.js') }}"></script>
+    <script type="text/javascript" src="{{ URL::asset('plugins/dataTables/extension/Responsive/js/dataTables.responsive.min.js') }}"></script>
+    <script type="text/javascript" src="{{ URL::asset('plugins/dataTables/extension/Responsive/js/responsive.bootstrap.min.js') }}"></script>
+    <script type="text/javascript" src="{{ URL::asset('admin/datatable_responsive.js') }}"></script>
     <script>
         function format ( dataSource ) {
             var html = '<table class="table table-bordered" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">';
@@ -230,6 +247,26 @@ $id_old="";
                     }
                 },
                 @endpermission
+                @permission('update.'.$kelas.'_update')
+                {
+                    text: '<i class="fa fa-pencil"></i> <u>U</u>bah Identitas',
+                    key: {
+                        altKey: true,
+                        key: 'u'
+                    },
+                    action: function(){
+                        var id = $.map(table.rows({ selected: true }).data(),function(item){
+                            return item[0];
+                        });
+                        var kelas = "{{ $kelas }}";
+                        if(id != ""){
+                            window.location.href =  kelas + "/" + id + "/edit";
+                        }else{
+                            $('#modalwarning').modal({show:true});
+                        }
+                    }
+                },
+                @endpermission
                 @permission('destroy.'.$kelas.'_destroy')
                 {
                     text: '<i class="fa fa-trash"></i> <u>H</u>apus',
@@ -239,7 +276,7 @@ $id_old="";
                     },
                     action: function(){
                         var id = $.map(table.rows({ selected:true }).data(),function(item){
-                            return item[1];
+                            return item[0];
                         });
                         if(id != ""){
                             $('#modalhapus').modal({show:true});
@@ -256,7 +293,7 @@ $id_old="";
                     text: '<i class="fa fa-database"></i> Detail',
                     action: function(){
                         var id = $.map(table.rows({ selected: true }).data(),function(item){
-                            return item[1];
+                            return item[0];
                         });
                         var kelas = "{{ $kelas }}";
                         if(id != ""){

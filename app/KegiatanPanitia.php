@@ -22,4 +22,16 @@ class KegiatanPanitia extends Model {
     public function kegiatan(){
         return $this->belongsTo('App\Kegiatan','id_kegiatan','id');
     }
+
+    public function kegiatanbkcu(){
+        return $this->kegiatan()->where('tipe',1);
+    }
+
+    public function kegiatanlembaga(){
+        return $this->kegiatan()->where('tipe',2);
+    }
+
+    public function kegiatanrapat(){
+        return $this->kegiatan()->where('tipe',3);
+    }
 }

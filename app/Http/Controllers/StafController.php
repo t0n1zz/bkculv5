@@ -30,7 +30,7 @@ class StafController extends Controller{
     {
         try{
             $id = '1';
-            $datas = StafPekerjaan::with('staf')->where('tipe','3')->where('tempat','=',$id)->get();
+            $datas = StafPekerjaan::with('staf.pekerjaan_aktif','staf.pendidikan_tertinggi')->where('tipe','3')->where('tempat','=',$id)->get();
             $datas2 = Cuprimer::select('id','name')->get();
             return view('admins.'.$this->kelaspath.'.index', compact('datas','datas2','id'));
         }catch (Exception $e){
@@ -57,26 +57,27 @@ class StafController extends Controller{
     public function detail($id)
     {
         try{
-            $data = Staf::find($id);
-            $riwayatpekerjaan = StafPekerjaan::where('id_staf','=',$id)->orderBy('selesai','dsc')->get();
-            $riwayatpendidikan = StafPendidikan::with('cuprimer')->where('id_staf','=',$id)->orderBy('selesai','dsc')->get();
-            $riwayatorganisasi = StafOrganisasi::where('id_staf','=',$id)->orderBy('selesai','dsc')->get();
-            $keluargas = StafKeluarga::where('id_staf',$id)->get();
-            $anggotacus = StafAnggotaCU::where('id_staf',$id)->get();
+            $data = Staf::with('pekerjaan.cuprimer','pekerjaan.lembaga','pendidikan','organisasi','keluarga','anggotacu','kegiatanpeserta.kegiatanbkcu','kegiatanpeserta.kegiatanlembaga','kegiatanpeserta.kegiatanrapat','kegiatanpanitia.kegiatanbkcu','kegiatanpanitia.kegiatanlembaga','kegiatanpanitia.kegiatanrapat','pekerjaan.bidanghub.bidang')->find($id);
+            // dd($data->kegiatanpeserta->count());
+            // $riwayatpekerjaan = StafPekerjaan::where('id_staf','=',$id)->orderBy('selesai','dsc')->get();
+            // $riwayatpendidikan = StafPendidikan::with('cuprimer')->where('id_staf','=',$id)->orderBy('selesai','dsc')->get();
+            // $riwayatorganisasi = StafOrganisasi::where('id_staf','=',$id)->orderBy('selesai','dsc')->get();
+            // $keluargas = StafKeluarga::where('id_staf',$id)->get();
+            // $anggotacus = StafAnggotaCU::where('id_staf',$id)->get();
             $culists = Cuprimer::select('no_ba','name')->orderBy('name','asc')->get();
             $lembagas = Lembaga::select('id','name')->orderBy('name','asc')->get();
 
-            $diklatbkcus = KegiatanPeserta::with(array('kegiatan'=> function($query){
-                $query->where('kegiatan.tipe',1);
-            },'kegiatan.tempat'))->where('id_peserta',$id)->get();
-            $diklatlembagas = KegiatanPeserta::with(array('kegiatan'=> function($query){
-                $query->where('kegiatan.tipe',2);
-            },'kegiatan.tempat'))->where('id_peserta',$id)->get();
-            $rapats = KegiatanPeserta::with(array('kegiatan'=> function($query){
-                $query->where('kegiatan.tipe',3);
-            },'kegiatan.tempat'))->where('id_peserta',$id)->get();
+            // $diklatbkcus = KegiatanPeserta::with(array('kegiatan'=> function($query){
+            //     $query->where('kegiatan.tipe',1);
+            // },'kegiatan.tempat'))->where('id_peserta',$id)->get();
+            // $diklatlembagas = KegiatanPeserta::with(array('kegiatan'=> function($query){
+            //     $query->where('kegiatan.tipe',2);
+            // },'kegiatan.tempat'))->where('id_peserta',$id)->get();
+            // $rapats = KegiatanPeserta::with(array('kegiatan'=> function($query){
+            //     $query->where('kegiatan.tipe',3);
+            // },'kegiatan.tempat'))->where('id_peserta',$id)->get();
 
-            return view('admins.'.$this->kelaspath.'.detail', compact('data','riwayatpekerjaan','riwayatpendidikan','riwayatorganisasi','culists','lembagas','keluargas','anggotacus','diklatbkcus','diklatlembagas','rapats'));
+            return view('admins.'.$this->kelaspath.'.detail', compact('data','culists','lembagas'));
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
         }

@@ -46,4 +46,24 @@ class Staf extends Model {
     public function pekerjaan_aktif(){
         return $this->pekerjaan()->where('sekarang','1')->orwhere('selesai','<=',date('Y-m-d').' 00:00:00');
     }
+
+    public function keluarga(){
+        return $this->hasMany('App\StafKeluarga','id_staf','id');
+    }
+
+    public function anggotacu(){
+        return $this->hasMany('App\StafAnggotaCU','id_staf','id');
+    }
+
+    public function organisasi(){
+        return $this->hasMany('App\StafOrganisasi','id_staf','id');
+    }
+
+    public function kegiatanpeserta(){
+        return $this->hasMany('App\KegiatanPeserta','id_peserta','id');
+    }
+
+    public function kegiatanpanitia(){
+        return $this->hasMany('App\KegiatanPanitia','id_panitia','id');
+    }
 }

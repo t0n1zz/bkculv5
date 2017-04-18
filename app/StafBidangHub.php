@@ -8,7 +8,7 @@ class StafBidangHub extends Model {
     protected $table = 'staf_bidanghub';
 
     protected $fillable = [
-        'id_staf','id_bidang'
+        'id_pekerjaan','id_bidang'
     ];
 
     public function getNameAttribute($value){

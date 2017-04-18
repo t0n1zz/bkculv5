@@ -6,43 +6,6 @@ $imagepath = "images_staf/";
 if(!empty($data->tanggal_lahir) && $data->tanggal_lahir != "0000-00-00"){
     $date = new Date($data->tanggal_lahir);
 }
-
-$pekerjaan = array();
-foreach ($riwayatpekerjaan as $j){
-    $tempat = "";
-    if($j->tipe == 1){
-        foreach($culists as $cu){
-            if($j->tempat == $cu->id){
-                $tempat = "CU " .$cu->name;
-            }
-        }
-    }elseif($j->tipe == 2){
-        foreach($lembagas as $lembaga){
-            if($j->tempat == $lembaga->id){
-                $tempat = $lembaga->name;
-            }
-        }
-    }elseif($j->tipe == 3){
-        $tempat = "Puskopdit BKCU Kalimantan";
-    }
-
-    if(!empty($j->selesai)){
-         $selesai = \Carbon\Carbon::createFromFormat('Y-m-d', $j->selesai);
-         $now =   \Carbon\Carbon::now();
-
-        if($j->tingkat != 'Pengurus' && $j->tingkat != 'Pengawas'){
-            if($j->sekarang == "1" || $selesai >= $now){
-                $pekerjaan[] = '<b>'.$j->name.' '.$tempat.'</b>';
-            }
-        }else{
-            if($selesai >= $now){
-                $pekerjaan[] = '<b>'.$j->name.' '.$tempat.'</b><br/> periode '.$mulai.' - '.$selesai;
-            }
-        }
-    }else{
-        $pekerjaan[] = $j->name.' '.$tempat;
-    }
-}
 ?>
 @extends('admins._layouts.layout')
 
@@ -74,11 +37,6 @@ foreach ($riwayatpekerjaan as $j){
                         <img class="profile-user-img img-responsive img-circle" src="{{ asset($imagepath.$data->gambar.'n.jpg') }}"
                              id="tampilgambar" alt="{{ asset($imagepath.$data->gambar."jpg") }}">
                         </div>
-                    @elseif(!empty($data->gambar) && is_file($imagepath.$data->gambar))
-                        <div class="modalphotos" >
-                        <img class="profile-user-img img-responsive img-circle" src="{{ asset($imagepath.$data->gambar) }}"
-                             id="tampilgambar" alt="{{ asset($imagepath.$data->gambar) }}">
-                        </div>
                     @else
                         @if($data->kelamin == "Wanita")
                             <img class="profile-user-img img-responsive img-circle" src="{{ asset('images/no_image_woman.jpg') }}"
@@ -90,13 +48,7 @@ foreach ($riwayatpekerjaan as $j){
                     @endif
                     <h3 class="profile-username text-center">{{ $data->name }}</h3>
                     <p class="text-muted text-center">
-                         @if(!empty($pekerjaan))
-                            @foreach($pekerjaan as $p)
-                                {!! $p  !!} <br/>
-                            @endforeach
-                        @else
-                            -
-                        @endif
+ 
                     </p>
                     <ul class="list-group list-group-unbordered">
                         <li class="list-group-item"><b>NIM</b> <a class="pull-right">{{ $data->nim }}</a></li>
@@ -106,7 +58,7 @@ foreach ($riwayatpekerjaan as $j){
                         <li class="list-group-item"><b>Status</b> <a class="pull-right">{{ $data->status }}</a></li>
                         <li class="list-group-item"><b>Agama</b> <a class="pull-right">{{ $data->agama }}</a></li>
                     </ul>
-                    <button type="button" class="btn btn-default btn-block" onclick="func_identitas()" style="margin-bottom: .5em;"><i class="fa fa-pencil"></i> Ubah Identitas</button>
+                    <a href="" class="btn btn-default btn-block"><i class="fa fa-pencil"></i> Ubah Identitas</a>
                 </div><!-- /.box-body -->
             </div><!-- /.box -->
             <div class="box box-primary">
@@ -152,13 +104,15 @@ foreach ($riwayatpekerjaan as $j){
             <div class="nav-tabs-custom">
                 <ul class="nav nav-tabs">
                     <li class="active"><a href="#riwayat" data-toggle="tab">Riwayat</a></li>
-                    <li><a href="#kegiatan" data-toggle="tab">Kegiatan</a></li>
+                    @if(!empty($data->kegiatanpeserta))
+                        <li><a href="#peserta" data-toggle="tab">Peserta</a></li>
+                    @endif    
                     <li ><a href="#info" data-toggle="tab">Info Lain</a></li>
                 </ul>
                 <div class="tab-content">
                     <div class="tab-pane fade in active" id="riwayat">
                         <section id="riwayatpekerjaan">
-                            <h4 class="page-header color1">Riwayat Pekerjaan</h4>
+                            <h4 class="page-header color1">Pekerjaan</h4>
                             <table class="table table-hover " id="dataTables-pekerjaan">
                                 <thead>
                                 <tr class="bg-light-blue-active color-palette">
@@ -174,60 +128,52 @@ foreach ($riwayatpekerjaan as $j){
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($riwayatpekerjaan as $riwayat2)
-                                    <?php $bidangs = App\StafBidangHub::with('bidang')->where('id_pekerjaan',$riwayat2->id)->get(); ?>
+                                @foreach($data->pekerjaan as $pekerjaan)
+                                    <?php $bidangs = App\StafBidangHub::with('bidang')->where('id_pekerjaan',$pekerjaan->id)->get(); ?>
                                     <tr
-                                    @if(!empty($riwayat2->sekarang) && $riwayat2->sekarang != '0')
+                                    @if(!empty($pekerjaan->sekarang) && $pekerjaan->sekarang != '0')
                                         {!! 'class="highlight"'  !!}
                                     @endif>
-                                        <td hidden>{{ $riwayat2->id }}</td>
-                                        <td hidden>{{ $riwayat2->tipe }}</td>
-                                        <td hidden>{{ $riwayat2->tempat }}</td>
-                                        @if(!empty($riwayat2->name))
-                                            <td>{{ $riwayat2->name }}</td>
+                                        <td hidden>{{ $pekerjaan->id }}</td>
+                                        <td hidden>{{ $pekerjaan->tipe }}</td>
+                                        <td hidden>{{ $pekerjaan->tempat }}</td>
+                                        @if(!empty($pekerjaan->name))
+                                            <td>{{ $pekerjaan->name }}</td>
                                         @else
                                             <td>-</td>
                                         @endif
-                                        @if(!empty($riwayat2->tempat))
-                                            @if($riwayat2->tipe == 1)
-                                                @foreach($culists as $cu)
-                                                    @if($riwayat2->tempat == $cu->no_ba)
-                                                        <td>CU {{ $cu->name }}</td>   
-                                                    @endif
-                                                @endforeach
-                                            @elseif($riwayat2->tipe == 2)
-                                                @foreach($lembagas as $lembaga)
-                                                    @if($riwayat2->tempat == $lembaga->id)
-                                                        <td>{{ $lembaga->name }}</td> 
-                                                    @endif
-                                                @endforeach
-                                            @elseif($riwayat2->tipe == 3)
+                                        @if(!empty($pekerjaan->tempat))
+                                            @if($pekerjaan->tipe == 1)
+                                                <td>{{ 'CU ' . $pekerjaan->cuprimer->name }}</td>
+                                            @elseif($pekerjaan->tipe == 2)
+                                                <td>{{ $pekerjaan->lembaga->name }}</td>
+                                            @elseif($pekerjaan->tipe == 3)
                                                 <td>Puskopdit BKCU Kalimantan</td> 
                                             @endif
                                         @else
                                             <td>-</td>
                                         @endif
 
-                                        <td>{{ $riwayat2->tingkat }}</td>
+                                        <td>{{ $pekerjaan->tingkat }}</td>
                                         
                                         <td>
-                                            @foreach($bidangs as $bidang)
-                                                <code>{{ $bidang->bidang->name }}</code>
+                                            @foreach($pekerjaan->bidanghub as $b)
+                                                <code>{{ $b->bidang->name }}</code>
                                             @endforeach
                                         </td>
 
-                                        @if(!empty($riwayat2->mulai ))
-                                            <?php $date = new Date($riwayat2->mulai); ?>
-                                            <td data-order="{{$riwayat2->mulai}}"> {{ $date->format('d/m/Y') }}</td>
+                                        @if(!empty($pekerjaan->mulai ))
+                                            <?php $date = new Date($pekerjaan->mulai); ?>
+                                            <td data-order="{{$pekerjaan->mulai}}"> {{ $date->format('d/m/Y') }}</td>
                                         @else
                                             <td>-</td>
                                         @endif
-                                        @if(!empty($riwayat2->sekarang) && $riwayat2->sekarang != '0')
+                                        @if(!empty($pekerjaan->sekarang) && $pekerjaan->sekarang != '0')
                                             <td data-order="Masih Bekerja">Masih Bekerja</td>
                                         @else
-                                            @if(!empty($riwayat2->selesai))
-                                                <?php $date2 = new Date($riwayat2->selesai);  ?>
-                                                <td data-order="{{$riwayat2->selesai}}"> {{ $date2->format('d/m/Y') }}</td>
+                                            @if(!empty($pekerjaan->selesai))
+                                                <?php $date2 = new Date($pekerjaan->selesai);  ?>
+                                                <td data-order="{{$pekerjaan->selesai}}"> {{ $date2->format('d/m/Y') }}</td>
                                             @else
                                                 <td>-</td>
                                             @endif
@@ -239,7 +185,7 @@ foreach ($riwayatpekerjaan as $j){
                         </section>
                         <section id="riwayatpendidikan">
                             <br/><br/>
-                            <h4 class="page-header color1">Riwayat Pendidikan</h4>
+                            <h4 class="page-header color1">Pendidikan</h4>
                             <table class="table table-hover " id="dataTables-pendidikan">
                                 <thead>
                                 <tr class="bg-light-blue-active color-palette">
@@ -252,36 +198,36 @@ foreach ($riwayatpekerjaan as $j){
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($riwayatpendidikan as $riwayat1)
+                                @foreach($data->pendidikan as $pendidikan)
                                     <tr>
-                                        <td hidden>{{ $riwayat1->id }}</td>
-                                        @if(!empty($riwayat1->tingkat))
-                                            <td>{{ $riwayat1->tingkat }}</td>
+                                        <td hidden>{{ $pendidikan->id }}</td>
+                                        @if(!empty($pendidikan->tingkat))
+                                            <td>{{ $pendidikan->tingkat }}</td>
                                         @else
                                             <td>-</td>
                                         @endif
-                                        @if(!empty($riwayat1->name))
-                                            <td>{{ $riwayat1->name }}</td>
+                                        @if(!empty($pendidikan->name))
+                                            <td>{{ $pendidikan->name }}</td>
                                         @else
                                             <td>-</td>
                                         @endif
-                                        @if(!empty($riwayat1->tempat))
-                                            <td>{{ $riwayat1->tempat}}</td>
+                                        @if(!empty($pendidikan->tempat))
+                                            <td>{{ $pendidikan->tempat}}</td>
                                         @else
                                             <td>-</td>
                                         @endif
-                                        @if(!empty($riwayat1->mulai ))
-                                            <?php $date = new Date($riwayat1->mulai); ?>
-                                            <td data-order="{{$riwayat1->mulai}}"> {{ $date->format('d/m/Y') }}</td>
+                                        @if(!empty($pendidikan->mulai ))
+                                            <?php $date = new Date($pendidikan->mulai); ?>
+                                            <td data-order="{{$pendidikan->mulai}}"> {{ $date->format('d/m/Y') }}</td>
                                         @else
                                             <td>-</td>
                                         @endif
-                                        @if(!empty($riwayat1->sekarang) && $riwayat1->sekarang != '0')
+                                        @if(!empty($pendidikan->sekarang) && $pendidikan->sekarang != '0')
                                             <td data-order="Masih Belajar">Masih Belajar</td>
                                         @else
-                                            @if(!empty($riwayat1->selesai))
-                                                <?php $date2 = new Date($riwayat1->selesai);  ?>
-                                                <td data-order="{{$riwayat1->selesai}}"> {{ $date2->format('d/m/Y') }}</td>
+                                            @if(!empty($pendidikan->selesai))
+                                                <?php $date2 = new Date($pendidikan->selesai);  ?>
+                                                <td data-order="{{$pendidikan->selesai}}"> {{ $date2->format('d/m/Y') }}</td>
                                             @else
                                                 <td>-</td>
                                             @endif
@@ -293,7 +239,7 @@ foreach ($riwayatpekerjaan as $j){
                         </section>
                         <section id="riwayatorganisasi">
                             <br/><br/>
-                            <h4 class="page-header color1">Riwayat Berorganisasi</h4>
+                            <h4 class="page-header color1">Berorganisasi</h4>
                             <table class="table table-hover " id="dataTables-organisasi">
                                 <thead>
                                 <tr class="bg-light-blue-active color-palette">
@@ -306,36 +252,36 @@ foreach ($riwayatpekerjaan as $j){
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($riwayatorganisasi as $riwayat3)
+                                @foreach($data->organisasi as $organisasi)
                                     <tr>
-                                        <td hidden>{{ $riwayat3->id }}</td>
-                                        @if(!empty($riwayat3->name))
-                                            <td>{{ $riwayat3->name }}</td>
+                                        <td hidden>{{ $organisasi->id }}</td>
+                                        @if(!empty($organisasi->name))
+                                            <td>{{ $organisasi->name }}</td>
                                         @else
                                             <td>-</td>
                                         @endif
-                                        @if(!empty($riwayat3->jabatan))
-                                            <td>{{ $riwayat3->jabatan }}</td>
+                                        @if(!empty($organisasi->jabatan))
+                                            <td>{{ $organisasi->jabatan }}</td>
                                         @else
                                             <td>-</td>
                                         @endif
-                                        @if(!empty($riwayat3->tempat))
-                                            <td>{{ $riwayat3->tempat }}</td>
+                                        @if(!empty($organisasi->tempat))
+                                            <td>{{ $organisasi->tempat }}</td>
                                         @else
                                             <td>-</td>
                                         @endif
-                                        @if(!empty($riwayat3->mulai ))
-                                            <?php $date = new Date($riwayat3->mulai); ?>
-                                            <td data-order="{{$riwayat3->mulai}}"> {{ $date->format('d/m/Y') }}</td>
+                                        @if(!empty($organisasi->mulai ))
+                                            <?php $date = new Date($organisasi->mulai); ?>
+                                            <td data-order="{{$organisasi->mulai}}"> {{ $date->format('d/m/Y') }}</td>
                                         @else
                                             <td>-</td>
                                         @endif
-                                        @if(!empty($riwayat3->sekarang) && $riwayat3->sekarang != '0')
+                                        @if(!empty($organisasi->sekarang) && $organisasi->sekarang != '0')
                                             <td data-order="Masih Aktif">Masih Aktif</td>
                                         @else
-                                            @if(!empty($riwayat3->selesai))
-                                                <?php $date2 = new Date($riwayat3->selesai);  ?>
-                                                <td data-order="{{$riwayat3->selesai}}"> {{ $date2->format('d/m/Y') }}</td>
+                                            @if(!empty($organisasi->selesai))
+                                                <?php $date2 = new Date($organisasi->selesai);  ?>
+                                                <td data-order="{{$organisasi->selesai}}"> {{ $date2->format('d/m/Y') }}</td>
                                             @else
                                                 <td>-</td>
                                             @endif
@@ -346,8 +292,8 @@ foreach ($riwayatpekerjaan as $j){
                             </table>
                         </section>
                     </div>
-                    <div class="tab-pane fade" id="kegiatan">
-                        @if(!empty($diklatbkcus))
+                    @if(!empty($data->kegiatanpeserta))
+                        <div class="tab-pane fade" id="peserta">
                             <section id="diklatbkcu">
                                 <h4 class="page-header color1">Diklat Puskopdit BKCU Kalimantan</h4>
                                 <table class="table table-hover " id="dataTables-diklatbkcu">
@@ -362,37 +308,36 @@ foreach ($riwayatpekerjaan as $j){
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    @foreach($diklatbkcus as $diklatbkcu)
-                                        <?php 
-                                            if($diklatbkcu->status == 1){
-                                                $diklatbkcustatus = "Sudah diikuti";
-                                            }elseif($diklatbkcu->status == 2){
-                                                $diklatbkcustatus = "Batal diikuti";
-                                            }else{
-                                                $diklatbkcustatus = "Belum dilaksanakan";
-                                            }
-                                        ?>
+                                    @foreach($data->kegiatanpeserta as $b)
                                         <tr>
-                                        @if(!empty($diklatbkcu->kegiatan))
-                                            <td>{{ $diklatbkcu->kegiatan->name }}</td>
-                                            @if(!empty($diklatbkcu->kegiatan->tempat))
-                                                <td>{{ $diklatbkcu->kegiatan->tempat->name }}</td>
-                                            @else
-                                                <td></td>
+                                            @if(!empty($b->kegiatanbkcu))
+                                                <?php 
+                                                    if($b->status == 1){
+                                                        $diklatbkcustatus = "Sudah diikuti";
+                                                    }elseif($b->status == 2){
+                                                        $diklatbkcustatus = "Batal diikuti";
+                                                    }else{
+                                                        $diklatbkcustatus = "Belum dilaksanakan";
+                                                    }
+                                                ?>
+                                                <td>{{ $b->kegiatanbkcu->name }}</td>
+                                                @if(!empty($b->kegiatanbkcu->tempat))
+                                                    <td>{{ $b->kegiatanbkcu->tempat->name }}</td>
+                                                @else
+                                                    <td></td>
+                                                @endif
+                                                <td data-order="{{ $b->kegiatanbkcu->mulai }}">@if(!empty($b->kegiatanbkcu->mulai )){{ $b->kegiatanbkcu->mulai ->format('d/m/Y') }}@else{{ '-' }}@endif</td>
+                                                <td data-order="{{ $b->kegiatanbkcu->selesai }}">@if(!empty($b->kegiatanbkcu->selesai )){{ $b->kegiatanbkcu->selesai ->format('d/m/Y') }}@else{{ '-' }}@endif</td>
+                                                <td>{{ $diklatbkcustatus }}</td>
+                                                <td class="warptext">{{ $b->keterangan }}</td>
                                             @endif
-                                            <td data-order="{{ $diklatbkcu->kegiatan->mulai }}">@if(!empty($diklatbkcu->kegiatan->mulai )){{ $diklatbkcu->kegiatan->mulai ->format('d/m/Y') }}@else{{ '-' }}@endif</td>
-                                            <td data-order="{{ $diklatbkcu->kegiatan->selesai }}">@if(!empty($diklatbkcu->kegiatan->selesai )){{ $diklatbkcu->kegiatan->selesai ->format('d/m/Y') }}@else{{ '-' }}@endif</td>
-                                            <td>{{ $diklatbkcustatus }}</td>
-                                            <td class="warptext">{{ $diklatbkcu->keterangan }}</td>
-                                        @endif
                                         </tr>
                                     @endforeach
                                     </tbody>
                                 </table>
                             </section>
-                        @endif
-                        @if(!empty($diklatlembaga))
                             <section id="diklatlembaga">
+                                <br/><br/>
                                 <h4 class="page-header color1">Diklat Lembaga Lain</h4>
                                 <table class="table table-hover " id="dataTables-diklatlembaga">
                                     <thead>
@@ -406,38 +351,37 @@ foreach ($riwayatpekerjaan as $j){
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    @foreach($diklatlembagas as $diklatlembaga)
-                                        <?php 
-                                            if($diklatlembaga->status == 1){
+                                    @foreach($data->kegiatanpeserta as $l)
+                                      <?php 
+                                            if($l->status == 1){
                                                 $diklatlembagastatus = "Sudah diikuti";
-                                            }elseif($diklatlembaga->status == 2){
+                                            }elseif($l->status == 2){
                                                 $diklatlembagastatus = "Batal diikuti";
                                             }else{
-                                                $diklatlembagastatus = "Belum dilaksanakan";
+                                                $diklatlembagastatus = "Terdaftar";
                                             }
                                         ?>
                                         <tr>
-                                        @if(!empty($diklatlembaga->kegiatan))
-                                            <td>{{ $diklatlembaga->kegiatan->name }}</td>
-                                            @if(!empty($diklatlembaga->kegiatan->tempat))
-                                                <td>{{ $diklatlembaga->kegiatan->tempat->name }}</td>
-                                            @else
-                                                <td></td>
+                                            @if(!empty($l->kegiatanlembaga))
+                                                <td>{{ $l->kegiatanlembaga->name }}</td>
+                                                @if(!empty($l->kegiatanlembaga->tempat))
+                                                    <td>{{ $l->kegiatanlembaga->tempat->name }}</td>
+                                                @else
+                                                    <td></td>
+                                                @endif
+                                                <td data-order="{{ $l->kegiatanlembaga->mulai }}">@if(!empty($l->kegiatanlembaga->mulai )){{ $l->kegiatanlembaga->mulai ->format('d/m/Y') }}@else{{ '-' }}@endif</td>
+                                                <td data-order="{{ $l->kegiatanlembaga->selesai }}">@if(!empty($l->kegiatanlembaga->selesai )){{ $l->kegiatanlembaga->selesai ->format('d/m/Y') }}@else{{ '-' }}@endif</td>
+                                                <td>{{ $diklatlembagastatus }}</td>
+                                                <td class="warptext">{{ $l->keterangan }}</td>  
                                             @endif
-                                            <td data-order="{{ $diklatlembaga->kegiatan->mulai }}">@if(!empty($diklatlembaga->kegiatan->mulai )){{ $diklatlembaga->kegiatan->mulai ->format('d/m/Y') }}@else{{ '-' }}@endif</td>
-                                            <td data-order="{{ $diklatlembaga->kegiatan->selesai }}">@if(!empty($diklatlembaga->kegiatan->selesai )){{ $diklatlembaga->kegiatan->selesai ->format('d/m/Y') }}@else{{ '-' }}@endif</td>
-                                            <td>{{ $diklatlembagastatus }}</td>
-                                            <td class="warptext">{{ $diklatlembaga->keterangan }}</td>
-                                        @endif
                                         </tr>
                                     @endforeach
                                     </tbody>
                                 </table>
                             </section>
-                        @endif
-                        @if(!empty($rapat))
                             <section id="rapat">
-                                <h4 class="page-header color1">Diklat Puskopdit BKCU Kalimantan</h4>
+                                <br/><br/>
+                                <h4 class="page-header color1">Rapat</h4>
                                 <table class="table table-hover " id="dataTables-rapat">
                                     <thead>
                                     <tr class="bg-light-blue-active color-palette">
@@ -450,36 +394,36 @@ foreach ($riwayatpekerjaan as $j){
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    @foreach($rapats as $rapat)
+                                    @foreach($data->kegiatanpeserta as $r)
                                         <?php 
-                                            if($rapat->status == 1){
+                                            if($r->status == 1){
                                                 $rapatstatus = "Sudah diikuti";
-                                            }elseif($rapat->status == 2){
+                                            }elseif($r->status == 2){
                                                 $rapatstatus = "Batal diikuti";
                                             }else{
                                                 $rapatstatus = "Belum dilaksanakan";
                                             }
                                         ?>
                                         <tr>
-                                        @if(!empty($rapat->kegiatan))
-                                            <td>{{ $rapat->kegiatan->name }}</td>
-                                            @if(!empty($rapat->kegiatan->tempat))
-                                                <td>{{ $rapat->kegiatan->tempat->name }}</td>
+                                        @if(!empty($r->rapat))
+                                            <td>{{ $r->rapat->name }}</td>
+                                            @if(!empty($r->rapat->tempat))
+                                                <td>{{ $r->rapat->tempat->name }}</td>
                                             @else
                                                 <td></td>
                                             @endif
-                                            <td data-order="{{ $rapat->kegiatan->mulai }}">@if(!empty($rapat->kegiatan->mulai )){{ $rapat->kegiatan->mulai ->format('d/m/Y') }}@else{{ '-' }}@endif</td>
-                                            <td data-order="{{ $rapat->kegiatan->selesai }}">@if(!empty($rapat->kegiatan->selesai )){{ $rapat->kegiatan->selesai ->format('d/m/Y') }}@else{{ '-' }}@endif</td>
+                                            <td data-order="{{ $r->rapat->mulai }}">@if(!empty($r->rapat->mulai )){{ $r->rapat->mulai ->format('d/m/Y') }}@else{{ '-' }}@endif</td>
+                                            <td data-order="{{ $r->rapat->selesai }}">@if(!empty($r->rapat->selesai )){{ $r->rapat->selesai ->format('d/m/Y') }}@else{{ '-' }}@endif</td>
                                             <td>{{ $rapatstatus }}</td>
-                                            <td class="warptext">{{ $rapat->keterangan }}</td>
+                                            <td class="warptext">{{ $r->keterangan }}</td>
                                         @endif
                                         </tr>
                                     @endforeach
                                     </tbody>
                                 </table>
                             </section>
-                        @endif
-                    </div><!-- /.tab-pane -->
+                        </div><!-- /.tab-pane -->
+                    @endif
                     <div class="tab-pane fade" id="info">
                         <section id="keluarga">
                             <h4 class="page-header color1">Keluarga</h4>
@@ -492,7 +436,7 @@ foreach ($riwayatpekerjaan as $j){
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($keluargas as $keluarga)
+                                @foreach($data->keluarga as $keluarga)
                                     <tr>
                                         <td hidden>{{ $keluarga->id }}</td>
                                         <td>{{ $keluarga->name }}</td>
@@ -514,7 +458,7 @@ foreach ($riwayatpekerjaan as $j){
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($anggotacus as $anggotacu)
+                                @foreach($data->anggotacu as $anggotacu)
                                     <tr>
                                         <td hidden>{{ $anggotacu->id }}</td>
                                         <td>{{ $anggotacu->name }}</td>
