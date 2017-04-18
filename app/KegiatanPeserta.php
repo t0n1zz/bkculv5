@@ -5,10 +5,8 @@ use illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class KegiatanPeserta extends Model {
-    use SoftDeletes;
 
     protected $table = 'kegiatan_peserta';
-    protected $dates = ['deleted_at'];
 
     protected $fillable = [
         'id_kegiatan','id_peserta','status'

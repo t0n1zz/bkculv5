@@ -192,17 +192,17 @@ $kelas ='kegiatan';
             </div>
             <div class="col-sm-12">
                 <h4>Tujuan</h4>
-                <textarea id="texttujuan" name="texttujuan"
+                <textarea id="texttujuan" name="tujuan"
                     >@if(!empty($data->tujuan)){{ $data->tujuan }}@endif</textarea>
             </div>
             <div class="col-sm-12">
                 <h4>Pokok Bahasan</h4>
-                <textarea id="textpokok" name="textpokok"
+                <textarea id="textpokok" name="pokok"
                     >@if(!empty($data->pokok)){{ $data->pokok }}@endif</textarea>  
             </div>
             <div class="col-sm-12">
                 <h4>Informasi Tambahan</h4>
-                <textarea id="texttambahan" name="texttambahan"
+                <textarea id="texttambahan" name="informasi"
                     >@if(!empty($data->keterangan)){{ $data->keterangan }}@endif</textarea>  
             </div>
         </div>

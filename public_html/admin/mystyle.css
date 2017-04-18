@@ -8,6 +8,10 @@
     cursor:default;
 }
 
+.marginbottom{
+    margin-bottom: 3px;
+}
+
 td {
     white-space: nowrap;
 }

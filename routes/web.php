@@ -484,10 +484,17 @@ Route::group(['prefix' => 'admins','middleware' => 'auth'], function(){
         'uses'         => 'KegiatanController@destroy',
         'middleware'   => ['auth', 'acl'],
         'can'          => 'destroy.kegiatan_destroy']);
+    Route::post('kegiatan/restore',array(
+        'as' => 'admins.kegiatan.restore',
+        'uses' => 'KegiatanController@restore'
+    ));
     Route::get('kegiatan/{id}/detail',array(
         'as' => 'admins.kegiatan.detail',
         'uses' => 'KegiatanController@detail'
     ));
+    Route::post('kegiatan/update_status_kegiatan', [
+        'as'           => 'admins.kegiatan.update_status_kegiatan',
+        'uses'         => 'KegiatanController@update_status_kegiatan']);
     Route::post('kegiatan/update_tujuan',array(
         'as' => 'admins.kegiatan.update_tujuan',
         'uses' => 'KegiatanController@update_tujuan'
@@ -503,13 +510,25 @@ Route::group(['prefix' => 'admins','middleware' => 'auth'], function(){
     Route::post('kegiatan/store_peserta', [
         'as'           => 'admins.kegiatan.store_peserta',
         'uses'         => 'KegiatanController@store_peserta']);
-    Route::post('kegiatan/store_panitia', [
-        'as'           => 'admins.kegiatan.store_panitia',
-        'uses'         => 'KegiatanController@store_panitia']);
+    Route::post('kegiatan/update_status_peserta', [
+        'as'           => 'admins.kegiatan.update_status_peserta',
+        'uses'         => 'KegiatanController@update_status_peserta']);
+    Route::post('kegiatan/update_ket_peserta', [
+        'as'           => 'admins.kegiatan.update_ket_peserta',
+        'uses'         => 'KegiatanController@update_ket_peserta']);
     Route::post('kegiatan/destroy_peserta',array(
         'as'            => 'admins.kegiatan.destroy_peserta',
         'uses'          => 'KegiatanController@destroy_peserta'
     ));
+    Route::post('kegiatan/store_panitia', [
+        'as'           => 'admins.kegiatan.store_panitia',
+        'uses'         => 'KegiatanController@store_panitia']);
+    Route::post('kegiatan/update_ket_panitia', [
+        'as'           => 'admins.kegiatan.update_ket_panitia',
+        'uses'         => 'KegiatanController@update_ket_panitia']);
+    Route::post('kegiatan/update_tugas_panitia', [
+        'as'           => 'admins.kegiatan.update_tugas_panitia',
+        'uses'         => 'KegiatanController@update_tugas_panitia']);
     Route::post('kegiatan/destroy_panitia',array(
         'as'            => 'admins.kegiatan.destroy_panitia',
         'uses'          => 'KegiatanController@destroy_panitia'

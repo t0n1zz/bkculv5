@@ -29,7 +29,7 @@ class KegiatanController extends Controller{
     public function index()
     {
         try{
-            $datas = Kegiatan::with('tempat','sasaranhub.sasaran','total_peserta')->get();
+            $datas = Kegiatan::withTrashed()->with('tempat','sasaranhub.sasaran','total_peserta')->get();
             // dd($datas[52]->sasaranhub);
             return view('admins.'.$this->kelaspath.'.index', compact('datas'));
         }catch (Exception $e){
@@ -65,14 +65,12 @@ class KegiatanController extends Controller{
     public function detail($id)
     {
         try{
-            $data = Kegiatan::find($id);
+            $data = Kegiatan::withTrashed()->find($id);
             $datasasaran = KegiatanSasaranHub::with('sasaran')->where('id_kegiatan',$id)->get();
             $datatempat = KegiatanTempat::find($data->id_tempat);
-            $datapanitia = KegiatanPanitia::with('staf','staf.pekerjaan')->where('id_kegiatan','=',$id)->get();
+            $datapanitia = KegiatanPanitia::with('staf.pekerjaan_aktif.cuprimer')->where('id_kegiatan','=',$id)->get();
             $datapeserta = KegiatanPeserta::with('staf.pekerjaan_aktif.cuprimer')->where('id_kegiatan','=',$id)->get();
-            $datastaf = StafPekerjaan::with('staf')->get();
-
-
+            $datastaf = StafPekerjaan::with('staf.pekerjaan_aktif.cuprimer','staf.pendidikan_tertinggi')->get();
             return view('admins.'.$this->kelaspath.'.detail',compact('data','datasasaran','datatempat','datapanitia','datapeserta','datastaf'));
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
@@ -230,6 +228,81 @@ class KegiatanController extends Controller{
         }
     }
 
+    public function update_status_peserta()
+    {
+        
+        try{
+            $id = Input::get('id');
+            $id_status = Input::get('id_status');
+            $kegiatan = Input::get('id_kegiatan');
+            $radiostatus = Input::get('radiostatus');
+
+            $kelas = KegiatanPeserta::find($id);
+            $kelas->status = $radiostatus;
+            $kelas->save();
+            
+            return Redirect::route('admins.'.$this->kelaspath.'.detail',array($kegiatan))->with('sucessmessage', 'Status peserta telah berhasil diubah');
+        }catch (Exception $e){
+            return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
+        }
+    }
+
+    public function update_ket_peserta()
+    {
+        
+        try{
+            $id = Input::get('id');
+            $kegiatan = Input::get('id_kegiatan');
+            $ketpeserta = Input::get('ketpeserta');
+            
+            $kelas = KegiatanPeserta::find($id);
+            $kelas->keterangan = $ketpeserta;
+            $kelas->save();
+            
+            return Redirect::route('admins.'.$this->kelaspath.'.detail',array($kegiatan))->with('sucessmessage', 'Keterangan peserta telah berhasil diubah');
+        }catch (Exception $e){
+            return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
+        }
+    }
+
+    public function update_tugas_panitia()
+    {
+        
+        try{
+            $id = Input::get('id');
+            $id_tugas = Input::get('id_tugas');
+            $kegiatan = Input::get('id_kegiatan');
+            $radiotugas = Input::get('radiotugas');
+
+            $kelas = KegiatanPanitia::find($id);
+            $kelas->tugas = $radiotugas;
+            $kelas->save();
+            
+            return Redirect::route('admins.'.$this->kelaspath.'.detail',array($kegiatan))->with('sucessmessage', 'Tugas panitia telah berhasil diubah');
+        }catch (Exception $e){
+            return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
+        }
+    }
+
+    public function update_ket_panitia()
+    {
+        
+        try{
+            $id = Input::get('id');
+            $kegiatan = Input::get('id_kegiatan');
+            $ketpanitia = Input::get('ketpanitia');
+            
+            $kelas = KegiatanPanitia::find($id);
+            $kelas->keterangan = $ketpanitia;
+            $kelas->save();
+            
+            return Redirect::route('admins.'.$this->kelaspath.'.detail',array($kegiatan))->with('sucessmessage', 'Keterangan panitia telah berhasil diubah');
+        }catch (Exception $e){
+            return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
+        }
+    }
+
+
     public function update_mulai(){
         try{
             $id = Input::get('id');
@@ -299,13 +372,8 @@ class KegiatanController extends Controller{
         $tanggal2=  date('Y-m-d', strtotime($date2));
         array_set($data,'tanggal2',$tanggal2);
 
-        $tujuan = Input::get('texttujuan');
-        $pokok = Input::get('textpokok');
-        $keterangan = Input::get('textketerangan');
-
         $periode = Input::get('periode');
         array_set($data,'periode',$periode);
-
 
         $selecttempat = Input::get('selecttempat');
         if($selecttempat == "tambah"){
@@ -360,10 +428,32 @@ class KegiatanController extends Controller{
     {
         try{
             $id = Input::get('id');
+            $keterangan = Input::get('keterangan');
 
+            if(!empty($keterangan)){
+                $kelas = Kegiatan::find($id);
+                $kelas->keterangan = $keterangan;
+                $kelas->save();
+            }
+            
             Kegiatan::destroy($id);
 
-        return Redirect::route('admins.'.$this->kelaspath.'.index')->with('sucessmessage', 'Informasi kegiatan telah berhasil di hapus.');
+        return Redirect::route('admins.'.$this->kelaspath.'.index')->with('sucessmessage', 'Kegiatan ini telah dibatalkan.');
+
+        }catch (Exception $e){
+            return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
+        }
+    }
+
+    public function restore()
+    {
+        try{
+            $id = Input::get('id');
+            $kelas = Kegiatan::onlyTrashed()->findOrFail($id);
+
+            $kelas->restore();
+
+            return Redirect::route('admins.'.$this->kelaspath.'.index')->with('sucessmessage', 'Kegiatan telah dilanjutkan.');
 
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
@@ -373,12 +463,8 @@ class KegiatanController extends Controller{
     public function destroy_panitia()
     {
         try{
-            $id = Input::get('idhapus');
+            $id = Input::get('id');
             $kegiatan = Input::get('id_kegiatan');
-
-            $kelas = KegiatanPanitia::find($id);
-            $kelas->deleted_ket = Input::get('deleted_ket');
-            $kelas->save();
 
             KegiatanPanitia::destroy($id);
 
@@ -391,14 +477,10 @@ class KegiatanController extends Controller{
     public function destroy_peserta()
     {
         try{
-            $id = Input::get('idhapus');
+            $id = Input::get('id');
             $kegiatan = Input::get('id_kegiatan');
-            
-            $kelas = KegiatanPeserta::find($id);
-            $kelas->deleted_ket = Input::get('deleted_ket');
-            $kelas->save();
 
-            Kegiatan::destroy($id);
+            KegiatanPeserta::destroy($id);
 
         return Redirect::route('admins.'.$this->kelaspath.'.detail',array($kegiatan))->with('sucessmessage', 'Peserta telah berhasil dihapus dari kegiatan');
         }catch (Exception $e){

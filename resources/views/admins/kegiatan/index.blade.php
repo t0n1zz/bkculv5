@@ -1,6 +1,7 @@
 <?php
 $title = "Kelola Kegiatan";
 $kelas = "kegiatan";
+$now = Date::now()->format('Y-m-d');
 ?>
 @extends('admins._layouts.layout')
 
@@ -50,10 +51,9 @@ $kelas = "kegiatan";
                 <table class="table table-hover dt-responsive nowarp" id="dataTables-example" cellspacing="0" width="100%">
                     <thead class="bg-light-blue-active color-palette">
                     <tr>
-                        <th data-sortable="false">#</th>
                         <th hidden></th>
                         <th hidden></th>
-                        <th>Nama </th>
+                        <th class="sort" data-priority="1">Nama </th>
                         <th>Kota</th>
                         <th>Tempat</th>
                         <th>Mulai</th>
@@ -80,9 +80,14 @@ $kelas = "kegiatan";
                             $numberDays = intval($numberDays);
                         ?>
                         <tr>
-                            <td class="bg-aqua disabled color-palette"></td>
                             <td hidden>{{ $data->id }}</td>
-                            <td hidden>{{ $data->status }}</td>
+                            @if($data->tanggal2 <= $now)
+                                <td hidden>TERLAKSANA</td>
+                            @elseif(!empty($data->deleted_at))
+                                <td hidden>BATAL</td>
+                            @else
+                                <td hidden>PENDING</td>
+                            @endif
                             
                             <td class="warptext">{{ $data->name }}</td>
                             @if(!empty($data->tempat))
@@ -110,7 +115,7 @@ $kelas = "kegiatan";
                             @if(!empty($data->sasaranhub))
                                 <td><p>
                                 @foreach($data->sasaranhub as $datasasaran)
-                                    <a class="btn btn-info btn-sm">{{ $datasasaran->sasaran->name }}</a>
+                                    <a class="btn btn-info btn-sm nopointer">{{ $datasasaran->sasaran->name }}</a>
                                 @endforeach
                                 </p></td>
                             @else
@@ -120,16 +125,13 @@ $kelas = "kegiatan";
                             <td>{{ $data->min }} Orang</td>
                             <td>{{ $data->max }} Orang</td>
                             <td>{{ $data->total_peserta->count() }} Orang</td>
-
-                            <td>
-                                @if($data->status == "1")
-                                    <a href="#" class="btn btn-warning btn-sm " data-toggle="tooltip" data-placement="left" title="Kegiatan sudah dilaksanakan"><i class="fa fa-check"></i></a>
-                                @elseif($data->status == "2")
-                                    <a href="#" class="btn btn-danger btn-sm " data-toggle="tooltip" data-placement="left" title="Kegiatan batal dilaksanakan"><i class="fa fa-times"></i></a>
-                                @else
-                                    <a href="#" class="btn btn-default btn-sm " data-toggle="tooltip" data-placement="left" title="Kegiatan belum dilaksanakan"><i class="fa fa-ban"></i></a>
-                                @endif
-                            </td>
+                            @if($data->tanggal2 <= $now && empty($data->deleted_at))
+                                <td data-order="TERLAKSANA"><a href="#" class="btn btn-info btn-sm nopointer">TERLAKSANA</a></td>
+                            @elseif(!empty($data->deleted_at))
+                                <td data-order="BATAL"><a href="#" class="btn btn-danger btn-sm nopointer">BATAL</a></td>
+                            @else
+                                <td data-order="PENDING"><a href="#" class="btn btn-default btn-sm nopointer">PENDING</a></td>
+                            @endif
                             <td></td>
                         </tr>
                     @endforeach
@@ -140,7 +142,64 @@ $kelas = "kegiatan";
     </div>
     <!--content-->
 </section>
-
+<div class="modal fade" id="modalbatal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    {{ Form::model($datas,array('route' => array('admins.'.$kelas.'.destroy',$kelas), 'method' => 'delete')) }}
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-red-active color-palette">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title"><i class="fa fa-times fa-fw"></i> Batalkan Pelatihan</h4>
+            </div>
+            <div class="modal-body">
+                <h4>Batalkan pelatihan ini?</h4>
+                <input type="text" name="id" value="" id="modalbatal_id" hidden="">
+                <p class="text-muted">Silahkan isikan alasan pembatalan pelatihan ini</p>
+                <textarea class="form-control" name="keterangan" rows="3" id="keterangan" placeholder="Alasan pembatalan"></textarea> 
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-danger" id="modalbutton">Iya</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Tidak</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+    {{ Form::close() }}
+</div>
+<div class="modal fade" id="modalpending" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    {{ Form::open(array('route' => array('admins.'.$kelas.'.restore'))) }}
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-light-blue-active color-palette">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title"> Lanjutkan Pelatihan</h4>
+            </div>
+            <div class="modal-body">
+                <h4>Lanjutkan pelatihan ini?</h4>
+                <input type="text" name="id" value="" id="modalpending_id" hidden="">
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" id="modalbutton">Iya</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Tidak</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+    {{ Form::close() }}
+</div>
+<div class="modal fade" id="modalterlaksana" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-yellow-active color-palette">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title"><i class="fa fa-warning fa-fw"></i> Oopss</h4>
+            </div>
+            <div class="modal-body">
+                <h4>Pelatihan ini sudah terlaksana</h4>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-check fa-fw"></i> ok</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
 @stop
 
 @section('js')
@@ -172,11 +231,18 @@ $kelas = "kegiatan";
                     },
                     action: function(){
                         var id = $.map(table.rows({ selected: true }).data(),function(item){
+                            return item[0];
+                        });
+                        var status = $.map(table.rows({ selected:true }).data(),function(item){
                             return item[1];
                         });
                         var kelas = "{{ $kelas }}";
                         if(id != ""){
-                            window.location.href =  kelas + "/" + id + "/edit";
+                            if(status == 'TERLAKSANA'){
+                                $('#modalterlaksana').modal({show:true});
+                            }else{
+                                window.location.href =  kelas + "/" + id + "/edit";
+                            }
                         }else{
                             $('#modalwarning').modal({show:true});
                         }
@@ -185,23 +251,28 @@ $kelas = "kegiatan";
                 @endpermission
                 @permission('destroy.'.$kelas.'_destroy')
                 {
-                    text: '<i class="fa fa-trash"></i> <u>H</u>apus',
+                    text: '<i class="fa fa-check-square"></i> Ubah Status',
                     key: {
                         altKey: true,
                         key: 'h'
                     },
                     action: function(){
                         var id = $.map(table.rows({ selected:true }).data(),function(item){
+                            return item[0];
+                        });
+                        var status = $.map(table.rows({ selected:true }).data(),function(item){
                             return item[1];
                         });
-                        var name = $.map(table.rows({ selected:true }).data(),function(item){
-                            return item[2];
-                        });
                         if(id != ""){
-                            $('#modalhapus').modal({show:true});
-                            $('#modalhapus_id').attr('value',id);
-                            $('#modalhapus_judul').text('Hapus Kegiatan');
-                            $('#modalhapus_detail').text('Yakin menghapus kegiatan "' + name + '" ?');
+                            if(status == 'PENDING'){
+                                $('#modalbatal').modal({show:true});
+                                $('#modalbatal_id').attr('value',id);
+                            }else if(status == 'BATAL'){
+                                $('#modalpending').modal({show:true});
+                                $('#modalpending_id').attr('value',id);
+                            }else{
+                                $('#modalterlaksana').modal({show:true});
+                            }
                         }else{
                             $('#modalwarning').modal({show:true});
                         }
@@ -212,7 +283,7 @@ $kelas = "kegiatan";
                     text: '<i class="fa fa-database"></i> Detail',
                     action: function(){
                         var id = $.map(table.rows({ selected: true }).data(),function(item){
-                            return item[1];
+                            return item[0];
                         });
                         var kelas = "{{ $kelas }}";
                         if(id != ""){

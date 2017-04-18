@@ -31,6 +31,14 @@ class Staf extends Model {
         return !empty($value) ? $value : '-';
     }
 
+    public function pendidikan(){
+        return $this->hasMany('App\StafPendidikan','id_staf','id');
+    }
+
+    public function pendidikan_tertinggi(){
+        return $this->pendidikan()->orderBy('tingkat','desc');
+    }
+
     public function pekerjaan(){
         return $this->hasMany('App\StafPekerjaan','id_staf','id');
     }

@@ -2,10 +2,13 @@
 namespace App;
 
 use illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Kegiatan extends Model {
+    use SoftDeletes;
     
     protected $table = 'kegiatan';
+    protected $dates = ['deleted_at'];
     
     public static $rules = [
         'name' => 'required',
