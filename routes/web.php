@@ -16,9 +16,9 @@ Route::get('pelayanan/{id}',array( 'as' => 'pelayanans','uses' => 'PublicControl
 Route::get('pelayanan',array( 'as' => 'pelayanan','uses' => 'PublicController@pelayanan'));
 Route::get('kegiatan',array( 'as' => 'kegiatan','uses' => 'PublicController@agenda'));
 Route::get('profil',array( 'as' => 'profil','uses' => 'PublicController@profil'));
-Route::get('pengurus',array( 'as' => 'pengurus','uses' => 'PublicController@pengurus'));
-Route::get('pengawas',array( 'as' => 'pengawas','uses' => 'PublicController@pengawas'));
-Route::get('manajemen',array( 'as' => 'manajemen','uses' => 'PublicController@manajemen'));
+// Route::get('pengurus',array( 'as' => 'pengurus','uses' => 'PublicController@pengurus'));
+// Route::get('pengawas',array( 'as' => 'pengawas','uses' => 'PublicController@pengawas'));
+// Route::get('manajemen',array( 'as' => 'manajemen','uses' => 'PublicController@manajemen'));
 Route::get('berita',array( 'as' => 'berita','uses' => 'PublicController@berita'));
 Route::get('sejarah',array( 'as' => 'sejarah','uses' => 'PublicController@sejarah'));
 Route::get('cuprimer',array('as' => 'cuprimer','uses' => 'PublicController@cuprimer'));

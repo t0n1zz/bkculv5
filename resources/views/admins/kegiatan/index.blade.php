@@ -2,6 +2,7 @@
 $title = "Kelola Kegiatan";
 $kelas = "kegiatan";
 $now = Date::now()->format('Y-m-d');
+$cu = Auth::user()->getCU();
 ?>
 @extends('admins._layouts.layout')
 
@@ -65,7 +66,7 @@ $now = Date::now()->format('Y-m-d');
                         <th class="none">Min</th>
                         <th class="none">Maks</th>
                         <th class="none">Terdaftar</th>
-                        <th>Detail</th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -291,7 +292,11 @@ $now = Date::now()->format('Y-m-d');
                 },
                 @endpermission
                 {
-                    text: '<i class="fa fa-database"></i> Detail',
+                    @if($cu == 0)
+                        text: '<i class="fa fa-database"></i> Detail',
+                    @else
+                        text: '<i class="fa fa-database"></i> Daftar',
+                    @endif
                     action: function(){
                         var id = $.map(table.rows({ selected: true }).data(),function(item){
                             return item[0];

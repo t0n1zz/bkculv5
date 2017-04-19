@@ -119,12 +119,14 @@
       $a1 = $data1['piutangberedar'] != 0 ? ($data1['piutanglalai_1bulan'] + $data1['piutanglalai_12bulan']) / $data1['piutangberedar'] : ($data1['piutanglalai_1bulan'] + $data1['piutanglalai_12bulan']) / 0.01; 
       $a2 = $data1['aset'] != 0 ? $data1['aset_tidak_menghasilkan'] / $data1['aset'] : $data1['aset_tidak_menghasilkan'] / 0.01;
       $ratasaham1 = ((($data1['simpanansaham_des']+ $data1['simpanansaham'])/2)/$date->format('m'))*12;
-      $r7 = $data1['bjs_saham'] / $ratasaham1;
-      $r7_2 = $data1['bjs_saham'] / (($data1['simpanansaham_lalu']+ $data1['simpanansaham'])/2);
+      $r7 = $ratasaham1 != 0 ? $data1['bjs_saham'] / $ratasaham1 : $data1['bjs_saham'] / 0.01;
+      $r7_2_divide = (($data1['simpanansaham_lalu']+ $data1['simpanansaham'])/2);
+      $r7_2 = $r7_2_divide != 0 ? $data1['bjs_saham'] / $r7_2_divide : $data1['bjs_saham'] / 0.01;
       if($data1['simpanansaham_des'] == 0 && $data1['simpanansaham_lalu'] != 0){
           $r7 = $r7_2;
       }
-      $r9 = ($data1['totalbiaya'] - $data1['beban_penyisihandcr']) / (($data1['shu'] + $data1['shu_lalu'])/ 2);
+      $r9_divide = (($data1['shu'] + $data1['shu_lalu'])/ 2);
+      $r9 = $r9_divide != 0 ? ($data1['totalbiaya'] - $data1['beban_penyisihandcr']) / $r9_divide : ($data1['totalbiaya'] - $data1['beban_penyisihandcr']) / 0.01;
       $l1 = $tot_nonsaham != 0 ? (($data1['investasi_likuid'] + $data1['aset_likuid_tidak_menghasilkan']) - $data1['hutang_tidak_berbiaya_30hari']) / $tot_nonsaham : (($data1['investasi_likuid'] + $data1['aset_likuid_tidak_menghasilkan']) - $data1['hutang_tidak_berbiaya_30hari']) / 0.01;
       $s10 = $data1['totalanggota_lalu'] != 0 ? ($tot_anggota - $data1['totalanggota_lalu']) / $data1['totalanggota_lalu'] : ($tot_anggota - $data1['totalanggota_lalu']) / 0.01;
       $s11 = $data1['aset_lalu'] != 0 ? ($data1['aset'] - $data1['aset_lalu']) / $data1['aset_lalu'] : ($data1['aset'] - $data1['aset_lalu']) / 0.01;

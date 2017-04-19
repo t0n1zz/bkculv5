@@ -74,9 +74,9 @@ $currentpage = $_SERVER['REQUEST_URI'];
                         @endif>Tentang Kami </a>
                         <ul class="dropdown">
                             <li><a href="{{ route('profil') }}" @if($currentpage == "/profil") {{'class="active"'}} @endif>Profil</a></li>
-                            <li><a href="{{ route('pengurus') }}" @if($currentpage == "/pengurus") {{'class="active"'}} @endif>Pengurus</a></li>
+{{--                             <li><a href="{{ route('pengurus') }}" @if($currentpage == "/pengurus") {{'class="active"'}} @endif>Pengurus</a></li>
                             <li><a href="{{ route('pengawas') }}" @if($currentpage == "/pengawas") {{'class="active"'}} @endif>Pengawas</a></li>
-                            <li><a href="{{ route('manajemen') }}" @if($currentpage == "/manajemen") {{'class="active"'}} @endif>Manajemen</a></li>
+                            <li><a href="{{ route('manajemen') }}" @if($currentpage == "/manajemen") {{'class="active"'}} @endif>Manajemen</a></li> --}}
                             <li><a href="{{ route('pelayanan') }}" @if($currentpage == "/pelayanan") {{'class="active"'}} @endif>Pelayanan</a></li>
                             <li><a href="{{ route('cuprimer') }}" @if($currentpage == "/cuprimer") {{'class="active"'}} @endif>Credit Union</a></li>
                             <li><a href="{{ route('artikel',array(4)) }}" @if($currentpage == "/artikel/4") {{'class="active"'}} @endif>Filosofi</a></li>
@@ -116,9 +116,9 @@ $currentpage = $_SERVER['REQUEST_URI'];
                 <a href="#" >Tentang Kami </a>
                 <ul class="dropdown">
                     <li><a href="{{ route('profil') }}">Profil</a></li>
-                    <li><a href="{{ route('pengurus') }}">Pengurus</a></li>
+  {{--                   <li><a href="{{ route('pengurus') }}">Pengurus</a></li>
                     <li><a href="{{ route('pengawas') }}">Pengawas</a></li>
-                    <li><a href="{{ route('manajemen') }}">Manajemen</a></li>
+                    <li><a href="{{ route('manajemen') }}">Manajemen</a></li> --}}
                     <li><a href="{{ route('pelayanan') }}">Pelayanan</a></li>
                     <li><a href="{{ route('cuprimer') }}">CU Primer</a></li>
                     <li><a href="{{ route('artikel',array(4)) }}">Filosofi</a></li>

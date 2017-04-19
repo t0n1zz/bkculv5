@@ -146,7 +146,7 @@
                 </div>
                 <div class="hr1" style="margin-bottom:50px;"></div>
             @endif
-            @if(!$stafs->isEmpty())
+         {{--    @if(!$stafs->isEmpty())
                 <div class="big-title text-center" data-animation="fadeInDown" data-animation-delay="01">
                     <h1>Pengurus, Pengawas dan Manajemen <strong>Credit Union {{ $cudetail->name }}</strong></h1>
                     <p>Daftar Pengurus, Pengawas dan Manajemen Credit Union {{ $cudetail->name }}</p>
@@ -222,7 +222,7 @@
                     </div>
                 </div>
                 <div class="hr1" style="margin-bottom:50px;"></div>
-            @endif
+            @endif --}}
         </div>
     </div>
 </div>

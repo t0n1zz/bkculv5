@@ -67,10 +67,19 @@ class KegiatanController extends Controller{
     {
         try{
             $tabname = "informasi";
+            $cu = Auth::user()->getCU();
+
             $data = Kegiatan::with('sasaranhub.sasaran','prasyarat.kegiatan','tempat')->withTrashed()->find($id);
             $datapanitia = KegiatanPanitia::with('staf.pekerjaan_aktif.cuprimer')->where('id_kegiatan','=',$id)->get();
-            $datapeserta = KegiatanPeserta::with('staf.pekerjaan_aktif.cuprimer')->where('id_kegiatan','=',$id)->get();
-            $datastaf = StafPekerjaan::with('staf.pekerjaan_aktif.cuprimer','staf.pendidikan_tertinggi')->get();
+            $datapeserta = KegiatanPeserta::with(array('staf.pekerjaan_aktif.cuprimer' => function($query){
+                $query->where('no_ba',Auth::user()->getCU());
+            }))->where('id_kegiatan','=',$id)->get();
+
+            if($cu == 0)
+                $datastaf = StafPekerjaan::with('cuprimer','staf.pendidikan_tertinggi')->where('sekarang','1')->orWhere('selesai','>',date('Y-m-d'))->get();
+            else
+                $datastaf = StafPekerjaan::with('cuprimer','staf.pendidikan_tertinggi')->where('id_tempat',$cu)->where('sekarang','1')->orWhere('selesai','>',date('Y-m-d'))->get();
+
             return view('admins.'.$this->kelaspath.'.detail',compact('data','datasasaran','datatempat','datapanitia','datapeserta','datastaf','tabname'));
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());

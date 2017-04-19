@@ -52,10 +52,10 @@ $ultahcu = DB::select(DB::raw($query));
         @permission('view.pengumuman_view')
             <div class="col-xs-6 col-sm-3 col-md-2">
                 <div class="small-box bg-aqua">
-                    <?php $total_pengumuman = App\Pengumuman::count(); $route = route('admins.pengumuman.index'); ?>
+                    <?php $route = route('admins.pengumuman.index'); ?>
                     <div class="inner">
                         <a href="{{ $route }}" style="color:white">
-                            <h3>{{ $total_pengumuman }}</h3>
+                            <h3>&nbsp;</h3>
                             <p>Pengumuman</p>
                         </a>
                     </div>
@@ -74,10 +74,10 @@ $ultahcu = DB::select(DB::raw($query));
         @permission('view.artikel_view')
             <div class="col-xs-6 col-sm-3 col-md-2">
                 <div class="small-box bg-green">
-                    <?php $total_artikel = App\Artikel::count(); $route = route('admins.artikel.index');?>
+                    <?php $route = route('admins.artikel.index');?>
                     <div class="inner">
                         <a href="{{ $route }}" style="color:white">
-                            <h3>{{ $total_artikel }}</h3>
+                            <h3>&nbsp;</h3>
                             <p>Artikel</p>
                         </a>
                     </div>
@@ -96,10 +96,10 @@ $ultahcu = DB::select(DB::raw($query));
         @permission('view.kegiatan_view')
             <div class="col-xs-6 col-sm-3 col-md-2">
                 <div class="small-box bg-red">
-                    <?php $total_kegiatan = App\Kegiatan::count();$route = route('admins.kegiatan.index'); ?>
+                    <?php $route = route('admins.kegiatan.index'); ?>
                     <div class="inner">
                         <a href="{{ $route }}" style="color:white">
-                            <h3>{{ $total_kegiatan }}</h3>
+                            <h3>&nbsp;</h3>
                             <p>Kegiatan</p>
                         </a>
                     </div>
@@ -120,7 +120,6 @@ $ultahcu = DB::select(DB::raw($query));
                 <div class="small-box bg-yellow">
                     <?php
                       if($cu == '0'){
-                        $total_cuprimer = App\Cuprimer::count();
                         $route = route('admins.cuprimer.index');
                       }else{
                         $route = route('admins.cuprimer.detail',array($cu));
@@ -129,10 +128,10 @@ $ultahcu = DB::select(DB::raw($query));
                     <div class="inner">
                         <a href="{{ $route }}" style="color:white">
                           @if($cu == '0')
-                            <h3>{{ $total_cuprimer }}</h3>
+                            <h3>&nbsp;</h3>
                             <p>CU</p>
                           @else
-                            <h3>&nbsp</h3>
+                            <h3>&nbsp;</h3>
                             <p>Profil CU</p>
                           @endif
                         </a>
@@ -154,16 +153,14 @@ $ultahcu = DB::select(DB::raw($query));
                 <div class="small-box bg-aqua">
                     <?php
                       if($cu == '0'){
-                        $total_tp = App\TpCU::count();
                         $route = route('admins.tpcu.index');
                       }else{
-                        $total_tp = App\TpCU::where('cu','=',$cu)->count();
                         $route = route('admins.tpcu.index_cu',array($cu));
                       }
                     ?>
                     <div class="inner">
                         <a href="{{ $route }}" style="color:white">
-                            <h3>{{ $total_tp }}</h3>
+                            <h3>&nbsp</h3>
                             <p>TP CU</p>
                         </a>
                     </div>
@@ -183,10 +180,6 @@ $ultahcu = DB::select(DB::raw($query));
             <div class="col-xs-6 col-sm-3 col-md-2">
                 <div class="small-box bg-green">
                     <?php
-                        if($cu != 0)
-                            $total_laporan = App\LaporanCu::where('no_ba','=',$cu)->count();
-                        else
-                            $total_laporan = App\LaporanCu::count();
                         if(Auth::user()->can('view.laporancu_view') && $cu == '0'){
                             $route = route('admins.laporancu.index');
                         }elseif(Auth::user()->can('view.laporancu_view') && $cu != '0'){
@@ -195,7 +188,7 @@ $ultahcu = DB::select(DB::raw($query));
                         ?>
                     <div class="inner">
                          <a href="{{ $route }}" style="color:white">
-                            <h3>{{ $total_laporan }}</h3>
+                            <h3>&nbsp;</h3>
                             <p>Laporan CU</p>
                         </a>
                     </div>
@@ -242,10 +235,10 @@ $ultahcu = DB::select(DB::raw($query));
         @permission('view.download_view')
             <div class="col-xs-6 col-sm-3 col-md-2">
                 <div class="small-box bg-yellow">
-                    <?php $total_download = App\Download::count(); $route = route('admins.download.index');?>
+                    <?php $route = route('admins.download.index');?>
                     <div class="inner">
                         <a href="{{ $route }}" style="color:white">
-                            <h3>{{ $total_download }}</h3>
+                            <h3>&nbsp;</h3>
                             <p>Download</p>
                         </a>
                     </div>
@@ -266,7 +259,6 @@ $ultahcu = DB::select(DB::raw($query));
                 <div class="small-box bg-aqua">
                     <?php
                       if($cu == '0'){
-                        $total_admin = App\User::count();
                         $route = route('admins.admin.index');
                       }else{
                         $route = route('admins.admin.detail',array($iduser));
@@ -279,10 +271,10 @@ $ultahcu = DB::select(DB::raw($query));
                              <a href="#" data-toggle="modal" data-target="#modalcheckpass" style="color:white">
                         @endpermission
                           @if($cu == '0')
-                            <h3>{{ $total_admin }}</h3>
+                            <h3>&nbsp;</h3>
                             <p>Admin</p>
                           @else
-                            <h3>&nbsp</h3>
+                            <h3>&nbsp;</h3>
                             <p>Admin</p>
                           @endif
                         </a>

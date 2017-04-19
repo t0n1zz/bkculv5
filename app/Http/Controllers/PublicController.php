@@ -195,11 +195,11 @@ class PublicController extends Controller{
                             ->where('id','=',$id)
                             ->first();
 
-        $stafs = Staf::where('cu','=',$id)->get();
+        // $stafs = Staf::where('cu','=',$id)->get();
 
 
 
-        return view('cuprimer_detail',compact('cudetail','stafs'));
+        return view('cuprimer_detail',compact('cudetail'));
     }
 
     public function hymnecu(){

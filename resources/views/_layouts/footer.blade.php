@@ -80,9 +80,9 @@ $infogerakan = App\InfoGerakan::find(1);
                         </div>
                         <div class="col-md-5 col-sm-5">
                             <ul class="no-list-style navigation">
-                                <li><a href="{{ route('pengurus') }}">Pengurus</a></li>
+{{--                                 <li><a href="{{ route('pengurus') }}">Pengurus</a></li>
                                 <li><a href="{{ route('pengawas') }}">Pengawas</a></li>
-                                <li><a href="{{ route('manajemen') }}">Manajemen</a></li>
+                                <li><a href="{{ route('manajemen') }}">Manajemen</a></li> --}}
                                 <li><a href="{{ route('cuprimer') }}">Credit Union</a></li>
                                 <li><a href="{{ route('artikel',array(4)) }}">Filosofi</a></li>
                                 <li><a href="{{ route('artikel',array(8)) }}">Sejarah</a></li>

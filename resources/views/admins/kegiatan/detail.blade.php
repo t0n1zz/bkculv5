@@ -78,8 +78,10 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
                             <b>Peserta Terdaftar</b> <a class="pull-right">{{ $datapeserta->count() }}</a>
                         </li>
                     </ul>
-                    @if($statuskegiatan != "terlaksana" && $statuskegiatan != "batal")
-                        <a href="{{ route('admins.'.$kelas.'.edit',array($data->id)) }}" class="btn btn-default btn-block"><i class="fa fa-pencil"></i> Ubah Data Kegiatan</a>   
+                    @if($cu == 0)
+                        @if($statuskegiatan != "terlaksana" && $statuskegiatan != "batal")
+                            <a href="{{ route('admins.'.$kelas.'.edit',array($data->id)) }}" class="btn btn-default btn-block"><i class="fa fa-pencil"></i> Ubah Data Kegiatan</a>   
+                        @endif
                     @endif
                 </div>
                 <!-- /.box-body -->
@@ -299,10 +301,10 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
                                     @endforeach
                                     </tbody>
                                 </table>
+                                <br/><br/>
                             </section>
                         @endif
                         <section id="peserta">
-                             <br/><br/>
                             <h4 class="page-header color1">Peserta</h4>
                             <table class="table table-hover dt-responsive" id="datatablepeserta" cellspacing="0" width="100%">
                                 <thead class="bg-light-blue-active color-palette">
@@ -457,7 +459,7 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
                                 <tbody>
                                 @foreach($datastaf as $dataf)
                                     <?php
-                                        $date = new Date($dataf->tanggal_lahir);
+                                        $date = new Date($dataf->staf->tanggal_lahir);
                                         $tempat ="";
                                         $pekerjaan = "";
                                         $pendidikan ="";
@@ -672,15 +674,15 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
                                     <th hidden></th>
                                     <th data-sortable="false">Foto</th>
                                     <th class="sort" data-priority="1">Nama</th>
-                                    <th>Lembaga</th>
                                     <th>Jabatan</th>
+                                    @if($cu == 0)<th>Lembaga</th>@endif
                                     <th class="none">NIM</th>
                                     <th class="none">NID</th>
-                                    <th class="none">Pendidikan</th>
-                                    <th class="none">Agama</th>
-                                    <th class="none">Status</th>
-                                    <th class="none">Tgl. Lahir</th>
-                                    <th class="none">Umur</th>
+                                    <th>Pendidikan</th>
+                                    <th>Agama</th>
+                                    <th>Status</th>
+                                    <th>Tgl. Lahir</th>
+                                    <th>Umur</th>
                                     <th class="none">Alamat</th>
                                     <th class="none">Kontak</th>
                                     <th>Detail</th>
@@ -689,7 +691,7 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
                                 <tbody>
                                 @foreach($datastaf as $dataf)
                                     <?php
-                                        $date = new Date($dataf->tanggal_lahir);
+                                        $date = new Date($dataf->staf->tanggal_lahir);
                                         $tempat ="";
                                         $pekerjaan = "";
                                         $pendidikan ="";
@@ -715,7 +717,31 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
                                         }
                                         if(!empty($dataf->staf->pendidikan)){
                                             $pendidikan = $dataf->staf->pendidikan->first();
+                                            if($pendidikan->tingkat == 1){
+                                                $tingkat = "SD";
+                                            }elseif($pendidikan->tingkat == 2){
+                                                $tingkat = "SMP";
+                                            }elseif($pendidikan->tingkat == 3){
+                                                $tingkat = "SMA/SMK";
+                                            }elseif($pendidikan->tingkat == 4){
+                                                $tingkat = "D1";
+                                            }elseif($pendidikan->tingkat == 5){
+                                                $tingkat = "D2";
+                                            }elseif($pendidikan->tingkat == 6){
+                                                $tingkat = "D3";
+                                            }elseif($pendidikan->tingkat == 7){
+                                                $tingkat = "D4";
+                                            }elseif($pendidikan->tingkat == 8){
+                                                $tingkat = "S1";
+                                            }elseif($pendidikan->tingkat == 9){
+                                                $tingkat = "S2";
+                                            }elseif($pendidikan->tingkat == 10){
+                                                $tingkat = "S3";
+                                            }else{
+                                                $tingkat = "";
+                                            }
                                         }
+
                                         if($dataf->staf->status == 1){
                                             $status = "Menikah";
                                         }elseif($dataf->staf->status == 2){
@@ -756,12 +782,12 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
                                             @endif
                                         @endif
                                         <td>{{ $dataf->staf->name }}</td>
-                                        <td class="warptext">{!! $tempat !!}</td>
                                         <td class="warptext">{!! $pekerjaan !!}</td>
+                                        @if($cu == 0)<td class="warptext">{!! $tempat !!}</td>@endif
                                         <td>{{ $dataf->staf->nim }}</td>
                                         <td>{{ $dataf->staf->nid }}</td>
                                         @if(!empty($pendidikan))
-                                            <td>{{ $pendidikan->tingkat . ' ' . $pendidikan->name . ' di ' . $pendidikan->tempat}}</td>
+                                            <td>{{ $tingkat . ' ' . $pendidikan->name . ' di ' . $pendidikan->tempat}}</td>
                                         @else
                                             <td></td>    
                                         @endif

@@ -30,7 +30,7 @@ class LaporanCu extends Model {
     ];
 
     public function getNameAttribute($value){
-        return !empty($value) ? $value : '0';
+        return !empty($value) ? $value : '0.01';
     }
 
     public function cuprimer(){
