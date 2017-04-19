@@ -146,6 +146,30 @@ $id_old="";
                                 }else{
                                     $status = "";
                                 }
+
+                                 if($pendidikan->tingkat == 1){
+                                        $tingkat = "SD";
+                                    }elseif($pendidikan->tingkat == 2){
+                                        $tingkat = "SMP";
+                                    }elseif($pendidikan->tingkat == 3){
+                                        $tingkat = "SMA/SMK";
+                                    }elseif($pendidikan->tingkat == 4){
+                                        $tingkat = "D1";
+                                    }elseif($pendidikan->tingkat == 5){
+                                        $tingkat = "D2";
+                                    }elseif($pendidikan->tingkat == 6){
+                                        $tingkat = "D3";
+                                    }elseif($pendidikan->tingkat == 7){
+                                        $tingkat = "D4";
+                                    }elseif($pendidikan->tingkat == 8){
+                                        $tingkat = "S1";
+                                    }elseif($pendidikan->tingkat == 9){
+                                        $tingkat = "S2";
+                                    }elseif($pendidikan->tingkat == 10){
+                                        $tingkat = "S3";
+                                    }else{
+                                        $tingkat = "Lain-lain";
+                                    }
                             ?>
                             <tr >  
                                 <td hidden>{{$data->staf->id}}</td>
@@ -170,7 +194,7 @@ $id_old="";
                                 <td>{{ $data->staf->nid }}</td>
                                 <td class="warptext">{!! $pekerjaan !!}</td>
                                 @if(!empty($pendidikan))
-                                    <td class="warptext">{{ $pendidikan->tingkat . ' ' . $pendidikan->name . ' di ' . $pendidikan->tempat}}</td>
+                                    <td class="warptext">{{ $tingkat . ' ' . $pendidikan->name . ' di ' . $pendidikan->tempat}}</td>
                                 @else
                                     <td></td>    
                                 @endif
@@ -260,7 +284,7 @@ $id_old="";
                         });
                         var kelas = "{{ $kelas }}";
                         if(id != ""){
-                            window.location.href =  kelas + "/" + id + "/edit";
+                            window.location.href =  "/admins/" + kelas + "/" + id + "/edit";
                         }else{
                             $('#modalwarning').modal({show:true});
                         }

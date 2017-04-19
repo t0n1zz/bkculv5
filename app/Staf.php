@@ -43,8 +43,12 @@ class Staf extends Model {
         return $this->hasMany('App\StafPekerjaan','id_staf','id');
     }
 
+    public function pekerjaan_cu(){
+       return $this->pekerjaan()->where('tipe','1'); 
+    }
+
     public function pekerjaan_aktif(){
-        return $this->pekerjaan()->where('sekarang','1')->orwhere('selesai','<=',date('Y-m-d').' 00:00:00');
+        return $this->pekerjaan()->where('sekarang','1')->orWhere('selesai','>',date('Y-m-d'));
     }
 
     public function keluarga(){

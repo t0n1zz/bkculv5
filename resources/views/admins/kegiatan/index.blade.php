@@ -56,14 +56,15 @@ $now = Date::now()->format('Y-m-d');
                         <th class="sort" data-priority="1">Nama </th>
                         <th>Kota</th>
                         <th>Tempat</th>
-                        <th>Mulai</th>
-                        <th>Selesai</th>
-                        <th class="none">Durasi</th>
+                        <th data-priority="4">Mulai</th>
+                        <th data-priority="3">Selesai</th>
                         <th>Sasaran</th>
+                        <th data-priority="2">Status</th>
+                        <th class="none">Prasyarat</th>
+                        <th class="none">Durasi</th>
                         <th class="none">Min</th>
                         <th class="none">Maks</th>
                         <th class="none">Terdaftar</th>
-                        <th>Status</th>
                         <th>Detail</th>
                     </tr>
                     </thead>
@@ -78,6 +79,21 @@ $now = Date::now()->format('Y-m-d');
                             $timeDiff = abs($endTimeStamp - $startTimeStamp);
                             $numberDays = $timeDiff/86400;
                             $numberDays = intval($numberDays);
+
+                            $sasaran = '';
+                            $prasyarat = '';
+
+                            if(!empty($data->sasaranhub)){
+                                foreach ($data->sasaranhub as $sr) {
+                                    $sasaran .= '<a class="btn btn-info btn-sm nopointer marginbottom" >' . $sr->sasaran->name . '</a> ';
+                                }
+                            }
+
+                            if(!empty($data->prasyarat)){
+                                foreach ($data->prasyarat as $pr) {
+                                    $prasyarat .= '<a class="btn btn-info btn-sm nopointer marginbottom">' . $pr->kegiatan->kode . ' - ' . $pr->kegiatan->name . '</a> ';
+                                }
+                            }
                         ?>
                         <tr>
                             <td hidden>{{ $data->id }}</td>
@@ -93,6 +109,9 @@ $now = Date::now()->format('Y-m-d');
                             @if(!empty($data->tempat))
                                 <td>{{ $data->tempat->kota }}</td>
                                 <td>{{ $data->tempat->name }}</td>
+                            @elseif(!empty($data->kota))
+                                <td>{{ $data->kota }}</td>
+                                <td>-</td>
                             @else
                                 <td>-</td>
                                 <td>-</td>
@@ -109,22 +128,9 @@ $now = Date::now()->format('Y-m-d');
                             @else
                                 <td>-</td>
                             @endif
-                            
-                            <td>{{ $numberDays }} Hari</td>
 
-                            @if(!empty($data->sasaranhub))
-                                <td><p>
-                                @foreach($data->sasaranhub as $datasasaran)
-                                    <a class="btn btn-info btn-sm nopointer">{{ $datasasaran->sasaran->name }}</a>
-                                @endforeach
-                                </p></td>
-                            @else
-                                <td></td>    
-                            @endif
-                            
-                            <td>{{ $data->min }} Orang</td>
-                            <td>{{ $data->max }} Orang</td>
-                            <td>{{ $data->total_peserta->count() }} Orang</td>
+                            <td class="warptext">{!! $sasaran !!}</td>
+
                             @if($data->tanggal2 <= $now && empty($data->deleted_at))
                                 <td data-order="TERLAKSANA"><a href="#" class="btn btn-info btn-sm nopointer">TERLAKSANA</a></td>
                             @elseif(!empty($data->deleted_at))
@@ -132,6 +138,11 @@ $now = Date::now()->format('Y-m-d');
                             @else
                                 <td data-order="PENDING"><a href="#" class="btn btn-default btn-sm nopointer">PENDING</a></td>
                             @endif
+                            <td class="warptext">{!! $prasyarat !!}</td>
+                            <td>{{ $numberDays }} Hari</td>
+                            <td>{{ $data->min }} Orang</td>
+                            <td>{{ $data->max }} Orang</td>
+                            <td>{{ $data->total_peserta->count() }} Orang</td>
                             <td></td>
                         </tr>
                     @endforeach

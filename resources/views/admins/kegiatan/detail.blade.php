@@ -14,6 +14,7 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
 }else{
     $statuskegiatan = "";
 }
+
 ?>
 @extends('admins._layouts.layout')
 
@@ -38,43 +39,15 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
 </section>
 <!-- /header -->
 <section class="content">
-    <!-- Alert -->
-    @include('admins._layouts.alert')
-    <!-- /Alert -->
+
     <div class="row">
-        <div class="col-sm-12">
-            @if($statuskegiatan == 'terlaksana')
-                <div class="callout callout-info ">
-                    <h3 style="margin-top: 5px;"><i class="icon fa fa-check"></i> Kegiatan ini sudah dilaksanakan</h3>
-                    @if(!empty($data->keterangan))
-                        <p>{{ $data->keterangan }}</p>
-                    @endif    
-                </div>
-            @elseif($statuskegiatan == 'batal')
-                <div class="callout callout-danger">
-                    <h3 style="margin-top: 5px;"><i class="icon fa fa-times"></i> Kegiatan ini tidak terlaksana</h3>
-                    @if(!empty($data->keterangan))
-                        <p>{{ $data->keterangan }}</p>
-                    @endif  
-                </div>
-            @else
-                @if($data->selesai >= $now)
-                    <div class="callout callout-warning ">
-                        <h3 style="margin-top: 5px;"><i class="icon fa fa-check"></i> Kegiatan ini sudah dilaksanakan?</h3>
-                        <btn class="btn btn-default" data-toggle="modal" data-target="#modalpulih"><i class="fa fa-check"></i> Sudah Dilaksanakan</btn>
-                        <btn class="btn btn-default" data-toggle="modal" data-target="#modalpulih"><i class="fa fa-check"></i> Batal Dilaksanakan</btn>  
-                    </div>
-                @endif    
-            @endif 
-        </div>
+        
         <div class="col-md-3">
             <!-- Profile Image -->
             <div class="box box-primary">
                 <div class="box-body box-profile">
                     <h2 class="profile-username text-center">{{ $data->name }}</h2>
-                    @if(!empty($datatempat->kota))
-                        <p class="text-muted text-center">{{ $datatempat->kota }}</p>
-                    @endif        
+                    <p class="text-muted text-center">{{ $data->kode }}</p>
                     <ul class="list-group list-group-unbordered">
                         <li class="list-group-item">
                             @if(!empty($data->tanggal))
@@ -119,42 +92,140 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
                 <!-- /.box-header -->
                 <div class="box-body">
                     <p>
-                    @foreach($datasasaran as $key)
-                       <a href="#" class="btn btn-info btn-sm">{{ $key->sasaran->name }}</a>
+                    @foreach($data->sasaranhub as $sr)
+                       <a href="#" class="btn btn-info btn-sm nopointer marginbottom">{{ $sr->sasaran->name }}</a>
                     @endforeach
                     </p>
                 </div>
                 <!-- /.box-body -->
             </div>
-            @if(!empty($datatempat))
-            <div class="box box-primary">
+             <div class="box box-primary">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Tempat</h3>
+                    <h3 class="box-title">Prasyarat</h3>
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body">
-                    @if(!empty($datatempat->gambar) && is_file($imagepath.$datatempat->gambar."n.jpg"))
-                        <div class="modalphotos">
-                        <img class="img-responsive " src="{{ asset($imagepath.$datatempat->gambar.'n.jpg') }}"
-                             id="tampilgambar" alt="{{ asset($imagepath.$datatempat->gambar."jpg") }}">
-                        </div>
-                    @endif
-                    <h4>{{ $datatempat->name }}</h4>
-                    <p class="text-muted">{{ $datatempat->keterangan }}</p>
+                    <p>
+                    @foreach($data->prasyarat as $pr)
+                       <a href="#" class="btn btn-info btn-sm nopointer marginbottom">{{ $pr->kegiatan->kode . ' - ' . $pr->kegiatan->name }}</a>
+                    @endforeach
+                    </p>
                 </div>
                 <!-- /.box-body -->
             </div>
+            @if(!empty($data->tempat))
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Tempat</h3>
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        @if(!empty($data->tempat->gambar) && is_file($imagepath.$data->tempat->gambar."n.jpg"))
+                            <div class="modalphotos">
+                            <img class="img-responsive " src="{{ asset($imagepath.$data->tempat->gambar.'n.jpg') }}"
+                                 id="tampilgambar" alt="{{ asset($imagepath.$data->tempat->gambar."jpg") }}">
+                            </div>
+                        @endif
+                        <h4>{{ $data->tempat->name }}</h4>
+                        <p class="text-muted">{{ $data->tempat->keterangan }}</p>
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+            @elseif(!empty($data->kota)) 
+                <div class="box box-primary">
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <h4>Tempat : {{ $data->kota }}</h4>
+                    </div>
+                    <!-- /.box-body -->
+                </div>   
             @endif
         </div>
         <!-- /.col -->
         <div class="col-md-9">
+            <!-- Alert -->
+            @include('admins._layouts.alert')
+            <!-- /Alert -->
+            <div>
+                @if($statuskegiatan == 'terlaksana')
+                    <div class="callout callout-info ">
+                        <h3 style="margin-top: 5px;"><i class="icon fa fa-check"></i> Kegiatan ini sudah dilaksanakan</h3>
+                        @if(!empty($data->keterangan))
+                            <p>{{ $data->keterangan }}</p>
+                        @endif    
+                    </div>
+                @elseif($statuskegiatan == 'batal')
+                    <div class="callout callout-danger">
+                        <h3 style="margin-top: 5px;"><i class="icon fa fa-times"></i> Kegiatan ini tidak terlaksana</h3>
+                        @if(!empty($data->keterangan))
+                            <p>{{ $data->keterangan }}</p>
+                        @endif  
+                    </div>
+                @else
+                    @if($data->selesai >= $now)
+                        <div class="callout callout-warning ">
+                            <h3 style="margin-top: 5px;"><i class="icon fa fa-check"></i> Kegiatan ini sudah dilaksanakan?</h3>
+                            <btn class="btn btn-default" data-toggle="modal" data-target="#modalpulih"><i class="fa fa-check"></i> Sudah Dilaksanakan</btn>
+                            <btn class="btn btn-default" data-toggle="modal" data-target="#modalpulih"><i class="fa fa-check"></i> Batal Dilaksanakan</btn>  
+                        </div>
+                    @endif    
+                @endif 
+            </div>
             <div class="nav-tabs-custom">
                 <ul class="nav nav-tabs">
-                    <li class="active"><a href="#peserta" data-toggle="tab">Pendaftaran</a></li>
-                    <li><a href="#tujuan" data-toggle="tab">Informasi</a></li>
+                    <li class="{{ $tabname == 'informasi' ? 'active' : '' }}"><a href="#informasi" data-toggle="tab">Informasi</a></li>
+                    <li class="{{ $tabname == 'pendaftaran' ? 'active' : '' }}"><a href="#pendaftaran" data-toggle="tab">Pendaftaran</a></li>
                 </ul>
                 <div class="tab-content">
-                    <div class="fade in active  tab-pane" id="peserta">
+                    <div class="fade tab-pane {{ $tabname == 'informasi' ? 'in active' : '' }}" id="informasi">
+                        @if(!empty($data->deskripsi))
+                            <section id="deskripsi">
+                                <h4 class="page-header color1">Deskripsi</h4>
+                                <div class="pre-scrollable">
+                                    {!! $data->deskripsi !!}
+                                </div>    
+                                <br/>
+                            </section>
+                        @endif
+                        @if(!empty($data->peserta))
+                            <section id="peserta">
+                                <h4 class="page-header color1">Peserta</h4>
+                                <div class="pre-scrollable">
+                                    {!! $data->peserta !!}
+                                </div>    
+                                <br/>
+                            </section>
+                        @endif
+                        @if(!empty($data->tujuan))
+                            <section id="tujuan">
+                                <h4 class="page-header color1">Tujuan</h4>
+                                <div class="pre-scrollable">
+                                    {!! $data->tujuan !!}
+                                </div>
+                                <br/>
+                            </section>
+                        @endif
+                        @if(!empty($data->ruang))
+                            <section id="ruang">
+                                <h4 class="page-header color1">Ruang Lingkup</h4>
+                                <div class="pre-scrollable">
+                                    {!! $data->ruang !!}
+                                </div>
+                                <br/>
+                            </section>
+                        @endif
+                        @if(!empty($data->informasi))
+                            <section id="informasi">
+                                <h4 class="page-header color1">Informasi Tambahan</h4>
+                                <div class="pre-scrollable">
+                                    {!! $data->informasi !!}
+                                </div>    
+                            </section> 
+                            </div>
+                        @endif    
+                    </div>
+                    <!-- /.tab-pane -->
+                    <div class="fade tab-pane {{ $tabname == 'pendaftaran' ? 'in active' : '' }}" id="pendaftaran">
                         @if($cu == '0')
                             <section id="panitia">
                                 <h4 class="page-header color1">Fasilitator & Panitia</h4>
@@ -318,31 +389,6 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
                         </section>
                     </div>
                     <!-- /.tab-pane -->
-                    <div class="fade tab-pane" id="tujuan">
-                        @if(!empty($data->tujuan))
-                            <section id="tujuan">
-                                <h4 class="page-header color1">Tujuan</h4>
-                                {!! $data->tujuan !!}
-                                 <br/>
-                            </section>
-                        @endif
-                        @if(!empty($data->pokok))
-                            <section id="pokok">
-                                <h4 class="page-header color1">Pokok Bahasan</h4>
-                                {!! $data->pokok !!}
-                                 <br/>
-                            </section>
-                        @endif
-                        @if(!empty($data->informasi))
-                            <section id="informasi">
-                                <h4 class="page-header color1">Informasi Tambahan</h4>
-                                {!! $data->informasi !!}
-                            </section> 
-                            </div>
-                        @endif    
-                    </div>
-                    <!-- /.tab-pane -->
-                    
                 </div>
                 <!-- /.tab-content -->
             </div>
@@ -374,6 +420,11 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
                                     <option value="Trainee">Trainee</option>
                                     <option value="Panitia">Panitia</option>
                                 </select>
+                            </div>
+                            <br/>
+                            <div class="form-group">
+                                <h4>Keterangan</h4>
+                                {{ Form::textarea('keterangan',null,array('class' => 'form-control','rows' => '3','placeholder'=>'Silahkan masukkan keterangan')) }}
                             </div> 
                         </div>
                         <div class="col-sm-12"><hr/></div>

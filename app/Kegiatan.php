@@ -17,7 +17,7 @@ class Kegiatan extends Model {
     ];
     
     protected $fillable = [
-        'name','periode','tanggal','tanggal2','tipe','id_tempat','max','min','tujuan','pokok','keterangan'
+        'kode','name','periode','tanggal','tanggal2','tipe','id_tempat','kota','max','min','tujuan','ruang','keterangan','deskripsi','peserta'
     ];
 
     public function getNameAttribute($value){
@@ -30,6 +30,10 @@ class Kegiatan extends Model {
 
     public function sasaranhub(){
         return $this->hasmany('App\KegiatanSasaranHub','id_kegiatan','id');
+    }
+
+    public function prasyarat(){
+        return $this->hasMany('App\KegiatanPrasyarat','id_prasyarat','id');
     }
 
     public function total_peserta(){

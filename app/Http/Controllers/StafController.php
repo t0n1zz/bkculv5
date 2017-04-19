@@ -5,6 +5,7 @@ use DB;
 use Auth;
 use File;
 use Input;
+use Image;
 use Redirect;
 use Validator;
 use App\Staf;
@@ -30,7 +31,7 @@ class StafController extends Controller{
     {
         try{
             $id = '1';
-            $datas = StafPekerjaan::with('staf.pekerjaan_aktif','staf.pendidikan_tertinggi')->where('tipe','3')->where('tempat','=',$id)->get();
+            $datas = StafPekerjaan::with('staf.pekerjaan_aktif','staf.pendidikan_tertinggi')->where('tipe','3')->where('id_tempat','=',$id)->get();
             $datas2 = Cuprimer::select('id','name')->get();
             return view('admins.'.$this->kelaspath.'.index', compact('datas','datas2','id'));
         }catch (Exception $e){
@@ -45,10 +46,9 @@ class StafController extends Controller{
     public function index_cu($id)
     {
         try{
-            $datas = StafPekerjaan::with('staf')->where('tipe','1')->where('tempat','=',$id)->get();
-            $datas2 = Cuprimer::all();
+            $datas = StafPekerjaan::with('staf.pekerjaan_aktif.cuprimer','staf.pendidikan_tertinggi')->where('tipe','1')->where('id_tempat','=',$id)->get();
 
-            return view('admins.'.$this->kelaspath.'.index', compact('datas','datas2','id'));
+            return view('admins.'.$this->kelaspath.'.index', compact('datas','id'));
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
         }
@@ -57,7 +57,7 @@ class StafController extends Controller{
     public function detail($id)
     {
         try{
-            $data = Staf::with('pekerjaan.cuprimer','pekerjaan.lembaga','pendidikan','organisasi','keluarga','anggotacu','kegiatanpeserta.kegiatanbkcu','kegiatanpeserta.kegiatanlembaga','kegiatanpeserta.kegiatanrapat','kegiatanpanitia.kegiatanbkcu','kegiatanpanitia.kegiatanlembaga','kegiatanpanitia.kegiatanrapat','pekerjaan.bidanghub.bidang')->find($id);
+            $data = Staf::with('pekerjaan_aktif','pekerjaan.cuprimer','pekerjaan.lembaga','pendidikan','organisasi','keluarga','anggotacu','kegiatanpeserta.kegiatan','kegiatanpanitia.kegiatan')->find($id);
             // dd($data->kegiatanpeserta->count());
             // $riwayatpekerjaan = StafPekerjaan::where('id_staf','=',$id)->orderBy('selesai','dsc')->get();
             // $riwayatpendidikan = StafPendidikan::with('cuprimer')->where('id_staf','=',$id)->orderBy('selesai','dsc')->get();
@@ -120,14 +120,16 @@ class StafController extends Controller{
 
             // anggota cu
             $i = 0;
-            foreach ($namecus as $namecu) {
-                if(!empty($nocus[$i])){
-                    $this->input_anggotacu($savedata->id,null,$namecu,$nocus[$i]);
-                }else{
-                    $this->input_anggotacu($savedata->id,null,$namecu,null);
+            if(!empty($namecus)){
+                foreach ($namecus as $namecu) {
+                    if(!empty($nocus[$i])){
+                        $this->input_anggotacu($savedata->id,null,$namecu,$nocus[$i]);
+                    }else{
+                        $this->input_anggotacu($savedata->id,null,$namecu,null);
+                    }
+                    
+                    $i++;
                 }
-                
-                $i++;
             }
 
             // keluarga
@@ -139,11 +141,12 @@ class StafController extends Controller{
 
             if(!empty($namepasangan))
                 $this->input_keluaga($savedata->id,null,$namepasangan,'Pasangan');
-   
-            foreach ($nameanaks as $nameanak) {
-                $this->input_keluaga($savedata->id,null,$nameanak,'Anak');
+            
+            if(!empty($nameanaks)){
+                foreach ($nameanaks as $nameanak) {
+                    $this->input_keluaga($savedata->id,null,$nameanak,'Anak');
+                }
             }
-
             // riwayat
             $riwayatpekerjaan = $this->input_pekerjaan($savedata->id,null);
             $this->input_pendidikan($savedata->id,null);
@@ -276,21 +279,21 @@ class StafController extends Controller{
                 $timestamp = strtotime(str_replace('/', '-',$date1));
                 $tanggal = date('Y-m-d',$timestamp);
                 array_set($data,'tanggal_lahir',$tanggal);
+
             }
 
             $img = Input::file('gambar');
-            $name = preg_replace('/[^A-Za-z0-9\-]/', '',Input::get('name'));
-            $formatedname = $name.str_random(5).date('Y-m-d');
             if (!is_null($img)) {
+                $name = preg_replace('/[^A-Za-z0-9\-]/', '',Input::get('name'));
+                $formatedname = $name.str_random(5).date('Y-m-d');
                 $filename = $formatedname.".jpg";
+                $filename2 = $formatedname."n.jpg";
 
-                if ($this->save_image($img, $kelas, $filename))
-                    array_set($data,'gambar',$formatedname);
-                else
-                    return false;
+                $this->save_image($img, $kelas, $filename, $filename2);
+                array_set($data,'gambar',$formatedname);
             }else{
-                $filename = $kelas->gambar;
-                array_set($data,'gambar',$filename);
+                $formatedname = $kelas->gambar;
+                array_set($data,'gambar',$formatedname);
             }
         } catch (Exception $e) {
             $this->status = $e->getMessage();
@@ -299,7 +302,7 @@ class StafController extends Controller{
         return $data;
     }
 
-    public function input_keluaga($id_staf,$id_keluarga)
+    public function input_keluaga($id_staf,$id_keluarga,$namekeluarga,$tipekeluarga)
     {
         if(!empty($id_keluarga)){
             $kelas = StafKeluarga::findOrFail($id_keluarga);
@@ -347,9 +350,9 @@ class StafController extends Controller{
 
         $no_tipe = 0;
         if($tipepekerjaan == "1"){//cu
-            $kelasriwayat->bidang = Input::get('selectbidangcu');
+            $kelasriwayat->id_bidang = Input::get('selectbidangcu');
             $kelasriwayat->tingkat = Input::get('selecttingkatcu');
-            $kelasriwayat->tempat = Input::get('selectcu');
+            $kelasriwayat->id_tempat = Input::get('selectcu');
             $lembaga = Input::get('selectcu');
 
             if($kelamin == 'Pria')//no tipe utk nim
@@ -357,7 +360,7 @@ class StafController extends Controller{
             else
                 $no_tipe = 2;
         }elseif($tipepekerjaan == "2"){//lembaga lain
-            $kelasriwayat->bidang = "";
+            $kelasriwayat->id_bidang = null;
             $kelasriwayat->tingkat = Input::get('selecttingkatlembaga');
 
             $selectlembaga = Input::get('selectlembaga');
@@ -366,16 +369,16 @@ class StafController extends Controller{
             }else{
                 $lembaga = $selectlembaga;
             }
-            $kelasriwayat->tempat = $lembaga;
+            $kelasriwayat->id_tempat = $lembaga;
 
             if($kelamin == 'Pria')//no tipe utk nim
                 $no_tipe = 3;
             else
                 $no_tipe = 4; 
         }elseif($tipepekerjaan == "3"){
-            $kelasriwayat->bidang = Input::get('selectbidangcu');
+            $kelasriwayat->id_bidang = Input::get('selectbidangcu');
             $kelasriwayat->tingkat = Input::get('selecttingkatcu');
-            $kelasriwayat->tempat = 1;
+            $kelasriwayat->id_tempat = 1;
             $lembaga = 1;
 
             if($kelamin == 'Pria')//no tipe utk nim
@@ -403,27 +406,29 @@ class StafController extends Controller{
         
         $kelasriwayat->save();
 
-        $bidangs = Input::get('bidang');
-        $bidangbaru = Input::get('bidangbaru');
+        // if($tipepekerjaan != "2"){
+        //     $bidangs = Input::get('bidang');
+        //     $bidangbaru = Input::get('bidangbaru');
 
-        if(!empty($bidangbaru)){
-            $kelasbidang = new StafBidang();
-            $kelasbidang->name = $bidangbaru;
-            $kelasbidang->save();
+        //     if(!empty($bidangbaru)){
+        //         $kelasbidang = new StafBidang();
+        //         $kelasbidang->name = $bidangbaru;
+        //         $kelasbidang->save();
 
-            array_push($bidangs,$kelasbidang->id);
-        }
+        //         array_push($bidangs,$kelasbidang->id);
+        //     }
 
-        if(!empty($bidangs) && !empty($id_pekerjaan)){
-            StafBidangHub::where('id_pekerjaan',$id_pekerjaan)->delete(); 
-        }
+        //     if(!empty($bidangs) && !empty($id_pekerjaan)){
+        //         StafBidangHub::where('id_pekerjaan',$id_pekerjaan)->delete(); 
+        //     }
 
-        foreach($bidangs as $bidang){
-            $kelasbidang = new StafBidangHub();
-            $kelasbidang->id_pekerjaan = $kelasriwayat->id;
-            $kelasbidang->id_bidang = $bidang;
-            $kelasbidang->save();
-        }
+        //     foreach($bidangs as $bidang){
+        //         $kelasbidang = new StafBidangHub();
+        //         $kelasbidang->id_pekerjaan = $kelasriwayat->id;
+        //         $kelasbidang->id_bidang = $bidang;
+        //         $kelasbidang->save();
+        //     }
+        // }
 
         return array($no_tipe,$lembaga);
     }
@@ -490,9 +495,7 @@ class StafController extends Controller{
     {
         try{
             $data = Staf::find($id);
-            $culists = Cuprimer::orderBy('name','asc')->get();
-            $lembagas = Lembaga::orderBy('name','asc')->get();
-            return view('admins.'.$this->kelaspath.'.edit', compact('data','culists','lembagas'));
+            return view('admins.'.$this->kelaspath.'.edit', compact('data'));
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
         }
@@ -504,7 +507,7 @@ class StafController extends Controller{
             $kelas = Staf::findOrFail($id);
 
             $route = Input::get('route');
-
+            
             if(empty($route)){
                 $validator = Validator::make($data = Input::all(), Staf::$rules);
                 if ($validator->fails())
@@ -514,7 +517,7 @@ class StafController extends Controller{
             }else{
                 $data = Input::all();
             }
-
+            
             $name = Input::get('name');
             $data2 = $this->input_data($kelas,$data,$name);
 
@@ -600,16 +603,25 @@ class StafController extends Controller{
         }
     }
 
-    function save_image($img,$kelas,$filename)
+    function save_image($img,$kelas,$filename,$filename2)
     {
         list($width, $height) = getimagesize($img);
 
         $path = public_path($this->imagepath);
 
         File::delete($path . $kelas->gambar);
-        File::delete($path . $kelas->gambar .".jpg");
         File::delete($path . $kelas->gambar ."n.jpg");
 
-        Image::make($img->getRealPath())->fit(249,289)->save($path . $filename);
+        if($width > 720){
+            Image::make($img->getRealPath())->resize(720, null,
+                function ($constraint) {
+                    $constraint->aspectRatio();
+                })
+                ->save($path . $filename);
+        }else{
+            Image::make($img->getRealPath())->save($path . $filename);
+        }
+
+        Image::make($img->getRealPath())->fit(249,289)->save($path . $filename2);
     }
 }

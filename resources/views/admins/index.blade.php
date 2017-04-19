@@ -214,17 +214,16 @@ $ultahcu = DB::select(DB::raw($query));
         @permission('view.staf_view')
             <div class="col-xs-6 col-sm-3 col-md-2">
                 <div class="small-box bg-red">
-                    <?php
-                        if($cu != 0)
-                            $total_staff = App\Staf::with('cuprimer')->where('cu','=',$cu)->count();
-                        else
-                            $total_staff = App\Staf::count();
-
-                        $route = route('admins.staf.index');
-                        ?>
+                <?php
+                  if($cu == '0'){
+                    $route = route('admins.staf.index');
+                  }else{
+                    $route = route('admins.staf.index_cu',array($cu));
+                  }
+                ?>
                     <div class="inner">
                         <a href="{{ $route }}" style="color:white">
-                            <h3>{{ $total_staff }}</h3>
+                            <h3>&nbsp;</h3>
                             <p>Staf</p>
                         </a>
                     </div>

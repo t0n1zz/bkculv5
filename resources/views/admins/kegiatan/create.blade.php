@@ -4,10 +4,6 @@ $kelas="kegiatan";
 ?>
 @extends('admins._layouts.layout')
 
-@section('css')
-<link rel="stylesheet" type="text/css" href="{{asset('plugins/summernote/summernote.css')}}" >
-@stop
-
 @section('content')
 <!-- header -->
 <section class="content-header">

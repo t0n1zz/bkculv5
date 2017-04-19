@@ -6,16 +6,16 @@
         <span class="input-group-addon"><i class="fa fa-list"></i></span>
         <select class="form-control placeholder" onChange="func_selectpendidikan(value);"  name="selectpendidikan" id="selectpendidikan">
             <option value="0" hidden>Silahkan pilih pendidikan</option>
-            <option value="SD">SD</option>
-            <option value="SMP">SMP</option>
-            <option value="SMA/SMK">SMA/SMK</option>
-            <option value="D1">D1</option>
-            <option value="D2">D2</option>
-            <option value="D3">D3</option>
-            <option value="D4">D4</option>
-            <option value="S1">S1</option>
-            <option value="S2">S2</option>
-            <option value="S3">S3</option>
+            <option value="1">SD</option>
+            <option value="2">SMP</option>
+            <option value="3">SMA/SMK</option>
+            <option value="4">D1</option>
+            <option value="5">D2</option>
+            <option value="6">D3</option>
+            <option value="7">D4</option>
+            <option value="8">S1</option>
+            <option value="9">S2</option>
+            <option value="10">S3</option>
             <option value="lain">Lain-lain</option>
         </select>
     </div>

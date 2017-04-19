@@ -11,6 +11,7 @@ use Redirect;
 use Validator;
 use App\StafPekerjaan;
 use App\KegiatanTempat;
+use App\KegiatanPrasyarat;
 use App\KegiatanSasaran;
 use App\KegiatanSasaranHub;
 use App\Staf;
@@ -29,7 +30,7 @@ class KegiatanController extends Controller{
     public function index()
     {
         try{
-            $datas = Kegiatan::withTrashed()->with('tempat','sasaranhub.sasaran','total_peserta')->get();
+            $datas = Kegiatan::withTrashed()->with('tempat','sasaranhub.sasaran','prasyarat.kegiatan','total_peserta')->get();
             // dd($datas[52]->sasaranhub);
             return view('admins.'.$this->kelaspath.'.index', compact('datas'));
         }catch (Exception $e){
@@ -65,13 +66,12 @@ class KegiatanController extends Controller{
     public function detail($id)
     {
         try{
-            $data = Kegiatan::withTrashed()->find($id);
-            $datasasaran = KegiatanSasaranHub::with('sasaran')->where('id_kegiatan',$id)->get();
-            $datatempat = KegiatanTempat::find($data->id_tempat);
+            $tabname = "informasi";
+            $data = Kegiatan::with('sasaranhub.sasaran','prasyarat.kegiatan','tempat')->withTrashed()->find($id);
             $datapanitia = KegiatanPanitia::with('staf.pekerjaan_aktif.cuprimer')->where('id_kegiatan','=',$id)->get();
             $datapeserta = KegiatanPeserta::with('staf.pekerjaan_aktif.cuprimer')->where('id_kegiatan','=',$id)->get();
             $datastaf = StafPekerjaan::with('staf.pekerjaan_aktif.cuprimer','staf.pendidikan_tertinggi')->get();
-            return view('admins.'.$this->kelaspath.'.detail',compact('data','datasasaran','datatempat','datapanitia','datapeserta','datastaf'));
+            return view('admins.'.$this->kelaspath.'.detail',compact('data','datasasaran','datatempat','datapanitia','datapeserta','datastaf','tabname'));
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
         }
@@ -94,7 +94,8 @@ class KegiatanController extends Controller{
         try{
             $tempats = KegiatanTempat::get();
             $sasarans = KegiatanSasaran::get();
-            return view('admins.'.$this->kelaspath.'.create',compact('sasarans','tempats'));
+            $prasyarats = Kegiatan::select('id','kode','name')->get();
+            return view('admins.'.$this->kelaspath.'.create',compact('sasarans','tempats','prasyarats'));
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
         }
@@ -119,6 +120,7 @@ class KegiatanController extends Controller{
             $savedata = Kegiatan::create($data2);
 
             $this->input_sasaran($savedata->id);
+            $this->input_prasyarat($savedata->id);
 
             if (Input::Get('simpan2'))
                 return Redirect::route('admins.'.$this->kelaspath.'.create')->with('sucessmessage', 'Kegiatan <b><i>' . $name . '</i></b> Telah berhasil ditambah.');
@@ -133,12 +135,14 @@ class KegiatanController extends Controller{
     public function store_panitia()
     {
         try{
+            $tabname = "pendaftaran";
             $kegiatan = Input::get('id_kegiatan');
 
             $kelas = new KegiatanPanitia();
             $kelas->id_kegiatan = $kegiatan;
             $kelas->id_panitia = Input::get('panitia');
             $kelas->tugas = Input::get('selecttugas');
+            $kelas->keterangan = Input::get('keterangan');
             $kelas->status = 1;
 
             $kelas->save();    
@@ -152,6 +156,7 @@ class KegiatanController extends Controller{
     public function store_peserta()
     {
         try{
+            $tabname = "pendaftaran";
             $kegiatan = Input::get('id_kegiatan');
             $peserta = Input::get('peserta');
 
@@ -199,7 +204,8 @@ class KegiatanController extends Controller{
             $data = Kegiatan::with('sasaranhub','tempat')->find($id);
             $tempats = KegiatanTempat::get();
             $sasarans = KegiatanSasaran::get();
-            return view('admins.'.$this->kelaspath.'.edit', compact('data','tempats','sasarans'));
+            $prasyarats = Kegiatan::select('id','kode','name')->get();
+            return view('admins.'.$this->kelaspath.'.edit', compact('data','tempats','sasarans','prasyarats'));
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
         }
@@ -381,8 +387,9 @@ class KegiatanController extends Controller{
         }else{
             $tempat = $selecttempat;
         }
+
         if(!empty($tempat))
-            array_set($data,'tempat',$tempat);
+            array_set($data,'id_tempat',$tempat);
 
         if(!empty($tujuan)){
             $dom = new DomDocument();
@@ -408,18 +415,33 @@ class KegiatanController extends Controller{
         return $data;
     }
 
+    public function input_prasyarat($id_kegiatan)
+    {
+        $prasyarat = Input::get('prasyarat');
+        if(!empty($prasyarat) && !empty($id_kegiatan)){
+            KegiatanPrasyarat::where('id_prasyarat',$id_kegiatan)->delete();
+
+            foreach($prasyarat as $pt){
+                $kelas = new KegiatanPrasyarat();
+                $kelas->id_prasyarat = $id_kegiatan;
+                $kelas->id_kegiatan = $pt;
+                $kelas->save();
+            }
+        }
+    }
+
     public function input_sasaran($id_kegiatan)
     {
         $sasarans = Input::get('sasaran');
         if(!empty($sasarans) && !empty($id_kegiatan)){
-            KegiatanSasaranHub::where('id_kegiatan',$id_kegiatan);
-        }
+            KegiatanSasaranHub::where('id_kegiatan',$id_kegiatan)->delete();
 
-        foreach($sasarans as $sasaran){
-            $kelassasaran = new KegiatanSasaranHub();
-            $kelassasaran->id_kegiatan = $id_kegiatan;
-            $kelassasaran->id_sasaran = $sasaran;
-            $kelassasaran->save();
+            foreach($sasarans as $sasaran){
+                $kelassasaran = new KegiatanSasaranHub();
+                $kelassasaran->id_kegiatan = $id_kegiatan;
+                $kelassasaran->id_sasaran = $sasaran;
+                $kelassasaran->save();
+            }
         }
     }
 

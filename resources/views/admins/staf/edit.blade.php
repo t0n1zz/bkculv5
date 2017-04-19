@@ -20,8 +20,7 @@ $kelas="staf";
 <!-- /header -->
 <!-- Main content -->
 <section class="content">
-    {{ Form::model($data,array('route' => array('admins.'.$kelas.'.update',$data->id),'method' => 'put', 'files' => true,
-        'data-toggle' => 'validator','role' => 'form')) }}
+    {{ Form::model($data,array('route' => array('admins.'.$kelas.'.update',$data->id),'method' => 'put', 'files' => true,'data-toggle' => 'validator','role' => 'form')) }}
     @include('admins.'.$kelas.'.form')
     {{ Form::close() }}
 </section>

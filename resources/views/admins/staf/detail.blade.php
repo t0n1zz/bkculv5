@@ -6,11 +6,13 @@ $imagepath = "images_staf/";
 if(!empty($data->tanggal_lahir) && $data->tanggal_lahir != "0000-00-00"){
     $date = new Date($data->tanggal_lahir);
 }
+$i = 0;
 ?>
 @extends('admins._layouts.layout')
 
 @section('css')
     @include('admins._components.datatable_CSS')
+    <link rel="stylesheet" type="text/css" href="{{asset('plugins/dataTables/extension/Responsive/css/responsive.bootstrap.min.css')}}" >
 @stop
 @section('content')
 <!-- Content Header (Page header) -->
@@ -48,7 +50,13 @@ if(!empty($data->tanggal_lahir) && $data->tanggal_lahir != "0000-00-00"){
                     @endif
                     <h3 class="profile-username text-center">{{ $data->name }}</h3>
                     <p class="text-muted text-center">
- 
+                        @foreach($data->pekerjaan_aktif as $paktif)
+                            <?php $i++; ?>
+                            {{ $paktif->name }}
+                            @if($i < $data->pekerjaan_aktif->count())
+                               {{ ', ' }}
+                            @endif
+                        @endforeach
                     </p>
                     <ul class="list-group list-group-unbordered">
                         <li class="list-group-item"><b>NIM</b> <a class="pull-right">{{ $data->nim }}</a></li>
@@ -103,28 +111,29 @@ if(!empty($data->tanggal_lahir) && $data->tanggal_lahir != "0000-00-00"){
             <!-- /Alert -->
             <div class="nav-tabs-custom">
                 <ul class="nav nav-tabs">
-                    <li class="active"><a href="#riwayat" data-toggle="tab">Riwayat</a></li>
+                    <li class="active"><a href="#riwayat" role="tab" data-toggle="tab" data-target="#riwayat">Riwayat</a></li>
                     @if(!empty($data->kegiatanpeserta))
-                        <li><a href="#peserta" data-toggle="tab">Peserta</a></li>
+                        <li><a href="#kegiatan" role="tab" data-toggle="tab" data-target="#kegiatan">Kegiatan</a></li>
                     @endif    
-                    <li ><a href="#info" data-toggle="tab">Info Lain</a></li>
+                    <li ><a href="#info" role="tab" data-toggle="tab" data-target="#info">Info Lain</a></li>
                 </ul>
                 <div class="tab-content">
                     <div class="tab-pane fade in active" id="riwayat">
                         <section id="riwayatpekerjaan">
                             <h4 class="page-header color1">Pekerjaan</h4>
-                            <table class="table table-hover " id="dataTables-pekerjaan">
+                            <table class="table table-hover dt-responsive no-warp" id="dataTables-pekerjaan" cellspacing="0" width="100%">
                                 <thead>
                                 <tr class="bg-light-blue-active color-palette">
                                     <th hidden></th>
                                     <th hidden></th>
                                     <th hidden></th>
-                                    <th>Jabatan</th>
+                                    <th data-priority="1">Jabatan</th>
                                     <th>Tempat</th>
                                     <th>Tingkat</th>
-                                    <th>Bidang</th>
+                                    {{-- <th>Bidang</th> --}}
                                     <th>Tanggal Mulai</th>
                                     <th>Tanggal Selesai</th>
+                                    <th>Detail</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -137,30 +146,25 @@ if(!empty($data->tanggal_lahir) && $data->tanggal_lahir != "0000-00-00"){
                                         <td hidden>{{ $pekerjaan->id }}</td>
                                         <td hidden>{{ $pekerjaan->tipe }}</td>
                                         <td hidden>{{ $pekerjaan->tempat }}</td>
-                                        @if(!empty($pekerjaan->name))
-                                            <td>{{ $pekerjaan->name }}</td>
-                                        @else
-                                            <td>-</td>
-                                        @endif
-                                        @if(!empty($pekerjaan->tempat))
-                                            @if($pekerjaan->tipe == 1)
-                                                <td>{{ 'CU ' . $pekerjaan->cuprimer->name }}</td>
-                                            @elseif($pekerjaan->tipe == 2)
-                                                <td>{{ $pekerjaan->lembaga->name }}</td>
-                                            @elseif($pekerjaan->tipe == 3)
-                                                <td>Puskopdit BKCU Kalimantan</td> 
-                                            @endif
-                                        @else
-                                            <td>-</td>
-                                        @endif
+                                        <td>{{ $pekerjaan->name }}</td>
 
+                                        @if($pekerjaan->tipe == 1)
+                                            <td>{{ 'CU ' . $pekerjaan->cuprimer->name }}</td>
+                                        @elseif($pekerjaan->tipe == 2)
+                                            <td>{{ $pekerjaan->lembaga->name }}</td>
+                                        @elseif($pekerjaan->tipe == 3)
+                                            <td>Puskopdit BKCU Kalimantan</td> 
+                                         @else
+                                            <td>-</td>
+                                        @endif
+                                   
                                         <td>{{ $pekerjaan->tingkat }}</td>
                                         
-                                        <td>
+                                      {{--   <td>
                                             @foreach($pekerjaan->bidanghub as $b)
                                                 <code>{{ $b->bidang->name }}</code>
                                             @endforeach
-                                        </td>
+                                        </td> --}}
 
                                         @if(!empty($pekerjaan->mulai ))
                                             <?php $date = new Date($pekerjaan->mulai); ?>
@@ -178,6 +182,7 @@ if(!empty($data->tanggal_lahir) && $data->tanggal_lahir != "0000-00-00"){
                                                 <td>-</td>
                                             @endif
                                         @endif
+                                        <td></td>
                                     </tr>
                                 @endforeach
                                 </tbody>
@@ -190,22 +195,46 @@ if(!empty($data->tanggal_lahir) && $data->tanggal_lahir != "0000-00-00"){
                                 <thead>
                                 <tr class="bg-light-blue-active color-palette">
                                     <th hidden></th>
-                                    <th>Tingkat</th>
+                                    <th hidden></th>
+                                    <th class="sort" data-priority="1">Tingkat</th>
                                     <th>Jurusan/Bidang</th>
                                     <th>Tempat</th>
                                     <th>Tanggal Mulai</th>
                                     <th>Tanggal Selesai</th>
+                                    <th>Detail</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 @foreach($data->pendidikan as $pendidikan)
+                                    <?php 
+                                        if($pendidikan->tingkat == 1){
+                                            $tingkat = "SD";
+                                        }elseif($pendidikan->tingkat == 2){
+                                            $tingkat = "SMP";
+                                        }elseif($pendidikan->tingkat == 3){
+                                            $tingkat = "SMA/SMK";
+                                        }elseif($pendidikan->tingkat == 4){
+                                            $tingkat = "D1";
+                                        }elseif($pendidikan->tingkat == 5){
+                                            $tingkat = "D2";
+                                        }elseif($pendidikan->tingkat == 6){
+                                            $tingkat = "D3";
+                                        }elseif($pendidikan->tingkat == 7){
+                                            $tingkat = "D4";
+                                        }elseif($pendidikan->tingkat == 8){
+                                            $tingkat = "S1";
+                                        }elseif($pendidikan->tingkat == 9){
+                                            $tingkat = "S2";
+                                        }elseif($pendidikan->tingkat == 10){
+                                            $tingkat = "S3";
+                                        }else{
+                                            $tingkat = "Lain-lain";
+                                        }
+                                    ?>
                                     <tr>
                                         <td hidden>{{ $pendidikan->id }}</td>
-                                        @if(!empty($pendidikan->tingkat))
-                                            <td>{{ $pendidikan->tingkat }}</td>
-                                        @else
-                                            <td>-</td>
-                                        @endif
+                                        <td hidden>{{ $pendidikan->tingkat }}</td>
+                                        <td data-order="{{ $pendidikan->tingkat }}">{{ $tingkat }}</td>
                                         @if(!empty($pendidikan->name))
                                             <td>{{ $pendidikan->name }}</td>
                                         @else
@@ -232,6 +261,7 @@ if(!empty($data->tanggal_lahir) && $data->tanggal_lahir != "0000-00-00"){
                                                 <td>-</td>
                                             @endif
                                         @endif
+                                        <td></td>
                                     </tr>
                                 @endforeach
                                 </tbody>
@@ -244,11 +274,12 @@ if(!empty($data->tanggal_lahir) && $data->tanggal_lahir != "0000-00-00"){
                                 <thead>
                                 <tr class="bg-light-blue-active color-palette">
                                     <th hidden></th>
-                                    <th>Nama Organisasi</th>
+                                    <th class="sort" data-priority="1">Nama Organisasi</th>
                                     <th>Jabatan</th>
                                     <th>Tempat</th>
                                     <th>Tanggal Mulai</th>
                                     <th>Tanggal Selesai</th>
+                                    <th>Detail</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -286,144 +317,65 @@ if(!empty($data->tanggal_lahir) && $data->tanggal_lahir != "0000-00-00"){
                                                 <td>-</td>
                                             @endif
                                         @endif
+                                        <td></td>
                                     </tr>
                                 @endforeach
                                 </tbody>
                             </table>
                         </section>
                     </div>
-                    @if(!empty($data->kegiatanpeserta))
-                        <div class="tab-pane fade" id="peserta">
-                            <section id="diklatbkcu">
-                                <h4 class="page-header color1">Diklat Puskopdit BKCU Kalimantan</h4>
-                                <table class="table table-hover " id="dataTables-diklatbkcu">
-                                    <thead>
-                                    <tr class="bg-light-blue-active color-palette">
-                                        <th>Nama Kegiatan</th>
-                                        <th>Tempat</th>
-                                        <th>Tanggal Mulai</th>
-                                        <th>Tanggal Selesai</th>
-                                        <th>Status</th>
-                                        <th>Keterangan</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    @foreach($data->kegiatanpeserta as $b)
-                                        <tr>
-                                            @if(!empty($b->kegiatanbkcu))
-                                                <?php 
-                                                    if($b->status == 1){
-                                                        $diklatbkcustatus = "Sudah diikuti";
-                                                    }elseif($b->status == 2){
-                                                        $diklatbkcustatus = "Batal diikuti";
-                                                    }else{
-                                                        $diklatbkcustatus = "Belum dilaksanakan";
-                                                    }
-                                                ?>
-                                                <td>{{ $b->kegiatanbkcu->name }}</td>
-                                                @if(!empty($b->kegiatanbkcu->tempat))
-                                                    <td>{{ $b->kegiatanbkcu->tempat->name }}</td>
-                                                @else
-                                                    <td></td>
-                                                @endif
-                                                <td data-order="{{ $b->kegiatanbkcu->mulai }}">@if(!empty($b->kegiatanbkcu->mulai )){{ $b->kegiatanbkcu->mulai ->format('d/m/Y') }}@else{{ '-' }}@endif</td>
-                                                <td data-order="{{ $b->kegiatanbkcu->selesai }}">@if(!empty($b->kegiatanbkcu->selesai )){{ $b->kegiatanbkcu->selesai ->format('d/m/Y') }}@else{{ '-' }}@endif</td>
-                                                <td>{{ $diklatbkcustatus }}</td>
-                                                <td class="warptext">{{ $b->keterangan }}</td>
-                                            @endif
-                                        </tr>
-                                    @endforeach
-                                    </tbody>
-                                </table>
-                            </section>
-                            <section id="diklatlembaga">
-                                <br/><br/>
-                                <h4 class="page-header color1">Diklat Lembaga Lain</h4>
-                                <table class="table table-hover " id="dataTables-diklatlembaga">
-                                    <thead>
-                                    <tr class="bg-light-blue-active color-palette">
-                                        <th>Nama Kegiatan</th>
-                                        <th>Tempat</th>
-                                        <th>Tanggal Mulai</th>
-                                        <th>Tanggal Selesai</th>
-                                        <th>Status</th>
-                                        <th>Keterangan</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    @foreach($data->kegiatanpeserta as $l)
-                                      <?php 
-                                            if($l->status == 1){
-                                                $diklatlembagastatus = "Sudah diikuti";
-                                            }elseif($l->status == 2){
-                                                $diklatlembagastatus = "Batal diikuti";
-                                            }else{
-                                                $diklatlembagastatus = "Terdaftar";
-                                            }
-                                        ?>
-                                        <tr>
-                                            @if(!empty($l->kegiatanlembaga))
-                                                <td>{{ $l->kegiatanlembaga->name }}</td>
-                                                @if(!empty($l->kegiatanlembaga->tempat))
-                                                    <td>{{ $l->kegiatanlembaga->tempat->name }}</td>
-                                                @else
-                                                    <td></td>
-                                                @endif
-                                                <td data-order="{{ $l->kegiatanlembaga->mulai }}">@if(!empty($l->kegiatanlembaga->mulai )){{ $l->kegiatanlembaga->mulai ->format('d/m/Y') }}@else{{ '-' }}@endif</td>
-                                                <td data-order="{{ $l->kegiatanlembaga->selesai }}">@if(!empty($l->kegiatanlembaga->selesai )){{ $l->kegiatanlembaga->selesai ->format('d/m/Y') }}@else{{ '-' }}@endif</td>
-                                                <td>{{ $diklatlembagastatus }}</td>
-                                                <td class="warptext">{{ $l->keterangan }}</td>  
-                                            @endif
-                                        </tr>
-                                    @endforeach
-                                    </tbody>
-                                </table>
-                            </section>
-                            <section id="rapat">
-                                <br/><br/>
-                                <h4 class="page-header color1">Rapat</h4>
-                                <table class="table table-hover " id="dataTables-rapat">
-                                    <thead>
-                                    <tr class="bg-light-blue-active color-palette">
-                                        <th>Nama Kegiatan</th>
-                                        <th>Tempat</th>
-                                        <th>Tanggal Mulai</th>
-                                        <th>Tanggal Selesai</th>
-                                        <th>Status</th>
-                                        <th>Keterangan</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    @foreach($data->kegiatanpeserta as $r)
+                    <div class="tab-pane fade" id="kegiatan">
+                        @if(!empty($data->kegiatanpeserta))
+                        <section id="peserta">
+                            <h4 class="page-header color1">Peserta</h4>
+                            <table class="table table-hover " id="dataTables-diklat">
+                                <thead>
+                                <tr class="bg-light-blue-active color-palette">
+                                    <th hidden></th>
+                                    <th class="sort" data-priority="1">Nama Kegiatan</th>
+                                    <th>Tempat</th>
+                                    <th>Penyelenggara</th>
+                                    <th>Tanggal Mulai</th>
+                                    <th>Tanggal Selesai</th>
+                                    <th data-priority="1">Status</th>
+                                    <th>Keterangan</th>
+                                    <th>Detail</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @foreach($data->kegiatanpeserta as $b)
+                                    @if(!empty($b->kegiatan))
+                                    <tr>
                                         <?php 
-                                            if($r->status == 1){
-                                                $rapatstatus = "Sudah diikuti";
-                                            }elseif($r->status == 2){
-                                                $rapatstatus = "Batal diikuti";
+                                            if($b->status == 1){
+                                                $diklatbkcustatus = "Sudah diikuti";
+                                            }elseif($b->status == 2){
+                                                $diklatbkcustatus = "Batal diikuti";
                                             }else{
-                                                $rapatstatus = "Belum dilaksanakan";
+                                                $diklatbkcustatus = "Belum dilaksanakan";
                                             }
                                         ?>
-                                        <tr>
-                                        @if(!empty($r->rapat))
-                                            <td>{{ $r->rapat->name }}</td>
-                                            @if(!empty($r->rapat->tempat))
-                                                <td>{{ $r->rapat->tempat->name }}</td>
-                                            @else
-                                                <td></td>
-                                            @endif
-                                            <td data-order="{{ $r->rapat->mulai }}">@if(!empty($r->rapat->mulai )){{ $r->rapat->mulai ->format('d/m/Y') }}@else{{ '-' }}@endif</td>
-                                            <td data-order="{{ $r->rapat->selesai }}">@if(!empty($r->rapat->selesai )){{ $r->rapat->selesai ->format('d/m/Y') }}@else{{ '-' }}@endif</td>
-                                            <td>{{ $rapatstatus }}</td>
-                                            <td class="warptext">{{ $r->keterangan }}</td>
+                                        <td hidden>{{ $b->kegiatan->id }}</td>
+                                        <td>{{ $b->kegiatan->name }}</td>
+                                        @if(!empty($b->kegiatan->tempat))
+                                            <td>{{ $b->kegiatan->tempat->name }}</td>
+                                        @else
+                                            <td></td>
                                         @endif
-                                        </tr>
-                                    @endforeach
-                                    </tbody>
-                                </table>
-                            </section>
-                        </div><!-- /.tab-pane -->
-                    @endif
+                                        <td>Puskopdit BKCU Kalimantan</td>
+                                        <td data-order="{{ $b->kegiatan->mulai }}">@if(!empty($b->kegiatan->mulai )){{ $b->kegiatan->mulai ->format('d/m/Y') }}@else{{ '-' }}@endif</td>
+                                        <td data-order="{{ $b->kegiatan->selesai }}">@if(!empty($b->kegiatan->selesai )){{ $b->kegiatan->selesai ->format('d/m/Y') }}@else{{ '-' }}@endif</td>
+                                        <td>{{ $diklatbkcustatus }}</td>
+                                        <td class="warptext">{{ $b->keterangan }}</td>
+                                        <td></td>
+                                    </tr>
+                                     @endif
+                                @endforeach
+                                </tbody>
+                            </table>
+                        </section>
+                        @endif
+                    </div><!-- /.tab-pane -->
                     <div class="tab-pane fade" id="info">
                         <section id="keluarga">
                             <h4 class="page-header color1">Keluarga</h4>
@@ -433,6 +385,7 @@ if(!empty($data->tanggal_lahir) && $data->tanggal_lahir != "0000-00-00"){
                                     <th hidden></th>
                                     <th>Nama</th>
                                     <th>Sebagai</th>
+                                    <th>Detail</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -441,6 +394,7 @@ if(!empty($data->tanggal_lahir) && $data->tanggal_lahir != "0000-00-00"){
                                         <td hidden>{{ $keluarga->id }}</td>
                                         <td>{{ $keluarga->name }}</td>
                                         <td>{{ $keluarga->tipe }}</td>
+                                        <td></td>
                                     </tr>
                                 @endforeach
                                 </tbody>
@@ -455,6 +409,7 @@ if(!empty($data->tanggal_lahir) && $data->tanggal_lahir != "0000-00-00"){
                                     <th hidden></th>
                                     <th>Nama</th>
                                     <th>No. BA</th>
+                                    <th>Detail</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -463,6 +418,7 @@ if(!empty($data->tanggal_lahir) && $data->tanggal_lahir != "0000-00-00"){
                                         <td hidden>{{ $anggotacu->id }}</td>
                                         <td>{{ $anggotacu->name }}</td>
                                         <td>{{ $anggotacu->no_ba }}</td>
+                                        <td></td>
                                     </tr>
                                 @endforeach
                                 </tbody>
@@ -771,8 +727,8 @@ if(!empty($data->tanggal_lahir) && $data->tanggal_lahir != "0000-00-00"){
 </div>
 <div class="modal fade" id="modalriwayatorganisasi" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     {{ Form::open(array('route' => array('admins.'.$kelas.'.save_riwayat'),'data-toggle'=>'validator','role'=>'form')) }}
-    <div class="modal-dialog modal-full">
-        <div class="modal-content modal-full">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
             <div class="modal-header bg-light-blue-active color-palette">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h4 class="modal-title"><i id="iconorganisasi"></i> <span  id="judulorganisasi"></span></h4>
@@ -862,17 +818,16 @@ if(!empty($data->tanggal_lahir) && $data->tanggal_lahir != "0000-00-00"){
 @section('js')
 @include('admins.staf._components.formjs')
 @include('admins._components.datatable_JS')
-<script type="text/javascript" src="{{ URL::asset('admin/datatable.js') }}"></script>
+<script type="text/javascript" src="{{ URL::asset('plugins/dataTables/extension/Responsive/js/dataTables.responsive.min.js') }}"></script>
+<script type="text/javascript" src="{{ URL::asset('plugins/dataTables/extension/Responsive/js/responsive.bootstrap.min.js') }}"></script>
 <script>
     $(document).ready(function() {
         $('a[data-toggle="tab"]').on( 'shown.bs.tab', function (e) {
-            $.fn.dataTable.tables( {visible: true, api: true} ).columns.adjust();
+            $($.fn.dataTable.tables(true)).DataTable()
+                  .columns.adjust()
+                  .responsive.recalc();
         } );
     } );
-
-    function func_identitas(){
-        $('#modalidentitas').modal({show:true});
-    }
 </script>
 {{--table pekerjaan--}}
 <script>
@@ -880,17 +835,25 @@ if(!empty($data->tanggal_lahir) && $data->tanggal_lahir != "0000-00-00"){
         dom: 'Bft',
         select: true,
         scrollY : '50vh',
-        scrollX: true,
-        "autoWidth": false,
+        autoWidth : true,
         scrollCollapse : true,
         paging : false,
         stateSave : false,
+        select: {
+            style:    'os',
+            selector: 'td:not(:last-child)'
+        },
+        responsive:{
+            details:{
+                type: 'column',
+                target: -1
+            }
+        },
         columnDefs: [ {
-            "searchable": false,
-            "orderable": false,
-            "targets": 0
-        } ],
-        order : [[ 0, "asc" ]],
+            className: 'control',
+            orderable: false,
+            targets:   -1
+        }],
         buttons: [],
         language: {
             buttons : {},
@@ -910,6 +873,9 @@ if(!empty($data->tanggal_lahir) && $data->tanggal_lahir != "0000-00-00"){
             "sInfoPostFix":  "",
         }
     });
+
+    tablepekerjaan.columns('.sort').order('asc').draw();
+
     new $.fn.dataTable.Buttons(tablepekerjaan,{
         buttons: [
             {
@@ -1003,12 +969,16 @@ if(!empty($data->tanggal_lahir) && $data->tanggal_lahir != "0000-00-00"){
 
                             $("#radiocu").prop("checked", true);
                             $('#selectcu').prop('disabled',false);
-                            $('#selectcu').val(tempat);
+
+                            if(tipe == "1")
+                                $('#selectcu').val(tempat);
+                            else
+                                $('#selectcu').val($('#selectcu option:eq(1)').val());
 
                             $("#radiolembaga").prop("checked", false);
                             $('#selectlembaga').prop('disabled',true);
                             $('#selectlembaga').val($('#selectlembaga option:first').val());
-                        }else{ //lembaga
+                        }else if(tipe == "2"){ //lembaga
                             $('#tingkatlembaga').show();
                             $('#selecttingkatlembaga').val(tingkat);
 
@@ -1068,17 +1038,25 @@ if(!empty($data->tanggal_lahir) && $data->tanggal_lahir != "0000-00-00"){
         dom: 'Bft',
         select: true,
         scrollY : '50vh',
-        scrollX: true,
-        "autoWidth": false,
+        autoWidth : true,
         scrollCollapse : true,
         paging : false,
         stateSave : false,
+        select: {
+            style:    'os',
+            selector: 'td:not(:last-child)'
+        },
+        responsive:{
+            details:{
+                type: 'column',
+                target: -1
+            }
+        },
         columnDefs: [ {
-            "searchable": false,
-            "orderable": false,
-            "targets": 0
-        } ],
-        order : [[ 0, "asc" ]],
+            className: 'control',
+            orderable: false,
+            targets:   -1
+        }],
         buttons: [],
         language: {
             buttons : {},
@@ -1098,6 +1076,8 @@ if(!empty($data->tanggal_lahir) && $data->tanggal_lahir != "0000-00-00"){
             "sInfoPostFix":  "",
         }
     });
+
+    tablependidikan.columns('.sort').order('asc').draw();
 
     new $.fn.dataTable.Buttons(tablependidikan,{
         buttons: [
@@ -1126,16 +1106,16 @@ if(!empty($data->tanggal_lahir) && $data->tanggal_lahir != "0000-00-00"){
                         return item[1];
                     });
                     var jurusan = $.map(tablependidikan.rows({ selected: true }).data(),function(item){
-                        return item[2];
-                    });
-                    var tempat = $.map(tablependidikan.rows({ selected: true }).data(),function(item){
                         return item[3];
                     });
+                    var tempat = $.map(tablependidikan.rows({ selected: true }).data(),function(item){
+                        return item[4];
+                    });
                     var mulai = $.map(tablependidikan.rows({ selected: true }).data(),function(item){
-                        return item[4].display;
+                        return item[5].display;
                     });
                     var selesai = $.map(tablependidikan.rows({ selected: true }).data(),function(item){
-                        return item[5].display;
+                        return item[6].display;
                     });
                     if(id != ""){
                         $('#modalriwayatpendidikan').modal({show:true});
@@ -1201,17 +1181,25 @@ if(!empty($data->tanggal_lahir) && $data->tanggal_lahir != "0000-00-00"){
         dom: 'Bft',
         select: true,
         scrollY : '50vh',
-        scrollX: true,
-        "autoWidth": false,
+        autoWidth : true,
         scrollCollapse : true,
         paging : false,
         stateSave : false,
+        select: {
+            style:    'os',
+            selector: 'td:not(:last-child)'
+        },
+        responsive:{
+            details:{
+                type: 'column',
+                target: -1
+            }
+        },
         columnDefs: [ {
-            "searchable": false,
-            "orderable": false,
-            "targets": 0
-        } ],
-        order : [[ 0, "asc" ]],
+            className: 'control',
+            orderable: false,
+            targets:   -1
+        }],
         buttons: [],
         language: {
             buttons : {},
@@ -1232,6 +1220,8 @@ if(!empty($data->tanggal_lahir) && $data->tanggal_lahir != "0000-00-00"){
         }
     });
 
+    tableorganisasi.columns('.sort').order('asc').draw();
+
     var tipeid_organisasi = '2';
     new $.fn.dataTable.Buttons(tableorganisasi,{
         buttons: [
@@ -1239,6 +1229,9 @@ if(!empty($data->tanggal_lahir) && $data->tanggal_lahir != "0000-00-00"){
                 text: '<i class="fa fa-plus"></i> Tambah',
                 action: function(){
                     $('#modalriwayatorganisasi').modal({show:true});
+                    $('#judulorganisasi').text('Tambah Organisasi');
+                    $('#iconorganisasi').attr('class','fa fa-plus');
+
                     $('#id_organisasi').val('');
                     $('#namaorganisasi').val('');
                     $('#jabatanorganisasi').val('');
@@ -1273,6 +1266,9 @@ if(!empty($data->tanggal_lahir) && $data->tanggal_lahir != "0000-00-00"){
                     });
                     if(id != ""){
                         $('#modalriwayatorganisasi').modal({show:true});
+                        $('#judulorganisasi').text('Ubah Organisasi');
+                        $('#iconorganisasi').attr('class','fa fa-pencil');
+
                         $('#id_organisasi').val(id);
                         $('#namaorganisasi').val(nama);
                         $('#jabatanorganisasi').val(jabatan);
@@ -1324,17 +1320,25 @@ if(!empty($data->tanggal_lahir) && $data->tanggal_lahir != "0000-00-00"){
         dom: 'Bft',
         select: true,
         scrollY : '50vh',
-        scrollX: true,
-        "autoWidth": false,
+        autoWidth : true,
         scrollCollapse : true,
         paging : false,
         stateSave : false,
+        select: {
+            style:    'os',
+            selector: 'td:not(:last-child)'
+        },
+        responsive:{
+            details:{
+                type: 'column',
+                target: -1
+            }
+        },
         columnDefs: [ {
-            "searchable": false,
-            "orderable": false,
-            "targets": 0
-        } ],
-        order : [[ 0, "asc" ]],
+            className: 'control',
+            orderable: false,
+            targets:   -1
+        }],
         buttons: [],
         language: {
             buttons : {},
@@ -1354,6 +1358,9 @@ if(!empty($data->tanggal_lahir) && $data->tanggal_lahir != "0000-00-00"){
             "sInfoPostFix":  "",
         }
     });
+
+    tablekeluarga.columns('.sort').order('asc').draw();
+
     new $.fn.dataTable.Buttons(tablekeluarga,{
         buttons: [
             {
@@ -1418,17 +1425,25 @@ if(!empty($data->tanggal_lahir) && $data->tanggal_lahir != "0000-00-00"){
         dom: 'Bft',
         select: true,
         scrollY : '50vh',
-        scrollX: true,
-        "autoWidth": false,
+        autoWidth : true,
         scrollCollapse : true,
         paging : false,
         stateSave : false,
+        select: {
+            style:    'os',
+            selector: 'td:not(:last-child)'
+        },
+        responsive:{
+            details:{
+                type: 'column',
+                target: -1
+            }
+        },
         columnDefs: [ {
-            "searchable": false,
-            "orderable": false,
-            "targets": 0
-        } ],
-        order : [[ 0, "asc" ]],
+            className: 'control',
+            orderable: false,
+            targets:   -1
+        }],
         buttons: [],
         language: {
             buttons : {},
@@ -1448,6 +1463,8 @@ if(!empty($data->tanggal_lahir) && $data->tanggal_lahir != "0000-00-00"){
             "sInfoPostFix":  "",
         }
     });
+
+    tableanggotacu.columns('.sort').order('asc').draw();
 
     new $.fn.dataTable.Buttons(tableanggotacu,{
         buttons: [
@@ -1506,6 +1523,75 @@ if(!empty($data->tanggal_lahir) && $data->tanggal_lahir != "0000-00-00"){
 
     tableanggotacu.buttons( 0, null ).container().prependTo(
             tableanggotacu.table().container()
+    );
+</script>
+{{-- diklat --}}
+<script>
+    var tablediklat = $('#dataTables-diklat').DataTable({
+        dom: 'Bft',
+        select: true,
+        scrollY : '50vh',
+        autoWidth : true,
+        scrollCollapse : true,
+        paging : false,
+        stateSave : false,
+        select: {
+            style:    'os',
+            selector: 'td:not(:last-child)'
+        },
+        responsive:{
+            details:{
+                type: 'column',
+                target: -1
+            }
+        },
+        columnDefs: [ {
+            className: 'control',
+            orderable: false,
+            targets:   -1
+        }],
+        buttons: [],
+        language: {
+            buttons : {},
+            select:{
+                rows:{
+                    _: "",
+                    0: "",
+                    1: ""
+                }
+            },
+            "sProcessing":   "Sedang proses...",
+            "sLengthMenu":   "Tampilan _MENU_ entri",
+            "sZeroRecords":  "Tidak ditemukan data yang sesuai",
+            "sInfo":         "Tampilan _START_ sampai _END_ dari _TOTAL_ entri",
+            "sInfoEmpty":    "Tampilan 0 hingga 0 dari 0 entri",
+            "sInfoFiltered": "(disaring dari _MAX_ entri keseluruhan)",
+            "sInfoPostFix":  "",
+        }
+    });
+
+    tablediklat.columns('.sort').order('asc').draw();
+
+    new $.fn.dataTable.Buttons(tablediklat,{
+        buttons: [
+            {
+                text: '<i class="fa fa-database"></i> Detail Kegiatan',
+                action: function(){
+                    var id = $.map(tablediklat.rows({ selected:true }).data(),function(item){
+                        return item[0];
+                    });
+                    if(id != ""){
+                        window.location.href =  "/admins/kegiatan/" + id + "/detail";
+                    }else{
+                        $('#modalwarning').modal({show:true});
+                    }
+                }
+            }
+        ]
+    });
+
+    tablediklat.buttons( 0, null ).container().prependTo(
+            tablediklat.table().container()
     );
 </script>
 @stop

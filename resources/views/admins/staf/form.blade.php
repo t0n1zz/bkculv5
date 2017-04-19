@@ -20,6 +20,7 @@ $file_max = intval($file_max);
     <div class="box-body">
         @include('admins.staf._components.form')
     </div>
+    @if(!Request::is('admins/staf/create')) 
     <div class="box-footer with-border">
         <div class="form-group" style="margin-bottom: 0px;">
             <button type="submit" name="simpan" accesskey="s" class="btn btn-primary">
@@ -30,6 +31,7 @@ $file_max = intval($file_max);
                 <i class="fa fa-times"></i> <u>B</u>atal</a>
         </div>
     </div>
+    @endif
 </div>
 
 @if(Request::is('admins/staf/create')) 

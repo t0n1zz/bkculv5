@@ -24,7 +24,7 @@ class StafPekerjaan extends Model {
     }
 
     public function cuprimer(){
-        return $this->belongsTo('App\Cuprimer','id_tempat','no_ba')->select(array('id','no_ba','name'));
+        return $this->belongsTo('App\Cuprimer','id_tempat','no_ba')->select(array('id','no_ba','name'))->withTrashed();
     }
 
     public function bidanghub(){
