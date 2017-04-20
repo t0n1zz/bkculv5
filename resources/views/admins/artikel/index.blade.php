@@ -46,7 +46,7 @@ $imagepath = 'images_artikel/';
             <div class="tab-pane active" id="tab_artikel">
                 <div class="input-group tabletools">
                     <div class="input-group-addon"><i class="fa fa-search"></i></div>
-                    <input type="text" id="searchtext" class="form-control" placeholder="Kata kunci pencarian..." autofocus>
+                    <input type="text" id="searchtext" class="form-control" placeholder="Kata kunci pencarian...">
                 </div>
 
                 <table class="table table-hover dt-responsive" id="dataTables-example" width="100%">
@@ -118,7 +118,7 @@ $imagepath = 'images_artikel/';
             <div class="tab-pane" id="tab_kategoriartikel">
                 <div class="input-group tabletools">
                     <div class="input-group-addon"><i class="fa fa-search"></i></div>
-                    <input type="text" id="searchtext2" class="form-control" placeholder="Kata kunci pencarian..." autofocus>
+                    <input type="text" id="searchtext2" class="form-control" placeholder="Kata kunci pencarian...">
                 </div>
 
                 <table class="table table-hover table-condensed dt-responsive" id="dataTables-example2" width="100%">

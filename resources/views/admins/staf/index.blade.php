@@ -50,7 +50,7 @@ $id_old="";
                     @endif
                         <div class="input-group tabletools">
                             <div class="input-group-addon"><i class="fa fa-search"></i></div>
-                            <input type="text" id="searchtext" class="form-control" placeholder="Kata kunci pencarian..." autofocus>
+                            <input type="text" id="searchtext" class="form-control" placeholder="Kata kunci pencarian...">
                         </div>
                     </div>
                     @if(Auth::user()->getCU() == '0')

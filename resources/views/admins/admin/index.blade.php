@@ -15,6 +15,7 @@ $file_max = intval($file_max);
 
 @section('css')
     @include('admins._components.datatable_CSS')
+    <link rel="stylesheet" type="text/css" href="{{asset('plugins/dataTables/extension/Responsive/css/responsive.bootstrap.min.css')}}" >
 @stop
 
 @section('content')
@@ -43,12 +44,12 @@ $file_max = intval($file_max);
             <div class="tab-pane active" id="tab_admin">
                 <div class="input-group tabletools">
                     <div class="input-group-addon"><i class="fa fa-search"></i></div>
-                    <input type="text" id="searchtext" class="form-control" placeholder="Kata kunci pencarian..." autofocus>
+                    <input type="text" id="searchtext" class="form-control" placeholder="Kata kunci pencarian...">
                 </div>
                 <table class="table table-hover" id="dataTables-example" width="100%">
                     <thead class="bg-light-blue-active color-palette">
                     <tr >
-                        <th>#</th>
+                        <th hidden></th>
                         <th hidden></th>
                         <th hidden></th>
                         <th data-sortable="false">Foto</th>
@@ -58,18 +59,19 @@ $file_max = intval($file_max);
                         <th>Terakhir Login</th>
                         <th>Terakhir Logout</th>
                         <th>Status</th>
+                        <th>&nbsp;</th>
                     </tr>
                     </thead>
                     <tbody>
                     @foreach($datas as $data)
                         <tr>
-                            <td class="bg-aqua disabled color-palette"></td>
                             <td hidden>{{ $data->id }}</td>
                             @if(!empty($data->gambar) && is_file($imagepath.$data->gambar.".jpg"))
                                 <td hidden>{{  asset($imagepath.$data->gambar.'.jpg') }}</td> 
                             @else
                                 <td hidden>{{ asset('images/no_image_man.jpg') }}</td>
                             @endif
+                            <td hidden>{{ $data->status  }}</td>
                             @if(!empty($data->gambar) && is_file($imagepath.$data->gambar.".jpg"))
                                 <td style="white-space: nowrap"><div class="modalphotos" >
                                         {{ Html::image($imagepath.$data->gambar.'.jpg',asset($imagepath.$data->gambar."jpg"),
@@ -105,13 +107,12 @@ $file_max = intval($file_max);
                             @else
                                 <td>-</td>
                             @endif
-                            @if($data->status == 0)
-                                <td>Tidak Aktif</td>
-                            @elseif($data->status == 1)
-                                <td>Aktif</td>
+                            @if($data->status == 1)
+                                <td><a class="btn btn-info nopointer"><i class="fa fa-check"></i> Aktif</a></td>
                             @else
-                                <td>Tidak Aktif</td>";
+                                <td><a class="btn btn-default nopointer"><i class="fa fa-ban"></i> Tidak Aktif</a></td>";
                             @endif
+                            <td></td>
                         </tr>
                     @endforeach
 
@@ -195,7 +196,7 @@ $file_max = intval($file_max);
                 <h4 id="judul"></h4>
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-warning" id="modalbutton"><i class="fa fa-check"></i> Ya</button>
+                <button type="submit" class="btn btn-primary" id="modalbutton"><i class="fa fa-check"></i> Ya</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Batal</button>
             </div>
         </div><!-- /.modal-content -->
@@ -237,7 +238,9 @@ $file_max = intval($file_max);
 
 @section('js')
     @include('admins._components.datatable_JS')
-    <script type="text/javascript" src="{{ URL::asset('admin/datatable.js') }}"></script>
+    <script type="text/javascript" src="{{ URL::asset('plugins/dataTables/extension/Responsive/js/dataTables.responsive.min.js') }}"></script>
+    <script type="text/javascript" src="{{ URL::asset('plugins/dataTables/extension/Responsive/js/responsive.bootstrap.min.js') }}"></script>
+    <script type="text/javascript" src="{{ URL::asset('admin/datatable_responsive.js') }}"></script>
     <script>
         new $.fn.dataTable.Buttons(table,{
             buttons: [
@@ -259,7 +262,7 @@ $file_max = intval($file_max);
                     text: '<i class="fa fa-key"></i> Ubah Password',
                     action: function(){
                         var id = $.map(table.rows({ selected:true }).data(),function(item){
-                            return item[1];
+                            return item[0];
                         });
                         if(id != ""){
                             $('#modalpassword').modal({show:true});
@@ -275,7 +278,7 @@ $file_max = intval($file_max);
                     text: '<i class="fa fa-hand-paper-o"></i> Ubah Hak Akses',
                     action: function(){
                         var id = $.map(table.rows({ selected:true }).data(),function(item){
-                            return item[1];
+                            return item[0];
                         });
                         var cu = $.map(table.rows({ selected:true }).data(),function(item){
                             return item[6];
@@ -321,14 +324,14 @@ $file_max = intval($file_max);
                     text: '<i class="fa fa-check-square"></i> Ubah Status',
                     action: function(){
                         var id = $.map(table.rows({ selected:true }).data(),function(item){
-                            return item[1];
+                            return item[0];
                         });
                         var status = $.map(table.rows({ selected:true }).data(),function(item){
-                            return item[9];
+                            return item[2];
                         });
                         if(id != ""){
                             $('#modalstatus').modal({show:true});
-                            if(status !="Aktif"){
+                            if(status !="1"){
                                 $('#judul').text('Aktifkan admin ini?');
                             }else{
                                 $('#judul').text('Non-aktifkan admin ini?');
@@ -344,10 +347,10 @@ $file_max = intval($file_max);
                     text: '<i class="fa fa-picture-o"></i> Ubah Foto',
                     action: function(){
                         var id = $.map(table.rows({ selected:true }).data(),function(item){
-                            return item[1];
+                            return item[0];
                         });
                         var foto = $.map(table.rows({ selected:true }).data(),function(item){
-                            return item[2];
+                            return item[1];
                         });
                         var nama = $.map(table.rows({ selected:true }).data(),function(item){
                             return item[5];
@@ -372,7 +375,7 @@ $file_max = intval($file_max);
                     },
                     action: function(){
                         var id = $.map(table.rows({ selected:true }).data(),function(item){
-                            return item[1];
+                            return item[0];
                         });
                         var username = $.map(table.rows({ selected:true }).data(),function(item){
                             return item[5];

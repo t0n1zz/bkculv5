@@ -126,7 +126,7 @@
                 <div class="tab-pane active" id="tab_cu">
                     <div class="input-group tabletools">
                         <div class="input-group-addon"><i class="fa fa-search"></i></div>
-                        <input type="text" id="searchtext" class="form-control" placeholder="Kata kunci pencarian..." autofocus>
+                        <input type="text" id="searchtext" class="form-control" placeholder="Kata kunci pencarian...">
                     </div>
                     <table class="table table-hover table-bordered" id="dataTables-all" cellspacing="0" width="100%" >
                         <thead class="bg-light-blue-active color-palette">
@@ -611,7 +611,7 @@
                 <div class="tab-pane" id="tab_pertumbuhan">
                     <div class="input-group tabletools">
                         <div class="input-group-addon"><i class="fa fa-search"></i></div>
-                        <input type="text" id="searchtextkonsolidasi" class="form-control" placeholder="Kata kunci pencarian..." autofocus>
+                        <input type="text" id="searchtextkonsolidasi" class="form-control" placeholder="Kata kunci pencarian...">
                     </div>
                     <table class="table table-hover table-bordered" id="dataTables-konsolidasi" cellspacing="0" width="100%" >
                         <thead class="bg-light-blue-active color-palette">
@@ -1069,7 +1069,7 @@
                 <div class="tab-pane active" id="tab_konsolidasi">
                     <div class="input-group tabletools">
                         <div class="input-group-addon"><i class="fa fa-search"></i></div>
-                        <input type="text" id="searchtextkonsolidasi" class="form-control" placeholder="Kata kunci pencarian..." autofocus>
+                        <input type="text" id="searchtextkonsolidasi" class="form-control" placeholder="Kata kunci pencarian...">
                     </div>
                     <table class="table table-hover table-bordered" id="dataTables-konsolidasi" width="100%" >
                         <thead class="bg-light-blue-active color-palette">
@@ -1426,7 +1426,7 @@
                 <div class="tab-pane " id="tab_pertumbuhan">
                     <div class="input-group tabletools">
                         <div class="input-group-addon"><i class="fa fa-search"></i></div>
-                        <input type="text" id="searchtextdo" class="form-control" placeholder="Kata kunci pencarian..." autofocus>
+                        <input type="text" id="searchtextdo" class="form-control" placeholder="Kata kunci pencarian...">
                     </div>
                     <table class="table table-hover table-bordered" id="dataTables-do" width="100%" >
                         <thead class="bg-light-blue-active color-palette">
@@ -1806,7 +1806,7 @@
                 <div class="tab-pane" id="tab_pearls">
                     <div class="input-group tabletools">
                         <div class="input-group-addon"><i class="fa fa-search"></i></div>
-                        <input type="text" id="searchtextpearls" class="form-control" placeholder="Kata kunci pencarian..." autofocus>
+                        <input type="text" id="searchtextpearls" class="form-control" placeholder="Kata kunci pencarian...">
                     </div>
                     <table class="table table-hover table-bordered" id="dataTables-pearls" width="100%" >
                         <thead class="bg-light-blue-active color-palette">

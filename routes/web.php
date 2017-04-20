@@ -533,6 +533,37 @@ Route::group(['prefix' => 'admins','middleware' => 'auth'], function(){
         'as'            => 'admins.kegiatan.destroy_panitia',
         'uses'          => 'KegiatanController@destroy_panitia'
     ));
+//  tempat
+    Route::get('tempat', [
+        'as'           => 'admins.tempat.index',           
+        'uses'         => 'TempatController@index',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'create.kegiatan_create']);
+    Route::get('tempat/create', [
+        'as'           => 'admins.tempat.create',
+        'uses'         => 'TempatController@create',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'create.kegiatan_create']);
+    Route::get('tempat/{tempat}/edit', [
+        'as'           => 'admins.tempat.edit',
+        'uses'         => 'TempatController@edit',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'create.kegiatan_create']);
+    Route::post('tempat', [
+        'as'           => 'admins.tempat.store',
+        'uses'         => 'TempatController@store',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'create.kegiatan_create']);
+    Route::put('tempat/{tempat}', [
+        'as'           => 'admins.tempat.update',
+        'uses'         => 'TempatController@update',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'create.kegiatan_create']);
+    Route::delete('tempat/{tempat}', [
+        'as'           => 'admins.tempat.destroy',
+        'uses'         => 'TempatController@destroy',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'create.kegiatan_create']);  
 // statisitik
     Route::get('statistik',array('as' => 'statistik', function()
     {

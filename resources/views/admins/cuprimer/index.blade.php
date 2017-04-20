@@ -46,7 +46,7 @@ $imagepath = "images_cu/";
                 <div class="tab-pane active" id="tab_cuprimer">
                     <div class="input-group tabletools">
                         <div class="input-group-addon"><i class="fa fa-search"></i></div>
-                        <input type="text" id="searchtext" class="form-control" placeholder="Kata kunci pencarian..." autofocus>
+                        <input type="text" id="searchtext" class="form-control" placeholder="Kata kunci pencarian...">
                     </div>
                     <table class="table table-hover order-column" id="dataTables-example" width="100%">
                         <thead class="bg-light-blue-active color-palette">
@@ -117,7 +117,7 @@ $imagepath = "images_cu/";
                 <div class="tab-pane " id="tab_cuprimer_non">
                     <div class="input-group tabletools">
                         <div class="input-group-addon"><i class="fa fa-search"></i></div>
-                        <input type="text" id="searchtext_non" class="form-control" placeholder="Kata kunci pencarian..." autofocus>
+                        <input type="text" id="searchtext_non" class="form-control" placeholder="Kata kunci pencarian...">
                     </div>
                     <table class="table table-hover order-column dt-responsive" id="dataTables_non" width="100%">
                         <thead class="bg-light-blue-active color-palette">

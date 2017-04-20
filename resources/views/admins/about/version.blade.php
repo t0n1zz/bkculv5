@@ -47,6 +47,7 @@ $title = "Version";
                                   <li>Data diklat yang dilaksanakan oleh Puskopdit BKCU Kalimantan</li>
                                   <li>Daftar diklat yang bisa dilakukan langsung melalui program oleh CU Primer anggota</li>
                                   <li>Data tempat dilaksanakan diklat</li>
+                                  <li>Penambahan widget kegiatan terdekat, kegiatan berjalan dan kalender pada dashboard</li>
                                 </ul>
                               </li>
                               <li>Penambahan bagian Staf yang berfungsi:
@@ -57,7 +58,10 @@ $title = "Version";
                               </li>
                               <li>Perubahan navigasi website dimana panel navigasi yang versi sebelumnya berada di tepi kiri menjadi berada di atas</li>
                               <li>Pengubahan semua tabel kecuali tabel bagian laporan CU menjadi tabel yang responsive/mobile friendly</li>
-                              <li>Penambahan bagian Panduan untuk memberikan petunjuk pengoperasian aplikas ini</li>
+                              <li>Penambahan bagian Panduan untuk memberikan petunjuk pengoperasian aplikasi ini</li>
+                              <li>Perbaikan rumusan laporan P.E.A.R.L.S.</li>
+                              <li>Perbaikan integrasi plugin upload foto</li>
+                              <li>Perbaikan bug dan peningkatan performa</li>
                           </ul>
                           <hr/>
                       </div>

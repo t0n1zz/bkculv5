@@ -27,10 +27,7 @@ $datelogout= new Date($data->logout);
         <small>Informasi {{ $title }} </small>
     </h1>
     <ol class="breadcrumb">
-        <li><a href="{{ URL::to('admins')  }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        @if($cu == 0)
-            <li><a href="{{ route('admins.admin.index') }}"><i class="fa fa-user-circle-o"></i> Kelola Admin</li></a>
-        @endif    
+        <li><a href="{{ URL::to('admins')  }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>  
         <li class="active"><i class="fa fa-user-circle-o"></i> {{ $title }}</li>
     </ol>
 </section>

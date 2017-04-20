@@ -52,6 +52,9 @@
                 @permission('view.saran_view')  
                   <li><a href="{{ route('admins.saran.index') }}"><i class="fa fa-paper-plane-o fa-fw""></i> Saran atau Kritik</a></li>
                 @endpermission
+                @permission('view.download_view')  
+                  <li><a href="{{ route('admins.download.index') }}"><i class="fa fa-download fa-fw""></i> Download</a></li>
+                @endpermission
                 @permission('view.artikel_view|view.kategoriartikel_view|view.pengumuman_view|view.saran_view')
                   <li class="divider"></li>
                 @endpermission
@@ -66,12 +69,15 @@
                   <li class="divider"></li>
                   @permission('create.kegiatan_create')
                     <li><a href="{{ route('admins.kegiatan.create') }}"><i class="fa fa-plus fa-fw""></i> Tambah Diklat</a></li>
+                    <li><a href="{{ route('admins.tempat.create') }}"><i class="fa fa-plus fa-fw""></i> Tambah Tempat</a></li>
                     <li class="divider"></li>
                   @endpermission
                   @permission('view.kegiatan_view')
                     <li><a href="{{ route('admins.kegiatan.index') }}"><i class="fa fa-suitcase fa-fw"></i> Diklat</a></li>
-                    <li><a href="{{ route('admins.kegiatan.index') }}"><i class="fa fa-map-marker fa-fw"></i> Tempat</a></li>
-                  @endpermission   
+                  @endpermission  
+                  @permission('create.kegiatan_create')
+                    <li><a href="{{ route('admins.tempat.index') }}"><i class="fa fa-map-marker fa-fw"></i> Tempat</a></li>
+                  @endpermission
                 </ul>
               </li>
             @endpermission
@@ -125,6 +131,9 @@
               </ul>
             </li>
             @endpermission
+            @permission('view.admin_view')
+              <li class="{{ Request::is('admins/admin') ? 'active' : '' }}"><a href="#" data-toggle="modal" data-target="#modalcheckpass"><i class="fa fa-user-circle-o"></i> Admin <span class="sr-only">(current)</span></a></li>
+            @endpermission  
             <li><a href="{{ route('panduan') }}" target="_blank"><i class="fa fa-question-circle-o fa-fw"></i> Panduan</a></li>
           </ul>
         </div>
@@ -191,12 +200,7 @@
                     </ul>
                 </li>
                 <li class="dropdown user user-menu">
-                    @permission('detail.admin_detail')
-                      <a href="{{ route('admins.admin.detail',array($iduser)) }}">
-                    @endpermission
-                    @permission('view.admin_view')
-                      <a href="#" data-toggle="modal" data-target="#modalcheckpass">
-                    @endpermission
+                    <a href="@permission('detail.admin_detail'){{ route('admins.admin.detail',array($iduser)) }}@endpermission">
                     @if(!empty($gambar) && is_file($imagepath.$gambar.".jpg"))
                             <img src="{!! asset($imagepath.$gambar.".jpg") !!}" class="user-image" alt="User Image" />
                     @else

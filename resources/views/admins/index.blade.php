@@ -283,18 +283,19 @@ $ultahcu = DB::select(DB::raw($query));
                         </a>
                     </div>
                     <div class="icon">
-                        @permission('detail.admin_detail')
-                            <a href="{{ route('admins.admin.detail',array($iduser)) }}" style="color: rgba(0, 0, 0, 0.15)">
-                        @else
+                        @permission('view.admin_view')
                             <a href="#" data-toggle="modal" data-target="#modalcheckpass" style="color: rgba(0, 0, 0, 0.15)">
+                        @else
+                            <a href="{{ route('admins.admin.detail',array($iduser)) }}" style="color: rgba(0, 0, 0, 0.15)">
                         @endpermission
                             <i class="fa fa-user-circle-o"></i>
                         </a>
                     </div>
-                    @permission('detail.admin_detail')
-                        <a href="{{ route('admins.admin.detail',array($iduser)) }}" class="small-box-footer">
-                    @else
+                    @permission('view.admin_view')
+                        
                         <a href="#" data-toggle="modal" data-target="#modalcheckpass" class="small-box-footer">
+                    @else
+                        <a href="{{ route('admins.admin.detail',array($iduser)) }}" class="small-box-footer">
                     @endpermission
                        Lihat <i class="fa fa-arrow-circle-right"></i></a>
                 </div>

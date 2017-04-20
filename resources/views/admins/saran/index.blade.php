@@ -35,7 +35,7 @@ $kelas = "saran"
             <div class="tab-pane fade in active" id="tab_saran">
                 <div class="input-group tabletools">
                     <div class="input-group-addon"><i class="fa fa-search"></i></div>
-                    <input type="text" id="searchtext" class="form-control" placeholder="Kata kunci pencarian..." autofocus>
+                    <input type="text" id="searchtext" class="form-control" placeholder="Kata kunci pencarian...">
                 </div>
                 <table class="table table-hover dt-responsive" id="dataTables-example" width="100%">
                     <thead class="bg-light-blue-active color-palette">

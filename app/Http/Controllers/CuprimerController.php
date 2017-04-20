@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use DB;
 use Auth;
 use Input;
+use File;
+use Image;
 use Redirect;
 use Validator;
 use App\TpCU;

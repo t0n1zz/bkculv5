@@ -38,7 +38,7 @@ $cu = Auth::user()->getCU();
                 <div class="col-sm-9" style="padding: .2em ;">
                     <div class="input-group tabletools">
                         <div class="input-group-addon"><i class="fa fa-search"></i></div>
-                        <input type="text" id="searchtext" class="form-control" placeholder="Kata kunci pencarian..." autofocus>
+                        <input type="text" id="searchtext" class="form-control" placeholder="Kata kunci pencarian...">
                     </div>
                 </div>
                 <div class="col-sm-3" style="padding: .2em ;">
