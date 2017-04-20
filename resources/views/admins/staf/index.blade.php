@@ -78,7 +78,7 @@ $id_old="";
                             </div>
                         </div>
                     @endif
-                    <table class="table table-hover" id="dataTables-example"  width="100%">
+                    <table class="table table-hover table-condensed " id="dataTables-example"  width="100%">
                         <thead class="bg-light-blue-active color-palette">
                             <tr>
                                 <th hidden></th>
@@ -92,9 +92,10 @@ $id_old="";
                                 <th>Status</th>
                                 <th>Tgl. Lahir</th>
                                 <th>Umur</th>
+                                <th class="none">Tmpt. Lahir</th>
                                 <th class="none">Alamat</th>
                                 <th class="none">Kontak</th>
-                                <th>Detail</th>
+                                <th>&nbsp;</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -105,7 +106,7 @@ $id_old="";
 
                                 $pekerjaan ='';
                                 $i = 0;
-                                $date = new Date($data->tanggal_lahir);
+                                $date = new Date($data->staf->tanggal_lahir);
 
                                 if(!empty($data->staf->pekerjaan_aktif)){
                                     foreach($data->staf->pekerjaan_aktif as $p){
@@ -135,16 +136,6 @@ $id_old="";
                                 $newarr2 = explode("\n",$data->staf->kontak);
                                 foreach($newarr2 as $str2){
                                     $kontak = $str2;
-                                }
-
-                                if($data->staf->status == 1){
-                                    $status = "Menikah";
-                                }elseif($data->staf->status == 2){
-                                    $status = "Belum Menikah";
-                                }elseif($data->staf->status == 3){
-                                    $status = "Duda/Janda";
-                                }else{
-                                    $status = "";
                                 }
 
                                 if($pendidikan->tingkat == 1){
@@ -194,14 +185,15 @@ $id_old="";
                                 <td>{{ $data->staf->nid }}</td>
                                 <td class="warptext">{!! $pekerjaan !!}</td>
                                 @if(!empty($pendidikan))
-                                    <td class="warptext">{{ $tingkat . ' ' . $pendidikan->name . ' di ' . $pendidikan->tempat}}</td>
+                                    <td class="warptext">{{ $tingkat . ' ' . $pendidikan->name . ' ' . $pendidikan->tempat}}</td>
                                 @else
                                     <td></td>    
                                 @endif
                                 <td>{{ $data->staf->agama }}</td>
-                                <td>{{ $status }}</td>
-                                <td data-order="{{ $data->tanggal_lahir }}">{{ $date->format('d F Y') }}</td>
+                                <td>{{ $data->staf->status }}</td>
+                                <td data-order="{{ $data->staf->tanggal_lahir }}">{{ $date->format('d F Y') }}</td>
                                 <td>{{ $data->staf->age }} Tahun</td>
+                                 <td>{{ $data->staf->tempat_lahir }}</td>
                                 <td>{{ $alamat }}</td>
                                 <td>{{ $kontak }}</td>
                                 <td></td>

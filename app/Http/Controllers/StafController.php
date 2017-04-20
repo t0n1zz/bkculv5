@@ -103,6 +103,8 @@ class StafController extends Controller{
             {
                 return Redirect::back()->withErrors($validator)->withInput();
             }
+            $cu = \Auth::user()->getCU();
+
             $name = Input::get('name');
 
             $kelas = new Staf();
@@ -165,10 +167,15 @@ class StafController extends Controller{
             $kelasdata2->nim = $nim;
             $kelasdata2->save();
 
-            if(Input::Get('simpan2'))
+            if(Input::Get('simpan2')){
                 return Redirect::route('admins.'.$this->kelaspath.'.create')->with('sucessmessage', 'Staff <b><i>' .$name. '</i></b> Telah berhasil ditambah.');
-            else
-                return Redirect::route('admins.'.$this->kelaspath.'.index')->with('sucessmessage', 'Staff <b><i>' .$name. '</i></b> Telah berhasil ditambah.');
+            }else{
+                if($cu == '0'){
+                    return Redirect::route('admins.'.$this->kelaspath.'.index')->with('sucessmessage', 'Staff <b><i>' .$name. '</i></b> Telah berhasil ditambah.');
+                }else{ 
+                    return Redirect::route('admins.'.$this->kelaspath.'.index_cu',array($cu))->with('sucessmessage', 'Staff <b><i>' .$name. '</i></b> Telah berhasil ditambah.'); 
+                }  
+            }
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
         }
@@ -505,17 +512,12 @@ class StafController extends Controller{
     {
         try{
             $kelas = Staf::findOrFail($id);
-
-            $route = Input::get('route');
+            $cu = \Auth::user()->getCU();
             
-            if(empty($route)){
-                $validator = Validator::make($data = Input::all(), Staf::$rules);
-                if ($validator->fails())
-                {
-                    return Redirect::back()->withErrors($validator)->withInput();
-                }
-            }else{
-                $data = Input::all();
+            $validator = Validator::make($data = Input::all(), Staf::$rules);
+            if ($validator->fails())
+            {
+                return Redirect::back()->withErrors($validator)->withInput();
             }
             
             $name = Input::get('name');
@@ -527,11 +529,11 @@ class StafController extends Controller{
             if (Input::Get('simpan2')){
                 return Redirect::route('admins.'.$this->kelaspath.'.create')->with('sucessmessage', 'Staff <b><i>' . $name . '</i></b> Telah berhasil diubah.');
             }else{
-                if(empty($route)){
-                    return Redirect::route('admins.'.$this->kelaspath.'.index')->with('sucessmessage', 'Staff <b><i>' . $name . '</i></b> Telah berhasil diubah.');
-                }else{
-                    return Redirect::route($route,array($id))->with('sucessmessage', 'Staff <b><i>' . $name . '</i></b> Telah berhasil diubah.');
-                }
+                if($cu == '0'){
+                    return Redirect::route('admins.'.$this->kelaspath.'.index')->with('sucessmessage', 'Staff <b><i>' .$name. '</i></b> Telah berhasil diubah.');
+                }else{ 
+                    return Redirect::route('admins.'.$this->kelaspath.'.index_cu',array($cu))->with('sucessmessage', 'Staff <b><i>' .$name. '</i></b> Telah berhasil diubah.'); 
+                } 
             }
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());

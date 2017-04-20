@@ -9,7 +9,7 @@ class Staf extends Model {
     protected $table = 'staf';
     
     public static $rules = [
-        'nid'=>'required|unique:staf',
+        'nid'=>'required',
         'name'=>'required',
         'email' =>  'email'
     ];

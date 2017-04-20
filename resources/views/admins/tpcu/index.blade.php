@@ -8,6 +8,7 @@ $imagepath = 'images_tpcu/';
 
 @section('css')
     @include('admins._components.datatable_CSS')
+    <link rel="stylesheet" type="text/css" href="{{asset('plugins/dataTables/extension/Responsive/css/responsive.bootstrap.min.css')}}" >
 @stop
 
 @section('content')
@@ -73,24 +74,23 @@ $imagepath = 'images_tpcu/';
                     <table class="table table-hover order-column" id="dataTables-example" width="100%">
                         <thead class="bg-light-blue-active color-palette">
                         <tr>
-                            <th data-sortable="false">#</th>
                             <th hidden></th>
                             <th data-sortable="false">Foto</th>
                             @if(Request::is('admins/tpcu'))<th>Nama Credit Union</th>@endif
-                            <th>Nama @if(Request::is('admins/tpcu')) TP @endif</th>
+                            <th class="sort" data-priority="1">Nama @if(Request::is('admins/tpcu')) TP @endif</th>
                             <th>No. TP</th>
                             <th>Tanggal Berdiri</th>
                             <th>Telepon</th>
                             <th>Handphone</th>
                             <th>Kode Pos</th>
                             <th>Alamat</th>
+                            <th>&nbsp;</th>
                         </tr>
                         </thead>
                         <tbody>
                         @foreach($datas as $data)
                             <?php $date = new Date($data->ultah); ?>
                             <tr>
-                                <td class="bg-aqua disabled color-palette"></td>
                                 <td hidden>{{ $data->id }}</td>
                                  @if(!empty($data->gambar) && is_file($imagepath.$data->gambar."n.jpg"))
                                     <th><img class="img-responsive"  width="50px" src="{{ asset($imagepath.$data->gambar.'n.jpg') }}"
@@ -110,6 +110,7 @@ $imagepath = 'images_tpcu/';
                                 <td>{{ $data->hp }}</td>
                                 <td>{{ $data->pos }}</td>
                                 <td>{{ $data->alamat }}</td>
+                                <td></td>
                             </tr>
                         @endforeach
 
@@ -124,7 +125,9 @@ $imagepath = 'images_tpcu/';
 
 @section('js')
     @include('admins._components.datatable_JS')
-    <script type="text/javascript" src="{{ URL::asset('admin/datatable.js') }}"></script>
+    <script type="text/javascript" src="{{ URL::asset('plugins/dataTables/extension/Responsive/js/dataTables.responsive.min.js') }}"></script>
+    <script type="text/javascript" src="{{ URL::asset('plugins/dataTables/extension/Responsive/js/responsive.bootstrap.min.js') }}"></script>
+    <script type="text/javascript" src="{{ URL::asset('admin/datatable_responsive.js') }}"></script>
     <script>
         $(function(){
             // bind change event to select
@@ -160,7 +163,7 @@ $imagepath = 'images_tpcu/';
                     },
                     action: function(){
                         var id = $.map(table.rows({ selected: true }).data(),function(item){
-                            return item[1];
+                            return item[0];
                         });
                         var kelas = "{{ $kelas }}";
                         if(id != ""){
@@ -180,7 +183,7 @@ $imagepath = 'images_tpcu/';
                     },
                     action: function(){
                         var id = $.map(table.rows({ selected:true }).data(),function(item){
-                            return item[1];
+                            return item[0];
                         });
                         if(id != ""){
                             $('#modalhapus').modal({show:true});

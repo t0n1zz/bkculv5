@@ -6,6 +6,7 @@ $kelas = "saran"
 
 @section('css')
     @include('admins._components.datatable_CSS')
+    <link rel="stylesheet" type="text/css" href="{{asset('plugins/dataTables/extension/Responsive/css/responsive.bootstrap.min.css')}}" >
 @stop
 
 @section('content')
@@ -36,20 +37,19 @@ $kelas = "saran"
                     <div class="input-group-addon"><i class="fa fa-search"></i></div>
                     <input type="text" id="searchtext" class="form-control" placeholder="Kata kunci pencarian..." autofocus>
                 </div>
-                <table class="table table-hover" id="dataTables-example" width="100%">
+                <table class="table table-hover dt-responsive" id="dataTables-example" width="100%">
                     <thead class="bg-light-blue-active color-palette">
-                    <tr >
-                        <th data-sortable="false">#</th>
+                    <tr>
                         <th hidden></th>
                         <th>Nama </th>
                         <th>Saran dan Kritik</th>
                         <th>Tanggal</th>
+                        <th>&nbsp;</th>
                     </tr>
                     </thead>
                     <tbody>
                     @foreach($datas as $data)
                         <tr>
-                            <td class="bg-aqua disabled color-palette"></td>
                             <td hidden>{{ $data->id }}</td>
                             @if(!empty($data->name))
                                 <td class="warptext">{{ $data->name }}</td>
@@ -64,10 +64,11 @@ $kelas = "saran"
 
                             @if(!empty($data->created_at ))
                                 <?php $date = new Date($data->created_at); ?>
-                                <td><i hidden="true">{{$data->created_at}}</i> {{  $date->format('d/n/Y') }}</td>
+                                <td><i hidden="true">{{$data->created_at}}</i> {{  $date->format('d F Y') }}</td>
                             @else
                                 <td>-</td>
                             @endif
+                            <td></td>
                         </tr>
                     @endforeach
 
@@ -82,7 +83,9 @@ $kelas = "saran"
 
 @section('js')
     @include('admins._components.datatable_JS')
-    <script type="text/javascript" src="{{ URL::asset('admin/datatable.js') }}"></script>
+    <script type="text/javascript" src="{{ URL::asset('plugins/dataTables/extension/Responsive/js/dataTables.responsive.min.js') }}"></script>
+    <script type="text/javascript" src="{{ URL::asset('plugins/dataTables/extension/Responsive/js/responsive.bootstrap.min.js') }}"></script>
+    <script type="text/javascript" src="{{ URL::asset('admin/datatable_responsive.js') }}"></script>
     <script>
         new $.fn.dataTable.Buttons(table,{
             buttons: [

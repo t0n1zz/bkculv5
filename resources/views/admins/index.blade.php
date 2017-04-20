@@ -7,8 +7,6 @@ $iduser = Auth::user()->getId();
 $date = Date::now()->format('d-m');
 $query = "SELECT  id,name FROM cuprimer WHERE DATE_FORMAT(ultah, '%d-%m') = '$date' ";
 $ultahcu = DB::select(DB::raw($query));
-
-
 ?>
 @extends('admins._layouts.layout')
 

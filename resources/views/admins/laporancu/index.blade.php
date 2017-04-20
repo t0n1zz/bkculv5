@@ -2708,18 +2708,9 @@
 @include('admins._components.datatable_JS')
 <script type="text/javascript" src="{{ URL::asset('plugins/chartJS/Chart.bundle.js') }}"></script>
 
-
 @if(!Request::is('admins/laporancu/index_hapus'))
     @include('admins.laporancu._component.grafik_data')
 @endif
-
-<script>
-    $(document).ready(function() {
-        $('a[data-toggle="tab"]').on( 'shown.bs.tab', function (e) {
-            $.fn.dataTable.tables( {visible: true, api: true} ).columns.adjust();
-        } );
-    } );
-</script>
 
 @if(Request::is('admins/laporancu') || Request::is('admins/laporancu/index_periode*'))
     @include('admins.laporancu._component.datatable_semua')

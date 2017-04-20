@@ -71,6 +71,11 @@ class User extends Authenticatable
         return $this->cu;
     }
 
+    public function getStyle()
+    {
+        return $this->style;
+    }
+    
     public function getLogout()
     {
         return $this->logout;

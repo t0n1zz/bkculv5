@@ -1,5 +1,5 @@
 <?php
-$title = "Kelola Kegiatan";
+$title = "Kelola Diklat";
 $kelas = "kegiatan";
 $now = Date::now()->format('Y-m-d');
 $cu = Auth::user()->getCU();
@@ -16,7 +16,7 @@ $cu = Auth::user()->getCU();
 <section class="content-header">
     <h1>
         <i class="fa fa-suitcase"></i> {{ $title }}
-        <small>Mengelola Data Kegiatan</small>
+        <small>Mengelola Data Diklat</small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="{{ URL::to('admins') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
@@ -49,24 +49,24 @@ $cu = Auth::user()->getCU();
                         </select>
                     </div>
                 </div>
-                <table class="table table-hover dt-responsive nowarp" id="dataTables-example" cellspacing="0" width="100%">
+                <table class="table table-hover " id="dataTables-example" cellspacing="0" width="100%">
                     <thead class="bg-light-blue-active color-palette">
                     <tr>
                         <th hidden></th>
                         <th hidden></th>
-                        <th class="sort" data-priority="1">Nama </th>
+                        <th data-priority="1" class="warptext">Nama </th>
                         <th>Kota</th>
-                        <th>Tempat</th>
-                        <th data-priority="4">Mulai</th>
+                        <th class="warptext">Tempat</th>
+                        <th class="sort" data-priority="4">Mulai</th>
                         <th data-priority="3">Selesai</th>
-                        <th>Sasaran</th>
+                        <th class="warptext">Sasaran</th>
                         <th data-priority="2">Status</th>
-                        <th class="none">Prasyarat</th>
+                        <th class="none" class="warptext">Prasyarat</th>
                         <th class="none">Durasi</th>
                         <th class="none">Min</th>
                         <th class="none">Maks</th>
                         <th class="none">Terdaftar</th>
-                        <th></th>
+                        <th>&nbsp;</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -292,11 +292,7 @@ $cu = Auth::user()->getCU();
                 },
                 @endpermission
                 {
-                    @if($cu == 0)
-                        text: '<i class="fa fa-database"></i> Detail',
-                    @else
-                        text: '<i class="fa fa-database"></i> Daftar',
-                    @endif
+                    text: '<i class="fa fa-database"></i> Daftar',
                     action: function(){
                         var id = $.map(table.rows({ selected: true }).data(),function(item){
                             return item[0];

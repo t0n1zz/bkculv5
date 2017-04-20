@@ -9,6 +9,7 @@ $imagepath = 'images_artikel/';
 
 @section('css')
     @include('admins._components.datatable_CSS')
+    <link rel="stylesheet" type="text/css" href="{{asset('plugins/dataTables/extension/Responsive/css/responsive.bootstrap.min.css')}}" >
 @stop
 
 @section('content')
@@ -48,27 +49,26 @@ $imagepath = 'images_artikel/';
                     <input type="text" id="searchtext" class="form-control" placeholder="Kata kunci pencarian..." autofocus>
                 </div>
 
-                <table class="table table-hover" id="dataTables-example" width="100%">
+                <table class="table table-hover dt-responsive" id="dataTables-example" width="100%">
                     <thead class="bg-light-blue-active color-palette">
                     <tr>
-                        <th data-sortable="false">#</th>
                         <th hidden></th>
                         <th hidden></th>
                         <th hidden></th>
                         <th data-sortable="false">Foto</th>
-                        <th>Judul</th>
+                        <th class="sort" data-priority="1">Judul</th>
                         <th>Kategori</th>
                         <th>Penulis</th>
                         <th>Tanggal Tulis</th>
                         <th>Tanggal Ubah</th>
-                        <th>Terbit</th>
-                        <th>Pilihan</th>
+                        <th data-priority="2">Terbit</th>
+                        <th data-priority="3">Pilihan</th>
+                        <th>&nbsp;</th>
                     </tr>
                     </thead>
                     <tbody>
                     @foreach($datas as $data)
                         <tr>
-                            <td class="bg-aqua disabled color-palette"></td>
                             <td hidden>{{ $data->id }}</td>
                             <td hidden>{{ $data->status }}</td>
                             <td hidden>{{ $data->pilih }}</td>
@@ -91,8 +91,8 @@ $imagepath = 'images_artikel/';
                             <td class="warptext">{{ $data->judul }}</td>    
                             <td>{{ $data->kategoriartikel->name }}</td>
                             <td>{{ $data->penulis }}</td>
-                            <td>{{ $data->created_at->format('d/n/Y') }}</td>
-                            <td>{{ $data->updated_at->format('d/n/Y')  }}</td>
+                            <td data-order="{{ $data->created_at }}">{{ $data->created_at->format('d F Y') }}</td>
+                            <td data-order="{{ $data->updated_at }}">{{ $data->updated_at->format('d F Y')  }}</td>
                             <td>
                                 @if($data->status == "1")
                                     <a href="#" class="btn btn-warning" disabled><i class="fa fa-check"></i></a>
@@ -107,6 +107,7 @@ $imagepath = 'images_artikel/';
                                     <a href="#" class="btn btn-default" disabled><i class="fa fa-ban"></i></a>
                                 @endif
                             </td>
+                            <td></td>
                         </tr>
                     @endforeach
                     </tbody>
@@ -120,19 +121,18 @@ $imagepath = 'images_artikel/';
                     <input type="text" id="searchtext2" class="form-control" placeholder="Kata kunci pencarian..." autofocus>
                 </div>
 
-                <table class="table table-hover" id="dataTables-example2" width="100%">
+                <table class="table table-hover table-condensed dt-responsive" id="dataTables-example2" width="100%">
                     <thead class="bg-light-blue-active color-palette">
                     <tr>
-                        <th data-sortable="false">#</th>
                         <th hidden></th>
                         <th>Nama Kategori </th>
                         <th>Jumlah Artikel</th>
+                        <th>&nbsp;</th>
                     </tr>
                     </thead>
                     <tbody>
                     @foreach($datas2 as $data)
                         <tr>
-                            <td class="bg-aqua disabled color-palette"></td>
                             <td hidden>{{ $data->id }}</td>
                             <td>{{ $data->name }}</td>
                             @if($data->hasartikel->count() > 0)
@@ -140,6 +140,7 @@ $imagepath = 'images_artikel/';
                             @else
                                 <td><a href="#" class="btn btn-default" disabled>{{ $data->hasartikel->count() }}</a> </td>
                             @endif
+                            <td></td>
                         </tr>
                     @endforeach
                     </tbody>
@@ -226,7 +227,7 @@ $imagepath = 'images_artikel/';
 <!-- /tambah -->
 <!-- ubah -->
 <div class="modal fade" id="modalubahkategori" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-{{ Form::open(array('route' => array('admins.'.$kelas2.'.update_kategori',$kelas2), 'method' => 'put','data-toggle' => 'validator','role' => 'form')) }}
+    {{ Form::open(array('route' => array('admins.'.$kelas2.'.update_kategori',$kelas2), 'method' => 'put','data-toggle' => 'validator','role' => 'form')) }}
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header bg-light-blue-active color-palette">
@@ -278,6 +279,8 @@ $imagepath = 'images_artikel/';
 
 @section('js')
     @include('admins._components.datatable_JS')
+    <script type="text/javascript" src="{{ URL::asset('plugins/dataTables/extension/Responsive/js/dataTables.responsive.min.js') }}"></script>
+    <script type="text/javascript" src="{{ URL::asset('plugins/dataTables/extension/Responsive/js/responsive.bootstrap.min.js') }}"></script>
     <script>
         $(document).ready(function(){
             $('a[data-toggle="tab"]').on( 'shown.bs.tab', function (e) {
@@ -286,7 +289,7 @@ $imagepath = 'images_artikel/';
         });
     </script>
     @permission('view.'.$kelas.'_view')
-    <script type="text/javascript" src="{{ URL::asset('admin/datatable.js') }}"></script>
+    <script type="text/javascript" src="{{ URL::asset('admin/datatable_responsive.js') }}"></script>
     <script>
         new $.fn.dataTable.Buttons(table,{
             buttons: [
@@ -311,7 +314,7 @@ $imagepath = 'images_artikel/';
                     },
                     action: function(){
                         var id = $.map(table.rows({ selected: true }).data(),function(item){
-                            return item[1];
+                            return item[0];
                         });
                         var kelas = "{{ $kelas }}";
                         if(id != ""){
@@ -331,10 +334,10 @@ $imagepath = 'images_artikel/';
                     },
                     action: function(){
                         var id = $.map(table.rows({ selected:true }).data(),function(item){
-                            return item[1];
+                            return item[0];
                         });
                         var judul = $.map(table.rows({ selected:true }).data(),function(item){
-                            return item[2];
+                            return item[1];
                         });
                         if(id != ""){
                             $('#modalhapus').modal({show:true});
@@ -356,13 +359,13 @@ $imagepath = 'images_artikel/';
                     },
                     action: function(){
                         var id = $.map(table.rows({ selected: true }).data(),function(item){
-                            return item[1];
+                            return item[0];
                         });
                         var judul = $.map(table.rows({ selected:true }).data(),function(item){
-                            return item[5];
+                            return item[4];
                         });
                         var status = $.map(table.rows({ selected:true }).data(),function(item){
-                            return item[2];
+                            return item[1];
                         });
                         if(id != ""){
                             $('#modalstatus').modal({show:true});
@@ -387,13 +390,13 @@ $imagepath = 'images_artikel/';
                     },
                     action: function(){
                         var id = $.map(table.rows({ selected: true }).data(),function(item){
-                            return item[1];
+                            return item[0];
                         });
                         var judul = $.map(table.rows({ selected:true }).data(),function(item){
-                            return item[5];
+                            return item[4];
                         });
                         var status = $.map(table.rows({ selected:true }).data(),function(item){
-                            return item[3];
+                            return item[2];
                         });
                         if(id != ""){
                             $('#modalpilihan').modal({show:true});
@@ -417,7 +420,7 @@ $imagepath = 'images_artikel/';
     </script>
     @endpermission
     @permission('view.'.$kelas2.'_view')
-    <script type="text/javascript" src="{{ URL::asset('admin/datatable2.js') }}"></script>
+    <script type="text/javascript" src="{{ URL::asset('admin/datatable2_responsive.js') }}"></script>
     <script>
         new $.fn.dataTable.Buttons(table2,{
             buttons: [
@@ -442,10 +445,10 @@ $imagepath = 'images_artikel/';
                     },
                     action: function(){
                         var id = $.map(table2.rows({ selected: true }).data(),function(item){
-                            return item[1];
+                            return item[0];
                         });
                         var id2 = $.map(table2.rows({ selected: true }).data(),function(item){
-                            return item[2];
+                            return item[1];
                         });
                         if(id != ""){
                             $('#modalubahkategori').modal({show:true});
@@ -466,7 +469,7 @@ $imagepath = 'images_artikel/';
                     },
                     action: function(){
                         var id = $.map(table2.rows({ selected:true }).data(),function(item){
-                            return item[1];
+                            return item[0];
                         });
                         if(id != ""){
                             $('#modalhapus2').modal({show:true});

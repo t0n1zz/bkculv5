@@ -124,7 +124,7 @@ class KegiatanController extends Controller{
 
             $data2 = $this->input_data($data);
 
-            //dd($data2);
+            // dd($data2);
 
             $savedata = Kegiatan::create($data2);
 
@@ -390,9 +390,24 @@ class KegiatanController extends Controller{
         $periode = Input::get('periode');
         array_set($data,'periode',$periode);
 
+        $min = Input::get('min');
+        $max = Input::get('max');
+
+        if(empty($min)){
+            $min = 5;
+            array_set($data,'min',$min);
+        }
+
+        if(empty($max)){
+            $max = 20;
+            array_set($data,'max',$max);
+        }
+
         $selecttempat = Input::get('selecttempat');
         if($selecttempat == "tambah"){
             $tempat = $this->store_tempat();
+        }elseif($selecttempat == "batal"){
+            $tempat = null;
         }else{
             $tempat = $selecttempat;
         }

@@ -69,21 +69,21 @@ $file_max = intval($file_max);
                             <option selected disabled>Status</option>
                             <option value="Menikah"
                             @if(!empty($data))
-                                @if($data->status == "1")
+                                @if($data->status == "Menikah")
                                     {{ "selected" }}
                                         @endif
                                     @endif
                             >Menikah</option>
                             <option value="Belum Menikah"
                             @if(!empty($data))
-                                @if($data->status == "2")
+                                @if($data->status == "Belum Menikah")
                                     {{ "selected" }}
                                         @endif
                                     @endif
                             >Belum Menikah</option>
                             <option value="Duda/Janda"
                             @if(!empty($data))
-                                @if($data->status == "3")
+                                @if($data->status == "Duda/Janda")
                                     {{ "selected" }}
                                         @endif
                                     @endif

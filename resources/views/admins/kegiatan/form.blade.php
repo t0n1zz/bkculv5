@@ -177,7 +177,7 @@ $kelas ='kegiatan';
                     <h4>Peserta Minimal</h4>
                     <div class="input-group">
                         <span class="input-group-addon">0-9</span>
-                        {{ Form::text('min',null,array('class' => 'form-control', 'placeholder' => 'Silahkan masukkan jumlah minimal peserta','autocomplete'=>'off'))}}
+                        {{ Form::number('min',null,array('class' => 'form-control', 'placeholder' => 'Silahkan masukkan jumlah minimal peserta','autocomplete'=>'off'))}}
                     </div>
                 </div>
             </div>
@@ -186,7 +186,7 @@ $kelas ='kegiatan';
                     <h4>Peserta Maksimal</h4>
                     <div class="input-group">
                         <span class="input-group-addon">0-9</span>
-                        {{ Form::text('max',null,array('class' => 'form-control', 'placeholder' => 'Silahkan masukkan jumlah maksimal peserta','autocomplete'=>'off'))}}
+                        {{ Form::number('max',null,array('class' => 'form-control', 'placeholder' => 'Silahkan masukkan jumlah maksimal peserta','autocomplete'=>'off'))}}
                     </div>
                 </div>
             </div>

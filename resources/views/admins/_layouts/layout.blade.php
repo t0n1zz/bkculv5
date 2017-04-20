@@ -1,3 +1,6 @@
+<?php 
+$style = Auth::user()->getStyle();;
+?>
 <!DOCTYPE Html>
 <Html lang="en">
 
@@ -39,18 +42,25 @@
     <![endif]-->
 </head>
 
-<body class="sidebar-collapse hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-blue layout-top-nav">
 <div class="wrapper">
     <!-- Header -->
-    @include('admins._layouts.header')
+    @if($style == "0")
+        @include('admins._layouts.header-top')
+    @else
+        @include('admins._layouts.header')
+    @endif
     <!-- /Header -->
 
     <!-- sidebar -->
-    @include('admins._layouts.sidebar')
+    @if($style != "0")
+        @include('admins._layouts.sidebar')
+    @endif
     <!-- /sidebar -->
 
     <!-- content -->
     <div class="content-wrapper">
+        <br/>
         @yield('content')
     </div>
     <!-- /content -->

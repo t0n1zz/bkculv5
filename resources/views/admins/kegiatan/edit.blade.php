@@ -1,5 +1,5 @@
 <?php
-$title="Ubah Kegiatan";
+$title="Ubah Diklat";
 $kelas="kegiatan";
 ?>
 @extends('admins._layouts.layout')
@@ -9,11 +9,11 @@ $kelas="kegiatan";
 <section class="content-header">
     <h1>
         <i class="fa fa-pencil-square-o"></i> {{ $title }}
-        <small>Mengubah Kegiatan</small>
+        <small>Mengubah Diklat</small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="{{ URL::to('admins')  }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li><a href="{{ route('admins.'.$kelas.'.index') }}"><i class="fa fa-calendar"></i> Kelola Kegiatan</a></li>
+        <li><a href="{{ route('admins.'.$kelas.'.index') }}"><i class="fa fa-suitcase"></i> Kelola Diklat</a></li>
         <li class="active"><i class="fa fa-pencil-square-o"></i> {{$title}}</li>
     </ol>
 </section>

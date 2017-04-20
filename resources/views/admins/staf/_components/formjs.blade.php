@@ -96,7 +96,7 @@
     }
 
     function func_selecttingkatan($i){
-        if($i == "Pengawas" || $i == "Senior Manajer"){
+        if($i == "Pengawas" || $i == "Pengurus" || $i == "Komite"){
             $('#bidang').hide();
             $('#btnsekarang').hide();
             $('#sekarangpekerjaan').val('0');

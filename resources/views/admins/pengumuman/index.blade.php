@@ -6,6 +6,7 @@ $kelas = "pengumuman";
 
 @section('css')
     @include('admins._components.datatable_CSS')
+    <link rel="stylesheet" type="text/css" href="{{asset('plugins/dataTables/extension/Responsive/css/responsive.bootstrap.min.css')}}" >
 @stop
 
 @section('content')
@@ -36,20 +37,19 @@ $kelas = "pengumuman";
                     <div class="input-group-addon"><i class="fa fa-search"></i></div>
                     <input type="text" id="searchtext" class="form-control" placeholder="Kata kunci pencarian..." autofocus>
                 </div>
-                <table class="table table-hover" id="dataTables-example" width="100%">
+                <table class="table table-hover dt-responsive" id="dataTables-example" width="100%">
                     <thead class="bg-light-blue-active color-palette">
                     <tr>
-                        <th>#</th>
                         <th hidden></th>
-                        <th>Pengumuman</th>
-                        <th>Tanggal</th>
+                        <th data-priority="1">Pengumuman</th>
+                        <th class="sort">Tanggal</th>
                         <th>Urutan</th>
+                        <th>&nbsp;</th>
                     </tr>
                     </thead>
                     <tbody>
                     @foreach($datas as $data)
                         <tr>
-                            <td class="bg-aqua disabled color-palette"></td>
                             <td hidden>{{ $data->id }}</td>
                             @if(!empty($data->name))
                                 <td class="warptext">{{ $data->name }}</td>
@@ -59,7 +59,7 @@ $kelas = "pengumuman";
 
                             @if(!empty($data->created_at ))
                                 <?php $date = new Date($data->created_at); ?>
-                                <td><i hidden="true">{{$data->created_at}}</i> {{  $date->format('d-n-Y') }}</td>
+                                <td data-order="{{$data->created_at}}">{{  $date->format('d F Y') }}</td>
                             @else
                                 <td>-</td>
                             @endif
@@ -69,6 +69,7 @@ $kelas = "pengumuman";
                             @else
                                 <td><a href="#" class="btn btn-default" disabled>-</a></td>
                             @endif
+                            <td></td>
                         </tr>
                     @endforeach
                     </tbody>
@@ -146,7 +147,7 @@ $kelas = "pengumuman";
 <!-- /ubah -->
 <!-- ubah urutan -->
 <div class="modal fade" id="modalurutan" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-{{ Form::open(array('route' => array('admins.'.$kelas.'.update_urutan','data-toggle' => 'validator','role' => 'form'))) }}
+    {{ Form::open(array('route' => array('admins.'.$kelas.'.update_urutan','data-toggle' => 'validator','role' => 'form'))) }}
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header bg-light-blue-active color-palette">
@@ -184,7 +185,9 @@ $kelas = "pengumuman";
 
 @section('js')
     @include('admins._components.datatable_JS')
-    <script type="text/javascript" src="{{ URL::asset('admin/datatable.js') }}"></script>
+    <script type="text/javascript" src="{{ URL::asset('plugins/dataTables/extension/Responsive/js/dataTables.responsive.min.js') }}"></script>
+    <script type="text/javascript" src="{{ URL::asset('plugins/dataTables/extension/Responsive/js/responsive.bootstrap.min.js') }}"></script>
+    <script type="text/javascript" src="{{ URL::asset('admin/datatable_responsive.js') }}"></script>
     <script>
         new $.fn.dataTable.Buttons(table,{
             buttons: [

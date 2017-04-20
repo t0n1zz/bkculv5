@@ -1,7 +1,7 @@
 <?php
 
 use App\pekerjaan;
-$title = "Detail Kegiatan";
+$title = "Detail Diklat";
 $kelas = "kegiatan";
 $imagepath = "images_tempat/";
 $cu = Auth::user()->getCU();
@@ -33,7 +33,7 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
     </h1>
     <ol class="breadcrumb">
         <li><a href="{{ URL::to('admins') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li><a href="{{ URL::to('admins/kegiatan') }}"><i class="fa fa-calendar"></i> Kegiatan</a></li>
+        <li><a href="{{ URL::to('admins/kegiatan') }}"><i class="fa fa-suitcase"></i> Kegiatan</a></li>
         <li class="active"><i class="fa fa-database"></i> {{ $title }}</li>
     </ol>
 </section>
@@ -78,11 +78,6 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
                             <b>Peserta Terdaftar</b> <a class="pull-right">{{ $datapeserta->count() }}</a>
                         </li>
                     </ul>
-                    @if($cu == 0)
-                        @if($statuskegiatan != "terlaksana" && $statuskegiatan != "batal")
-                            <a href="{{ route('admins.'.$kelas.'.edit',array($data->id)) }}" class="btn btn-default btn-block"><i class="fa fa-pencil"></i> Ubah Data Kegiatan</a>   
-                        @endif
-                    @endif
                 </div>
                 <!-- /.box-body -->
             </div>
@@ -175,63 +170,61 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
             </div>
             <div class="nav-tabs-custom">
                 <ul class="nav nav-tabs">
-                    <li class="{{ $tabname == 'informasi' ? 'active' : '' }}"><a href="#informasi" data-toggle="tab">Informasi</a></li>
+                    @if(!empty($data->deskripsi) && !empty($data->peserta) && !empty($data->tujuan) && !empty($data->ruang) && !empty($data->informasi))
+                        <li class="{{ $tabname == 'informasi' ? 'active' : '' }}"><a href="#informasi" data-toggle="tab">Informasi</a></li>
+                    @else 
+                        <?php $tabname = 'pendaftaran'; ?>    
+                    @endif
                     <li class="{{ $tabname == 'pendaftaran' ? 'active' : '' }}"><a href="#pendaftaran" data-toggle="tab">Pendaftaran</a></li>
                 </ul>
                 <div class="tab-content">
-                    <div class="fade tab-pane {{ $tabname == 'informasi' ? 'in active' : '' }}" id="informasi">
-                        @if(!empty($data->deskripsi))
-                            <section id="deskripsi">
-                                <h4 class="page-header color1">Deskripsi</h4>
-                                <div class="pre-scrollable">
-                                    {!! $data->deskripsi !!}
-                                </div>    
-                                <br/>
-                            </section>
-                        @endif
-                        @if(!empty($data->peserta))
-                            <section id="peserta">
-                                <h4 class="page-header color1">Peserta</h4>
-                                <div class="pre-scrollable">
-                                    {!! $data->peserta !!}
-                                </div>    
-                                <br/>
-                            </section>
-                        @endif
-                        @if(!empty($data->tujuan))
-                            <section id="tujuan">
-                                <h4 class="page-header color1">Tujuan</h4>
-                                <div class="pre-scrollable">
-                                    {!! $data->tujuan !!}
+                    @if(!empty($data->deskripsi) && !empty($data->peserta) && !empty($data->tujuan) && !empty($data->ruang) && !empty($data->informasi))
+                        <div class="fade tab-pane {{ $tabname == 'informasi' ? 'in active' : '' }}" id="informasi">
+                            @if(!empty($data->deskripsi))
+                                <section id="deskripsi">
+                                    <h4 class="page-header color1">Deskripsi</h4>
+                                        {!! $data->deskripsi !!}
+                                    <br/>
+                                </section>
+                            @endif
+                            @if(!empty($data->peserta))
+                                <section id="peserta">
+                                    <h4 class="page-header color1">Peserta</h4>
+                                        {!! $data->peserta !!}
+                                    <br/>
+                                </section>
+                            @endif
+                            @if(!empty($data->tujuan))
+                                <section id="tujuan">
+                                    <h4 class="page-header color1">Tujuan</h4>
+                                        {!! $data->tujuan !!}
+                                    <br/>
+                                </section>
+                            @endif
+                            @if(!empty($data->ruang))
+                                <section id="ruang">
+                                    <h4 class="page-header color1">Ruang Lingkup</h4>
+                                        {!! $data->ruang !!}
+                                    <br/>
+                                </section>
+                            @endif
+                            @if(!empty($data->informasi))
+                                <section id="informasi">
+                                    <h4 class="page-header color1">Informasi Tambahan</h4>
+                                    <div class="pre-scrollable">
+                                        {!! $data->informasi !!}
+                                    </div>    
+                                </section> 
                                 </div>
-                                <br/>
-                            </section>
-                        @endif
-                        @if(!empty($data->ruang))
-                            <section id="ruang">
-                                <h4 class="page-header color1">Ruang Lingkup</h4>
-                                <div class="pre-scrollable">
-                                    {!! $data->ruang !!}
-                                </div>
-                                <br/>
-                            </section>
-                        @endif
-                        @if(!empty($data->informasi))
-                            <section id="informasi">
-                                <h4 class="page-header color1">Informasi Tambahan</h4>
-                                <div class="pre-scrollable">
-                                    {!! $data->informasi !!}
-                                </div>    
-                            </section> 
-                            </div>
-                        @endif    
-                    </div>
+                            @endif    
+                        </div>
+                    @endif    
                     <!-- /.tab-pane -->
                     <div class="fade tab-pane {{ $tabname == 'pendaftaran' ? 'in active' : '' }}" id="pendaftaran">
                         @if($cu == '0')
                             <section id="panitia">
                                 <h4 class="page-header color1">Fasilitator & Panitia</h4>
-                                <table class="table table-hover dt-responsive nowarp" id="datatablepanitia" cellspacing="0" width="100%">
+                                <table class="table table-hover dt-responsive" id="datatablepanitia" cellspacing="0" width="100%">
                                     <thead class="bg-light-blue-active color-palette">
                                     <tr> 
                                         <th hidden></th>
@@ -243,7 +236,7 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
                                         <th data-priority="2">Tugas</th>
                                         <th class="none">NIM</tH>
                                         <th class="none">Jabatan</th>
-                                        <th>Detail</th>
+                                        <th>&nbsp;</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -256,11 +249,15 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
                                                 foreach($datap->staf->pekerjaan_aktif as $p){
                                                     $i++;
                                                     if($p->tipe == "1"){
-                                                        $tempat .= 'CU ' . $p->cuprimer->name ;
-                                                        $pekerjaan .= $p->name . ' CU ' . $p->cuprimer->name;
+                                                        if(!empty($p->cuprimer)){
+                                                            $tempat .= 'CU ' . $p->cuprimer->name ;
+                                                            $pekerjaan .= $p->name . ' CU ' . $p->cuprimer->name;
+                                                        }
                                                     }elseif($p->tipe == "2"){
-                                                        $tempat .= $p->lembaga->name;
-                                                        $pekerjaan .= $p->name . ' ' . $p->lembaga->name;
+                                                        if(!empty($p->lembaga)){
+                                                            $tempat .= $p->lembaga->name;
+                                                            $pekerjaan .= $p->name . ' ' . $p->lembaga->name;
+                                                        }
                                                     }elseif($p->tipe == "3"){
                                                         $tempat .= 'Puskopdit BKCU Kalimantan';
                                                         $pekerjaan .=$p->name . ' Puskopdit BKCU Kalimantan';
@@ -320,7 +317,7 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
                                     <th data-priority="2">Status</th>
                                     <th class="none">NIM</th>
                                     <th class="none">Jabatan</th>
-                                    <th>Detail</th>
+                                    <th>&nbsp;</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -334,11 +331,15 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
                                                 foreach($datap->staf->pekerjaan_aktif as $p){
                                                     $i++;
                                                     if($p->tipe == "1"){
-                                                        $tempat .= 'CU ' . $p->cuprimer->name ;
-                                                        $pekerjaan .= $p->name . ' CU ' . $p->cuprimer->name;
+                                                        if(!empty($p->cuprimer)){
+                                                            $tempat .= 'CU ' . $p->cuprimer->name ;
+                                                            $pekerjaan .= $p->name . ' CU ' . $p->cuprimer->name;
+                                                        }
                                                     }elseif($p->tipe == "2"){
-                                                        $tempat .= $p->lembaga->name;
-                                                        $pekerjaan .= $p->name . ' ' . $p->lembaga->name;
+                                                        if(!empty($p->lembaga)){
+                                                            $tempat .= $p->lembaga->name;
+                                                            $pekerjaan .= $p->name . ' ' . $p->lembaga->name;
+                                                        }
                                                     }elseif($p->tipe == "3"){
                                                         $tempat .= 'Puskopdit BKCU Kalimantan';
                                                         $pekerjaan .=$p->name . ' Puskopdit BKCU Kalimantan';
@@ -435,7 +436,7 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
                                 <div class="input-group-addon"><i class="fa fa-search"></i></div>
                                 <input type="text" id="searchpanitia" class="form-control" placeholder="Kata kunci pencarian..." autofocus>
                             </div>
-                            <table class="table table-hover dt-responsive nowarp" id="datatabletambahpanitia" cellspacing="0" width="100%">
+                            <table class="table table-hover dt-responsive" id="datatabletambahpanitia" cellspacing="0" width="100%">
                                 <thead class="bg-light-blue-active color-palette">
                                 <tr>
                                     <th hidden></th>
@@ -453,7 +454,7 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
                                     <th class="none">Umur</th>
                                     <th class="none">Alamat</th>
                                     <th class="none">Kontak</th>
-                                    <th>Detail</th>
+                                    <th>&nbsp;</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -486,15 +487,7 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
                                         if(!empty($dataf->staf->pendidikan)){
                                             $pendidikan = $dataf->staf->pendidikan->first();
                                         }
-                                        if($dataf->staf->status == 1){
-                                            $status = "Menikah";
-                                        }elseif($dataf->staf->status == 2){
-                                            $status = "Belum Menikah";
-                                        }elseif($dataf->staf->status == 3){
-                                            $status = "Duda/Janda";
-                                        }else{
-                                            $status = "";
-                                        }
+                                     
                                         $newarr = explode("\n",$dataf->staf->alamat);
                                         foreach($newarr as $str){
                                             $alamat = $str;
@@ -536,7 +529,7 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
                                             <td></td>    
                                         @endif
                                         <td>{{ $dataf->staf->agama }}</td>
-                                        <td>{{ $status }}</td>
+                                        <td>{{ $dataf->staf->status }}</td>
                                         <td data-order="{{ $dataf->tanggal_lahir }}">{{ $date->format('d F Y') }}</td>
                                         <td>{{ $dataf->staf->age }} Tahun</td>
                                         <td>{{ $alamat }}</td>
@@ -571,7 +564,7 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
                     <input type="text" name="id_tugas"  id="idtugas" value="" hidden>
                     <input type="text" name="id_kegiatan" value="{{ $data->id }}" hidden>
                     <div class="table-responsive">
-                        <table class="table table-condensed" style="margin-bottom: 0px;">
+                        <table class="table table-condensed dt-responsive" style="margin-bottom: 0px;">
                             <tr>
                                 <td style="border-bottom: 1px solid #f4f4f4">
                                     <div class="checkbox">
@@ -667,7 +660,7 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
                             <div class="input-group-addon"><i class="fa fa-search"></i></div>
                             <input type="text" id="searchstaf" class="form-control" placeholder="Kata kunci pencarian..." autofocus>
                         </div>
-                        <table class="table table-hover" id="datatabletambahpeserta" cellspacing="0" width="100%">
+                        <table class="table table-hover dt-responsive" id="datatabletambahpeserta" cellspacing="0" width="100%">
                             <thead class="bg-light-blue-active color-palette">
                                 <tr>
                                     <th hidden></th>
@@ -685,7 +678,7 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
                                     <th>Umur</th>
                                     <th class="none">Alamat</th>
                                     <th class="none">Kontak</th>
-                                    <th>Detail</th>
+                                    <th>&nbsp;</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -742,15 +735,6 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
                                             }
                                         }
 
-                                        if($dataf->staf->status == 1){
-                                            $status = "Menikah";
-                                        }elseif($dataf->staf->status == 2){
-                                            $status = "Belum Menikah";
-                                        }elseif($dataf->staf->status == 3){
-                                            $status = "Duda/Janda";
-                                        }else{
-                                            $status = "";
-                                        }
                                         $newarr = explode("\n",$dataf->staf->alamat);
                                         foreach($newarr as $str){
                                             $alamat = $str;
@@ -792,7 +776,7 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
                                             <td></td>    
                                         @endif
                                         <td>{{ $dataf->staf->agama }}</td>
-                                        <td>{{ $status }}</td>
+                                        <td>{{ $dataf->staf->status }}</td>
                                         <td data-order="{{ $dataf->tanggal_lahir }}">{{ $date->format('d F Y') }}</td>
                                         <td>{{ $dataf->staf->age }} Tahun</td>
                                         <td>{{ $alamat }}</td>
@@ -905,23 +889,16 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
 @include('admins._components.datatable_JS')
 <script type="text/javascript" src="{{ URL::asset('plugins/dataTables/extension/Responsive/js/dataTables.responsive.min.js') }}"></script>
 <script type="text/javascript" src="{{ URL::asset('plugins/dataTables/extension/Responsive/js/responsive.bootstrap.min.js') }}"></script>
-<script>
-    $(document).ready(function(){
-        $('a[data-toggle="tab"]').on( 'shown.bs.tab', function (e) {
-            $.fn.dataTable.tables( {visible: true, api: true} ).columns.adjust();
-        } );
-    });
-</script>
 {{-- panitia --}}
 @if($cu == '0')
 <script>
     var tablepanitia = $('#datatablepanitia').DataTable({
-        dom: 'Bfti',
-        paging : false,
-        stateSave : false,
-        scrollY: '50vh',
+        dom: 'Bti',
+        scrollY: '70vh',
         autoWidth: true,
         scrollCollapse : true,
+        paging : false,
+        stateSave : false ,
         select: {
             style:    'os',
             selector: 'td:not(:last-child)'
@@ -1150,12 +1127,12 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
 {{-- peserta --}}
 <script>
     var tablepeserta = $('#datatablepeserta').DataTable({
-        dom: 'Bfti',
-        paging : false,
-        stateSave : false,
-        scrollY: '50vh',
+        dom: 'Bti',
+        scrollY: '70vh',
         autoWidth: true,
         scrollCollapse : true,
+        paging : false,
+        stateSave : false ,
         select: {
             style:    'os',
             selector: 'td:not(:last-child)'

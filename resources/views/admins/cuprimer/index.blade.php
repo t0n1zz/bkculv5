@@ -9,6 +9,7 @@ $imagepath = "images_cu/";
 
 @section('css')
     @include('admins._components.datatable_CSS')
+     <link rel="stylesheet" type="text/css" href="{{asset('plugins/dataTables/extension/Responsive/css/responsive.bootstrap.min.css')}}" >
 @stop
 
 @section('content')
@@ -50,15 +51,13 @@ $imagepath = "images_cu/";
                     <table class="table table-hover order-column" id="dataTables-example" width="100%">
                         <thead class="bg-light-blue-active color-palette">
                         <tr>
-                            <th data-sortable="false">#</th>
                             <th hidden></th>
                             <th hidden></th>
                             <th hidden></th>
                             <th data-sortable="false">Foto</th>
-                            <th>Nama </th>
+                            <th class="sort" data-priority="1">Nama </th>
                             <th>No. BA</th>
                             <th>Wilayah</th>
-                            <th>District Office</th>
                             <th>Tanggal Berdiri</th>
                             <th>Tanggal Bergtabung</th>
                             <th>TP</th>
@@ -71,6 +70,7 @@ $imagepath = "images_cu/";
                             <th>Email</th>
                             <th>Alamat</th>
                             <th>Website</th>
+                            <th>&nbsp;</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -78,18 +78,8 @@ $imagepath = "images_cu/";
                             <?php 
                                 $date = new Date($data->ultah); 
                                 $date2 = new Date($data->bergabung);
-                                if($data->do == "1"){
-                                    $do ="Barat";
-                                }else if($data->do == "2"){
-                                    $do ="Tengah";
-                                }else if($data->do == "3"){
-                                    $do ="Timur";
-                                }else{
-                                    $do ='-';
-                                }
                             ?>
                             <tr>
-                                <td class="bg-aqua disabled color-palette"></td>
                                 <td hidden>{{ $data->id }}</td>
                                 <td hidden>{{ $data->no_ba }}</td>
                                 <td hidden=>{{ $data->status }}</td>
@@ -106,7 +96,6 @@ $imagepath = "images_cu/";
                                 <td>{{ $data->name }}</td>
                                 <td>{{ $data->no_ba }}</td>
                                 <td>{{ $data->wilayahcuprimer->name }}</td>
-                                <td>{{ $do }}</td>
                                 <td data-order="{{ $data->ultah }}">{{ $date->format('d/m/Y') }}</td>
                                 <td data-order="{{ $data->bergabung }}">{{ $date2->format('d/m/Y') }}</td>
                                 <td>{{ $data->tp }}</td>
@@ -119,6 +108,7 @@ $imagepath = "images_cu/";
                                 <td>{{ $data->email }}</td>
                                 <td>{{ $data->alamat }}</td>
                                 <td><a href="http://{{$data->website}}" class="facebook" target="_blank"> {{ $data->website }} </a></td>
+                                <td></td>
                             </tr>
                         @endforeach
                         </tbody>
@@ -129,15 +119,14 @@ $imagepath = "images_cu/";
                         <div class="input-group-addon"><i class="fa fa-search"></i></div>
                         <input type="text" id="searchtext_non" class="form-control" placeholder="Kata kunci pencarian..." autofocus>
                     </div>
-                    <table class="table table-hover order-column" id="dataTables_non" width="100%">
+                    <table class="table table-hover order-column dt-responsive" id="dataTables_non" width="100%">
                         <thead class="bg-light-blue-active color-palette">
                         <tr>
-                            <th data-sortable="false">#</th>
                             <th hidden></th>
                             <th hidden></th>
                             <th hidden></th>
                             <th data-sortable="false">Foto</th>
-                            <th>Nama </th>
+                            <th class="sort" data-priority="1">Nama </th>
                             <th>No. BA</th>
                             <th>Wilayah</th>
                             <th>District Office</th>
@@ -153,6 +142,7 @@ $imagepath = "images_cu/";
                             <th>Email</th>
                             <th>Alamat</th>
                             <th>Website</th>
+                            <th>&nbsp;</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -171,7 +161,6 @@ $imagepath = "images_cu/";
                                 }
                             ?>
                             <tr>
-                                <td class="bg-aqua disabled color-palette"></td>
                                 <td hidden>{{ $data->id }}</td>
                                 <td hidden>{{ $data->no_ba }}</td>
                                 <td hidden=>{{ $data->status }}</td>
@@ -201,6 +190,7 @@ $imagepath = "images_cu/";
                                 <td>{{ $data->email }}</td>
                                 <td>{{ $data->alamat }}</td>
                                 <td><a href="http://{{$data->website}}" class="facebook" target="_blank"> {{ $data->website }} </a></td>
+                                <td></td>
                             </tr>
                         @endforeach
 
@@ -215,19 +205,18 @@ $imagepath = "images_cu/";
                     <input type="text" id="searchtext2" class="form-control" placeholder="Kata kunci pencarian..." autofocus>
                 </div>
 
-                <table class="table table-hover" id="dataTables-example2" style="width:100%;">
+                <table class="table table-hover dt-responsive" id="dataTables-example2" style="width:100%;">
                     <thead class="bg-light-blue-active color-palette">
                     <tr>
-                        <th>#</th>
                         <th hidden></th>
-                        <th>Nama Wilayah </th>
+                        <th class="sort" data-priority="1">Nama Wilayah </th>
                         <th>Jumlah CU</th>
+                        <td>&nbsp;</td>
                     </tr>
                     </thead>
                     <tbody>
                     @foreach($datas2 as $data)
                         <tr>
-                            <td class="bg-aqua disabled color-palette"></td>
                             <td hidden>{{ $data->id }}</td>
                             <td>{{ $data->name }}</td>
                             @if($data && count($data->hascuprimer) > 0)
@@ -235,6 +224,7 @@ $imagepath = "images_cu/";
                             @else
                                 <td><a class="btn btn-default" href="#" disabled="">{{ $data->jumlah }}</a></td>
                             @endif
+                            <td></td>
                         </tr>
                     @endforeach
 
@@ -371,13 +361,15 @@ $imagepath = "images_cu/";
     @include('admins._components.datatable_JS')
     <script>
         $(document).ready(function(){
-            $('a[data-toggle="tab"]').on( 'shown.bs.tab', function (e) {
+             $('a[data-toggle="tab"]').on( 'shown.bs.tab', function (e) {
                 $.fn.dataTable.tables( {visible: true, api: true} ).columns.adjust();
             } );
         });
     </script>
     @permission('view.'.$kelas.'_view')
-    <script type="text/javascript" src="{{ URL::asset('admin/datatable.js') }}"></script>
+    <script type="text/javascript" src="{{ URL::asset('plugins/dataTables/extension/Responsive/js/dataTables.responsive.min.js') }}"></script>
+    <script type="text/javascript" src="{{ URL::asset('plugins/dataTables/extension/Responsive/js/responsive.bootstrap.min.js') }}"></script>
+    <script type="text/javascript" src="{{ URL::asset('admin/datatable_responsive.js') }}"></script>
     <script>
         new $.fn.dataTable.Buttons(table,{
             buttons: [
@@ -417,7 +409,7 @@ $imagepath = "images_cu/";
                     },
                     action: function(){
                         var id = $.map(table.rows({ selected: true }).data(),function(item){
-                            return item[2];
+                            return item[0];
                         });
                         var kelas = "{{ $kelas }}";
                         if(id != ""){
@@ -437,10 +429,10 @@ $imagepath = "images_cu/";
                     },
                     action: function(){
                         var id = $.map(table.rows({ selected: true }).data(),function(item){
-                            return item[1];
+                            return item[0];
                         });
                         var aktif = $.map(table.rows({ selected: true }).data(),function(item){
-                            return item[3];
+                            return item[2];
                         });
                         if(id != ""){
                             $('#modalnonaktif').modal({show:true});
@@ -456,7 +448,7 @@ $imagepath = "images_cu/";
                     text: '<i class="fa fa-building"></i> Profil',
                     action: function(){
                         var id = $.map(table.rows({ selected: true }).data(),function(item){
-                            return item[2];
+                            return item[0];
                         });
                         var kelas = "{{ $kelas }}";
                         if(id != ""){
@@ -470,7 +462,7 @@ $imagepath = "images_cu/";
                     text: '<i class="fa fa-home"></i> TP',
                     action: function(){
                         var id = $.map(table.rows({ selected: true }).data(),function(item){
-                            return item[2];
+                            return item[1];
                         });
                         if(id != ""){
                             window.location.href =  "/admins/tpcu/index_cu/" + id;
@@ -484,7 +476,7 @@ $imagepath = "images_cu/";
                     text: '<i class="fa fa-line-chart"></i> Laporan',
                     action: function(){
                         var id = $.map(table.rows({ selected: true }).data(),function(item){
-                            return item[2];
+                            return item[0];
                         });
                         if(id != ""){
                             window.location.href =  "/admins/laporancu/index_cu/" + id;
@@ -499,7 +491,7 @@ $imagepath = "images_cu/";
                     text: '<i class="fa fa-sitemap"></i> Staf',
                     action: function(){
                         var id = $.map(table.rows({ selected: true }).data(),function(item){
-                            return item[2];
+                            return item[0];
                         });
                         if(id != ""){
                             window.location.href =  "/admins/staf/index_cu/" + id;
@@ -532,14 +524,26 @@ $imagepath = "images_cu/";
     <script>
         var table_non = $('#dataTables_non').DataTable({
             dom: 'Bti',
-            select: true,
             scrollY: '70vh',
-            scrollX: true,
             autoWidth: true,
             scrollCollapse : true,
             paging : false,
-            stateSave : false,
-            order : [],
+            stateSave : false ,
+            select: {
+                style:    'os',
+                selector: 'td:not(:last-child)'
+            },
+            responsive:{
+                details:{
+                    type: 'column',
+                    target: -1
+                }
+            },
+            columnDefs: [ {
+                className: 'control',
+                orderable: false,
+                targets:   -1
+            }],
             buttons: [],
             language: {
                 buttons : {},
@@ -559,6 +563,8 @@ $imagepath = "images_cu/";
                 "sInfoPostFix":  "",
             }
         });
+
+        table_non.columns('.sort').order('asc').draw();
 
         table_non.on( 'order.dt search.dt', function () {
             table_non.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
@@ -596,7 +602,7 @@ $imagepath = "images_cu/";
                     },
                     action: function(){
                         var id = $.map(table_non.rows({ selected: true }).data(),function(item){
-                            return item[1];
+                            return item[0];
                         });
                         if(id != ""){
                             $('#modalaktif').modal({show:true});
@@ -616,7 +622,7 @@ $imagepath = "images_cu/";
     </script>
     @endpermission
     @permission('view.'.$kelas2.'_view')
-    <script type="text/javascript" src="{{ URL::asset('admin/datatable2.js') }}"></script>
+    <script type="text/javascript" src="{{ URL::asset('admin/datatable2_responsive.js') }}"></script>
         <script>
         new $.fn.dataTable.Buttons(table2,{
             buttons: [
@@ -641,10 +647,10 @@ $imagepath = "images_cu/";
                     },
                     action: function(){
                         var id = $.map(table2.rows({ selected: true }).data(),function(item){
-                            return item[1];
+                            return item[0];
                         });
                         var id2 = $.map(table2.rows({ selected: true }).data(),function(item){
-                            return item[2];
+                            return item[1];
                         });
                         if(id != ""){
                             $('#modalubahwilayah').modal({show:true});
@@ -665,7 +671,7 @@ $imagepath = "images_cu/";
                     },
                     action: function(){
                         var id = $.map(table2.rows({ selected:true }).data(),function(item){
-                            return item[1];
+                            return item[0];
                         });
                         if(id != ""){
                             $('#modalhapus2').modal({show:true});
