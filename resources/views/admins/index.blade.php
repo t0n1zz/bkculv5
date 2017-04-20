@@ -10,11 +10,16 @@ $ultahcu = DB::select(DB::raw($query));
 ?>
 @extends('admins._layouts.layout')
 
-@permission('view.saran_view')
+
 @section('css')
-    @include('admins._components.datatable_CSS')
+    @permission('view.saran_view')
+        @include('admins._components.datatable_CSS')
+    @endpermission
+    @permission('view.kegiatan_view')
+        <link rel="stylesheet" type="text/css" href="{{asset('plugins/datepicker/datepicker3.css')}}" >
+    @endpermission
 @stop
-@endpermission
+
 
 @section('content')
 <section class="content-header">
@@ -299,9 +304,16 @@ $ultahcu = DB::select(DB::raw($query));
     </div>
     <!-- /Small boxes (Stat box) -->
     <!-- Main content -->
-    @if(Auth::user()->can('view.laporanbkcu_view') || Auth::user()->can('view.laporancu_view'))
-        @include('admins._components.laporancu')
-    @endif
+    @permission('view.laporanbkcu_view|view.laporancu_view')
+        <div class="row"><div class="col-sm-12"> 
+            @include('admins._components.laporancu')
+        </div></div>    
+    @endpermission
+    @permission('view.kegiatan_view')
+        <div class="row"> 
+            @include('admins._components.kegiatan')
+        </div>
+    @endpermission
     <div class="row">
         <div class="col-lg-5">
             @permission('view.statistikweb_view')
@@ -420,45 +432,54 @@ $ultahcu = DB::select(DB::raw($query));
 </section>
 
 @stop
-@permission('view.saran_view')
-@section('js')
-    @include('admins._components.datatable_JS')
-    <script type="text/javascript">
-        var table = $('#dataTables-saran').DataTable({
-            dom: 't',
-            select: true,
-            scrollY: '40vh',
-            scrollX: true,
-            autoWidth: true,
-            scrollCollapse : true,
-            paging : false,
-            stateSave : false,
-            order : [],
-            buttons: [],
-            language: {
-                buttons : {},
-                select:{
-                    rows:{
-                        _: "",
-                        0: "",
-                        1: ""
-                    }
-                },
-                "sProcessing":   "Sedang proses...",
-                "sLengthMenu":   "Tampilan _MENU_ entri",
-                "sZeroRecords":  "Tidak ditemukan data yang sesuai",
-                "sInfo":         "Tampilan _START_ sampai _END_ dari _TOTAL_ entri",
-                "sInfoEmpty":    "Tampilan 0 hingga 0 dari 0 entri",
-                "sInfoFiltered": "(disaring dari _MAX_ entri keseluruhan)",
-                "sInfoPostFix":  "",
-            }
-        });
 
-        table.on( 'order.dt search.dt', function () {
-            table.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
-                cell.innerHTML = i+1;
-            } );
-        } ).draw();
-    </script>
-@stop
+@section('js')
+@permission('view.kegiatan_view')
+<script type="text/javascript" src="{{ URL::asset('plugins/datepicker/bootstrap-datepicker.js') }}"></script>
+<script>
+    //The Calender
+    $("#calendar").datepicker();
+</script>
 @endpermission
+@permission('view.saran_view')
+@include('admins._components.datatable_JS')
+<script type="text/javascript">
+    var table = $('#dataTables-saran').DataTable({
+        dom: 't',
+        select: true,
+        scrollY: '40vh',
+        scrollX: true,
+        autoWidth: true,
+        scrollCollapse : true,
+        paging : false,
+        stateSave : false,
+        order : [],
+        buttons: [],
+        language: {
+            buttons : {},
+            select:{
+                rows:{
+                    _: "",
+                    0: "",
+                    1: ""
+                }
+            },
+            "sProcessing":   "Sedang proses...",
+            "sLengthMenu":   "Tampilan _MENU_ entri",
+            "sZeroRecords":  "Tidak ditemukan data yang sesuai",
+            "sInfo":         "Tampilan _START_ sampai _END_ dari _TOTAL_ entri",
+            "sInfoEmpty":    "Tampilan 0 hingga 0 dari 0 entri",
+            "sInfoFiltered": "(disaring dari _MAX_ entri keseluruhan)",
+            "sInfoPostFix":  "",
+        }
+    });
+
+    table.on( 'order.dt search.dt', function () {
+        table.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
+</script>
+@endpermission
+@stop
+

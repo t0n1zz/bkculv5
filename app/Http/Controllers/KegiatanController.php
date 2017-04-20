@@ -170,12 +170,15 @@ class KegiatanController extends Controller{
             $peserta = Input::get('peserta');
 
             foreach ($peserta as $p){
-                $kelas = new KegiatanPeserta();
-                $kelas->id_kegiatan = $kegiatan;
-                $kelas->id_peserta = $p;
-                $kelas->status = 1;
+                $cek = KegiatanPeserta::find($p);
+                if(empty($cek)){
+                    $kelas = new KegiatanPeserta();
+                    $kelas->id_kegiatan = $kegiatan;
+                    $kelas->id_peserta = $p;
+                    $kelas->status = 1;
 
-                $kelas->save();    
+                    $kelas->save(); 
+                }
             }
             
             return Redirect::route('admins.'.$this->kelaspath.'.detail',array($kegiatan))->with('sucessmessage', 'Peserta telah berhasil didaftarkan');

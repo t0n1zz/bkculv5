@@ -123,11 +123,9 @@
         if($i == "SD" || $i == "SMP"){
             $('#namapendidikan').val('');
             $('#jurusan').hide();
-            $("#namapendidikan").prop('required',false); 
         }else{
             $('#namapendidikan').val('');
             $('#jurusan').show(); 
-            $("#namapendidikan").prop('required',true);
         }
     }
 

@@ -16,7 +16,7 @@
             <option value="8">S1</option>
             <option value="9">S2</option>
             <option value="10">S3</option>
-            <option value="lain">Lain-lain</option>
+            <option value="999">Lain-lain</option>
         </select>
     </div>
 </div>

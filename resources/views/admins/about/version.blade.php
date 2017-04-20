@@ -23,6 +23,48 @@ $title = "Version";
             <ul class="timeline">
               <li class="time-label">
                 <span class="bg-red">
+                  20 April 2017
+                </span>
+              </li>
+              <li>
+                  <i class="fa fa-gears bg-blue"></i>
+                  <div class="timeline-item">
+                      <span class="time"><i class="fa fa-clock-o"></i> 19:24</span>
+                      <h3 class="timeline-header"><a href="#">Version 2.1.3</a> SIMO</h3>
+                      <div class="timeline-body">
+                          Pada versi ini <b>AdminBKCU</b> berubah nama menjadi <b>SIMO</b> yang merupakan singkatan dari <b>S</b>istem <b>I</b>nformasi <b>M</b>anajemen <b>O</b>rganisasi. Pemilihan nama ini adalah didasarkan dari fitur yang ditawarkan oleh aplikasi ini yaitu memanajemen informasi dari organisasi (bukan bidang organisasi, melainkan organisasi dalam artian Puskopdit BKCU Kalimantan dan CU Primer anggota).
+                          <br/><br/>
+                          Dalam versi ini terdapat 2 bagian baru yang ditambahkan di aplikasi ini yaitu bagian <b>Diklat</b> dan bagian <b>Staf</b>. Kedua bagian tersebut merupakan pengembangan dari bagian <b>Kegiatan</b> yang sekarang menjadi <b>Diklat</b> dengan penambahan fitur informasi yang lebih mendetail serta fitur pendaftaran peserta. Kemudian bagian <b>Staf</b> juga ditambahkan beberapa fitur agak dapat saling berinteraksi dengan bagian <b>Diklat</b>, karena peserta adalah berasal dari bagian <b>Staf</b>
+                          <br/><br/>
+                          Selain itu juga terdapat banyak penambahan serta perbaikan pada aplikasi yang memberikan peningkatan performa, stabilitas, serta pengalaman menggunakan aplikasi ini.
+                          <br/><br/>
+                          Berikut adalah rincian perubahan pada versi ini:
+                          <br/><br/>
+                          <ul>
+                              <li>AdminBKCU berubah nama menjadi SIMO</li>
+                              <li>Penambahan bagian Diklat yang berfungsi:
+                                <ul>
+                                  <li>Data diklat yang dilaksanakan oleh Puskopdit BKCU Kalimantan</li>
+                                  <li>Daftar diklat yang bisa dilakukan langsung melalui program oleh CU Primer anggota</li>
+                                  <li>Data tempat dilaksanakan diklat</li>
+                                </ul>
+                              </li>
+                              <li>Penambahan bagian Staf yang berfungsi:
+                                <ul>
+                                  <li>Data staf dalam gerakan Puskopdit BKCU Kalimantan</li>
+                                  <li>Komunikasi data antara bagian Staf dengan bagian Diklat</li>
+                                </ul>
+                              </li>
+                              <li>Perubahan navigasi website dimana panel navigasi yang versi sebelumnya berada di tepi kiri menjadi berada di atas</li>
+                              <li>Pengubahan semua tabel kecuali tabel bagian laporan CU menjadi tabel yang responsive/mobile friendly</li>
+                              <li>Penambahan bagian Panduan untuk memberikan petunjuk pengoperasian aplikas ini</li>
+                          </ul>
+                          <hr/>
+                      </div>
+                  </div>
+              </li>
+              <li class="time-label">
+                <span class="bg-red">
                   11 Maret 2017
                 </span>
               </li>

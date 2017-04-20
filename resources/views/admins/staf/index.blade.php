@@ -138,28 +138,30 @@ $id_old="";
                                     $kontak = $str2;
                                 }
 
-                                if($pendidikan->tingkat == 1){
-                                    $tingkat = "SD";
-                                }elseif($pendidikan->tingkat == 2){
-                                    $tingkat = "SMP";
-                                }elseif($pendidikan->tingkat == 3){
-                                    $tingkat = "SMA/SMK";
-                                }elseif($pendidikan->tingkat == 4){
-                                    $tingkat = "D1";
-                                }elseif($pendidikan->tingkat == 5){
-                                    $tingkat = "D2";
-                                }elseif($pendidikan->tingkat == 6){
-                                    $tingkat = "D3";
-                                }elseif($pendidikan->tingkat == 7){
-                                    $tingkat = "D4";
-                                }elseif($pendidikan->tingkat == 8){
-                                    $tingkat = "S1";
-                                }elseif($pendidikan->tingkat == 9){
-                                    $tingkat = "S2";
-                                }elseif($pendidikan->tingkat == 10){
-                                    $tingkat = "S3";
-                                }else{
-                                    $tingkat = "";
+                                if(!empty($pendidikan)){
+                                    if($pendidikan->tingkat == 1){
+                                        $tingkat = "SD";
+                                    }elseif($pendidikan->tingkat == 2){
+                                        $tingkat = "SMP";
+                                    }elseif($pendidikan->tingkat == 3){
+                                        $tingkat = "SMA/SMK";
+                                    }elseif($pendidikan->tingkat == 4){
+                                        $tingkat = "D1";
+                                    }elseif($pendidikan->tingkat == 5){
+                                        $tingkat = "D2";
+                                    }elseif($pendidikan->tingkat == 6){
+                                        $tingkat = "D3";
+                                    }elseif($pendidikan->tingkat == 7){
+                                        $tingkat = "D4";
+                                    }elseif($pendidikan->tingkat == 8){
+                                        $tingkat = "S1";
+                                    }elseif($pendidikan->tingkat == 9){
+                                        $tingkat = "S2";
+                                    }elseif($pendidikan->tingkat == 10){
+                                        $tingkat = "S3";
+                                    }else{
+                                        $tingkat = "";
+                                    }
                                 }
                             ?>
                             <tr >  

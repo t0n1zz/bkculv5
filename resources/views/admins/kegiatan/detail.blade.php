@@ -4,6 +4,7 @@ use App\pekerjaan;
 $title = "Detail Diklat";
 $kelas = "kegiatan";
 $imagepath = "images_tempat/";
+$imagepath2 = "images_staf/";
 $cu = Auth::user()->getCU();
 $now = Date::now()->format('Y-m-d');
 
@@ -96,6 +97,7 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
                 </div>
                 <!-- /.box-body -->
             </div>
+            @if(!empty($data->prasyarat))
              <div class="box box-primary">
                 <div class="box-header with-border">
                     <h3 class="box-title">Prasyarat</h3>
@@ -110,6 +112,7 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
                 </div>
                 <!-- /.box-body -->
             </div>
+            @endif
             @if(!empty($data->tempat))
                 <div class="box box-primary">
                     <div class="box-header with-border">
@@ -272,9 +275,9 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
                                         <tr>
                                             <td hidden>{{ $datap->id }}</td>
                                             <td hidden>{{ $datap->staf->id }}</td>
-                                            @if(!empty($datap->staf->gambar) && is_file($imagepath.$datap->staf->gambar."n.jpg"))
+                                            @if(!empty($datap->staf->gambar) && is_file($imagepath2.$datap->staf->gambar."n.jpg"))
                                                 <td style="white-space: nowrap"><div class="modalphotos" >
-                                                        {{ Html::image($imagepath.$datap->staf->gambar.'n.jpg',asset($imagepath.$datap->staf->gambar."jpg"),
+                                                        {{ Html::image($imagepath2.$datap->staf->gambar.'n.jpg',asset($imagepath2.$datap->staf->gambar."jpg"),
                                                          array('class' => 'img-responsive',
                                                         'id' => 'tampilgambar', 'width' => '40px')) }}
                                                     </div></td>
@@ -354,9 +357,9 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
                                         <td hidden>{{ $datap->id }}</td>
                                         <td hidden>{{ $datap->staf->id }}</td>
                                         <td hidden>{{ $datap->status }}</td>
-                                        @if(!empty($datap->staf->gambar) && is_file($imagepath.$datap->staf->gambar."n.jpg"))
+                                        @if(!empty($datap->staf->gambar) && is_file($imagepath2.$datap->staf->gambar."n.jpg"))
                                             <td style="white-space: nowrap"><div class="modalphotos" >
-                                                    {{ Html::image($imagepath.$datap->staf->gambar.'n.jpg',asset($imagepath.$datap->staf->gambar."jpg"),
+                                                    {{ Html::image($imagepath2.$datap->staf->gambar.'n.jpg',asset($imagepath2.$datap->staf->gambar."jpg"),
                                                      array('class' => 'img-responsive',
                                                     'id' => 'tampilgambar', 'width' => '40px')) }}
                                                 </div></td>
@@ -484,8 +487,34 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
                                                 }
                                             }
                                         }
+                                        
                                         if(!empty($dataf->staf->pendidikan)){
                                             $pendidikan = $dataf->staf->pendidikan->first();
+                                            if(!empty($pendidikan)){
+                                                if($pendidikan->tingkat == 1){
+                                                    $tingkat = "SD";
+                                                }elseif($pendidikan->tingkat == 2){
+                                                    $tingkat = "SMP";
+                                                }elseif($pendidikan->tingkat == 3){
+                                                    $tingkat = "SMA/SMK";
+                                                }elseif($pendidikan->tingkat == 4){
+                                                    $tingkat = "D1";
+                                                }elseif($pendidikan->tingkat == 5){
+                                                    $tingkat = "D2";
+                                                }elseif($pendidikan->tingkat == 6){
+                                                    $tingkat = "D3";
+                                                }elseif($pendidikan->tingkat == 7){
+                                                    $tingkat = "D4";
+                                                }elseif($pendidikan->tingkat == 8){
+                                                    $tingkat = "S1";
+                                                }elseif($pendidikan->tingkat == 9){
+                                                    $tingkat = "S2";
+                                                }elseif($pendidikan->tingkat == 10){
+                                                    $tingkat = "S3";
+                                                }else{
+                                                    $tingkat = "";
+                                                }
+                                            }
                                         }
                                      
                                         $newarr = explode("\n",$dataf->staf->alamat);
@@ -500,10 +529,10 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
                                         ?>
                                     <tr>
                                         <td hidden>{{ $dataf->id_staf }}</td>
-                                        @if(!empty($dataf->staf->gambar) && is_file($imagepath.$dataf->staf->gambar."n.jpg"))
-                                            <td hidden>{{ asset($imagepath.$dataf->staf->gambar.'n.jpg') }}</td>
+                                        @if(!empty($dataf->staf->gambar) && is_file($imagepath2.$dataf->staf->gambar."n.jpg"))
+                                            <td hidden>{{ asset($imagepath2.$dataf->staf->gambar.'n.jpg') }}</td>
                                             <td style="white-space: nowrap"><div class="modalphotos" >
-                                                    {{ Html::image($imagepath.$dataf->staf->gambar.'n.jpg',asset($imagepath.$dataf->staf->gambar."jpg"),
+                                                    {{ Html::image($imagepath2.$dataf->staf->gambar.'n.jpg',asset($imagepath2.$dataf->staf->gambar."jpg"),
                                                      array('class' => 'img-responsive',
                                                     'id' => 'tampilgambar', 'width' => '40px')) }}
                                                 </div></td>
@@ -524,7 +553,7 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
                                         <td>{{ $dataf->staf->nim }}</td>
                                         <td>{{ $dataf->staf->nid }}</td>
                                         @if(!empty($pendidikan))
-                                            <td>{{ $pendidikan->tingkat . ' ' . $pendidikan->name . ' di ' . $pendidikan->tempat}}</td>
+                                            <td>{{ $tingkat . ' ' . $pendidikan->name . ' ' . $pendidikan->tempat}}</td>
                                         @else
                                             <td></td>    
                                         @endif
@@ -653,7 +682,8 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
             <div class="modal-body">
                 <input type="text" name="id_kegiatan" value="{{ $data->id }}" hidden>
                 <div class="row">
-                    <div id="areapeserta"></div> 
+                    <div id="areapeserta"></div>
+                    <div class="col-sm-12"><button type="button" id="warningpeserta" class="btn btn-danger nopointer btn-block" style="display: none;"> </button></div>
                     <div class="col-sm-12"><hr/></div>
                     <div class="col-sm-12">
                         <div class="input-group tabletools">
@@ -708,30 +738,33 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
                                                 }
                                             }
                                         }
+
                                         if(!empty($dataf->staf->pendidikan)){
                                             $pendidikan = $dataf->staf->pendidikan->first();
-                                            if($pendidikan->tingkat == 1){
-                                                $tingkat = "SD";
-                                            }elseif($pendidikan->tingkat == 2){
-                                                $tingkat = "SMP";
-                                            }elseif($pendidikan->tingkat == 3){
-                                                $tingkat = "SMA/SMK";
-                                            }elseif($pendidikan->tingkat == 4){
-                                                $tingkat = "D1";
-                                            }elseif($pendidikan->tingkat == 5){
-                                                $tingkat = "D2";
-                                            }elseif($pendidikan->tingkat == 6){
-                                                $tingkat = "D3";
-                                            }elseif($pendidikan->tingkat == 7){
-                                                $tingkat = "D4";
-                                            }elseif($pendidikan->tingkat == 8){
-                                                $tingkat = "S1";
-                                            }elseif($pendidikan->tingkat == 9){
-                                                $tingkat = "S2";
-                                            }elseif($pendidikan->tingkat == 10){
-                                                $tingkat = "S3";
-                                            }else{
-                                                $tingkat = "";
+                                            if(!empty($pendidikan)){
+                                                if($pendidikan->tingkat == 1){
+                                                    $tingkat = "SD";
+                                                }elseif($pendidikan->tingkat == 2){
+                                                    $tingkat = "SMP";
+                                                }elseif($pendidikan->tingkat == 3){
+                                                    $tingkat = "SMA/SMK";
+                                                }elseif($pendidikan->tingkat == 4){
+                                                    $tingkat = "D1";
+                                                }elseif($pendidikan->tingkat == 5){
+                                                    $tingkat = "D2";
+                                                }elseif($pendidikan->tingkat == 6){
+                                                    $tingkat = "D3";
+                                                }elseif($pendidikan->tingkat == 7){
+                                                    $tingkat = "D4";
+                                                }elseif($pendidikan->tingkat == 8){
+                                                    $tingkat = "S1";
+                                                }elseif($pendidikan->tingkat == 9){
+                                                    $tingkat = "S2";
+                                                }elseif($pendidikan->tingkat == 10){
+                                                    $tingkat = "S3";
+                                                }else{
+                                                    $tingkat = "";
+                                                }
                                             }
                                         }
 
@@ -747,10 +780,10 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
                                         ?>
                                     <tr>
                                         <td hidden>{{ $dataf->id_staf }}</td>
-                                        @if(!empty($dataf->staf->gambar) && is_file($imagepath.$dataf->staf->gambar."n.jpg"))
-                                            <td hidden>{{ asset($imagepath.$dataf->staf->gambar.'n.jpg') }}</td>
+                                        @if(!empty($dataf->staf->gambar) && is_file($imagepath2.$dataf->staf->gambar."n.jpg"))
+                                            <td hidden>{{ asset($imagepath2.$dataf->staf->gambar.'n.jpg') }}</td>
                                             <td style="white-space: nowrap"><div class="modalphotos" >
-                                                    {{ Html::image($imagepath.$dataf->staf->gambar.'n.jpg',asset($imagepath.$dataf->staf->gambar."jpg"),
+                                                    {{ Html::image($imagepath2.$dataf->staf->gambar.'n.jpg',asset($imagepath2.$dataf->staf->gambar."jpg"),
                                                      array('class' => 'img-responsive',
                                                     'id' => 'tampilgambar', 'width' => '40px')) }}
                                                 </div></td>
@@ -771,7 +804,7 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
                                         <td>{{ $dataf->staf->nim }}</td>
                                         <td>{{ $dataf->staf->nid }}</td>
                                         @if(!empty($pendidikan))
-                                            <td>{{ $tingkat . ' ' . $pendidikan->name . ' di ' . $pendidikan->tempat}}</td>
+                                            <td>{{ $tingkat . ' ' . $pendidikan->name . ' ' . $pendidikan->tempat}}</td>
                                         @else
                                             <td></td>    
                                         @endif
@@ -1043,7 +1076,7 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
         paging : true,
         stateSave : false ,
         select: {
-            style:    'os',
+            style:    'multiple',
             selector: 'td:not(:last-child)'
         },
         responsive:{
@@ -1263,7 +1296,6 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
     } ).draw(); 
 
     var areapeserta = $('#areapeserta');
-    var counterpeserta = 0;
 
     var tabletambahpeserta = $('#datatabletambahpeserta').DataTable({
         dom: 'tip',
@@ -1271,7 +1303,7 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
         paging : true,
         stateSave : false ,
         select: {
-            style:    'os',
+            style:    'single',
             selector: 'td:not(:last-child)'
         },
         responsive:{
@@ -1320,7 +1352,7 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
     $('#searchpeserta').keyup(function(){
         tabletambahpeserta.search($(this).val()).draw() ;
     });
-
+    var counterpeserta = [];
     tabletambahpeserta
         .on( 'select', function ( e, dt, type, indexes ) {
             var id = $.map(tabletambahpeserta.rows({ selected: true }).data(),function(item){
@@ -1335,7 +1367,7 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
             var tempat = $.map(tabletambahpeserta.rows({ selected: true }).data(),function(item){
                         return item[4];
                     }); 
-            var htmlpeserta = '<div class="col-sm-4" id="widgetpeserta'+counterpeserta+'">';
+            var htmlpeserta = '<div class="col-sm-4" id="widgetpeserta'+id+'">';
                 htmlpeserta += '<div class="box box-widget">';
                     htmlpeserta += '<div class="box-header with-border">' ;
                         htmlpeserta += '<div class="user-block">';
@@ -1345,20 +1377,29 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
                             htmlpeserta += '<span class="description"><small>'+tempat+'</small></span>';
                         htmlpeserta += '</div>';
                         htmlpeserta += '<div class="box-tools">';   
-                            htmlpeserta += '<button type="button" class="btn btn-box-tool" onclick="func_pesertakurang()"><i class="fa fa-times"></i></button>';
+                            htmlpeserta += '<button type="button" class="btn btn-box-tool" onclick="func_pesertakurang('+id+')"><i class="fa fa-times"></i></button>';
                         htmlpeserta += '</div>';          
                     htmlpeserta += '</div>';            
                 htmlpeserta += '</div>';                
                 htmlpeserta += '</div>';
 
-            areapeserta.prepend(htmlpeserta);
-            counterpeserta++;
+                ids = id + "";
+                
+                if(jQuery.inArray(ids, counterpeserta) == -1){
+                    areapeserta.prepend(htmlpeserta);
+                    counterpeserta.push(ids);
+                    $('#warningpeserta').hide();
+                }else{
+                    $('#warningpeserta').show();
+                    $('#warningpeserta').text('Peserta bernama ' + name + ' sudah dipilih');
+                }
         } );
 
-        function func_pesertakurang()
-        {
-            counterpeserta--;
-            $('#widgetpeserta'+counterpeserta).remove();
+        function func_pesertakurang(value)
+        {   
+            counterpeserta.splice($.inArray(value,counterpeserta),1);
+            $('#widgetpeserta'+value).remove();
+            console.log(counterpeserta);
         }
 </script>
 @stop

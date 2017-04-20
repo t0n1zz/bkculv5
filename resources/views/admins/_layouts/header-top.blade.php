@@ -59,7 +59,7 @@
               </ul>
             </li>
             {{-- diklat --}}
-            @permission('view.kegiatan_view')
+            @permission('view.kegiatan_view|create.kegiatan_create')
               <li class="dropdown {{ Request::is('admins/kegiatan') || Request::is('admins/kegiatan*') ? 'active' : '' }}">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-suitcase fa-fw"></i> Diklat <span class="caret"></span></a>
                 <ul class="dropdown-menu" role="menu">

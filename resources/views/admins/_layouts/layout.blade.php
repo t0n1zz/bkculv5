@@ -69,7 +69,7 @@ $style = Auth::user()->getStyle();;
     <footer class="main-footer">
         <!-- To the right -->
         <div class="pull-right hidden-xs">
-            <a href="{{ route('admins.version') }}"><b>SIMO</b> 2.1.2</a>
+            <a href="{{ route('admins.version') }}"><b>SIMO</b> 2.1.3</a>
         </div>
         <!-- Default to the left -->
         <strong>Copyright &copy; {{ date("Y") }} <a href="#">Puskopdit BKCU Kalimantan</a>.</strong> All rights reserved.
