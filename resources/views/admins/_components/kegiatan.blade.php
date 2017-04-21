@@ -1,7 +1,7 @@
 <?php
   $bulan = new Date('+12 weeks');
   $now = new Date('today');
-  $kegiatans = App\Kegiatan::with('total_peserta')->whereDate('tanggal','<',$bulan)->get();
+  $kegiatans = App\Kegiatan::with('tempat','total_peserta')->whereDate('tanggal','<',$bulan)->get();
 ?>
 <div class="col-sm-8">
   <div class="nav-tabs-custom">
@@ -37,7 +37,13 @@
                   ?>
                   <tr>
                     <td class="warptext">{{ $kegiatan->name }}</td>
-                    <td>{{ $kegiatan->kota }}</td>
+                    @if(!empty($kegiatan->tempat))
+                        <td>{{ $kegiatan->tempat->kota }}</td>
+                    @elseif(!empty($kegiatan->kota))
+                        <td>{{ $kegiatan->kota }}</td>
+                    @else
+                        <td>-</td>
+                    @endif
                     @if(!empty($kegiatan->tanggal))
                         <td data-order="{{ $kegiatan->tanggal }}"><i hidden="true">{{ $kegiatan->tanggal }}</i> {{  $date->format('d F Y') }}</td>
                     @else

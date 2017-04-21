@@ -12,7 +12,7 @@ class User extends Authenticatable
     use Notifiable, ThrottlesLogins, HasRole;
 
      public static $rules = [
-        'username' => 'required|min:5',
+        'username' => 'required|min:5|unique:user',
         'password' => 'required'
     ];
 
@@ -29,7 +29,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'username','password','name',
+        'username','password','name','style',
         'logout','login','cu','status','gambar'
     ];
 

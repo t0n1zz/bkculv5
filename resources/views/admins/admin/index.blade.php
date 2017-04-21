@@ -53,12 +53,12 @@ $file_max = intval($file_max);
                         <th hidden></th>
                         <th hidden></th>
                         <th data-sortable="false">Foto</th>
-                        <th>Username</th>
+                        <th data-priority="1">Username</th>
                         <th>Nama</th>
-                        <th>CU</th>
+                        <th class="sort">CU</th>
                         <th>Terakhir Login</th>
                         <th>Terakhir Logout</th>
-                        <th>Status</th>
+                        <th data-priority="2">Status</th>
                         <th>&nbsp;</th>
                     </tr>
                     </thead>

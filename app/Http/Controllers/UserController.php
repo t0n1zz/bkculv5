@@ -94,11 +94,13 @@ class UserController extends controller{
 
             $kelas->password = Hash::make($password);
             $kelas->status = 1;
+            $kelas->style = Input::get('style');
             if($tipe == "bkcu"){
-                $kelas->cu = 'bkcu';
+                $kelas->cu = '0';
             }else{
                 $kelas->cu = $cu;
             }
+
             $kelas->save();
 
             $role = new Role();

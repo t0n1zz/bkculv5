@@ -86,13 +86,13 @@ $cu = Auth::user()->getCU();
 
                             if(!empty($data->sasaranhub)){
                                 foreach ($data->sasaranhub as $sr) {
-                                    $sasaran .= '<a class="btn btn-info btn-sm nopointer marginbottom" >' . $sr->sasaran->name . '</a> ';
+                                    $sasaran .= '<a class="btn btn-info btn-xs nopointer marginbottom" >' . $sr->sasaran->name . '</a> ';
                                 }
                             }
 
                             if(!empty($data->prasyarat)){
                                 foreach ($data->prasyarat as $pr) {
-                                    $prasyarat .= '<a class="btn btn-info btn-sm nopointer marginbottom">' . $pr->kegiatan->kode . ' - ' . $pr->kegiatan->name . '</a> ';
+                                    $prasyarat .= '<a class="btn btn-info btn-xs nopointer marginbottom">' . $pr->kegiatan->kode . ' - ' . $pr->kegiatan->name . '</a> ';
                                 }
                             }
                         ?>
@@ -109,7 +109,7 @@ $cu = Auth::user()->getCU();
                             <td class="warptext">{{ $data->name }}</td>
                             @if(!empty($data->tempat))
                                 <td>{{ $data->tempat->kota }}</td>
-                                <td>{{ $data->tempat->name }}</td>
+                                <td class="warptext">{{ $data->tempat->name }}</td>
                             @elseif(!empty($data->kota))
                                 <td>{{ $data->kota }}</td>
                                 <td>-</td>

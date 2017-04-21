@@ -415,8 +415,10 @@ class KegiatanController extends Controller{
             $tempat = $selecttempat;
         }
 
-        if(!empty($tempat))
+        if(!empty($tempat)){
             array_set($data,'id_tempat',$tempat);
+            array_set($data,'id_tempat',$tempat);
+        }
 
         if(!empty($tujuan)){
             $dom = new DomDocument();

@@ -1,6 +1,7 @@
 <?php
 $kelas ='admin';
 ?>
+<input type="text" value="0" name="style" hidden />
 <!-- Alert -->
 @include('admins._layouts.alert')
 <!-- /Alert -->

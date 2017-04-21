@@ -42,12 +42,6 @@ class AuthController extends Controller{
     {
         $data = Input::all();
 
-        $validator = Validator::make($data, User::$rules);
-        if($validator->fails())
-        {
-            return Redirect::back()->withErrors($validator)->withInput();
-        }
-
         if(Auth::attempt(array('username' => Input::get('username'), 'password' => Input::get('password')))){
 
             if(Auth::check()) { $id = Auth::user()->getId();}
