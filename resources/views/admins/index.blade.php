@@ -103,7 +103,7 @@ $ultahcu = DB::select(DB::raw($query));
                     <div class="inner">
                         <a href="{{ $route }}" style="color:white">
                             <h3>&nbsp;</h3>
-                            <p>Kegiatan</p>
+                            <p>Diklat</p>
                         </a>
                     </div>
                     <div class="icon">

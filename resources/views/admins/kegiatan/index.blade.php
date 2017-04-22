@@ -75,7 +75,8 @@ $cu = Auth::user()->getCU();
                             $date = new Date($data->tanggal);
                             $date2 = new Date($data->tanggal2);  
 
-                            $startTimeStamp = strtotime($data->tanggal);
+                            $mulai = new \Carbon\Carbon($data->tanggal);
+                            $startTimeStamp = strtotime($mulai->subDays(1));
                             $endTimeStamp = strtotime($data->tanggal2);
                             $timeDiff = abs($endTimeStamp - $startTimeStamp);
                             $numberDays = $timeDiff/86400;
@@ -95,15 +96,27 @@ $cu = Auth::user()->getCU();
                                     $prasyarat .= '<a class="btn btn-info btn-xs nopointer marginbottom">' . $pr->kegiatan->kode . ' - ' . $pr->kegiatan->name . '</a> ';
                                 }
                             }
+
+                            if($data->status == 1){
+                                $status = '<a class="btn btn-default btn-sm nopointer">MENUNGGU</a>';
+                            }elseif($data->status == 2){
+                                $status = '<a class="btn btn-warning btn-sm nopointer">PENDAFTARAN TERBUKA</a>';
+                            }elseif($data->status == 3){
+                                $status = '<a class="btn btn-warning btn-sm disabled">PENDAFTARAN TERTUTUP</a>';
+                            }elseif($data->status == 4){
+                                $status = '<a class="btn btn-danger btn-sm nopointer"><i class="fa fa-times"></i> BATAL</a>';
+                            }else{
+                                $status = "-";
+                            }
                         ?>
                         <tr>
                             <td hidden>{{ $data->id }}</td>
                             @if($data->tanggal2 <= $now)
-                                <td hidden>TERLAKSANA</td>
-                            @elseif(!empty($data->deleted_at))
-                                <td hidden>BATAL</td>
+                                <td hidden>5</td>
+                            @elseif($data->tanggal >= $now && $data->tanggal <= $now)
+                                <td hidden>6</td>
                             @else
-                                <td hidden>PENDING</td>
+                                <td hidden>{{ $data->status }}</td>
                             @endif
                             
                             <td class="warptext">{{ $data->name }}</td>
@@ -132,13 +145,15 @@ $cu = Auth::user()->getCU();
 
                             <td class="warptext">{!! $sasaran !!}</td>
 
-                            @if($data->tanggal2 <= $now && empty($data->deleted_at))
-                                <td data-order="TERLAKSANA"><a href="#" class="btn btn-info btn-sm nopointer">TERLAKSANA</a></td>
-                            @elseif(!empty($data->deleted_at))
-                                <td data-order="BATAL"><a href="#" class="btn btn-danger btn-sm nopointer">BATAL</a></td>
+                            
+                            @if($data->tanggal >= $now && $data->tanggal2 <= $now)) 
+                                <td data-order="5"><a href="#" class="btn btn-success btn-sm nopointer">SEDANG BERLANGSUNG</a></td>
+                            @elseif($data->tanggal2 < $now)
+                                <td data-order="6"><a href="#" class="btn btn-info btn-sm nopointer"><i class="fa fa-check"></i> TERLAKSANA</a></td>    
                             @else
-                                <td data-order="PENDING"><a href="#" class="btn btn-default btn-sm nopointer">PENDING</a></td>
+                                <td data-order="{{ $data->status }}">{!! $status !!}</td>
                             @endif
+
                             <td class="warptext">{!! $prasyarat !!}</td>
                             <td>{{ $numberDays }} Hari</td>
                             <td>{{ $data->min }} Orang</td>
@@ -154,28 +169,6 @@ $cu = Auth::user()->getCU();
     </div>
     <!--content-->
 </section>
-<div class="modal fade" id="modalbatal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    {{ Form::model($datas,array('route' => array('admins.'.$kelas.'.destroy',$kelas), 'method' => 'delete')) }}
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header bg-red-active color-palette">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title"><i class="fa fa-times fa-fw"></i> Batalkan Pelatihan</h4>
-            </div>
-            <div class="modal-body">
-                <h4>Batalkan pelatihan ini?</h4>
-                <input type="text" name="id" value="" id="modalbatal_id" hidden="">
-                <p class="text-muted">Silahkan isikan alasan pembatalan pelatihan ini</p>
-                <textarea class="form-control" name="keterangan" rows="3" id="keterangan" placeholder="Alasan pembatalan"></textarea> 
-            </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-danger" id="modalbutton">Iya</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Tidak</button>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-    {{ Form::close() }}
-</div>
 <div class="modal fade" id="modalpending" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     {{ Form::open(array('route' => array('admins.'.$kelas.'.restore'))) }}
     <div class="modal-dialog">
@@ -211,6 +204,52 @@ $cu = Auth::user()->getCU();
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
+</div>
+<div class="modal fade" id="modalstatuskegiatan" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    {{ Form::open(array('route' => array('admins.'.$kelas.'.update_status_kegiatan'))) }}
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-light-blue-active color-palette">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title"><i class="fa fa-check-square"></i> Ubah Status Diklat</h4>
+            </div>
+            <div class="modal-body">
+                <h4>Status Diklat</h4>
+                <input type="text" name="id"  id="idkegiatan" value="" hidden>
+                <div class="table-responsive">
+                    <table class="table table-condensed" style="margin-bottom: 0px;">
+                        <tr>
+                            <td style="border-bottom: 1px solid #f4f4f4">
+                                <div class="checkbox">
+                                    <label><input type="radio" name="radiostatus" value="1" id="checkmenunggu" /> MENUNGGU</label>
+                                </div>
+                            </td>
+                            <td style="border-bottom: 1px solid #f4f4f4">
+                                <div class="checkbox">
+                                    <label><input type="radio" name="radiostatus" value="2" id="checkbuka" /> PENDAFTARAN TERBUKA</label>
+                                </div>
+                            </td>
+                            <td style="border-bottom: 1px solid #f4f4f4">
+                                <div class="checkbox">
+                                    <label><input type="radio" name="radiostatus" value="3" id="checktutup" /> PENDAFTARAN TERTUTUP</label>
+                                </div>
+                            </td>
+                            <td style="border-bottom: 1px solid #f4f4f4">
+                                <div class="checkbox">
+                                    <label><input type="radio" name="radiostatus" value="4" id="checkbatal" /> BATAL</label>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" id="modalbutton"><i class="fa fa-save"></i> Simpan</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Batal</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+    {{ Form::close() }}
 </div>
 @stop
 
@@ -260,10 +299,45 @@ $cu = Auth::user()->getCU();
                         }
                     }
                 },
+                {
+                    text: '<i class="fa fa-check-square"></i> Ubah Status',
+                    key: {
+                        altKey: true,
+                        key: 'u'
+                    },
+                    action: function(){
+                        var id = $.map(table.rows({ selected: true }).data(),function(item){
+                            return item[0];
+                        });
+                        var status = $.map(table.rows({ selected:true }).data(),function(item){
+                            return item[1];
+                        });
+                        var kelas = "{{ $kelas }}";
+                        if(id != ""){
+                            $('#idkegiatan').val(id);
+                            $('#modalstatuskegiatan').modal({show:true});
+                            $('#checkmenunggu').prop('checked',false);
+                            $('#checktutup').prop('checked',false);
+                            $('#checkbuka').prop('checked',false);
+                            $('#checkbatal').prop('checked',false);
+                            if(status == "1"){
+                                $('#checkmenunggu').prop('checked',true);
+                            }else if(status == "2"){
+                                $('#checktutup').prop('checked',true);
+                            }else if(status == "3"){
+                                $('#checkbuka').prop('checked',true);
+                            }else if(status == "4"){
+                                $('#checkbatal').prop('checked',true);
+                            }
+                        }else{
+                            $('#modalwarning').modal({show:true});
+                        }
+                    }
+                },
                 @endpermission
                 @permission('destroy.'.$kelas.'_destroy')
                 {
-                    text: '<i class="fa fa-check-square"></i> Ubah Status',
+                    text: '<i class="fa fa-trash"></i> Hapus',
                     key: {
                         altKey: true,
                         key: 'h'

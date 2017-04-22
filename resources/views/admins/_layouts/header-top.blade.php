@@ -89,11 +89,11 @@
                 <ul class="dropdown-menu" role="menu">
                   <li class="divider"></li>
                   @permission('create.laporancu_create')
-                    <li><a href="{{ route('admins.laporancu.create') }}"><i class="fa fa-plus"></i> Tambah Laporan CU</a></li>
+                    <li><a href="{{ route('admins.laporancu.create') }}"><i class="fa fa-plus fa-fw"></i> Tambah Laporan CU</a></li>
                     <li class="divider"></li>
                   @endpermission
                   @permission('view.kegiatan_view')
-                    <li><a href="{{ $cu == '0' ? route('admins.laporancu.index') : route('admins.laporancu.index_cu',array($cu)) }}"><i class="fa fa-bar-chart"></i> Laporan CU</a></li>
+                    <li><a href="{{ $cu == '0' ? route('admins.laporancu.index') : route('admins.laporancu.index_cu',array($cu)) }}"><i class="fa fa-bar-chart fa-fw"></i> Laporan CU</a></li>
                   @endpermission   
                 </ul>
               </li>
@@ -132,7 +132,7 @@
             </li>
             @endpermission
             @permission('view.admin_view')
-              <li class="{{ Request::is('admins/admin') ? 'active' : '' }}"><a href="#" data-toggle="modal" data-target="#modalcheckpass"><i class="fa fa-user-circle-o"></i> Admin <span class="sr-only">(current)</span></a></li>
+              <li class="{{ Request::is('admins/admin') ? 'active' : '' }}"><a href="#" data-toggle="modal" data-target="#modalcheckpass"><i class="fa fa-user-circle-o fa-fw"></i> Admin <span class="sr-only">(current)</span></a></li>
             @endpermission  
             <li><a href="{{ route('panduan') }}" target="_blank"><i class="fa fa-question-circle-o fa-fw"></i> Panduan</a></li>
           </ul>

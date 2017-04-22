@@ -435,7 +435,8 @@
                         </div>
                     </a>
                 </div>
-                <div class="col-md-4 col-sm-6 service-box service-center" data-animation="fadeIn" data-animation-delay="01">
+                
+{{--                 <div class="col-md-4 col-sm-6 service-box service-center" data-animation="fadeIn" data-animation-delay="01">
                     <a href="{{ route('pengurus') }}">
                         <div class="service-boxed">
                             <div class="service-icon" style="margin-top:-25px;">
@@ -473,7 +474,7 @@
                             </div>
                         </div>
                     </a>
-                </div>
+                </div> --}}
             </div>
         </div>
     </div>

@@ -16,6 +16,17 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
     $statuskegiatan = "";
 }
 
+if($data->status == 1){
+    $status = '<a class="btn btn-default btn-sm nopointer btn-block">MENUNGGU</a>';
+}elseif($data->status == 2){
+    $status = '<a class="btn btn-warning btn-sm nopointer btn-block">PENDAFTARAN TERBUKA</a>';
+}elseif($data->status == 3){
+    $status = '<a class="btn btn-warning btn-sm disabled btn-block">PENDAFTARAN TERTUTUP</a>';
+}elseif($data->status == 4){
+    $status = '<a class="btn btn-danger btn-sm nopointer btn-block"><i class="fa fa-times"></i> BATAL</a>';
+}else{
+    $status = "-";
+}
 ?>
 @extends('admins._layouts.layout')
 
@@ -79,6 +90,7 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
                             <b>Peserta Terdaftar</b> <a class="pull-right">{{ $datapeserta->count() }}</a>
                         </li>
                     </ul>
+                    {!! $status !!}
                 </div>
                 <!-- /.box-body -->
             </div>
@@ -688,7 +700,7 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
                     <div class="col-sm-12">
                         <div class="input-group tabletools">
                             <div class="input-group-addon"><i class="fa fa-search"></i></div>
-                            <input type="text" id="searchstaf" class="form-control" placeholder="Kata kunci pencarian..." autofocus>
+                            <input type="text" id="searchpeserta" class="form-control" placeholder="Kata kunci pencarian..." autofocus>
                         </div>
                         <table class="table table-hover dt-responsive" id="datatabletambahpeserta" cellspacing="0" width="100%">
                             <thead class="bg-light-blue-active color-palette">
@@ -948,7 +960,7 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
             targets:   -1
         }],
         buttons: [
-        @if($statuskegiatan != "terlaksana" && $statuskegiatan != "batal")
+        @if($data->status == 2)
             {
                 text: '<i class="fa fa-plus"></i> Tambah',
                 action: function () {
@@ -1062,12 +1074,6 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
 
     tablepanitia.columns('.sort').order('asc').draw();
 
-    tablepanitia.on( 'order.dt search.dt', function () {
-        tablepanitia.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
-            cell.innerHTML = i+1;
-        } );
-    } ).draw();
-
     var areapanitia = $('#areapanitia');
 
     var tabletambahpanitia = $('#datatabletambahpanitia').DataTable({
@@ -1110,12 +1116,6 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
     });
 
     tabletambahpanitia.columns('.sort').order('asc').draw();
-
-    tabletambahpanitia.on( 'order.dt search.dt', function () {
-        tabletambahpanitia.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
-            cell.innerHTML = i+1;
-        } );
-    } ).draw();
 
     $('#searchpanitia').keyup(function(){
         tabletambahpanitia.search($(this).val()).draw() ;
@@ -1182,7 +1182,7 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
             targets:   -1
         }],
         buttons: [
-        @if($statuskegiatan != "terlaksana" && $statuskegiatan != "batal")
+        @if($data->status == 2)
             {
                 text: '<i class="fa fa-plus"></i> Tambah',
                 action: function () {
@@ -1289,12 +1289,6 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
 
     tablepeserta.columns('.sort').order('asc').draw();
 
-    tablepeserta.on( 'order.dt search.dt', function () {
-        tablepeserta.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
-            cell.innerHTML = i+1;
-        } );
-    } ).draw(); 
-
     var areapeserta = $('#areapeserta');
 
     var tabletambahpeserta = $('#datatabletambahpeserta').DataTable({
@@ -1343,15 +1337,11 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
 
     tabletambahpeserta.columns('.sort').order('asc').draw();
 
-    tabletambahpeserta.on( 'order.dt search.dt', function () {
-        tabletambahpeserta.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
-            cell.innerHTML = i+1;
-        } );
-    } ).draw();
 
     $('#searchpeserta').keyup(function(){
         tabletambahpeserta.search($(this).val()).draw() ;
     });
+
     var counterpeserta = [];
     tabletambahpeserta
         .on( 'select', function ( e, dt, type, indexes ) {
@@ -1399,7 +1389,6 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
         {   
             counterpeserta.splice($.inArray(value,counterpeserta),1);
             $('#widgetpeserta'+value).remove();
-            console.log(counterpeserta);
         }
 </script>
 @stop

@@ -265,6 +265,21 @@ class KegiatanController extends Controller{
         }
     }
 
+    public function update_status_kegiatan()
+    {
+        try{
+            $id = Input::get('id');
+
+            $kelas = Kegiatan::find($id);
+            $kelas->status = Input::get('radiostatus');
+            $kelas->save();
+            
+            return Redirect::route('admins.'.$this->kelaspath.'.index')->with('sucessmessage', 'Status kegiatan telah berhasil diubah');
+        }catch (Exception $e){
+            return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
+        }
+    }
+
     public function update_ket_peserta()
     {
         
