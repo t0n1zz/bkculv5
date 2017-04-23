@@ -371,6 +371,10 @@ Route::group(['prefix' => 'admins','middleware' => 'auth'], function(){
         'as' => 'admins.staf.update_cu',
         'uses' => 'StafController@update_cu'
     ));
+    Route::post('staf/store_panitia_new',array(
+        'as' => 'admins.staf.store_panitia_new',
+        'uses' => 'StafController@store_panitia_new'
+    ));
 // pengumuman
     Route::get('pengumuman', [
         'as'           => 'admins.pengumuman.index',           

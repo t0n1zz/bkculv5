@@ -347,11 +347,11 @@ $i = 0;
                                     <tr>
                                         <?php 
                                             if($b->status == 1){
-                                                $diklatbkcustatus = '<a class="btn btn-info btn-sm nopointer"> Sudah diikuti </a>';
+                                                $diklatbkcustatus = '<a class="btn btn-default btn-sm nopointer"> MENUNGGU</a>';
                                             }elseif($b->status == 2){
-                                                $diklatbkcustatus = '<a class="btn btn-danger btn-sm nopointer"> Batal diikuti </a>';
-                                            }else{
-                                                $diklatbkcustatus = '<a class="btn btn-default btn-sm nopointer"> Belum dilaksanakan </a>';
+                                                $diklatbkcustatus = '<a class="btn btn-danger btn-sm nopointer">TERDAFTAR </a>';
+                                            }else if($b->status == 3){
+                                                $diklatbkcustatus = '<a class="btn btn-info btn-sm nopointer"> BATAL</a>';
                                             }
                                         ?>
                                         <td hidden>{{ $b->kegiatan->id }}</td>

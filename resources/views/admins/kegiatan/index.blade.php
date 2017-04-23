@@ -189,7 +189,7 @@ $cu = Auth::user()->getCU();
     </div><!-- /.modal-dialog -->
     {{ Form::close() }}
 </div>
-<div class="modal fade" id="modalterlaksana" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="modaltidakdaftar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header bg-yellow-active color-palette">

@@ -17,6 +17,7 @@ use App\StafPekerjaan;
 use App\StafPendidikan;
 use App\StafOrganisasi;
 use App\KegiatanPeserta;
+use App\KegiatanPanitia;
 use App\Cuprimer;
 use App\Lembaga;
 use App\Http\Requests;
@@ -176,6 +177,28 @@ class StafController extends Controller{
         $kelaslembaga->save();
 
         return $kelaslembaga->id;
+    }
+
+    public function store_panitia_new()
+    {
+        try{
+            $kegiatan = Input::get('id_kegiatan');
+
+            $kelas = new KegiatanPanitia();
+            $kelas->id_kegiatan = $kegiatan;
+            $kelas->id_panitia = Input::get('panitia');
+            $kelas->tugas = Input::get('selecttugas');
+            $kelas->keterangan = Input::get('keterangan');
+            $kelas->status = 1;
+
+            $kelas->save();    
+
+            dd($kegiatan);
+            
+            return Redirect::route('admins.'.$this->kelaspath.'.detail',array($kegiatan))->with('sucessmessage', 'Peserta telah berhasil didaftarkan');
+        }catch (Exception $e){
+            return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
+        }
     }
 
     public function save_riwayat()

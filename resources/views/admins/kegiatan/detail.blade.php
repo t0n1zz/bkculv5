@@ -417,7 +417,7 @@ if($data->status == 1){
 </section>
 @if($cu == '0')
     <div class="modal fade" id="modalpanitia" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        {{ Form::open(array('route' => array('admins.'.$kelas.'.store_panitia'),'role' => 'form')) }}
+        {{ Form::open(array('route' => array('admins.'.$kelas.'.store_panitia'),'role' => 'form','id'=>'form_panitia')) }}
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header bg-light-blue-active color-palette">
@@ -426,162 +426,49 @@ if($data->status == 1){
                 </div>
                 <div class="modal-body">
                     <input type="text" name="id_kegiatan" value="{{ $data->id }}" hidden>
-                    <div class="row">
-                        <div id="areapanitia"></div>
-                        <div class="col-sm-12" id="tugaspanitia" style="display: none;">
-                            <div class="input-group">
-                                <div class="input-group-addon primary-color">Sebagai</div>
-                                <select class="form-control" name="selecttugas">
-                                    <option value="0" hidden>Silahkan pilih tugas</option>
-                                    <option value="Fasilitator">Fasilitator</option>
-                                    <option value="Co-Fasilitator">Co-Fasilitator</option>
-                                    <option value="Trainee">Trainee</option>
-                                    <option value="Panitia">Panitia</option>
-                                </select>
+                    <div class="nav-tabs-custom">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#tab_pilih_panitia" data-toggle="tab" id='nav_pilih_panitia' data-target="#tab_pilih_panitia">Pilih</a></li>
+                            <li><a href="#tab_baru_panitia" data-toggle="tab" id='nav_baru_panitia' data-target="#tab_baru_panitia">Buat Baru</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane fade in active" id="tab_pilih_panitia">
+                                <div class="row">
+                                    <div id="areapanitia"></div>
+                                    <div class="col-sm-12" id="tugaspanitia" style="display: none;">
+                                        <div class="input-group">
+                                            <div class="input-group-addon primary-color">Sebagai</div>
+                                            <select class="form-control" name="selecttugas">
+                                                <option value="0" hidden>Silahkan pilih tugas</option>
+                                                <option value="Fasilitator">Fasilitator</option>
+                                                <option value="Co-Fasilitator">Co-Fasilitator</option>
+                                                <option value="Trainee">Trainee</option>
+                                                <option value="Panitia">Panitia</option>
+                                            </select>
+                                        </div>
+                                        <br/>
+                                        <div class="form-group">
+                                            <h4>Keterangan</h4>
+                                            {{ Form::textarea('keterangan',null,array('class' => 'form-control','rows' => '3','placeholder'=>'Silahkan masukkan keterangan')) }}
+                                        </div> 
+                                    </div>
+                                    <div class="col-sm-12"><hr/></div>
+                                    <div class="col-sm-12">
+                                        <div class="input-group tabletools">
+                                            <div class="input-group-addon"><i class="fa fa-search"></i></div>
+                                            <input type="text" id="searchpanitia" class="form-control" placeholder="Kata kunci pencarian..." autofocus>
+                                        </div>
+                                        <table class="table table-hover dt-responsive" id="datatabletambahpanitia" cellspacing="0" width="100%">
+                                            @include('admins.kegiatan._component.tambahtable')
+                                        </table>
+                                    </div>
+                                 </div>   
                             </div>
-                            <br/>
-                            <div class="form-group">
-                                <h4>Keterangan</h4>
-                                {{ Form::textarea('keterangan',null,array('class' => 'form-control','rows' => '3','placeholder'=>'Silahkan masukkan keterangan')) }}
-                            </div> 
-                        </div>
-                        <div class="col-sm-12"><hr/></div>
-                        <div class="col-sm-12">
-                            <div class="input-group tabletools">
-                                <div class="input-group-addon"><i class="fa fa-search"></i></div>
-                                <input type="text" id="searchpanitia" class="form-control" placeholder="Kata kunci pencarian..." autofocus>
+                            <div class="tab-pane" id="tab_baru_panitia">
+                                <a href="{{ route('admins.staf.create')}}" class="btn btn-default btn-block"><i class="fa fa-plus"></i> Tambah Staf</a>
                             </div>
-                            <table class="table table-hover dt-responsive" id="datatabletambahpanitia" cellspacing="0" width="100%">
-                                <thead class="bg-light-blue-active color-palette">
-                                <tr>
-                                    <th hidden></th>
-                                    <th hidden></th>
-                                    <th data-sortable="false">Foto</th>
-                                    <th class="sort" data-priority="1">Nama</th>
-                                    <th>Lembaga</th>
-                                    <th>Jabatan</th>
-                                    <th class="none">NIM</th>
-                                    <th class="none">NID</th>
-                                    <th class="none">Pendidikan</th>
-                                    <th class="none">Agama</th>
-                                    <th class="none">Status</th>
-                                    <th class="none">Tgl. Lahir</th>
-                                    <th class="none">Umur</th>
-                                    <th class="none">Alamat</th>
-                                    <th class="none">Kontak</th>
-                                    <th>&nbsp;</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                @foreach($datastaf as $dataf)
-                                    <?php
-                                        $date = new Date($dataf->staf->tanggal_lahir);
-                                        $tempat ="";
-                                        $pekerjaan = "";
-                                        $pendidikan ="";
-                                        $i = 0; 
-                                        if(!empty($dataf->staf->pekerjaan_aktif)){
-                                            foreach($dataf->staf->pekerjaan_aktif as $p){
-                                                $i++;
-                                                if($p->tipe == "1"){
-                                                    $tempat .= 'CU ' . $p->cuprimer->name ;
-                                                    $pekerjaan .= $p->name . ' CU ' . $p->cuprimer->name;
-                                                }elseif($p->tipe == "2"){
-                                                    $tempat .= $p->lembaga->name;
-                                                    $pekerjaan .= $p->name . ' ' . $p->lembaga->name;
-                                                }elseif($p->tipe == "3"){
-                                                    $tempat .= 'Puskopdit BKCU Kalimantan';
-                                                    $pekerjaan .=$p->name . ' Puskopdit BKCU Kalimantan';
-                                                }
-                                                if($i < $dataf->staf->pekerjaan_aktif->count()){
-                                                    $tempat .= ', ';
-                                                    $pekerjaan .= ', ';
-                                                }
-                                            }
-                                        }
-                                        
-                                        if(!empty($dataf->staf->pendidikan)){
-                                            $pendidikan = $dataf->staf->pendidikan->first();
-                                            if(!empty($pendidikan)){
-                                                if($pendidikan->tingkat == 1){
-                                                    $tingkat = "SD";
-                                                }elseif($pendidikan->tingkat == 2){
-                                                    $tingkat = "SMP";
-                                                }elseif($pendidikan->tingkat == 3){
-                                                    $tingkat = "SMA/SMK";
-                                                }elseif($pendidikan->tingkat == 4){
-                                                    $tingkat = "D1";
-                                                }elseif($pendidikan->tingkat == 5){
-                                                    $tingkat = "D2";
-                                                }elseif($pendidikan->tingkat == 6){
-                                                    $tingkat = "D3";
-                                                }elseif($pendidikan->tingkat == 7){
-                                                    $tingkat = "D4";
-                                                }elseif($pendidikan->tingkat == 8){
-                                                    $tingkat = "S1";
-                                                }elseif($pendidikan->tingkat == 9){
-                                                    $tingkat = "S2";
-                                                }elseif($pendidikan->tingkat == 10){
-                                                    $tingkat = "S3";
-                                                }else{
-                                                    $tingkat = "";
-                                                }
-                                            }
-                                        }
-                                     
-                                        $newarr = explode("\n",$dataf->staf->alamat);
-                                        foreach($newarr as $str){
-                                            $alamat = $str;
-                                        }
-
-                                        $newarr2 = explode("\n",$dataf->staf->kontak);
-                                        foreach($newarr2 as $str2){
-                                            $kontak = $str2;
-                                        }
-                                        ?>
-                                    <tr>
-                                        <td hidden>{{ $dataf->id_staf }}</td>
-                                        @if(!empty($dataf->staf->gambar) && is_file($imagepath2.$dataf->staf->gambar."n.jpg"))
-                                            <td hidden>{{ asset($imagepath2.$dataf->staf->gambar.'n.jpg') }}</td>
-                                            <td style="white-space: nowrap"><div class="modalphotos" >
-                                                    {{ Html::image($imagepath2.$dataf->staf->gambar.'n.jpg',asset($imagepath2.$dataf->staf->gambar."jpg"),
-                                                     array('class' => 'img-responsive',
-                                                    'id' => 'tampilgambar', 'width' => '40px')) }}
-                                                </div></td>
-                                        @else
-                                            @if($dataf->staf->kelamin == "Wanita")
-                                                <td hidden>{{ asset('images/no_image_woman.jpg') }}</td>
-                                                <td>{{ Html::image('images/no_image_woman.jpg', 'a picture', array('class' => 'img-responsive',
-                                                                    'id' => 'tampilgambar', 'width' => '40px')) }}</td>
-                                            @else
-                                                <td hidden>{{ asset('images/no_image_man.jpg') }}</td>
-                                                <td>{{ Html::image('images/no_image_man.jpg', 'a picture', array('class' => 'img-responsive',
-                                                                    'id' => 'tampilgambar', 'width' => '40px')) }}</td>
-                                            @endif
-                                        @endif
-                                        <td>{{ $dataf->staf->name }}</td>
-                                        <td class="warptext">{!! $tempat !!}</td>
-                                        <td class="warptext">{!! $pekerjaan !!}</td>
-                                        <td>{{ $dataf->staf->nim }}</td>
-                                        <td>{{ $dataf->staf->nid }}</td>
-                                        @if(!empty($pendidikan))
-                                            <td>{{ $tingkat . ' ' . $pendidikan->name . ' ' . $pendidikan->tempat}}</td>
-                                        @else
-                                            <td></td>    
-                                        @endif
-                                        <td>{{ $dataf->staf->agama }}</td>
-                                        <td>{{ $dataf->staf->status }}</td>
-                                        <td data-order="{{ $dataf->tanggal_lahir }}">{{ $date->format('d F Y') }}</td>
-                                        <td>{{ $dataf->staf->age }} Tahun</td>
-                                        <td>{{ $alamat }}</td>
-                                        <td>{{ $kontak }}</td>
-                                        <td></td>
-                                    </tr>
-                                @endforeach
-                                </tbody>
-                            </table>
                         </div>
-                     </div>   
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary" id="modalbutton"><i class="fa fa-save"></i> Simpan</button>
@@ -693,146 +580,34 @@ if($data->status == 1){
             </div>
             <div class="modal-body">
                 <input type="text" name="id_kegiatan" value="{{ $data->id }}" hidden>
-                <div class="row">
-                    <div id="areapeserta"></div>
-                    <div class="col-sm-12"><button type="button" id="warningpeserta" class="btn btn-danger nopointer btn-block" style="display: none;"> </button></div>
-                    <div class="col-sm-12"><hr/></div>
-                    <div class="col-sm-12">
-                        <div class="input-group tabletools">
-                            <div class="input-group-addon"><i class="fa fa-search"></i></div>
-                            <input type="text" id="searchpeserta" class="form-control" placeholder="Kata kunci pencarian..." autofocus>
+                <div class="nav-tabs-custom">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#tab_pilih_peserta" data-toggle="tab" id='nav_pilih_peserta' data-target="#tab_pilih_peserta">Pilih</a></li>
+                        <li><a href="#tab_baru_peserta" data-toggle="tab" id='nav_baru' data-target="#tab_baru_peserta">Buat Baru</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade in active" id="tab_pilih_peserta">
+                            <div class="row">
+                                <div id="areapeserta"></div>
+                                <div class="col-sm-12"><button type="button" id="warningpeserta" class="btn btn-danger nopointer btn-block" style="display: none;"> </button></div>
+                                <div class="col-sm-12"><hr/></div>
+                                <div class="col-sm-12">
+                                    <div class="input-group tabletools">
+                                        <div class="input-group-addon"><i class="fa fa-search"></i></div>
+                                        <input type="text" id="searchpeserta" class="form-control" placeholder="Kata kunci pencarian..." autofocus>
+                                    </div>
+                                    <table class="table table-hover dt-responsive" id="datatabletambahpeserta" cellspacing="0" width="100%">
+                                        @include('admins.kegiatan._component.tambahtable')
+                                    </table>
+                                </div>
+                             </div>   
                         </div>
-                        <table class="table table-hover dt-responsive" id="datatabletambahpeserta" cellspacing="0" width="100%">
-                            <thead class="bg-light-blue-active color-palette">
-                                <tr>
-                                    <th hidden></th>
-                                    <th hidden></th>
-                                    <th data-sortable="false">Foto</th>
-                                    <th class="sort" data-priority="1">Nama</th>
-                                    <th>Jabatan</th>
-                                    @if($cu == 0)<th>Lembaga</th>@endif
-                                    <th class="none">NIM</th>
-                                    <th class="none">NID</th>
-                                    <th>Pendidikan</th>
-                                    <th>Agama</th>
-                                    <th>Status</th>
-                                    <th>Tgl. Lahir</th>
-                                    <th>Umur</th>
-                                    <th class="none">Alamat</th>
-                                    <th class="none">Kontak</th>
-                                    <th>&nbsp;</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                @foreach($datastaf as $dataf)
-                                    <?php
-                                        $date = new Date($dataf->staf->tanggal_lahir);
-                                        $tempat ="";
-                                        $pekerjaan = "";
-                                        $pendidikan ="";
-                                        $i = 0; 
-                                        if(!empty($dataf->staf->pekerjaan_aktif)){
-                                            foreach($dataf->staf->pekerjaan_aktif as $p){
-                                                $i++;
-                                                if($p->tipe == "1"){
-                                                    $tempat .= 'CU ' . $p->cuprimer->name ;
-                                                    $pekerjaan .= $p->name . ' CU ' . $p->cuprimer->name;
-                                                }elseif($p->tipe == "2"){
-                                                    $tempat .= $p->lembaga->name;
-                                                    $pekerjaan .= $p->name . ' ' . $p->lembaga->name;
-                                                }elseif($p->tipe == "3"){
-                                                    $tempat .= 'Puskopdit BKCU Kalimantan';
-                                                    $pekerjaan .=$p->name . ' Puskopdit BKCU Kalimantan';
-                                                }
-                                                if($i < $dataf->staf->pekerjaan_aktif->count()){
-                                                    $tempat .= ', ';
-                                                    $pekerjaan .= ', ';
-                                                }
-                                            }
-                                        }
-
-                                        if(!empty($dataf->staf->pendidikan)){
-                                            $pendidikan = $dataf->staf->pendidikan->first();
-                                            if(!empty($pendidikan)){
-                                                if($pendidikan->tingkat == 1){
-                                                    $tingkat = "SD";
-                                                }elseif($pendidikan->tingkat == 2){
-                                                    $tingkat = "SMP";
-                                                }elseif($pendidikan->tingkat == 3){
-                                                    $tingkat = "SMA/SMK";
-                                                }elseif($pendidikan->tingkat == 4){
-                                                    $tingkat = "D1";
-                                                }elseif($pendidikan->tingkat == 5){
-                                                    $tingkat = "D2";
-                                                }elseif($pendidikan->tingkat == 6){
-                                                    $tingkat = "D3";
-                                                }elseif($pendidikan->tingkat == 7){
-                                                    $tingkat = "D4";
-                                                }elseif($pendidikan->tingkat == 8){
-                                                    $tingkat = "S1";
-                                                }elseif($pendidikan->tingkat == 9){
-                                                    $tingkat = "S2";
-                                                }elseif($pendidikan->tingkat == 10){
-                                                    $tingkat = "S3";
-                                                }else{
-                                                    $tingkat = "";
-                                                }
-                                            }
-                                        }
-
-                                        $newarr = explode("\n",$dataf->staf->alamat);
-                                        foreach($newarr as $str){
-                                            $alamat = $str;
-                                        }
-
-                                        $newarr2 = explode("\n",$dataf->staf->kontak);
-                                        foreach($newarr2 as $str2){
-                                            $kontak = $str2;
-                                        }
-                                        ?>
-                                    <tr>
-                                        <td hidden>{{ $dataf->id_staf }}</td>
-                                        @if(!empty($dataf->staf->gambar) && is_file($imagepath2.$dataf->staf->gambar."n.jpg"))
-                                            <td hidden>{{ asset($imagepath2.$dataf->staf->gambar.'n.jpg') }}</td>
-                                            <td style="white-space: nowrap"><div class="modalphotos" >
-                                                    {{ Html::image($imagepath2.$dataf->staf->gambar.'n.jpg',asset($imagepath2.$dataf->staf->gambar."jpg"),
-                                                     array('class' => 'img-responsive',
-                                                    'id' => 'tampilgambar', 'width' => '40px')) }}
-                                                </div></td>
-                                        @else
-                                            @if($dataf->staf->kelamin == "Wanita")
-                                                <td hidden>{{ asset('images/no_image_woman.jpg') }}</td>
-                                                <td>{{ Html::image('images/no_image_woman.jpg', 'a picture', array('class' => 'img-responsive',
-                                                                    'id' => 'tampilgambar', 'width' => '40px')) }}</td>
-                                            @else
-                                                <td hidden>{{ asset('images/no_image_man.jpg') }}</td>
-                                                <td>{{ Html::image('images/no_image_man.jpg', 'a picture', array('class' => 'img-responsive',
-                                                                    'id' => 'tampilgambar', 'width' => '40px')) }}</td>
-                                            @endif
-                                        @endif
-                                        <td>{{ $dataf->staf->name }}</td>
-                                        <td class="warptext">{!! $pekerjaan !!}</td>
-                                        @if($cu == 0)<td class="warptext">{!! $tempat !!}</td>@endif
-                                        <td>{{ $dataf->staf->nim }}</td>
-                                        <td>{{ $dataf->staf->nid }}</td>
-                                        @if(!empty($pendidikan))
-                                            <td>{{ $tingkat . ' ' . $pendidikan->name . ' ' . $pendidikan->tempat}}</td>
-                                        @else
-                                            <td></td>    
-                                        @endif
-                                        <td>{{ $dataf->staf->agama }}</td>
-                                        <td>{{ $dataf->staf->status }}</td>
-                                        <td data-order="{{ $dataf->tanggal_lahir }}">{{ $date->format('d F Y') }}</td>
-                                        <td>{{ $dataf->staf->age }} Tahun</td>
-                                        <td>{{ $alamat }}</td>
-                                        <td>{{ $kontak }}</td>
-                                        <td></td>
-                                    </tr>
-                                @endforeach
-                                </tbody>
-                        </table>
+                        <div class="tab-pane fade" id="tab_baru_peserta">
+                            <a href="{{ route('admins.staf.create')}}" class="btn btn-default btn-block"><i class="fa fa-plus"></i> Tambah Staf</a>
+                        </div>
                     </div>
-                 </div>   
+                </div>    
+                
             </div>
             <div class="modal-footer">
                 <button type="submit" class="btn btn-primary" id="modalbutton"><i class="fa fa-save"></i> Simpan</button>
@@ -882,7 +657,7 @@ if($data->status == 1){
                         <tr>
                             <td style="border-bottom: 1px solid #f4f4f4">
                                 <div class="checkbox">
-                                    <label><input type="radio" name="radiostatus" value="1" id="checkpending" /> PENDING</label>
+                                    <label><input type="radio" name="radiostatus" value="1" id="checkpending" /> MENUNGGU</label>
                                 </div>
                             </td>
                             <td style="border-bottom: 1px solid #f4f4f4">
@@ -937,6 +712,15 @@ if($data->status == 1){
 {{-- panitia --}}
 @if($cu == '0')
 <script>
+    $('#nav_pilih').on('click',function(e){
+        e.preventDefault();
+        $('#form_panitia').attr('action',"{{ route('admins.'.$kelas.'.store_panitia') }}");
+    })
+    $('#nav_baru').on('click',function(e){
+        e.preventDefault();
+        $('#form_panitia').attr('action', "{{ route('admins.staf.store_panitia_new') }}");
+    })
+
     var tablepanitia = $('#datatablepanitia').DataTable({
         dom: 'Bti',
         scrollY: '70vh',
@@ -1080,6 +864,7 @@ if($data->status == 1){
         dom: 'tip',
         autoWidth: true,
         paging : true,
+        pagingType: 'full_numbers',
         stateSave : false ,
         select: {
             style:    'multiple',
@@ -1112,6 +897,12 @@ if($data->status == 1){
             "sInfoEmpty":    "Tampilan 0 hingga 0 dari 0 entri",
             "sInfoFiltered": "(disaring dari _MAX_ entri keseluruhan)",
             "sInfoPostFix":  "",
+            "paginate": {
+              "previous": "&lt;",
+              "next": "&gt;",
+              "first": "&lt;&lt;",
+              "last": "&gt;&gt;"
+            }
         }
     });
 
@@ -1295,6 +1086,7 @@ if($data->status == 1){
         dom: 'tip',
         autoWidth: true,
         paging : true,
+        pagingType: 'full_numbers',
         stateSave : false ,
         select: {
             style:    'single',
@@ -1332,6 +1124,12 @@ if($data->status == 1){
             "sInfoEmpty":    "Tampilan 0 hingga 0 dari 0 entri",
             "sInfoFiltered": "(disaring dari _MAX_ entri keseluruhan)",
             "sInfoPostFix":  "",
+            "paginate": {
+              "previous": "&lt;",
+              "next": "&gt;",
+              "first": "&lt;&lt;",
+              "last": "&gt;&gt;"
+            }
         }
     });
 
