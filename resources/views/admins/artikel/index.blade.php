@@ -1,5 +1,5 @@
 <?php
-$title = "Kelola Artikel";
+$title = "Artikel";
 $kelas ='artikel';
 $kelas2 = 'kategoriartikel';
 $imagepath = 'images_artikel/';
@@ -9,7 +9,7 @@ $imagepath = 'images_artikel/';
 
 @section('css')
     @include('admins._components.datatable_CSS')
-    <link rel="stylesheet" type="text/css" href="{{asset('plugins/dataTables/extension/Responsive/css/responsive.bootstrap.min.css')}}" >
+    <link rel="stylesheet" type="text/css" href="{{asset('plugins/dataTables/extension/Responsive/css/responsive.bootstrap.css')}}" >
 @stop
 
 @section('content')
@@ -18,7 +18,7 @@ $imagepath = 'images_artikel/';
 <section class="content-header">
     <h1>
         <i class="fa fa-book"></i> {{ $title }}
-        <small>Mengelola Data Artikel</small>
+        <small>Mengelola Data {{ $title }}</small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="{{ URL::to('admins') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>

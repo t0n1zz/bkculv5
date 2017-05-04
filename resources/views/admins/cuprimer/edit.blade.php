@@ -1,6 +1,7 @@
 <?php
 $title="Ubah Informasi CU";
 $kelas="cuprimer";
+$batal_route = route('admins.'.$kelas.'.index');
 ?>
 @extends('admins._layouts.layout')
 
@@ -13,18 +14,22 @@ $kelas="cuprimer";
     </h1>
     <ol class="breadcrumb">
         <li><a href="{{ URL::to('admins')  }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li><a href="{{ route('admins.'.$kelas.'.index') }}"><i class="fa fa-building"></i> Kelola CU Primer</a></li>
+        <li><a href="{{ $batal_route }}"><i class="fa fa-building"></i> Kelola CU Primer</a></li>
         <li class="active"><i class="fa fa-pencil-square-o"></i> {{$title}}</li>
     </ol>
 </section>
 <!-- /header -->
 <!-- Main content -->
 <section class="content">
-    {{ Form::model($data,array('route' => array('admins.'.$kelas.'.update',$data->id),
-    'files' => true,'method' => 'put',
-    'data-toggle' => 'validator','role' => 'form')) }}
-    @include('admins.'.$kelas.'.form')
-    {{ Form::close() }}
+{{ Form::model($data,array('route' => array('admins.'.$kelas.'.update',$data->id),'files' => true,'method' => 'put','data-toggle' => 'validator','role' => 'form')) }}
+    @include('admins._layouts.alert')
+    <div class="box box-primary">
+        <div class="box-body">
+            @include('admins.'.$kelas.'.form')
+        </div>
+    </div>        
+    @include('admins._components.tombol')
+{{ Form::close() }}
 </section>
 <!-- Main content -->
 @stop

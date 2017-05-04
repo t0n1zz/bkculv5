@@ -1,6 +1,50 @@
 <?php
 $navberita = App\KategoriArtikel::whereNotIn('id',array(1,4,8))->get();
 $infogerakan = App\InfoGerakan::find(1);
+$cu = App\Cuprimer::all()->count();
+$data = App\LaporanCu::orderBy('periode','ASC')->groupBy('periode')->get(['periode']);
+$periodeiode = $data->groupBy('periode');
+
+$periodeiode1 = collect([]);
+foreach ($periodeiode as $data){
+  $periodeiode1->push($data->first());
+}
+
+$periodes = array_column($periodeiode1->toArray(),'periode');
+
+foreach ($periodes as $periode) {
+  $datacu = App\LaporanCu::where('periode','<=',$periode)->orderBy('periode','DESC')->get();
+  $datacu1= $datacu->groupBy('no_ba');
+
+  $datascu = collect([]);
+  foreach ($datacu1 as $data2){
+      $datascu->push($data2->first());
+  }
+
+  $tot_l_biasa = 0;
+  $tot_l_lbiasa = 0;
+  $tot_p_biasa = 0;
+  $tot_p_lbiasa = 0;
+
+  foreach($datascu as $data){
+      $tot_l_biasa += $data->l_biasa;
+      $tot_l_lbiasa += $data->l_lbiasa;
+      $tot_p_biasa += $data->p_biasa;
+      $tot_p_lbiasa += $data->p_lbiasa;
+  } 
+  $date = new Date($periode);
+  $gperiode[] = $date->format('F Y');
+
+  $infogerakans[$periode] = array(
+      'periode' => $date->format('F Y'),
+      'l_biasa' => $tot_l_biasa,
+      'l_lbiasa' => $tot_l_lbiasa,
+      'p_biasa' => $tot_p_biasa,
+      'p_lbiasa' => $tot_p_lbiasa,
+  );
+};
+$tot_anggota = $tot_l_biasa + $tot_l_lbiasa + $tot_p_biasa + $tot_p_lbiasa;
+$data1 = array_last($infogerakans);
 ?>
 {{--footer--}}
 <footer>
@@ -12,21 +56,18 @@ $infogerakan = App\InfoGerakan::find(1);
                 <div class="footer-widget">
                     <h4>Info Gerakan<span class="head-line"></span></h4>
                     <p>
-                        @if(!empty($infogerakan->tanggal))
-                            <?php $date = new Date($infogerakan->tanggal) ?>
-                            <b>Per tanggal :</b> {{ $date->format('j F Y ')}}
-                            <br/>
-                        @endif
+                        <b>Periode: </b> {{ $data1['periode'] }}
+                        <br/>
                         @if(!empty($infogerakan->jumlah_anggota))
-                            <b>Jumlah Anggota :</b> {{ number_format($infogerakan->jumlah_anggota,0,",",".") }} orang
+                            <b>Jumlah Anggota: </b> {{ number_format($tot_anggota,0,",",".") }} orang
                             <br/>
                         @endif
                         @if(!empty($infogerakan->jumlah_cu))
-                            <b>Jumlah CU Primer :</b> <a href="{{ route('cuprimer') }}" style="color: #ccc">{{ number_format($infogerakan->jumlah_cu,0,",",".")}} Credit Union</a>
+                            <b>Jumlah CU Primer: </b> <a href="{{ route('cuprimer') }}" style="color: #ccc">{{ $cu }} Credit Union</a>
                             <br/>
                         @endif
                         @if(!empty($infogerakan->jumlah_staff_cu))
-                            <b>Jumlah Staff CU Primer :</b> {{ number_format($infogerakan->jumlah_staff_cu,0,",",".") }} orang
+                            <b>Jumlah Staf CU Primer: </b> {{ number_format($infogerakan->jumlah_staff_cu,0,",",".") }} orang
                             <br/>
                         @endif
                         @if(!empty($infogerakan->asset))

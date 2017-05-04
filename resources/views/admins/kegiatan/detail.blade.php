@@ -51,9 +51,7 @@ if($data->status == 1){
 </section>
 <!-- /header -->
 <section class="content">
-
-    <div class="row">
-        
+    <div class="row"> 
         <div class="col-md-3">
             <!-- Profile Image -->
             <div class="box box-primary">
@@ -64,7 +62,7 @@ if($data->status == 1){
                         <li class="list-group-item">
                             @if(!empty($data->tanggal))
                                 <?php $date = new Date($data->tanggal); ?>
-                                <b>Tanggal Mulai</b> <a class="pull-right">{{  $date->format('d-n-Y') }}</a>
+                                <b>Tanggal Mulai</b> <a class="pull-right">{{  $date->format('d F Y') }}</a>
                             @else
                                 <b>Tanggal Mulai</b> <a class="pull-right">-</a>
                             @endif
@@ -72,7 +70,7 @@ if($data->status == 1){
                         <li class="list-group-item">
                             @if(!empty($data->tanggal))
                                 <?php $date2 = new Date($data->tanggal2); ?>
-                                <b>Tanggal Selesai</b> <a class="pull-right">{{  $date2->format('d-n-Y') }}</a>
+                                <b>Tanggal Selesai</b> <a class="pull-right">{{  $date2->format('d F Y') }}</a>
                             @else
                                 <b>Tanggal Selesai</b> <a class="pull-right">-</a>
                             @endif
@@ -390,7 +388,7 @@ if($data->status == 1){
                                         <td data-order="{{ $datap->created_at }}">@if(!empty($datap->created_at)){{ $datap->created_at->format('d F Y') }}@else{{ '-' }}@endif</td>
                                         <td data-order="{{ $datap->status }}">
                                             @if($datap->status == "1")
-                                                <a href="#" class="btn btn-default btn-sm nopointer">PENDING</a>
+                                                <a href="#" class="btn btn-default btn-sm nopointer">MENUNGGU</a>
                                             @elseif($datap->status == "2")
                                                 <a href="#" class="btn btn-info btn-sm nopointer">TERDAFTAR</a>
                                             @elseif($datap->status == "3")

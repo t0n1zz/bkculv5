@@ -1,5 +1,5 @@
 <?php
-$title = "Kelola Download";
+$title = "Download";
 $kelas ='download';
 ?>
 
@@ -14,8 +14,8 @@ $kelas ='download';
 <!-- header -->
 <section class="content-header">
     <h1>
-        <i class="fa fa-download"></i> {!! $title !!}
-        <small>Mengelola File Download</small>
+        <i class="fa fa-download"></i> {{ $title }}
+        <small>Mengelola Data {{ $title }}</small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="{{ URL::to('admins') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>

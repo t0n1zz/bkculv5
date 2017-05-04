@@ -3,14 +3,16 @@ $title = "Profil CU";
 $kelas = "cuprimer";
 $imagepath = "images_cu/";
 
-if($data->do == "1"){
-    $do ="Barat";
-}else if($data->do == "2"){
-    $do ="Tengah";
-}else if($data->do == "3"){
-    $do ="Timur";
-}else{
-    $do ='-';
+if(!empty($data->do)){
+    if($data->do == "1"){
+        $do ="Barat";
+    }else if($data->do == "2"){
+        $do ="Tengah";
+    }else if($data->do == "3"){
+        $do ="Timur";
+    }else{
+        $do ='-';
+    }
 }
 
 $dateultah = new Date($data->ultah);

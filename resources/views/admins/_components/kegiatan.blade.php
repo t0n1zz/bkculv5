@@ -13,7 +13,7 @@
         <div class="tab-pane fade in active" id="tab_kegiatandekat">
             <div class="table-responsive">
               <table class="table no-margin table-striped">
-                <thead>
+                <thead class="bg-light-blue-active color-palette">
                 <tr>
                   <th class="warptext">Nama</th>
                   <th>Kota</th>
@@ -67,7 +67,7 @@
         <div class="tab-pane fade" id="tab_kegiatanjalan">
             <div class="table-responsive">
               <table class="table no-margin table-striped">
-                <thead>
+                <thead class="bg-light-blue-active color-palette">
                 <tr>
                   <th class="warptext">Nama</th>
                   <th>Kota</th>

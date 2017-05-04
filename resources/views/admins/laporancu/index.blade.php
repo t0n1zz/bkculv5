@@ -1,17 +1,20 @@
 <?php
-    $culists = App\Cuprimer::orderBy('name','asc')->get();
-    $culists_non = App\Cuprimer::onlyTrashed()->orderBy('name','asc')->get();
-    if(Request::is('admins/laporancu/index_cu/*')){
-        $cuname = App\Cuprimer::withTrashed()->orderBy('name','asc')->where('no_ba',$id)->first();
-        $title = "Laporan CU " .$cuname->name;
-    }elseif(Request::is('admins/laporancu') || Request::is('admins/laporancu/index_periode/*')){
-        $title = "Laporan CU";
-    }else{
-        $title = "Laporan Konsolidasi CU";
-    }
+$culists = App\Cuprimer::orderBy('name','asc')->get();
+$culists_non = App\Cuprimer::onlyTrashed()->orderBy('name','asc')->get();
 
-    $kelas ='laporancu';
-    $cu = Auth::user()->getCU();
+if(Request::is('admins/laporancu/index_cu/*')){
+    $cuname = App\Cuprimer::withTrashed()->orderBy('name','asc')->where('no_ba',$id)->first();
+    $title = "Laporan CU " .$cuname->name;
+}elseif(Request::is('admins/laporancu') || Request::is('admins/laporancu/index_periode/*')){
+    $title = "Laporan CU";
+}elseif(Request::is('admins/laporancu/index_bkcu')){
+    $title = "Laporan Konsolidasi CU";
+}elseif(Request::is('admins/laporancu/index_hapus')){
+    $title = "Laporan Terhapus";
+}
+
+$kelas ='laporancu';
+$cu = Auth::user()->getCU();
 ?>
 
 @extends('admins._layouts.layout')
@@ -28,12 +31,12 @@
 <!-- header -->
 <section class="content-header">
     <h1>
-        <i class="fa fa-line-chart"></i> Kelola {{ $title }}
-        <small>Mengelola {{ $title }}</small> 
+        <i class="fa fa-bar-chart"></i> {{ $title }}
+        <small>Mengelola Data {{ $title }}</small> 
     </h1>
     <ol class="breadcrumb">
         <li><a href="{{ URL::to('admins') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active"><i class="fa fa-line-chart"></i> Kelola Laporan CU</li>
+        <li class="active"><i class="fa fa-bar-chart"></i> Kelola Laporan CU</li>
     </ol>
 </section>
 <!-- /header -->
@@ -1081,7 +1084,7 @@
                                 <th>Periode Laporan</th>
                                 @if(!Request::is('admins/laporancu/index_cu/*'))
                                     <th>CU</th>
-                                    <th>CU <br/>Tepat<br/>Waktu</th>
+                                    <th>CU Tepat Waktu</th>
                                 @endif
                                 <th>Anggota Lelaki Biasa</th>
                                 <th>Anggota Lelaki L.Biasa</th>

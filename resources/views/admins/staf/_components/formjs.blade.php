@@ -62,6 +62,7 @@
     function func_selectcu($i) { //cu
         $('#jabatan').show();
         $('#tingkatcu').show();
+        $('#waktupekerjaan').show();
 
         if($i == "bkcu"){
             $('#tipepekerjaan').val('3');
@@ -104,7 +105,7 @@
             $('#bidang').show();
             $('#btnsekarang').show();
         }
-        $('#waktupekerjaan').show();
+        
     }
 
     function cekbidang(checkbox) {
@@ -120,7 +121,7 @@
     function func_selectpendidikan($i){
         $('#pendidikangroup').show();
 
-        if($i == "SD" || $i == "SMP"){
+        if($i == "1" || $i == "2"){
             $('#namapendidikan').val('');
             $('#jurusan').hide();
         }else{

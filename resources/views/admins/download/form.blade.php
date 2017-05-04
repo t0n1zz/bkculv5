@@ -11,17 +11,10 @@ $file_max = intval($file_max);
 @include('admins._layouts.alert')
 <!-- /Alert -->
 <!-- content -->
+{{-- tombol --}}
+@include('admins._components.tombol')
+{{-- tombol --}}
 <div class="box box-primary">
-    <div class="box-header with-border">
-        <div class="form-group">
-            <button type="submit" name="simpan" accesskey="s" class="btn btn-primary">
-                <i class="fa fa-save"></i> <u>S</u>impan</button>
-            <button type="submit" name="simpan2" accesskey="m" class="btn btn-primary">
-                <i class="fa fa-save fa-fw"></i><i class="fa fa-plus"></i> Si<u>m</u>pan dan buat baru</button>
-            <a href="{{ route('admins.'.$kelas.'.index') }}" name="batal" accesskey="b" class="btn btn-danger"">
-                <i class="fa fa-times"></i> <u>B</u>atal</a>
-        </div>
-    </div>
     <div class="box-body">
         <div class="row">
             <!--nama-->
@@ -47,4 +40,6 @@ $file_max = intval($file_max);
         </div>
     </div>
 </div>
-
+{{-- tombol --}}
+@include('admins._components.tombol')
+{{-- tombol --}}

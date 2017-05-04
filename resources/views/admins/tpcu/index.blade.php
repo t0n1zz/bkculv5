@@ -1,5 +1,5 @@
 <?php
-$title = "Kelola TP CU";
+$title = "TP CU";
 $kelas = 'tpcu';
 $imagepath = 'images_tpcu/';
 ?>
@@ -8,19 +8,19 @@ $imagepath = 'images_tpcu/';
 
 @section('css')
     @include('admins._components.datatable_CSS')
-    <link rel="stylesheet" type="text/css" href="{{asset('plugins/dataTables/extension/Responsive/css/responsive.bootstrap.min.css')}}" >
+    <link rel="stylesheet" type="text/css" href="{{asset('plugins/dataTables/extension/Responsive/css/responsive.bootstrap.css')}}" >
 @stop
 
 @section('content')
     <!-- header -->
     <section class="content-header">
         <h1>
-            <i class="fa fa-building"></i> {{ $title }}
-            <small>Mengelola Data TP CU Primer</small>
+            <i class="fa fa-home"></i> {{ $title }}
+            <small>Mengelola Data {{ $title }}</small>
         </h1>
         <ol class="breadcrumb">
             <li><a href="{{ URL::to('admins')  }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-            <li class="active"><i class="fa fa-building"></i> {{ $title }}</li>
+            <li class="active"><i class="fa fa-home"></i> {{ $title }}</li>
         </ol>
     </section>
     <!-- /header -->

@@ -169,7 +169,6 @@ return [
         'Jenssegers\Date\DateServiceProvider',
         Collective\Html\HtmlServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
-        Collective\Bus\BusServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         Kodeine\Acl\AclServiceProvider::class,

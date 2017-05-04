@@ -51,7 +51,7 @@ hidden>
             </div>
         </div>
     </div>
-    <div class="row" id="lembagabaru">
+    <div class="row" id="lembagabaru" style="display: none;">
         <div class="col-sm-12"><hr/></div>
         <div class="col-sm-6">
             <div class="form-group" >

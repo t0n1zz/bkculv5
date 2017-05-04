@@ -12,7 +12,7 @@ $i = 0;
 
 @section('css')
     @include('admins._components.datatable_CSS')
-    <link rel="stylesheet" type="text/css" href="{{asset('plugins/dataTables/extension/Responsive/css/responsive.bootstrap.min.css')}}" >
+    <link rel="stylesheet" type="text/css" href="{{asset('plugins/dataTables/extension/Responsive/css/responsive.bootstrap.css')}}" >
 @stop
 @section('content')
 <!-- Content Header (Page header) -->
@@ -336,7 +336,7 @@ $i = 0;
                                     <th>Penyelenggara</th>
                                     <th>Tanggal Mulai</th>
                                     <th>Tanggal Selesai</th>
-                                    <th data-priority="1">Status</th>
+                                    <th data-priority="2">Status</th>
                                     <th>Keterangan</th>
                                     <th>&nbsp;</th>
                                 </tr>

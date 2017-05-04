@@ -1,12 +1,12 @@
 <?php
-$title = "Kelola Pengumuman";
+$title = "Pengumuman";
 $kelas = "pengumuman";
 ?>
 @extends('admins._layouts.layout')
 
 @section('css')
     @include('admins._components.datatable_CSS')
-    <link rel="stylesheet" type="text/css" href="{{asset('plugins/dataTables/extension/Responsive/css/responsive.bootstrap.min.css')}}" >
+    <link rel="stylesheet" type="text/css" href="{{asset('plugins/dataTables/extension/Responsive/css/responsive.bootstrap.css')}}" >
 @stop
 
 @section('content')

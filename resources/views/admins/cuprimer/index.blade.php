@@ -1,5 +1,5 @@
 <?php
-$title = "Kelola CU";
+$title = "CU";
 $kelas = 'cuprimer';
 $kelas2 = 'wilayahcuprimer';
 $imagepath = "images_cu/";
@@ -9,15 +9,14 @@ $imagepath = "images_cu/";
 
 @section('css')
     @include('admins._components.datatable_CSS')
-     <link rel="stylesheet" type="text/css" href="{{asset('plugins/dataTables/extension/Responsive/css/responsive.bootstrap.min.css')}}" >
+     <link rel="stylesheet" type="text/css" href="{{asset('plugins/dataTables/extension/Responsive/css/responsive.bootstrap.css')}}" >
 @stop
 
 @section('content')
 <!-- header -->
 <section class="content-header">
-    <h1>
-        <i class="fa fa-building"></i> {{ $title }}
-        <small>Mengelola Data CU Primer</small>
+    <h1><i class="fa fa-building"></i> {{ $title }}
+        <small>Mengelola Data {{ $title }}</small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="{{ URL::to('admins')  }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
@@ -58,8 +57,8 @@ $imagepath = "images_cu/";
                             <th class="sort" data-priority="1">Nama </th>
                             <th>No. BA</th>
                             <th>Wilayah</th>
-                            <th>Tanggal Berdiri</th>
-                            <th>Tanggal Bergtabung</th>
+                            <th>Tgl. Berdiri</th>
+                            <th>Tgl. Bergabung</th>
                             <th>TP</th>
                             <th>Staf</th>
                             <th>Aplikasi</th>
@@ -84,20 +83,17 @@ $imagepath = "images_cu/";
                                 <td hidden>{{ $data->no_ba }}</td>
                                 <td hidden=>{{ $data->status }}</td>
                                 @if(!empty($data->gambar) && is_file($imagepath.$data->gambar."n.jpg"))
-                                    <th><img class="img-responsive"  width="50px" src="{{ asset($imagepath.$data->gambar.'n.jpg') }}"
-                                             id="tampilgambar" alt="{{ asset($imagepath.$data->gambar."jpg") }}"></th>
+                                    <td><img class="img-responsive"  width="50px" src="{{ asset($imagepath.$data->gambar.'n.jpg') }}" id="tampilgambar" alt="{{ asset($imagepath.$data->gambar."jpg") }}"></td>
                                 @elseif(!empty($data->gambar) && is_file($imagepath.$data->gambar))
-                                    <th><img class="img-responsive" width="50px" src="{{ asset($imagepath.$data->gambar) }}"
-                                             id="tampilgambar" alt="{{ asset($imagepath.$data->gambar) }}"></th>
+                                    <td><img class="img-responsive" width="50px" src="{{ asset($imagepath.$data->gambar) }}" id="tampilgambar" alt="{{ asset($imagepath.$data->gambar) }}"></td>
                                 @else
-                                    <th><img class="img-responsive" width="50px" src="{{ asset('images/image-cu.jpg') }}"
-                                         id="tampilgambar" alt="cu profile"></th>
+                                    <td><img class="img-responsive" width="50px" src="{{ asset('images/image-cu.jpg') }}" id="tampilgambar" alt="cu profile"></td>
                                 @endif  
                                 <td>{{ $data->name }}</td>
                                 <td>{{ $data->no_ba }}</td>
                                 <td>{{ $data->wilayahcuprimer->name }}</td>
-                                <td data-order="{{ $data->ultah }}">{{ $date->format('d/m/Y') }}</td>
-                                <td data-order="{{ $data->bergabung }}">{{ $date2->format('d/m/Y') }}</td>
+                                <td data-order="{{ $data->ultah }}">{{ $date->format('d F Y') }}</td>
+                                <td data-order="{{ $data->bergabung }}">{{ $date2->format('d F Y') }}</td>
                                 <td>{{ $data->tp }}</td>
                                 <td>{{ $data->staf }}</td>
                                 <td>{{ $data->app }}</td>
@@ -178,7 +174,7 @@ $imagepath = "images_cu/";
                                 <td>{{ $data->no_ba }}</td>
                                 <td>{{ $data->wilayahcuprimer->name }}</td>
                                 <td>{{ $do }}</td>
-                                <td data-order="{{ $data->ultah }}">{{ $date->format('d/m/Y') }}</td>
+                                <td data-order="{{ $data->ultah }}">{{ $date->format('d F Y') }}</td>
                                 <td data-order="{{ $data->bergabung }}">{{ $date2->format('d/m/Y') }}</td>
                                 <td>{{ $data->tp }}</td>
                                 <td>{{ $data->staf }}</td>
@@ -373,21 +369,6 @@ $imagepath = "images_cu/";
     <script>
         new $.fn.dataTable.Buttons(table,{
             buttons: [
-                {
-                    extend:'colvis',
-                    text: '<i class="fa fa-table"></i>'
-                },
-                {
-                    extend:'colvisRestore',
-                    text: 'Semua'
-                }
-            ]
-        });
-        table.buttons( 0, null ).container().prependTo(
-                table.table().container()
-        );
-        new $.fn.dataTable.Buttons(table,{
-            buttons: [
                 @permission('create.'.$kelas.'_create')
                 {
                     text: '<i class="fa fa-plus"></i> <u>T</u>ambah',
@@ -409,7 +390,7 @@ $imagepath = "images_cu/";
                     },
                     action: function(){
                         var id = $.map(table.rows({ selected: true }).data(),function(item){
-                            return item[0];
+                            return item[1];
                         });
                         var kelas = "{{ $kelas }}";
                         if(id != ""){
@@ -448,7 +429,7 @@ $imagepath = "images_cu/";
                     text: '<i class="fa fa-building"></i> Profil',
                     action: function(){
                         var id = $.map(table.rows({ selected: true }).data(),function(item){
-                            return item[0];
+                            return item[1];
                         });
                         var kelas = "{{ $kelas }}";
                         if(id != ""){
@@ -476,7 +457,7 @@ $imagepath = "images_cu/";
                     text: '<i class="fa fa-line-chart"></i> Laporan',
                     action: function(){
                         var id = $.map(table.rows({ selected: true }).data(),function(item){
-                            return item[0];
+                            return item[1];
                         });
                         if(id != ""){
                             window.location.href =  "/admins/laporancu/index_cu/" + id;
@@ -491,7 +472,7 @@ $imagepath = "images_cu/";
                     text: '<i class="fa fa-sitemap"></i> Staf',
                     action: function(){
                         var id = $.map(table.rows({ selected: true }).data(),function(item){
-                            return item[0];
+                            return item[1];
                         });
                         if(id != ""){
                             window.location.href =  "/admins/staf/index_cu/" + id;

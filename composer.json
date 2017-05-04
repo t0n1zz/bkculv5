@@ -9,7 +9,6 @@
         "laravel/framework": "5.3.*",
         "laravelcollective/html": "^5.3.0",
         "intervention/image": "^2.3",
-        "laravelcollective/bus": "^5.3.0",
         "kodeine/laravel-acl": "~1.0@dev",
         "barryvdh/laravel-ide-helper": "^2.2",
         "spatie/laravel-sluggable": "^1.3",

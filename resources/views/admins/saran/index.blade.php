@@ -1,12 +1,12 @@
 <?php
-$title = "Kelola Saran atau Kritik";
+$title = "Saran atau Kritik";
 $kelas = "saran"
 ?>
 @extends('admins._layouts.layout')
 
 @section('css')
     @include('admins._components.datatable_CSS')
-    <link rel="stylesheet" type="text/css" href="{{asset('plugins/dataTables/extension/Responsive/css/responsive.bootstrap.min.css')}}" >
+    <link rel="stylesheet" type="text/css" href="{{asset('plugins/dataTables/extension/Responsive/css/responsive.bootstrap.css')}}" >
 @stop
 
 @section('content')
@@ -14,7 +14,7 @@ $kelas = "saran"
 <section class="content-header">
     <h1>
         <i class="fa fa-paper-plane-o"></i> {{ $title }}
-        <small>Mengelola Data Saran atau Kritik</small>
+        <small>Mengelola Data {{ $title }}</small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="{{ URL::to('admins') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>

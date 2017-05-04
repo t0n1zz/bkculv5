@@ -60,7 +60,6 @@ $style = Auth::user()->getStyle();;
 
     <!-- content -->
     <div class="content-wrapper">
-        <br/>
         @yield('content')
     </div>
     <!-- /content -->

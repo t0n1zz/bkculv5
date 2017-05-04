@@ -1,5 +1,5 @@
 <?php
-$title = "Kelola Staf";
+$title = "Staf";
 
 if(!empty($datas->first()->cuprimer))
     $title2 ="CU " . $datas->first()->cuprimer->name;
@@ -15,7 +15,7 @@ $id_old="";
 
 @section('css')
     @include('admins._components.datatable_CSS')
-    <link rel="stylesheet" type="text/css" href="{{asset('plugins/dataTables/extension/Responsive/css/responsive.bootstrap.min.css')}}" >
+    <link rel="stylesheet" type="text/css" href="{{asset('plugins/dataTables/extension/Responsive/css/responsive.bootstrap.css')}}" >
 @stop
 
 @section('content')
@@ -23,7 +23,7 @@ $id_old="";
     <section class="content-header">
         <h1>
             <i class="fa fa-sitemap"></i> {{ $title }}
-            <small>Mengelola Data Staf {!! $title2 !!}</small>
+            <small>Mengelola Data {{ $title }} {{ $title2 }}</small>
         </h1>
         <ol class="breadcrumb">
             <li><a href="{{ URL::to('admins') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>

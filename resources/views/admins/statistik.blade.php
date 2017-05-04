@@ -1,5 +1,5 @@
 <?php 
-    $title="Statistik Pengunjung Website";
+    $title="Statistik";
     $kelas="statistik";
  ?>
 @extends('admins._layouts.layout')

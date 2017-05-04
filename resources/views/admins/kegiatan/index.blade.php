@@ -1,5 +1,5 @@
 <?php
-$title = "Kelola Diklat";
+$title = "Diklat";
 $kelas = "kegiatan";
 $now = Date::now()->format('Y-m-d');
 $cu = Auth::user()->getCU();
@@ -8,7 +8,7 @@ $cu = Auth::user()->getCU();
 
 @section('css')
     @include('admins._components.datatable_CSS')
-    <link rel="stylesheet" type="text/css" href="{{asset('plugins/dataTables/extension/Responsive/css/responsive.bootstrap.min.css')}}" >
+    <link rel="stylesheet" type="text/css" href="{{asset('plugins/dataTables/extension/Responsive/css/responsive.bootstrap.css')}}" >
 @stop
 
 @section('content')
@@ -16,7 +16,7 @@ $cu = Auth::user()->getCU();
 <section class="content-header">
     <h1>
         <i class="fa fa-suitcase"></i> {{ $title }}
-        <small>Mengelola Data Diklat</small>
+        <small>Mengelola Data {{ $title }}</small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="{{ URL::to('admins') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
@@ -31,7 +31,7 @@ $cu = Auth::user()->getCU();
     <!--content-->
     <div class="nav-tabs-custom">
         <ul class="nav nav-tabs">
-            <li class="active"><a href="#tab_kegiatan" data-toggle="tab">Kegiatan</a></li>
+            <li class="active"><a href="#tab_kegiatan" data-toggle="tab">Diklat</a></li>
         </ul>
         <div class="tab-content"> 
             <div class="tab-pane active" id="tab_kegiatan">
@@ -43,13 +43,13 @@ $cu = Auth::user()->getCU();
                 </div>
                 <div class="col-sm-3" style="padding: .2em ;">
                     <div class="input-group tabletools">
-                        <div class="input-group-addon primary-color"><i class="fa fa-clock-o fa-fw"></i> Periode Kegiatan</div>
+                        <div class="input-group-addon primary-color"><i class="fa fa-clock-o fa-fw"></i> Periode Diklat</div>
                         <select class="form-control"  id="">
                                 <option value="">2017</option>
                         </select>
                     </div>
                 </div>
-                <table class="table table-hover " id="dataTables-example" cellspacing="0" width="100%">
+                <table class="table table-hover" id="dataTables-example" cellspacing="0" width="100%">
                     <thead class="bg-light-blue-active color-palette">
                     <tr>
                         <th hidden></th>
@@ -61,7 +61,7 @@ $cu = Auth::user()->getCU();
                         <th data-priority="3">Selesai</th>
                         <th class="warptext">Sasaran</th>
                         <th data-priority="2">Status</th>
-                        <th class="none" class="warptext">Prasyarat</th>
+                        <th class="none warptext">Prasyarat</th>
                         <th class="none">Durasi</th>
                         <th class="none">Min</th>
                         <th class="none">Maks</th>
@@ -98,13 +98,13 @@ $cu = Auth::user()->getCU();
                             }
 
                             if($data->status == 1){
-                                $status = '<a class="btn btn-default btn-sm nopointer">MENUNGGU</a>';
+                                $status = '<a class="btn btn-default btn-sm nopointer"><i class="fa fa-pause"></i> <span class="hidden-xs">MENUNGGU</span></a>';
                             }elseif($data->status == 2){
-                                $status = '<a class="btn btn-warning btn-sm nopointer">PENDAFTARAN TERBUKA</a>';
+                                $status = '<a class="btn btn-warning btn-sm nopointer"><i class="fa fa-circle-o"></i> <span class="hidden-xs">PENDAFTARAN TERBUKA</span></a>';
                             }elseif($data->status == 3){
-                                $status = '<a class="btn btn-warning btn-sm disabled">PENDAFTARAN TERTUTUP</a>';
+                                $status = '<a class="btn btn-warning btn-sm disabled"><i class="fa fa-ban"></i> <span class="hidden-xs">PENDAFTARAN TERTUTUP</span></a>';
                             }elseif($data->status == 4){
-                                $status = '<a class="btn btn-danger btn-sm nopointer"><i class="fa fa-times"></i> BATAL</a>';
+                                $status = '<a class="btn btn-danger btn-sm nopointer"><i class="fa fa-times"></i> <span class="hidden-xs">BATAL</span></a>';
                             }else{
                                 $status = "-";
                             }
@@ -149,7 +149,7 @@ $cu = Auth::user()->getCU();
                             @if($data->tanggal >= $now && $data->tanggal2 <= $now)) 
                                 <td data-order="5"><a href="#" class="btn btn-success btn-sm nopointer">SEDANG BERLANGSUNG</a></td>
                             @elseif($data->tanggal2 < $now)
-                                <td data-order="6"><a href="#" class="btn btn-info btn-sm nopointer"><i class="fa fa-check"></i> TERLAKSANA</a></td>    
+                                <td data-order="6"><a href="#" class="btn btn-info btn-sm nopointer"><i class="fa fa-check"></i> <span class="hidden-xs">TERLAKSANA</span></a></td>    
                             @else
                                 <td data-order="{{ $data->status }}">{!! $status !!}</td>
                             @endif
@@ -353,9 +353,6 @@ $cu = Auth::user()->getCU();
                             if(status == 'PENDING'){
                                 $('#modalbatal').modal({show:true});
                                 $('#modalbatal_id').attr('value',id);
-                            }else if(status == 'BATAL'){
-                                $('#modalpending').modal({show:true});
-                                $('#modalpending_id').attr('value',id);
                             }else{
                                 $('#modalterlaksana').modal({show:true});
                             }
