@@ -1,4 +1,7 @@
-<?php $page = ""; ?>
+<?php 
+$page = ""; 
+$hariraya = "0";
+?>
 @extends('_layouts.layout')
 
 @section('content')
@@ -10,8 +13,10 @@
         <ol class="carousel-indicators">
             <?php $i = 0; ?>
             <li data-target="#main-slide" data-slide-to="{{$i}}" class="active"></li>
-{{--             <?php $i++; ?>
-            <li data-target="#main-slide" data-slide-to="{{$i}}"></li> --}}
+            @if($hariraya != 0)
+                <?php $i++; ?>
+                <li data-target="#main-slide" data-slide-to="{{$i}}"></li>
+            @endif
             @if(!empty($ultahcu))
                 <?php $i++; ?>
                 <li data-target="#main-slide" data-slide-to="{{$i}}"></li>
@@ -50,14 +55,16 @@
                     </div>
                 </div>
             </div>
-{{--             <div class="item">
-               <div class="">
-                   {{ Html::image('images/natal.jpg', 'Selamat Menunaikan Ibadah Puasa', array(
-                  'class' => 'img-responsive')) }}
-               </div>
-               <div class="slider-content">
-               </div>
-            </div> --}}
+            @if($hariraya != 0)
+                <div class="item">
+                   <div class="">
+                       {{ Html::image('images/natal.jpg', 'Selamat Menunaikan Ibadah Puasa', array(
+                      'class' => 'img-responsive')) }}
+                   </div>
+                   <div class="slider-content">
+                   </div>
+                </div>
+            @endif
             @if(!empty($ultahcu))
                 <div class="item">
                     <div class="black" >
@@ -197,6 +204,7 @@
         </div>
     </div>
     {{--layanan--}}
+
     <div class="hr1 margin-top"></div>
     {{--berita--}}
     <div class="row latest-posts-classic">
@@ -241,6 +249,9 @@
         @endforeach
     </div>
     {{--berita--}}
+    {{-- promo --}}
+    {{-- @include('_components.promo') --}}
+    {{-- promo --}}
     </div>
 </div>
 {{--kegiatan--}}

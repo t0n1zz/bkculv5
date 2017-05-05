@@ -88,9 +88,8 @@
     @yield('map')
 </head>
 <body >
+{{-- @include('_components.analyticstracking') --}}
 <div id="container" class="boxed-page">
-
-
     @include('_layouts.header')
     @yield('content')
 
