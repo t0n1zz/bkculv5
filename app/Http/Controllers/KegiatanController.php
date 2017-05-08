@@ -9,6 +9,7 @@ use Image;
 use Input;
 use Redirect;
 use Validator;
+use Date;
 use App\StafPekerjaan;
 use App\KegiatanTempat;
 use App\KegiatanPrasyarat;
@@ -22,6 +23,8 @@ use App\KegiatanPeserta;
 use \DOMDocument;
 use App\Http\Requests;
 
+use Datatables;
+
 class KegiatanController extends Controller{
 
     protected $kelaspath = 'kegiatan';
@@ -30,12 +33,81 @@ class KegiatanController extends Controller{
     public function index()
     {
         try{
-            $datas = Kegiatan::withTrashed()->with('tempat','sasaranhub.sasaran','prasyarat.kegiatan','total_peserta')->get();
+            // $datas = Kegiatan::withTrashed()->with('tempat','sasaranhub.sasaran','prasyarat.kegiatan','total_peserta')->get();
             // dd($datas[52]->sasaranhub);
-            return view('admins.'.$this->kelaspath.'.index', compact('datas'));
+            // return view('admins.'.$this->kelaspath.'.index', compact('datas'));
+            return view('admins.'.$this->kelaspath.'.index');
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
         }
+    }
+
+    public function data_kegiatan()
+    {
+        $data = Kegiatan::with('tempat','sasaranhub.sasaran','prasyarat.kegiatan','total_peserta');
+        $datatable = Datatables::of($data)
+        ->editColumn('kota', function($data){
+            return $data->tempat ? $data->tempat->kota : $data->kota;
+        })
+        ->editColumn('tempat', function($data){
+            return $data->tempat ? $data->tempat->name : '';
+        })
+        ->editColumn('tanggal', function($data){
+            return $data->tanggal ? with(new Date($data->tanggal))->format('d F Y') : '';
+        })
+        ->editColumn('tanggal2', function($data){
+            return $data->tanggal2 ? with(new Date($data->tanggal2))->format('d F Y') : '';
+        })
+        ->editColumn('status', function($data){
+            if($data->status == 1){
+                $status = '<a class="btn btn-default btn-sm nopointer"><i class="fa fa-pause"></i> <span class="hidden-xs">MENUNGGU</span></a>';
+            }elseif($data->status == 2){
+                $status = '<a class="btn btn-warning btn-sm nopointer"><i class="fa fa-circle-o"></i> <span class="hidden-xs">PENDAFTARAN TERBUKA</span></a>';
+            }elseif($data->status == 3){
+                $status = '<a class="btn btn-warning btn-sm disabled"><i class="fa fa-ban"></i> <span class="hidden-xs">PENDAFTARAN TERTUTUP</span></a>';
+            }elseif($data->status == 4){
+                $status = '<a class="btn btn-primary btn-sm disabled"><i class="fa fa-dot-circle-o"></i> <span class="hidden-xs">BERJALAN</span></a>';
+            }elseif($data->status == 5){
+                $status = '<a class="btn btn-primary btn-sm nopointer"><i class="fa fa-times"></i> <span class="hidden-xs">TERLAKSANA</span></a>';
+            }elseif($data->status == 6){
+                $status = '<a class="btn btn-danger btn-sm nopointer"><i class="fa fa-times"></i> <span class="hidden-xs">BATAL</span></a>';
+            }else{
+                $status = "-";
+            }
+            return $status;
+        })
+        ->editColumn('sasaranhub', function($data){
+            $sasaran = '';
+            if(!empty($data->sasaranhub)){
+                foreach ($data->sasaranhub as $sr) {
+                    $sasaran .= '<a class="btn btn-info btn-xs nopointer marginbottom" >' . $sr->sasaran->name . '</a> ';
+                }
+            }
+            return $sasaran;
+        })
+        ->editColumn('prasyarat', function($data){
+            $prasyarat = '';
+            if(!empty($data->prasyarat)){
+                foreach ($data->prasyarat as $pr) {
+                    $prasyarat .= '<a class="btn btn-info btn-xs nopointer marginbottom">' . $pr->kegiatan->kode . ' - ' . $pr->kegiatan->name . '</a> ';
+                }
+            }
+            return $prasyarat;
+        })
+        ->addColumn('durasi',function($data){
+            $mulai = new \Carbon\Carbon($data->tanggal);
+            $startTimeStamp = strtotime($mulai->subDays(1));
+            $endTimeStamp = strtotime($data->tanggal2);
+            $timeDiff = abs($endTimeStamp - $startTimeStamp);
+            $numberDays = $timeDiff/86400;
+            $numberDays = intval($numberDays);
+
+            return $numberDays;
+        })
+        ->rawColumns(['sasaranhub', 'prasyarat','status'])->make(true);
+
+
+        return $datatable;   
     }
 
     public function index_public()

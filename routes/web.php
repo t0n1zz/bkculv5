@@ -537,6 +537,11 @@ Route::group(['prefix' => 'admins','middleware' => 'auth'], function(){
         'as'            => 'admins.kegiatan.destroy_panitia',
         'uses'          => 'KegiatanController@destroy_panitia'
     ));
+    Route::get('kegiatan/data_kegiatan',array(
+        'as' => 'admins.kegiatan.data_kegiatan',
+        'uses' => 'KegiatanController@data_kegiatan'
+    ));
+
 //  tempat
     Route::get('tempat', [
         'as'           => 'admins.tempat.index',           

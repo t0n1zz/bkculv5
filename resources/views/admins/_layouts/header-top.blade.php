@@ -21,7 +21,7 @@
 <header class="main-header">
     <nav class="navbar navbar-static-top"> 
         <div class="navbar-header">
-          @if(url()->previous() != url()->current())
+          @if(url()->previous() != url()->current() && url()->previous() != url('admins/login'))
             <a href="{{ url()->previous() }}" title="kembali ke halaman sebelumnya" class="navbar-brand"><i class="fa fa-arrow-circle-left"></i></a>
           @endif
           <a href="{{ route('admins') }}" class="navbar-brand" title="Sistem Informasi Manajemen Organisasi"><b>SIMO</b></a>

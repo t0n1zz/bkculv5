@@ -52,117 +52,23 @@ $cu = Auth::user()->getCU();
                 <table class="table table-hover" id="dataTables-example" cellspacing="0" width="100%">
                     <thead class="bg-light-blue-active color-palette">
                     <tr>
-                        <th hidden></th>
-                        <th hidden></th>
-                        <th data-priority="1" class="warptext">Nama </th>
+                        <th hidden>id</th>
+                        <th hidden>status</th>
+                        <th data-priority="1">Nama </th>
                         <th>Kota</th>
-                        <th class="warptext">Tempat</th>
+                        <th>Tempat</th>
                         <th class="sort" data-priority="4">Mulai</th>
                         <th data-priority="3">Selesai</th>
-                        <th class="warptext">Sasaran</th>
+                        <th>Durasi</th>
                         <th data-priority="2">Status</th>
-                        <th class="none warptext">Prasyarat</th>
-                        <th class="none">Durasi</th>
+                        <th class="none">Sasaran</th>
+                        <th class="none">Prasyarat</th>
                         <th class="none">Min</th>
                         <th class="none">Maks</th>
                         <th class="none">Terdaftar</th>
-                        <th>&nbsp;</th>
+                        <th></th>
                     </tr>
                     </thead>
-                    <tbody>
-                    @foreach($datas as $data)
-                        <?php 
-                            $date = new Date($data->tanggal);
-                            $date2 = new Date($data->tanggal2);  
-
-                            $mulai = new \Carbon\Carbon($data->tanggal);
-                            $startTimeStamp = strtotime($mulai->subDays(1));
-                            $endTimeStamp = strtotime($data->tanggal2);
-                            $timeDiff = abs($endTimeStamp - $startTimeStamp);
-                            $numberDays = $timeDiff/86400;
-                            $numberDays = intval($numberDays);
-
-                            $sasaran = '';
-                            $prasyarat = '';
-
-                            if(!empty($data->sasaranhub)){
-                                foreach ($data->sasaranhub as $sr) {
-                                    $sasaran .= '<a class="btn btn-info btn-xs nopointer marginbottom" >' . $sr->sasaran->name . '</a> ';
-                                }
-                            }
-
-                            if(!empty($data->prasyarat)){
-                                foreach ($data->prasyarat as $pr) {
-                                    $prasyarat .= '<a class="btn btn-info btn-xs nopointer marginbottom">' . $pr->kegiatan->kode . ' - ' . $pr->kegiatan->name . '</a> ';
-                                }
-                            }
-
-                            if($data->status == 1){
-                                $status = '<a class="btn btn-default btn-sm nopointer"><i class="fa fa-pause"></i> <span class="hidden-xs">MENUNGGU</span></a>';
-                            }elseif($data->status == 2){
-                                $status = '<a class="btn btn-warning btn-sm nopointer"><i class="fa fa-circle-o"></i> <span class="hidden-xs">PENDAFTARAN TERBUKA</span></a>';
-                            }elseif($data->status == 3){
-                                $status = '<a class="btn btn-warning btn-sm disabled"><i class="fa fa-ban"></i> <span class="hidden-xs">PENDAFTARAN TERTUTUP</span></a>';
-                            }elseif($data->status == 4){
-                                $status = '<a class="btn btn-danger btn-sm nopointer"><i class="fa fa-times"></i> <span class="hidden-xs">BATAL</span></a>';
-                            }else{
-                                $status = "-";
-                            }
-                        ?>
-                        <tr>
-                            <td hidden>{{ $data->id }}</td>
-                            @if($data->tanggal2 <= $now)
-                                <td hidden>5</td>
-                            @elseif($data->tanggal >= $now && $data->tanggal <= $now)
-                                <td hidden>6</td>
-                            @else
-                                <td hidden>{{ $data->status }}</td>
-                            @endif
-                            
-                            <td class="warptext">{{ $data->name }}</td>
-                            @if(!empty($data->tempat))
-                                <td>{{ $data->tempat->kota }}</td>
-                                <td class="warptext">{{ $data->tempat->name }}</td>
-                            @elseif(!empty($data->kota))
-                                <td>{{ $data->kota }}</td>
-                                <td>-</td>
-                            @else
-                                <td>-</td>
-                                <td>-</td>
-                            @endif
-
-                            @if(!empty($data->tanggal))
-                                <td data-order="{{ $data->tanggal }}"><i hidden="true">{{ $data->tanggal }}</i> {{  $date->format('d F Y') }}</td>
-                            @else
-                                <td>-</td>
-                            @endif
-
-                            @if(!empty($data->tanggal2))
-                                <td data-order="{{ $data->tanggal2 }}"><i hidden="true">{{ $data->tanggal2 }}</i> {{ $date2->format('d F Y') }}</td>
-                            @else
-                                <td>-</td>
-                            @endif
-
-                            <td class="warptext">{!! $sasaran !!}</td>
-
-                            
-                            @if($data->tanggal >= $now && $data->tanggal2 <= $now)) 
-                                <td data-order="5"><a href="#" class="btn btn-success btn-sm nopointer">SEDANG BERLANGSUNG</a></td>
-                            @elseif($data->tanggal2 < $now)
-                                <td data-order="6"><a href="#" class="btn btn-info btn-sm nopointer"><i class="fa fa-check"></i> <span class="hidden-xs">TERLAKSANA</span></a></td>    
-                            @else
-                                <td data-order="{{ $data->status }}">{!! $status !!}</td>
-                            @endif
-
-                            <td class="warptext">{!! $prasyarat !!}</td>
-                            <td>{{ $numberDays }} Hari</td>
-                            <td>{{ $data->min }} Orang</td>
-                            <td>{{ $data->max }} Orang</td>
-                            <td>{{ $data->total_peserta->count() }} Orang</td>
-                            <td></td>
-                        </tr>
-                    @endforeach
-                    </tbody>
                 </table>
             </div>
         </div>
@@ -236,7 +142,17 @@ $cu = Auth::user()->getCU();
                             </td>
                             <td style="border-bottom: 1px solid #f4f4f4">
                                 <div class="checkbox">
-                                    <label><input type="radio" name="radiostatus" value="4" id="checkbatal" /> BATAL</label>
+                                    <label><input type="radio" name="radiostatus" value="4" id="checkjalan" /> BERJALAN</label>
+                                </div>
+                            </td>
+                            <td style="border-bottom: 1px solid #f4f4f4">
+                                <div class="checkbox">
+                                    <label><input type="radio" name="radiostatus" value="5" id="checkterlaksana" /> TERLAKSANA</label>
+                                </div>
+                            </td>
+                            <td style="border-bottom: 1px solid #f4f4f4">
+                                <div class="checkbox">
+                                    <label><input type="radio" name="radiostatus" value="6" id="checkbatal" /> BATAL</label>
                                 </div>
                             </td>
                         </tr>
@@ -257,9 +173,81 @@ $cu = Auth::user()->getCU();
     @include('admins._components.datatable_JS')
     <script type="text/javascript" src="{{ URL::asset('plugins/dataTables/extension/Responsive/js/dataTables.responsive.min.js') }}"></script>
     <script type="text/javascript" src="{{ URL::asset('plugins/dataTables/extension/Responsive/js/responsive.bootstrap.min.js') }}"></script>
-    <script type="text/javascript" src="{{ URL::asset('admin/datatable_responsive.js') }}"></script>
-    <script>
-        new $.fn.dataTable.Buttons(table,{
+    {{-- <script type="text/javascript" src="{{ URL::asset('admin/datatable_responsive.js') }}"></script> --}}
+    <script>  
+    var table = $('#dataTables-example').DataTable({
+        dom: '<"top"B>t<"bottom"p>',
+        processing: true,
+        serverSide: true,
+        ajax: '{!! route('admins.kegiatan.data_kegiatan') !!}',
+        select: {
+            style:    'os',
+            selector: 'td:not(:last-child)'
+        },
+        responsive:{
+            details:{
+                type: 'column',
+                target: -1
+            }
+        },
+        columns: [
+            { data: 'id', name: 'kegiatan.id', visible : false, searchable : false },
+            { data: 'status', name: 'kegiatan.status',visible : false, searchable : false  },
+            { data: 'name', name: 'kegiatan.name', className: 'warptext'},
+            { data: 'kota', name: 'kegiatan.kota'},
+            { data: 'tempat', name: 'kegiatan.tempat',className: 'warptext'},
+            { data: 'tanggal', name: 'kegiatan.tanggal'},
+            { data: 'tanggal2', name: 'kegiatan.tanggal2' },
+            { data: 'durasi', name: 'durasi', render: function(data){
+                return data ? data + ' hari' : '-';
+            }},
+            
+            { data: 'status', name: 'kegiatan.status'},
+            { data: 'sasaranhub', name: 'kegiatan.sasaranhub' },
+            { data: 'prasyarat', name: 'kegiatan.prasyarat', render:function(data){
+                return data ? data : '-';
+            } },
+            
+            { data: 'min', name: 'kegiatan.min' },
+            { data: 'max', name: 'kegiatan.maks' },
+            { data: 'max', name: 'kegiatan.terdaftar'},
+            { data: null, orderable: 'false', searchable: 'false', className:'control', defaultContent: ''}
+        ],
+        buttons: [
+            {
+                extend:'colvis',
+                columns: ':gt(1)',
+                text: '<i class="fa fa-table"></i>'
+            },
+            {
+                extend:'colvisGroup',
+                text: 'Semua',
+                hide: [0,1],
+                show: ':hidden'
+            }
+        ],
+        language: {
+            buttons : {},
+            select:{
+                rows:{
+                    _: "",
+                    0: "",
+                    1: ""
+                }
+            },
+            "sProcessing":   "Sedang proses...",
+            "sLengthMenu":   "Tampilan _MENU_ entri",
+            "sZeroRecords":  "Tidak ditemukan data yang sesuai",
+            "sInfo":         "Tampilan _START_ sampai _END_ dari _TOTAL_ entri",
+            "sInfoEmpty":    "Tampilan 0 hingga 0 dari 0 entri",
+            "sInfoFiltered": "(disaring dari _MAX_ entri keseluruhan)",
+            "sInfoPostFix":  "",
+        }
+    });
+    $('#searchtext').keyup(function(){
+        table.search($(this).val()).draw() ;
+    });
+    new $.fn.dataTable.Buttons(table,{
             buttons: [
                 @permission('create.'.$kelas.'_create')
                 {
@@ -327,6 +315,10 @@ $cu = Auth::user()->getCU();
                             }else if(status == "3"){
                                 $('#checkbuka').prop('checked',true);
                             }else if(status == "4"){
+                                $('#checkjalan').prop('checked',true);
+                            }else if(status == "5"){
+                                $('#checkterlaksana').prop('checked',true);
+                            }else if(status == "6"){
                                 $('#checkbatal').prop('checked',true);
                             }
                         }else{

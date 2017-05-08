@@ -17,13 +17,17 @@ if($data->tanggal2 <= $now && empty($data->deleted_at)){
 }
 
 if($data->status == 1){
-    $status = '<a class="btn btn-default btn-sm nopointer btn-block">MENUNGGU</a>';
+    $status = '<a class="btn btn-default btn-sm nopointer btn-block"><i class="fa fa-pause"></i> <span class="hidden-xs">MENUNGGU</span></a>';
 }elseif($data->status == 2){
-    $status = '<a class="btn btn-warning btn-sm nopointer btn-block">PENDAFTARAN TERBUKA</a>';
+    $status = '<a class="btn btn-warning btn-sm nopointer btn-block"><i class="fa fa-circle-o"></i> <span class="hidden-xs">PENDAFTARAN TERBUKA</span></a>';
 }elseif($data->status == 3){
-    $status = '<a class="btn btn-warning btn-sm disabled btn-block">PENDAFTARAN TERTUTUP</a>';
+    $status = '<a class="btn btn-warning btn-sm disabled btn-block"><i class="fa fa-ban"></i> <span class="hidden-xs">PENDAFTARAN TERTUTUP</span></a>';
 }elseif($data->status == 4){
-    $status = '<a class="btn btn-danger btn-sm nopointer btn-block"><i class="fa fa-times"></i> BATAL</a>';
+    $status = '<a class="btn btn-primary btn-sm disabled btn-block"><i class="fa fa-dot-circle-o"></i> <span class="hidden-xs">BERJALAN</span></a>';
+}elseif($data->status == 5){
+    $status = '<a class="btn btn-primary btn-sm nopointer btn-block"><i class="fa fa-times"></i> <span class="hidden-xs">TERLAKSANA</span></a>';
+}elseif($data->status == 6){
+    $status = '<a class="btn btn-danger btn-sm nopointer btn-block"><i class="fa fa-times"></i> <span class="hidden-xs">BATAL</span></a>';
 }else{
     $status = "-";
 }
@@ -32,7 +36,7 @@ if($data->status == 1){
 
 @section('css')
 @include('admins._components.datatable_CSS')
-<link rel="stylesheet" type="text/css" href="{{asset('plugins/dataTables/extension/Responsive/css/responsive.bootstrap.min.css')}}" >
+<link rel="stylesheet" type="text/css" href="{{asset('plugins/dataTables/extension/Responsive/css/responsive.bootstrap.css')}}" >
 @stop
 
 @section('content')
