@@ -172,7 +172,6 @@ return [
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         Kodeine\Acl\AclServiceProvider::class,
-         Yajra\Datatables\DatatablesServiceProvider::class,
         //
 
         /*

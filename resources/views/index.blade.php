@@ -250,7 +250,7 @@ $hariraya = "0";
     </div>
     {{--berita--}}
     {{-- promo --}}
-    {{-- @include('_components.promo') --}}
+    @include('_components.promo')
     {{-- promo --}}
     </div>
 </div>
