@@ -34,6 +34,10 @@ Route::get('attribution',array('as' => 'attribution','uses' => 'PublicController
 Route::get('sitemap',array('as' => 'sitemap','uses' => 'PublicController@sitemap'));
 Route::post('saran',array('as' => 'saran', 'uses' => 'PublicController@saran'));
 
+Route::get('promo',array('as' => 'promo', function()
+{
+    return view('promo');
+}));
 
 Route::group(array('prefix' => 'admins'), function(){
     Route::get('login',array('as' => 'admins.login','uses' => 'AuthController@getLogin'));

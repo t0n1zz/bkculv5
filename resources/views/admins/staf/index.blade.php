@@ -6,7 +6,6 @@ if(!empty($datas->first()->cuprimer))
 else
     $title2 ="Puskopdit BKCU Kalimantan";
 
-
 $kelas = "staf";
 $imagepath = "images_staf/";
 $id_old="";
@@ -81,11 +80,11 @@ $id_old="";
                     <table class="table table-hover table-condensed " id="dataTables-example"  width="100%">
                         <thead class="bg-light-blue-active color-palette">
                             <tr>
-                                <th hidden></th>
+                                <th hidden>Id</th>
                                 <th data-sortable="false">Foto</th>
                                 <th class="sort" data-priority="1">Nama </th>
-                                <th>NIM</th>
-                                <th>No.Identitas</th>
+                                <th class="none">NIM</th>
+                                <th class="none">No.Identitas</th>
                                 <th>Jabatan</th>
                                 <th>Pendidikan Tertinggi</th>
                                 <th>Agama</th>
@@ -95,7 +94,7 @@ $id_old="";
                                 <th class="none">Tmpt. Lahir</th>
                                 <th class="none">Alamat</th>
                                 <th class="none">Kontak</th>
-                                <th>&nbsp;</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>

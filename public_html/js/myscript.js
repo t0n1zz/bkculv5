@@ -188,6 +188,8 @@ $('.modalphotos img').on('click',function(){
 	})
 })
 
+
+
 //modal pemilihan
 $(document).ready(function(){
     $("#modaltext1").on('show.bs.modal', function(event){

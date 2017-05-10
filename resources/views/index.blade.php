@@ -1,12 +1,12 @@
 <?php 
 $page = ""; 
-$hariraya = "0";
+$hariraya = "1";
 ?>
 @extends('_layouts.layout')
 
 @section('content')
 {{--slider--}}
-<section id="home" class="hidden-xs">
+<section id="home">
     {{--carousel--}}
     <div id="main-slide" class="carousel slide" data-ride="carousel">
         {{--indicators--}}
@@ -58,7 +58,7 @@ $hariraya = "0";
             @if($hariraya != 0)
                 <div class="item">
                    <div class="">
-                       {{ Html::image('images/natal.jpg', 'Selamat Menunaikan Ibadah Puasa', array(
+                       {{ Html::image('images/slider-waisak.jpg', 'Selamat Hari Raya Waisak 2561', array(
                       'class' => 'img-responsive')) }}
                    </div>
                    <div class="slider-content">
@@ -409,9 +409,44 @@ $random = mt_rand($min,$max); ?>
 </div>
 {{--cu--}}
 
+{{-- modal promo --}}
+<div class="modal fade" id="modalpromo" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-light-blue-active color-palette">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Modul Pendidikan dan Pelatihan </h4>
+            </div>
+            <div class="modal-body">
+                  <img class="img-responsive" src="" id="modulgambar"/>
+                  <h3 id="modulnama"></h2>
+                  <hr/>
+                  <p id="moduldeskripsi"></p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default btn-block" data-dismiss="modal"><i class="fa fa-times fa-fw"></i> Tutup</button>
+            </div>
+        </div>
+    </div>    
+</div>
 
 @stop
 
 @section('javascript')
 {{ Html::script('js/jquery.parallax.js') }}
+<script>
+    $('.modalpromo').on('click',function(){
+        $('#modalpromo').modal({
+            show: true,
+        })
+
+        gambar = $(this).data('gambar');
+        deskripsi = $(this).data('deskripsi');
+        nama = $(this).data('nama');
+
+        $('#modulgambar').attr('src',gambar);
+        $('#modulnama').text(nama);
+        $('#moduldeskripsi').text(deskripsi);
+    });
+</script>
 @stop
