@@ -21,7 +21,7 @@ class TpCU extends Model {
     }
 
     public function cuprimer(){
-        return $this->belongsTo('App\Cuprimer','cu','no_ba');
+        return $this->belongsTo('App\Cuprimer','cu','no_ba')->withTrashed();
     }
 
 }

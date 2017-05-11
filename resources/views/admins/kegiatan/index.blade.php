@@ -106,7 +106,7 @@ $cu = Auth::user()->getCU();
                             }elseif($data->status == 4){
                                 $status = '<a class="btn btn-primary btn-sm disabled"><i class="fa fa-dot-circle-o"></i> <span class="hidden-xs">BERJALAN</span></a>';
                             }elseif($data->status == 5){
-                                $status = '<a class="btn btn-primary btn-sm nopointer"><i class="fa fa-times"></i> <span class="hidden-xs">TERLAKSANA</span></a>';
+                                $status = '<a class="btn btn-primary btn-sm nopointer"><i class="fa fa-check"></i> <span class="hidden-xs">TERLAKSANA</span></a>';
                             }elseif($data->status == 6){
                                 $status = '<a class="btn btn-danger btn-sm nopointer"><i class="fa fa-times"></i> <span class="hidden-xs">BATAL</span></a>';
                             }else{

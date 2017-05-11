@@ -1015,6 +1015,7 @@ if($data->status == 1){
                     }
                 }
             },
+            @if($cu == '0')
             {
                 text: '<i class="fa fa-check-square"></i> Status',
                 action: function () {
@@ -1046,6 +1047,7 @@ if($data->status == 1){
                     }
                 }
             },
+            @endif
         @endif
         {
             text: '<i class="fa fa-database"></i> Profil',

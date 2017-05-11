@@ -10,11 +10,19 @@
       <li class="treeview" id="scrollspy-components">
         <a href="javascript:void(0)"><i class="fa fa-circle-o"></i> Dashboard</a>
         <ul class="nav treeview-menu">
-          <li><a href="#dashboard-header">1. Header</a></li>
-          <li><a href="#dashboard-panelnavigasi">2. Panel Navigasi</a></li>
-          <li><a href="#dashboard-aksescepat">3. Akses Cepat</a></li>
-          <li><a href="#dashboard-panelperkembangan">4. Panel Perkembangan</a></li>
-          <li><a href="#dashboard-footer">5. Footer</a></li>
+          <li><a href="#dashboard-all">Dashboard</a></li>
+          <li><a href="#dashboard-header">Header Dashboard</a></li>
+          <li><a href="#dashboard-aksescepat">Akses Cepat Dashboard</a></li>
+          <li><a href="#dashboard-panelperkembangan">Panel Perkembangan Dashboard</a></li>
+          <li><a href="#dashboard-panelkegiatan">Panel Kegiatan Dashboard</a></li>
+          <li><a href="#dashboard-footer">Footer Dashboard</a></li>
+        </ul>
+      </li>
+      <li class="treeview" id="scrollspy-components">
+        <a href="javascript:void(0)"><i class="fa fa-circle-o"></i> CU</a>
+        <ul class="nav treeview-menu">
+          <li><a href="#cu-akses"> Akses CU</a></li>
+          <li><a href="#cu-pengenalan"> Pengenalan CU</a></li>
         </ul>
       </li>
       <li class="treeview" id="scrollspy-components">
@@ -26,6 +34,14 @@
           <li><a href="#laporancu-ubah"> Ubah Laporan CU</a></li>
           <li><a href="#laporancu-hapus"> Hapus Laporan CU</a></li>
           <li><a href="#laporancu-detail"> Detail Laporan CU</a></li>
+        </ul>
+      </li>
+      <li class="treeview" id="scrollspy-components">
+        <a href="javascript:void(0)"><i class="fa fa-circle-o"></i> Diklat</a>
+        <ul class="nav treeview-menu">
+          <li><a href="#diklat-akses"> Akses Diklat</a></li>
+          <li><a href="#diklat-pengenalan"> Pengenalan Diklat</a></li>
+          <li><a href="#diklat-daftar"> Daftar Diklat</a></li>
         </ul>
       </li>
     </ul>

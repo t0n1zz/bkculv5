@@ -39,7 +39,7 @@
 
 <body class="skin-blue fixed" data-spy="scroll" data-target="#scrollspy">
 <div class="wrapper">
-    <?php $versi = "2.1.2"; ?>
+    <?php $versi = "2.1.3"; ?>
     <!-- Header -->
     <header class="main-header">
         <!-- Logo -->

@@ -13,6 +13,8 @@ if(!empty($data->do)){
     }else{
         $do ='-';
     }
+}else{
+    $do = '-';
 }
 
 $dateultah = new Date($data->ultah);
