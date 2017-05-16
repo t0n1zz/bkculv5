@@ -11,24 +11,24 @@
 <div id="laporancu-pengenalan">
     <h2 class="page-header"><a href="#laporancu-pengenalan">Pengenalan <small>Laporan CU</small></a></h2>
     <p class="lead">
-        Halaman <b>Laporan CU</b> merupakan pusat dari pengelolaan laporan keuangan CU. Secara umum pengguna dapat melakukan: 
+        Halaman <b>Laporan CU</b> merupakan pusat dari pengelolaan laporan keuangan CU. Secara umum anda dapat melakukan: 
         <ul>
             <li>Melihat tabel perkembangan, pertumbuhan,dan P.E.A.R.L.S.</li>
             <li>Melihat grafik perkembangan, pertumbuhan,dan P.E.A.R.L.S.</li>
             <li>Menambah / memasukkan, mengubah, menghapus dan mencetak dalam bentuk file excel data laporan yang nanti akan diolah dan ditampilkan pada tabel dan grafik perkembangan, pertumbuhan,dan P.E.A.R.L.S. </li>
-            <li>Melakukan komunikasi antara pengguna aplikasi di CU dengan pihak Puskopdit BKCU Kalimantan mengenai laporan pada periode tertentu.</li>
+            <li>Melakukan komunikasi antara anda aplikasi di CU dengan pihak Puskopdit BKCU Kalimantan mengenai laporan pada periode tertentu.</li>
         </ul>
     </p>
     <div class="callout callout-info lead">
         <h4>Kesepakatan</h4>
         <p>
-            Dengan mengunakan halaman <b>Laporan CU</b>, maka pengguna menyetujui dan mengetahui bahwa pihak Puskopdit BKCU Kalimantan dapat mengakses, serta melakukan perbaikan terhadap data yang dimasukkan dengan pemberitahuan/persetujuan dari pihak CU yang memiliki data.
+            Dengan mengunakan halaman <b>Laporan CU</b>, maka anda menyetujui dan mengetahui bahwa pihak Puskopdit BKCU Kalimantan dapat mengakses, serta melakukan perbaikan terhadap data yang dimasukkan dengan pemberitahuan/persetujuan dari pihak CU yang memiliki data.
         </p>
     </div>
     <div class="callout callout-warning lead"> 
         <h4>Perhatian!</h4>
         <p>
-            Laporan yang ditampilkan <b>HANYA</b> laporan milik CU pengguna aplikasi saja. Jadi pengguna tidak dapat melihat laporan milik CU lain kecuali punya miliknya, begitu juga dengan penambahan, pengubahan, penghapusan laporan serta diskusi kepada pihak Puskopdit BKCU Kalimantan. Segala kegiatan yang terjadi hanya mempengaruhi data laporan pada CU pengguna.
+            Laporan yang ditampilkan <b>HANYA</b> laporan milik CU anda aplikasi saja. Jadi anda tidak dapat melihat laporan milik CU lain kecuali punya miliknya, begitu juga dengan penambahan, pengubahan, penghapusan laporan serta diskusi kepada pihak Puskopdit BKCU Kalimantan. Segala kegiatan yang terjadi hanya mempengaruhi data laporan pada CU anda.
         </p>
     </div>
     {{ Html::image($imagepath.'laporancu-all.png','laporan cu', array('class' => 'img-responsive ','style'=>'margin-bottom:10px;')) }}
@@ -66,6 +66,7 @@
                 </ul>
             </li>
             <li><b>Pencarian</b>: fungsinya untuk melakukan pencarian pada tabel yang ditampilkan dibawah. Silahkan ketikkan saja kata kunci pencarian maka tabel akan memunculkan baris yang dicari sesuai dengan kata kunci yang diketikkan <b>jika ada</b>.</li>
+            {{ Html::image($imagepath.'pencarian.png','pencarian', array('class' => 'img-responsive ','style'=>'margin-bottom:10px;')) }}
             <li><b>Toolbar</b>: merupakan bagian yang menyediakan tombol-tombol yang berfungsi untuk berinteraksi dengan tabel yang ditampilkan.
                 <ul>
                     <li><b>Column Display Bar</b>: tombol yang berfungsi untuk mengatur kolom apa saja yang ingin ditampilkan pada tabel.</li>
@@ -94,21 +95,21 @@
     <h2 class="page-header"><a href="#laporancu">Tambah <small>Laporan CU</small></a></h2>
     <p class="lead">
         <ol>
-            <li>Untuk menambah data pada laporan CU, pengguna pertama harus berada di halaman Laporan CU <a href="#laporancu-akses">(caranya dapat dilihat di bagian Akses Laporan CU)</a>,</li>
+            <li>Untuk menambah data pada laporan CU, anda pertama harus berada di halaman Laporan CU <a href="#laporancu-akses">(caranya dapat dilihat di bagian Akses Laporan CU)</a>,</li>
 
             <li>Kemudian menekan tombol <button class="btn btn-default btn-sm" disabled><i class="fa fa-plus"></i> <u>T</u>ambah</button>  pada bagian <b>Data Bar</b>,</li>
 
             {{ Html::image($imagepath.'laporancu-tambah.png','tambah laporan cu', array('class' => 'img-responsive ','style'=>'margin-bottom:10px;')) }}
 
-            <li>Selanjutnya pengguna akan diarahkan ke halaman <b>Tambah Laporan CU</b>,</li>
+            <li>Selanjutnya anda akan diarahkan ke halaman <b>Tambah Laporan CU</b>,</li>
             {{ Html::image($imagepath.'laporancu-form.png','tambah laporan cu', array('class' => 'img-responsive ','style'=>'margin-bottom:10px;')) }}
 
-            <li>Pengguna tinggal mengisikan sesuai dengan tempat yang telah disediakan berupa <b>textbox</b>.</li>
+            <li>anda tinggal mengisikan sesuai dengan tempat yang telah disediakan berupa <b>textbox</b>.</li>
             {{ Html::image($imagepath.'laporancu-textbox.png','tambah laporan cu', array('class' => 'img-responsive ','style'=>'margin-bottom:10px;')) }}
 
             <li>Untuk beberapa bagian akan terdapat logo <code><i class="fa fa-question-circle-o"></i></code> maka itu berarti ada keterangan lebih lanjut, untuk membacanya tinggal arahkan cursor ke logo <code><i class="fa fa-question-circle-o"></i></code>,</li>
 
-            <li>Apabila sudah terisi dengan benar maka pengguna tinggal menekan tombol <button class="btn btn-primary btn-sm" disabled><i class="fa fa-save"></i> <u>S</u>impan</button>, 
+            <li>Apabila sudah terisi dengan benar maka anda tinggal menekan tombol <button class="btn btn-primary btn-sm" disabled><i class="fa fa-save"></i> <u>S</u>impan</button>, 
             apabila berencana untuk menambah <b>data laporan baru</b> setelah menyimpan maka bisa <b>lebih cepat</b> jika menekan tombol <button class="btn btn-primary btn-sm" disabled><i class="fa fa-save"></i><i class="fa fa-plus"></i> Si<u>m</u>pan dan buat baru</button>. J
             ika ingin batal menambah data silakan menekan tombol <button class="btn btn-danger btn-sm" disabled><i class="fa fa-times"></i> <u>B</u>atal</button></li>
         </ol>
@@ -119,34 +120,31 @@
     <h2 class="page-header"><a href="#laporancu-pengenalan">Ubah <small>Laporan CU</small></a></h2>
     <p class="lead">
         <ol>
-            <li>Untuk mengubah data pada laporan CU, pengguna pertama harus berada di halaman Laporan CU <a href="#laporancu-akses">(caranya dapat dilihat di bagian Akses Laporan CU)</a>,</li>
+            <li>Untuk mengubah data pada laporan CU, anda pertama harus berada di halaman Laporan CU <a href="#laporancu-akses">(caranya dapat dilihat di bagian Akses Laporan CU)</a>,</li>
 
-            <li>Kemudian pilih/klik laporan mana yang ingin diubah di tabel (mis: memilih laporan periode September 2016),</li>
-             {{ Html::image($imagepath.'laporancu-tabelpilih.png','pilih tabel laporan', array('class' => 'img-responsive ','style'=>'margin-bottom:10px;')) }}
+            <li>Kemudian pilih/klik laporan mana yang ingin diubah di tabel,</li>
 
             <li>Kemudian menekan tombol <button class="btn btn-default btn-sm" disabled><i class="fa fa-pencil"></i> <u>U</u>bah</button> pada bagian <b>Data Bar</b>,</li>
             {{ Html::image($imagepath.'laporancu-ubah.png','ubah laporan cu', array('class' => 'img-responsive ','style'=>'margin-bottom:10px;')) }}
 
-            <li>Selanjutnya pengguna akan diarahkan ke halaman <b>Ubah Laporan CU</b> yang tampilannya sama dengan halaman <b>Tambah Laporan CU</b> cuma bedanya sekarang masing-masing <b>textbox</b> telah terisi angka sesuai dengan data yang tadi dipilih di tabel,</li>
-            <li>Pengguna tinggal mengubah bagian mana yang ingin diubah dan selanjutnya menekan tombol <button class="btn btn-primary btn-sm" disabled><i class="fa fa-save"></i> <u>S</u>impan</button> untuk menyimpan perubahan data, atau jika tidak ingin mengubah data tinggal menekan tombol <button class="btn btn-danger btn-sm" disabled><i class="fa fa-times"></i> <u>B</u>atal</button></li>
+            <li>Selanjutnya anda akan diarahkan ke halaman <b>Ubah Laporan CU</b> yang tampilannya sama dengan halaman <b>Tambah Laporan CU</b> cuma bedanya sekarang masing-masing <b>textbox</b> telah terisi angka sesuai dengan data yang tadi dipilih di tabel,</li>
+            <li>anda tinggal mengubah bagian mana yang ingin diubah dan selanjutnya menekan tombol <button class="btn btn-primary btn-sm" disabled><i class="fa fa-save"></i> <u>S</u>impan</button> untuk menyimpan perubahan data, atau jika tidak ingin mengubah data tinggal menekan tombol <button class="btn btn-danger btn-sm" disabled><i class="fa fa-times"></i> <u>B</u>atal</button></li>
         </ol>
     </p>
 </div>    
 {{-- hapus laporan --}}
 <div id="laporancu-hapus">
-    <h2 class="page-header"><a href="#laporancu-pengenalan">Hapus <small>Laporan CU</small></a></h2>
+    <h2 class="page-header"><a href="#laporancu-hapus">Hapus <small>Laporan CU</small></a></h2>
     <p class="lead">
         <ol>
-            <li>Untuk menghapus data pada laporan CU, pengguna pertama harus berada di halaman Laporan CU <a href="#laporancu-akses">(caranya dapat dilihat di bagian Akses Laporan CU)</a>,</li>
+            <li>Untuk menghapus data pada laporan CU, anda pertama harus berada di halaman Laporan CU <a href="#laporancu-akses">(caranya dapat dilihat di bagian Akses Laporan CU)</a>,</li>
 
-            <li>Kemudian pilih/klik laporan mana yang ingin diubah di tabel (mis: memilih laporan periode September 2016),</li>
-             {{ Html::image($imagepath.'laporancu-tabelpilih.png','pilih tabel laporan', array('class' => 'img-responsive ','style'=>'margin-bottom:10px;')) }}
+            <li>Kemudian pilih/klik laporan mana yang ingin diubah di tabel,</li>
 
             <li>Kemudian menekan tombol <button class="btn btn-default btn-sm" disabled><i class="fa fa-trash"></i> <u>H</u>apus</button> pada bagian <b>Data Bar</b>,</li>
             {{ Html::image($imagepath.'laporancu-hapus.png','hapus laporan cu', array('class' => 'img-responsive ','style'=>'margin-bottom:10px;')) }}
 
             <li>Maka akan muncul kotak dialog yang merupakan konfirmasi apakah benar laporan ini akan dihapus</li>
-            {{ Html::image($imagepath.'laporancu-hapusmodal.png','hapus laporan cu modal', array('class' => 'img-responsive ','style'=>'margin-bottom:10px;')) }}
 
             <li>Tekan tombol <button class="btn btn-danger btn-sm" disabled><i class="fa fa-trash"></i> Hapus</button> untuk menghapus laporan, laporan yang terhapus akan otomatis masuk ke <b>Tabel Laporan Terhapus</b>.Apabila tidak ingin menghapus maka menekan tombol <button class="btn btn-default btn-sm" disabled><i class="fa fa-times"></i> Batal</button>
             </li>
@@ -158,14 +156,13 @@
     <h2 class="page-header"><a href="#laporancu-pengenalan">Detail <small>Laporan CU</small></a></h2>
      <p class="lead">
         <ol>
-            <li>Untuk menghapus data pada laporan CU, pengguna pertama harus berada di halaman Laporan CU <a href="#laporancu-akses">(caranya dapat dilihat di bagian Akses Laporan CU)</a>,</li>
+            <li>Untuk mengakses halaman detail laporan CU, anda pertama harus berada di halaman Laporan CU <a href="#laporancu-akses">(caranya dapat dilihat di bagian Akses Laporan CU)</a>,</li>
 
-            <li>Kemudian pilih/klik laporan mana yang ingin diubah di tabel (mis: memilih laporan periode September 2016),</li>
-             {{ Html::image($imagepath.'laporancutabelpilih.png','pilih tabel laporan', array('class' => 'img-responsive ','style'=>'margin-bottom:10px;')) }}
+            <li>Kemudian pilih/klik laporan mana yang ingin diubah di tabel,</li>
 
             <li>Kemudian menekan tombol <button class="btn btn-default btn-sm" disabled><i class="fa fa-database"></i> Detail</button> pada bagian <b>Data Bar</b>,</li>
-            {{ Html::image($imagepath.'laporancutomboldetail.png','detail laporan cu', array('class' => 'img-responsive ','style'=>'margin-bottom:10px;')) }}
-            <li>Selanjutnya pengguna akan diarahkan ke halaman <b>Detail Laporan CU</b></li>
+            {{ Html::image($imagepath.'laporancu-tomboldetail.png','detail laporan cu', array('class' => 'img-responsive ','style'=>'margin-bottom:10px;')) }}
+            <li>Selanjutnya anda akan diarahkan ke halaman <b>Detail Laporan CU</b></li>
         </ol>
     </p>
     {{ Html::image($imagepath.'laporancu-detail.png','laporan cu detail', array('class' => 'img-responsive ','style'=>'margin-bottom:10px;')) }}
@@ -174,7 +171,7 @@
         <ol>
             <li><b>Periode Laporan</b> yang berfungsi untuk memilih periode laporan mana yang ingin di tampilkan.</li>
             <li><b><a href="#dashboard-panelperkembangan">Panel perkembangan</a></b> sesuai bulan/periode yang dipilih. </li>
-            <li><b>Panel diskusi</b> yang berguna untuk komunikasi antar pengguna dengan pihak Puskopdit BKCU Kalimantan berkaitan dengan laporan pada periode tersebut.<br/>
+            <li><b>Panel diskusi</b> yang berguna untuk komunikasi antar anda dengan pihak Puskopdit BKCU Kalimantan berkaitan dengan laporan pada periode tersebut.<br/>
             Untuk memulai diskusi maka:
             <ol>
                 <li>Ketikkan pesan yang ingin disampaikan/didiskusikan,</li>

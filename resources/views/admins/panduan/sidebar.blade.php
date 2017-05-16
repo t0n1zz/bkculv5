@@ -26,6 +26,16 @@
         </ul>
       </li>
       <li class="treeview" id="scrollspy-components">
+        <a href="javascript:void(0)"><i class="fa fa-circle-o"></i> TP CU</a>
+        <ul class="nav treeview-menu">
+          <li><a href="#tpcu-akses"> Akses TP CU</a></li>
+          <li><a href="#tpcu-pengenalan"> Pengenalan TP CU</a></li>
+          <li><a href="#tpcu-tambah"> Tambah TP CU</a></li>
+          <li><a href="#tpcu-ubah"> Ubah TP CU</a></li>
+          <li><a href="#tpcu-hapus"> Hapus TP CU</a></li>
+        </ul>
+      </li>
+      <li class="treeview" id="scrollspy-components">
         <a href="javascript:void(0)"><i class="fa fa-circle-o"></i> Laporan CU</a>
         <ul class="nav treeview-menu">
           <li><a href="#laporancu-akses"> Akses Laporan CU</a></li>
@@ -34,6 +44,17 @@
           <li><a href="#laporancu-ubah"> Ubah Laporan CU</a></li>
           <li><a href="#laporancu-hapus"> Hapus Laporan CU</a></li>
           <li><a href="#laporancu-detail"> Detail Laporan CU</a></li>
+        </ul>
+      </li>
+      <li class="treeview" id="scrollspy-components">
+        <a href="javascript:void(0)"><i class="fa fa-circle-o"></i> Staf</a>
+        <ul class="nav treeview-menu">
+          <li><a href="#staf-akses"> Akses Staf</a></li>
+          <li><a href="#staf-pengenalan"> Pengenalan Staf</a></li>
+          <li><a href="#staf-tambah"> Tambah Staf</a></li>
+          <li><a href="#staf-ubah"> Ubah Staf</a></li>
+          <li><a href="#staf-hapus"> Hapus Staf</a></li>
+          <li><a href="#staf-detail"> Detail Staf</a></li>
         </ul>
       </li>
       <li class="treeview" id="scrollspy-components">

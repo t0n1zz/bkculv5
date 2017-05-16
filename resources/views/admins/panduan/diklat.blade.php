@@ -18,6 +18,7 @@
         Inilah halaman <b>Diklat</b>. Pada halaman ini terdapat beberapa komponen yaitu:
         <ol>
             <li><b>Pencarian</b>: fungsinya untuk melakukan pencarian pada tabel yang ditampilkan dibawah. Silahkan ketikkan saja kata kunci pencarian maka tabel akan memunculkan baris yang dicari sesuai dengan kata kunci yang diketikkan <b>jika ada</b>.</li>
+            {{ Html::image($imagepath.'pencarian.png','pencarian', array('class' => 'img-responsive ','style'=>'margin-bottom:10px;')) }}
              <li><b>Periode Diklat</b>: fungsinya untuk mengatur diklat pada periode berapa yang akan ditampilkan.</li>
             <li><b>Toolbar</b>: merupakan bagian yang menyediakan tombol-tombol yang berfungsi untuk berinteraksi dengan tabel yang ditampilkan.
                 <ul>

@@ -12,7 +12,7 @@ $imagepath = "images_panduan/";
 <section id="pendahuluan">
     <h2 class="page-header"><a href="#pendahuluan">Pendahuluan</a></h2>
     <p class="lead">
-        Selamat datang di panduan pengoperasian aplikasi berbasis website <b>{{ $appname }}</b>. Panduan ini dibuat untuk memberikan pemahaman kepada pengguna, cara pengoperasian aplikasi <b>{{ $appname }}</b>.
+        Selamat datang di panduan pengoperasian aplikasi berbasis website <b>{{ $appname }}</b>. Panduan ini dibuat untuk memberikan pemahaman kepada anda, cara pengoperasian aplikasi <b>{{ $appname }}</b>.
     </p>
     <div class="callout callout-warning lead">
         <h4>Perhatian!</h4>
@@ -30,11 +30,11 @@ $imagepath = "images_panduan/";
 <section id="login">
     <h2 class="page-header"><a href="#login">Login</a></h2>
     <p class="lead">
-        Aplikasi <b>{{ $appname }}</b> merupakan aplikasi berbasis website, maka untuk mengaksesnya adalah melalui <b>browser</b> pada komputer/gadget pengguna. Kemudian di <b>address bar</b> ketikkan <code><a href="http://puskopditbkcukalimantan.org/admins" target="_blank">www.puskopditbkcukalimantan.org/admins</a></code> kemudian pengguna akan sampai ke halaman login. 
+        Aplikasi <b>{{ $appname }}</b> merupakan aplikasi berbasis website, maka untuk mengaksesnya adalah melalui <b>browser</b> pada komputer/gadget anda. Kemudian di <b>address bar</b> ketikkan <code><a href="http://puskopditbkcukalimantan.org/admins" target="_blank">www.puskopditbkcukalimantan.org/admins</a></code> kemudian anda akan sampai ke halaman login. 
     </p>
     {{ Html::image($imagepath.'login.png','Login', array('class' => 'img-responsive ','style'=>'margin-bottom:10px;')) }}
     <p class="lead">
-        Pada halaman <b>login</b> pengguna mesti mengisi <b>username</b> dan <b>password</b> sesuai dengan yang telah diberikan dari <b>Puskopdit BKCU Kalimantan</b> kemudian menekan tombol <button class="btn btn-primary btn-float disabled"><i class="fa fa-sign-in"></i> Login</button> untuk masuk kedalam aplikasi {{ $appname }}.
+        Pada halaman <b>login</b> anda mesti mengisi <b>username</b> dan <b>password</b> sesuai dengan yang telah diberikan dari <b>Puskopdit BKCU Kalimantan</b> kemudian menekan tombol <button class="btn btn-primary btn-float disabled"><i class="fa fa-sign-in"></i> Login</button> untuk masuk kedalam aplikasi {{ $appname }}.
     </p>
 </section>
 <section id="dashboard">
@@ -43,8 +43,14 @@ $imagepath = "images_panduan/";
 <section id="cu">
     @include('admins.panduan.cu')
 </section>
+<section id="tpcu">
+    @include('admins.panduan.tpcu')
+</section>
 <section id="laporancu">
     @include('admins.panduan.laporancu')
+</section>
+<section id="staf">
+    @include('admins.panduan.staf')
 </section>
 <section id="diklat">
     @include('admins.panduan.diklat')

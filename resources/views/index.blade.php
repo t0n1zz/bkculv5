@@ -1,6 +1,6 @@
 <?php 
 $page = ""; 
-$hariraya = "1";
+$hariraya = "0";
 ?>
 @extends('_layouts.layout')
 
