@@ -52,8 +52,8 @@ $cu = Auth::user()->getCU();
                 <table class="table table-hover" id="dataTables-example" cellspacing="0" width="100%">
                     <thead class="bg-light-blue-active color-palette">
                     <tr>
-                        <th hidden>id</th>
-                        <th hidden>status</th>
+                        <th hidden></th>
+                        <th hidden></th>
                         <th data-priority="1" class="warptext">Nama </th>
                         <th>Kota</th>
                         <th class="warptext">Tempat</th>
@@ -324,9 +324,9 @@ $cu = Auth::user()->getCU();
                             if(status == "1"){
                                 $('#checkmenunggu').prop('checked',true);
                             }else if(status == "2"){
-                                $('#checktutup').prop('checked',true);
-                            }else if(status == "3"){
                                 $('#checkbuka').prop('checked',true);
+                            }else if(status == "3"){
+                                $('#checktutp').prop('checked',true);
                             }else if(status == "4"){
                                 $('#checkjalan').prop('checked',true);
                             }else if(status == "5"){

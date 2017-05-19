@@ -22,6 +22,11 @@ $batal_route = route('admins.'.$kelas.'.index');
 <!-- Main content -->
 <section class="content">
 {{ Form::open(array('route' => array('admins.'.$kelas.'.store'), 'files' => true, 'data-toggle' => 'validator','role' => 'form')) }}
+@if(!empty($tipe_kegiatan))
+    <input type="text" name="tipe_kegiatan" value="{{$tipe_kegiatan}}" hidden>
+    <input type="text" name="id_kegiatan" value="{{$id_kegiatan}}" hidden>
+    <?php $no_simpan2 = 1; ?>
+@endif
 @include('admins._layouts.alert')
 {{-- identitias --}}
 <div class="box box-solid">
@@ -76,7 +81,8 @@ $batal_route = route('admins.'.$kelas.'.index');
     <div class="box-body">
         @include('admins.staf._components.organisasi')
     </div>
-</div>        
+</div> 
+{{-- kegiatan --}} 
 @include('admins._components.tombol')
 {{ Form::close() }}
 </section>

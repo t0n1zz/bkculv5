@@ -16,6 +16,7 @@ use App\StafBidangHub;
 use App\StafPekerjaan;
 use App\StafPendidikan;
 use App\StafOrganisasi;
+use App\Kegiatan;
 use App\KegiatanPeserta;
 use App\KegiatanPanitia;
 use App\Cuprimer;
@@ -75,6 +76,29 @@ class StafController extends Controller{
             $culists = Cuprimer::orderBy('name','asc')->get();
             $lembagas = Lembaga::orderBy('name','asc')->get();
             return view('admins.'.$this->kelaspath.'.create',compact('culists','lembagas'));
+        }catch (Exception $e){
+            return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
+        }
+    }
+
+    public function create_kegiatan($tipe_kegiatan,$id_kegiatan)
+    {
+        try{
+            $culists = Cuprimer::orderBy('name','asc')->get();
+            $lembagas = Lembaga::orderBy('name','asc')->get();
+            return view('admins.'.$this->kelaspath.'.create',compact('culists','lembagas','tipe_kegiatan','id_kegiatan'));
+        }catch (Exception $e){
+            return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
+        }
+    }
+
+    public function create_kegiatan_daftar($tipe_kegiatan,$id_kegiatan,$id_staf)
+    {
+        try{
+            $data = Kegiatan::find($id_kegiatan);
+            $data_staf = Staf::with('pekerjaan.cuprimer')->where('id',$id_staf)->first();
+
+            return view('admins.kegiatan.daftar', compact('data','data_staf','tipe_kegiatan'));
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
         }
@@ -153,14 +177,21 @@ class StafController extends Controller{
             $kelasdata2->nim = $nim;
             $kelasdata2->save();
 
-            if(Input::Get('simpan2')){
-                return Redirect::route('admins.'.$this->kelaspath.'.create')->with('sucessmessage', 'Staff <b><i>' .$name. '</i></b> Telah berhasil ditambah.');
+            $tipe_kegiatan = Input::get('tipe_kegiatan');
+            $id_kegiatan = Input::get('id_kegiatan');
+            if(!empty($tipe_kegiatan)){
+                //jika tambah staf di pendaftaran kegiatan
+                return redirect()->route('admins.staf.create_kegiatan_daftar',array($tipe_kegiatan,$id_kegiatan,$savedata->id));
             }else{
-                if($cu == '0'){
-                    return Redirect::route('admins.'.$this->kelaspath.'.index')->with('sucessmessage', 'Staff <b><i>' .$name. '</i></b> Telah berhasil ditambah.');
-                }else{ 
-                    return Redirect::route('admins.'.$this->kelaspath.'.index_cu',array($cu))->with('sucessmessage', 'Staff <b><i>' .$name. '</i></b> Telah berhasil ditambah.'); 
-                }  
+                if(Input::Get('simpan2')){
+                    return Redirect::route('admins.'.$this->kelaspath.'.create')->with('sucessmessage', 'Staff <b><i>' .$name. '</i></b> Telah berhasil ditambah.');
+                }else{
+                    if($cu == '0'){
+                        return Redirect::route('admins.'.$this->kelaspath.'.index')->with('sucessmessage', 'Staff <b><i>' .$name. '</i></b> Telah berhasil ditambah.');
+                    }else{ 
+                        return Redirect::route('admins.'.$this->kelaspath.'.index_cu',array($cu))->with('sucessmessage', 'Staff <b><i>' .$name. '</i></b> Telah berhasil ditambah.'); 
+                    }  
+                }
             }
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
@@ -365,7 +396,6 @@ class StafController extends Controller{
 
         $no_tipe = 0;
         if($tipepekerjaan == "1"){//cu
-            $kelasriwayat->id_bidang = Input::get('selectbidangcu');
             $kelasriwayat->tingkat = Input::get('selecttingkatcu');
             $kelasriwayat->id_tempat = Input::get('selectcu');
             $lembaga = Input::get('selectcu');
@@ -375,7 +405,6 @@ class StafController extends Controller{
             else
                 $no_tipe = 2;
         }elseif($tipepekerjaan == "2"){//lembaga lain
-            $kelasriwayat->id_bidang = null;
             $kelasriwayat->tingkat = Input::get('selecttingkatlembaga');
             $selectlembaga = Input::get('selectlembaga');
             if($selectlembaga == "tambah"){// tambah lembaga
@@ -389,8 +418,7 @@ class StafController extends Controller{
                 $no_tipe = 3;
             else
                 $no_tipe = 4; 
-        }elseif($tipepekerjaan == "3"){
-            $kelasriwayat->id_bidang = Input::get('selectbidangcu');
+        }elseif($tipepekerjaan == "3"){//bkcu
             $kelasriwayat->tingkat = Input::get('selecttingkatcu');
             $kelasriwayat->id_tempat = 1;
             $lembaga = 1;

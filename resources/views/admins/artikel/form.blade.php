@@ -223,7 +223,7 @@ $file_max = intval($file_max);
                 ['para',['style']],
                 ['style', ['addclass','bold', 'italic', 'underline', 'hr']],
                 ['font', ['strikethrough', 'superscript', 'subscript','clear']],
-                ['fontsize', ['fontsize']],
+                ['fontsize', ['fontname','fontsize']],
                 ['color', ['color']],
                 ['para', ['ul', 'ol']],
                 ['paragraph',['paragraph']],

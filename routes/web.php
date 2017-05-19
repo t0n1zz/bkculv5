@@ -303,6 +303,16 @@ Route::group(['prefix' => 'admins','middleware' => 'auth'], function(){
         'uses'         => 'StafController@create',
         'middleware'   => ['auth', 'acl'],
         'can'          => 'create.staf_create']);
+    Route::get('staf/create_kegiatan/{tipe_kegiatan}/{id_kegiatan}', [
+        'as'           => 'admins.staf.create_kegiatan',
+        'uses'         => 'StafController@create_kegiatan',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'create.staf_create']);
+    Route::get('staf/create_kegiatan_daftar/{tipe_kegiatan}/{id_kegiatan}/{id_staf}', [
+        'as'           => 'admins.staf.create_kegiatan_daftar',
+        'uses'         => 'StafController@create_kegiatan_daftar',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'create.staf_create']);
     Route::get('staf/{staf}/edit', [
         'as'           => 'admins.staf.edit',
         'uses'         => 'StafController@edit',
@@ -545,7 +555,6 @@ Route::group(['prefix' => 'admins','middleware' => 'auth'], function(){
         'as' => 'admins.kegiatan.data_kegiatan',
         'uses' => 'KegiatanController@data_kegiatan'
     ));
-
 //  tempat
     Route::get('tempat', [
         'as'           => 'admins.tempat.index',           
@@ -639,6 +648,28 @@ Route::group(['prefix' => 'admins','middleware' => 'auth'], function(){
     {
         return View::make('admins.about.version');
     }));
+// pemilihan  
+    Route::get('pemilihan', [
+        'as'           => 'admins.pemilihan.index',
+        'uses'         => 'PemilihanController@index']);
+    Route::post('pemilihan', [
+        'as'           => 'admins.pemilihan.store',
+        'uses'         => 'PemilihanController@store']);
+    Route::put('pemilihan/{pemilihan}', [
+        'as'           => 'admins.pemilihan.update',
+        'uses'         => 'PemilihanController@update']);
+    Route::delete('pemilihan/{pemilihan}', [
+        'as'           => 'admins.pemilihan.destroy',
+        'uses'         => 'PemilihanController@destroy']);
+    Route::post('pemilihan/store_calon', [
+        'as'           => 'admins.pemilihan.store_calon',
+        'uses'         => 'PemilihanController@store_calon']);
+    Route::post('pemilihan/store_pilih', [
+        'as'           => 'admins.pemilihan.store_pilih',
+        'uses'         => 'PemilihanController@store_pilih']);
+    Route::get('pemilihan/calon/{id}',[
+        'as'           => 'admins.pemilihan.calon',
+        'uses'         => 'PemilihanController@calon']);
 });
 
     

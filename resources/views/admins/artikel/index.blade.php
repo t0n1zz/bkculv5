@@ -71,7 +71,7 @@ $imagepath = 'images_artikel/';
                         <tr>
                             <td hidden>{{ $data->id }}</td>
                             <td hidden>{{ $data->status }}</td>
-                            <td hidden>{{ $data->pilih }}</td>
+                            <td hidden>{{ $data->pilihan }}</td>
                             @if(!empty($data->gambar) && is_file($imagepath.$data->gambar."n.jpg"))
                                 <td style="white-space: nowrap"><div class="modalphotos" >
                                         {{ Html::image(($imagepath.$data->gambar).'n.jpg',asset(($imagepath.$data->gambar)."jpg"),
@@ -337,7 +337,7 @@ $imagepath = 'images_artikel/';
                             return item[0];
                         });
                         var judul = $.map(table.rows({ selected:true }).data(),function(item){
-                            return item[1];
+                            return item[4];
                         });
                         if(id != ""){
                             $('#modalhapus').modal({show:true});

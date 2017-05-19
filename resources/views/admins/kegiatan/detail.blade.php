@@ -431,7 +431,9 @@ if($data->status == 1){
                     <div class="nav-tabs-custom">
                         <ul class="nav nav-tabs">
                             <li class="active"><a href="#tab_pilih_panitia" data-toggle="tab" id='nav_pilih_panitia' data-target="#tab_pilih_panitia">Pilih</a></li>
-                            <li><a href="#tab_baru_panitia" data-toggle="tab" id='nav_baru_panitia' data-target="#tab_baru_panitia">Buat Baru</a></li>
+                            @permission('create.staf_create')
+                                <li><a href="#tab_baru_panitia" data-toggle="tab" id='nav_baru_panitia' data-target="#tab_baru_panitia">Buat Baru</a></li>
+                            @endpermission
                         </ul>
                         <div class="tab-content">
                             <div class="tab-pane fade in active" id="tab_pilih_panitia">
@@ -466,9 +468,11 @@ if($data->status == 1){
                                     </div>
                                  </div>   
                             </div>
-                            <div class="tab-pane" id="tab_baru_panitia">
-                                <a href="{{ route('admins.staf.create')}}" class="btn btn-default btn-block"><i class="fa fa-plus"></i> Tambah Staf</a>
-                            </div>
+                            @permission('create.staf_create')
+                                <div class="tab-pane" id="tab_baru_panitia">
+                                    <a href="{{ route('admins.staf.create_kegiatan',array('1',$data->id))}}" class="btn btn-default btn-block"><i class="fa fa-plus"></i> Tambah Panitia Baru</a>
+                                </div>
+                            @endpermission
                         </div>
                     </div>
                 </div>
@@ -605,7 +609,7 @@ if($data->status == 1){
                              </div>   
                         </div>
                         <div class="tab-pane fade" id="tab_baru_peserta">
-                            <a href="{{ route('admins.staf.create')}}" class="btn btn-default btn-block"><i class="fa fa-plus"></i> Tambah Staf</a>
+                            <a href="{{ route('admins.staf.create_kegiatan',array('2',$data->id))}}" class="btn btn-default btn-block"><i class="fa fa-plus"></i> Tambah Peserta Baru</a>
                         </div>
                     </div>
                 </div>    
@@ -869,7 +873,7 @@ if($data->status == 1){
         pagingType: 'full_numbers',
         stateSave : false ,
         select: {
-            style:    'multiple',
+            style:    'single',
             selector: 'td:not(:last-child)'
         },
         responsive:{
@@ -960,7 +964,7 @@ if($data->status == 1){
         paging : false,
         stateSave : false ,
         select: {
-            style:    'os',
+            style:    'single',
             selector: 'td:not(:last-child)'
         },
         responsive:{

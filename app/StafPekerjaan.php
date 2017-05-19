@@ -8,7 +8,7 @@ class StafPekerjaan extends Model {
     protected $table = 'staf_pekerjaan';
 
     protected $fillable = [
-        'id_staf','id_bidang','id_tempat','tipe','name','tingkat','mulai','selesai','sekarang'
+        'id_staf','id_tempat','tipe','name','tingkat','mulai','selesai','sekarang'
     ];
 
     public function getNameAttribute($value){

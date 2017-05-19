@@ -171,7 +171,7 @@
             @endpermission
             @permission('view.admin_view')
               <li class="{{ Request::is('admins/admin') ? 'active' : '' }}"><a href="#" data-toggle="modal" data-target="#modalcheckpass"><i class="fa fa-user-circle-o fa-fw"></i> Admin <span class="sr-only">(current)</span></a></li>
-            @endpermission  
+            @endpermission
             <li><a href="{{ route('panduan') }}" target="_blank"><i class="fa fa-question-circle-o fa-fw"></i> Panduan</a></li>
           </ul>
         </div>

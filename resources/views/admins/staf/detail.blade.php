@@ -129,7 +129,6 @@ $i = 0;
                                     <th data-priority="1">Jabatan</th>
                                     <th>Tempat</th>
                                     <th>Tingkat</th>
-                                    {{-- <th>Bidang</th> --}}
                                     <th>Tanggal Mulai</th>
                                     <th>Tanggal Selesai</th>
                                     <th>&nbsp;</th>
@@ -137,14 +136,13 @@ $i = 0;
                                 </thead>
                                 <tbody>
                                 @foreach($data->pekerjaan as $pekerjaan)
-                                    <?php $bidangs = App\StafBidangHub::with('bidang')->where('id_pekerjaan',$pekerjaan->id)->get(); ?>
                                     <tr
                                     @if(!empty($pekerjaan->sekarang) && $pekerjaan->sekarang != '0')
                                         {!! 'class="highlight"'  !!}
                                     @endif>
                                         <td hidden>{{ $pekerjaan->id }}</td>
                                         <td hidden>{{ $pekerjaan->tipe }}</td>
-                                        <td hidden>{{ $pekerjaan->tempat }}</td>
+                                        <td hidden>{{ $pekerjaan->id_tempat }}</td>
                                         <td>{{ $pekerjaan->name }}</td>
 
                                         @if($pekerjaan->tipe == 1)
@@ -158,12 +156,6 @@ $i = 0;
                                         @endif
                                    
                                         <td>{{ $pekerjaan->tingkat }}</td>
-                                        
-                                      {{--   <td>
-                                            @foreach($pekerjaan->bidanghub as $b)
-                                                <code>{{ $b->bidang->name }}</code>
-                                            @endforeach
-                                        </td> --}}
 
                                         @if(!empty($pekerjaan->mulai ))
                                             <?php $date = new Date($pekerjaan->mulai); ?>

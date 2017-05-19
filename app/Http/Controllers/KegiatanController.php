@@ -59,7 +59,7 @@ class KegiatanController extends Controller{
                 ->orderBy('cu','asc')->get();
             return view('cu.daftar_kegiatan', compact('data','datas'));
         }catch (Exception $e){
-        return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
+            return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
         }
     }
 
@@ -73,10 +73,17 @@ class KegiatanController extends Controller{
             $datapanitia = KegiatanPanitia::with('staf.pekerjaan_aktif.cuprimer')->where('id_kegiatan','=',$id)->get();
             $datapeserta = KegiatanPeserta::with('staf.pekerjaan_aktif.cuprimer','staf.pekerjaan_aktif.lembaga')->where('id_kegiatan','=',$id)->get();
 
-            if($cu == 0)
-                $datastaf = StafPekerjaan::with('cuprimer','staf.pendidikan_tertinggi')->where('sekarang','1')->orWhere('selesai','>',date('Y-m-d'))->get();
-            else
-                $datastaf = StafPekerjaan::with('cuprimer','staf.pendidikan_tertinggi')->where('id_tempat',$cu)->where('sekarang','1')->orWhere('selesai','>',date('Y-m-d'))->get();
+            // if($cu == 0)
+            //     $datastaf = StafPekerjaan::with('cuprimer','staf.pendidikan_tertinggi')->where('sekarang','1')->orWhere('selesai','>',date('Y-m-d'))->get();
+            // else
+            //     $datastaf = StafPekerjaan::with('cuprimer','staf.pendidikan_tertinggi')->where('id_tempat',$cu)->where('sekarang','1')->orWhere('selesai','>',date('Y-m-d'))->get();
+            if($cu == 0){
+                $datastaf = Staf::with('pekerjaan_aktif.cuprimer','pendidikan_tertinggi')->get();
+            }else{
+                $datastaf = Staf::whereHas('pekerjaan', function($query){
+                    $query->where('id_tempat',$cu);
+                })->with('pekerjaan_aktif.cuprimer','pendidikan_tertinggi')->get();
+            }
 
             return view('admins.'.$this->kelaspath.'.detail',compact('data','datasasaran','datatempat','datapanitia','datapeserta','datastaf','tabname'));
         }catch (Exception $e){
