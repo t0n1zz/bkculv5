@@ -12,7 +12,24 @@ $imagepath = "images_panduan/";
 <section id="pendahuluan">
     <h2 class="page-header"><a href="#pendahuluan">Pendahuluan</a></h2>
     <p class="lead">
-        Selamat datang di panduan pengoperasian aplikasi berbasis website <b>{{ $appname }}</b>. Panduan ini dibuat untuk memberikan pemahaman kepada anda, cara pengoperasian aplikasi <b>{{ $appname }}</b>.
+        Selamat datang di panduan pengoperasian aplikasi berbasis website <b>{{ $appname }}</b>. Panduan ini dibuat untuk memberikan pemahaman kepada anda, cara pengoperasian aplikasi <b>{{ $appname }}</b>. Serta memberikan pemahaman mengenai fungsi dan tujuan di ciptakannya aplikasi <b>{{ $appname }}</b>.
+        <br/><br/>
+        Panduan ini dibuat dengan beberapa fitur yang akan memudahkan anda dalam mengakses informasi, pada bagian sebelah kiri dari web anda akan melihat kolom hitam yang merupakan daftar isi interaktif, dengan menekan judul dari masing-masing bagian anda dapat langsung dibawa ke bagian yang ditekan.
+        <br/><br/>
+        Apabila anda ingin menyimpan panduan ini dalam versi offline atau mencetaknya anda dapat menekan tombol <code><i class="fa fa-print"></i> Print/Cetak</code> yang terletak di pojok kanan atas pada halaman ini.
+    </p>
+    <h3>Perkenalan</h3>
+    <p class="lead">
+        <b>{{ $appname }}</b> merupakan aplikasi berbasis web yang berfungsi untuk mengolah data dari organisasi. Nama <b>{{ $appname }}</b> sendiri diambil dari singkatan Sistem Informasi Manajemen Organisasi yang menjelaskan bahwa aplikasi ini adalah sebuah sistem informasi yang berfungsi untuk mengatur(manajemen) data dari organisasi (gerakan Puskopdit BKCU Kalimantan).
+        <br/><br/>
+        Aplikasi ini menyediakan fitur-fitur yaitu:
+        <ol>
+            <li><b>Pusat kontrol website Puskopdit BKCU Kalimantan</b>: yang mencakup kontrol artikel yang ada di website, pengumuman, saran serta komponen dalam website Puskopdit BKCU Kalimantan.</li>
+            <li><b>Pusat data CU</b>: merupakan pusat data hal-hal yang berkaitan dengan CU seperti data staf CU yang terhubung dengan riwayat mengikuti pelatihan/diklat, profil CU, data TP/KP/Cabang, dan data-data lainnya yang digunakan untuk membuat sebuah portal CU di website Puskopdit BKCU Kalimantan. Portal CU ini sendiri adalah sebuah pusat informasi yang lengkap mengenai CU anggota Puskopdit BKCU Kalimantan di website. Dengan adanya portal CU ini memudahkan masyarakat dan anggota untuk mendapatkan informasi yang lengkap mengenai CU anggota Puskopdit BKCU Kalimantan.</li>
+            <li><b>Pusat data laporan keuangan CU</b>: yang memberikan kemudahan dan kebebasan kepada CU untuk mengisikan laporan keuangan per periode dan akan diolah menjadi kumpulan laporan keuangan lengkap dengan grafik serta perhitungan laporan P.E.A.R.L.S.</li>
+            <li><b>Pusat data Diklat</b>: yang merupakan pusat pengolahan seluruh data diklat dan merupakan tempat dilakukannya pendaftaran peserta diklat secara online/langsung melalui aplikasi. </li>
+        </ol>
+        Dari fitur-fitur diatas maka dapat dilihat bahwa tujuan dari <b>{{ $appname }}</b> adalah untuk menyatukan semua data dalam organisasi kedalam satu tempat yang mudah diakses dan mudah untuk diperbaharui langsung.
     </p>
     <div class="callout callout-warning lead">
         <h4>Perhatian!</h4>

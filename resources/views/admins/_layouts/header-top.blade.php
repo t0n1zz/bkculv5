@@ -123,7 +123,7 @@
                     <li class="{{ Request::is('admins/laporancu') || Request::is('admins/laporancu/index_cu*') || Request::is('admins/laporancu/index_hapus') || Request::is('admins/laporancu/index_bkcu') ? 'active' : '' }}">
                       <a href="{{ $cu == '0' ? route('admins.laporancu.index') : route('admins.laporancu.index_cu',array($cu)) }}"><i class="fa fa-bar-chart fa-fw"></i> Laporan CU</a>
                     </li>
-                  @endpermission   
+                  @endpermission  
                 </ul>
               </li>
             @endpermission
@@ -172,6 +172,9 @@
             @permission('view.admin_view')
               <li class="{{ Request::is('admins/admin') ? 'active' : '' }}"><a href="#" data-toggle="modal" data-target="#modalcheckpass"><i class="fa fa-user-circle-o fa-fw"></i> Admin <span class="sr-only">(current)</span></a></li>
             @endpermission
+            @if($iduser == 1)
+              <li><a href="{{ route('admins.errorlog.index') }}"><i class="fa fa-exclamation-triangle fa-fw"></i> Error Log</a></li>
+            @endif
             <li><a href="{{ route('panduan') }}" target="_blank"><i class="fa fa-question-circle-o fa-fw"></i> Panduan</a></li>
           </ul>
         </div>

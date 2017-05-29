@@ -10,7 +10,7 @@
 | to using a Closure or controller method. Build something great!
 |
 */
-
+Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 Route::get('/',array( 'as' => 'home','uses' => 'PublicController@index'));
 Route::get('pelayanan/{id}',array( 'as' => 'pelayanans','uses' => 'PublicController@solusi'));
 Route::get('pelayanan',array( 'as' => 'pelayanan','uses' => 'PublicController@pelayanan'));
@@ -648,6 +648,16 @@ Route::group(['prefix' => 'admins','middleware' => 'auth'], function(){
     {
         return View::make('admins.about.version');
     }));
+//error log
+    Route::get('errorlog', [
+        'as'           => 'admins.errorlog.index',
+        'uses'         => 'ErrorLogController@index']);
+    Route::post('errorlog/destroy', [
+        'as'           => 'admins.errorlog.destroy',
+        'uses'         => 'ErrorLogController@destroy']);
+    Route::get('errorlog/download', [
+        'as'           => 'admins.errorlog.download',
+        'uses'         => 'ErrorLogController@download']);
 // pemilihan  
     Route::get('pemilihan', [
         'as'           => 'admins.pemilihan.index',
@@ -675,24 +685,24 @@ Route::group(['prefix' => 'admins','middleware' => 'auth'], function(){
     
 
 
-Route::get('importexport', function()
-{
-    return view('importExport');
-});
+// Route::get('importexport', function()
+// {
+//     return view('importExport');
+// });
 
-Route::get('importExport', 'ExcelController@importExport');
-Route::get('downloadExcel/{type}', 'ExcelController@downloadExcel');
-Route::post('importExcel', 'ExcelController@importExcel');
-Route::get('/getreq',function (){
-   if(Request::ajax()){
-       return 'get request loaded';
-   }
-});
-Route::post('/register',function (){
-    if(Request::ajax()){
-        return Response::json(Request::all());
-    }
-});
+// Route::get('importExport', 'ExcelController@importExport');
+// Route::get('downloadExcel/{type}', 'ExcelController@downloadExcel');
+// Route::post('importExcel', 'ExcelController@importExcel');
+// Route::get('/getreq',function (){
+//    if(Request::ajax()){
+//        return 'get request loaded';
+//    }
+// });
+// Route::post('/register',function (){
+//     if(Request::ajax()){
+//         return Response::json(Request::all());
+//     }
+// });
 
 
 
@@ -700,18 +710,17 @@ Route::post('/register',function (){
 //echo var_dump($datacu->staf);
 //echo '<pre>';
 
-Route::get('/getrole',function(){
-    $role = App\Models\Role::with('perms')->findOrFail('2');
-});
+// Route::get('/getrole',function(){
+//     $role = App\Models\Role::with('perms')->findOrFail('2');
+// });
 
 Route::get('/addrole',function(){
-
     
-    foreach($users as $user){
-        if($user->can('view.laporancu_view')){
-            Illuminate\Support\Facades\Notification::send($user, new App\Notifications\notifikasi("1","bkcu",'menambahkan laporan periode desember 2016','laporancu'));
-        }
-    }
+    // foreach($users as $user){
+    //     if($user->can('view.laporancu_view')){
+    //         Illuminate\Support\Facades\Notification::send($user, new App\Notifications\notifikasi("1","bkcu",'menambahkan laporan periode desember 2016','laporancu'));
+    //     }
+    // }
 
     // $roleAdmin = new Kodeine\Acl\Models\Eloquent\Role();
     // $roleAdmin->name = 't0n1zz';

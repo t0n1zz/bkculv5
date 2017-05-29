@@ -8,6 +8,7 @@
 <script type="text/javascript" src="{{ URL::asset('plugins/dataTables/extension/Buttons/js/buttons.print.min.js') }}"></script>
 <script type="text/javascript" src="{{ URL::asset('plugins/dataTables/extension/Buttons/js/jszip.min.js') }}"></script>
 <script type="text/javascript" src="{{ URL::asset('plugins/dataTables/extension/Buttons/js/buttons.html5.min.js') }}"></script>
+<script type="text/javascript" src="{{ URL::asset('plugins/dataTables/extension/RowGroup/js/dataTables.rowGroup.min.js') }}"></script>
 <script>
     $(document).ready(function(){
         $('a[data-toggle="tab"]').on( 'shown.bs.tab', function (e) {
