@@ -225,7 +225,7 @@
                                 {{ $notification->data['message'] }}<br/>
 
                                 @if(!empty($notification->data['message2']))
-                                    <div class="well well-sm" style="margin-bottom: 0px;">{{ $notification->data['message2']}}</div>
+                                    <div class="well well-sm" style="margin-bottom: 0px;">{!! str_limit(preg_replace('/(<.*?>)|(&.*?;)/', '...',$notification->data['message2']),100) !!}</div>
                                 @endif
 
                                 <small class="text-muted">{{ $date->format('d F') }} • {{ $date->format('H:i') }}</small>

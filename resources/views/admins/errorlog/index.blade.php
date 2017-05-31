@@ -89,7 +89,7 @@ $title = "Error Log";
 </div>
 <div class="modal fade" id="modalhapuslog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 {{ Form::open(array('route' => array('admins.errorlog.destroy'))) }}
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header bg-red-active color-palette">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -99,7 +99,7 @@ $title = "Error Log";
             <h4>Hapus Log?</h4>
         </div>
         <div class="modal-footer">
-
+            <button type="submit" class="btn btn-danger" id="modalbutton"><i class="fa fa-trash fa-fw"></i> Hapus</button>
             <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Batal</button>
         </div>
       </div><!-- /.modal-content -->

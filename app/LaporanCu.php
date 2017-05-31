@@ -37,6 +37,10 @@ class LaporanCu extends Model {
         return $this->belongsTo('App\Cuprimer','no_ba','no_ba');
     }
 
+    public function diskusi(){
+        return $this->hasMany('App\LaporanCuDiskusi','id_laporan','id')->select('id_laporan');
+    }
+
     public function cuprimer_all(){
         return $this->belongsTo('App\Cuprimer','no_ba','no_ba')->withTrashed();
     }

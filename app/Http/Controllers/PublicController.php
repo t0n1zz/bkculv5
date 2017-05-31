@@ -210,8 +210,8 @@ class PublicController extends Controller{
         return view('attribution');
     }
 
-    public function sitemap($region){
-        echo $region;
+    public function sitemap(){
+        return view('sitemap');
     }
 
     public function download(){

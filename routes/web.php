@@ -10,7 +10,6 @@
 | to using a Closure or controller method. Build something great!
 |
 */
-Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 Route::get('/',array( 'as' => 'home','uses' => 'PublicController@index'));
 Route::get('pelayanan/{id}',array( 'as' => 'pelayanans','uses' => 'PublicController@solusi'));
 Route::get('pelayanan',array( 'as' => 'pelayanan','uses' => 'PublicController@pelayanan'));
@@ -238,6 +237,11 @@ Route::group(['prefix' => 'admins','middleware' => 'auth'], function(){
     Route::post('laporancu/restore', [
         'as'           => 'admins.laporancu.restore',           
         'uses'         => 'LaporanCuController@restore',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'update.laporancu_update']);
+    Route::post('laporancu/update_pearls', [
+        'as'           => 'admins.laporancu.update_pearls',           
+        'uses'         => 'LaporanCuController@update_pearls',
         'middleware'   => ['auth', 'acl'],
         'can'          => 'update.laporancu_update']);
 //laporan cu diskusi

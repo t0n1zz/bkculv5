@@ -29,7 +29,7 @@ class LaporanCuController extends Controller{
     public function index()
     {
         try{
-            $data = LaporanCu::with('cuprimer')->orderBy('periode','DESC')->get();
+            $data = LaporanCu::with('cuprimer','diskusi')->orderBy('periode','DESC')->get();
             $data1 = $data->groupBy('no_ba');
  
             $datas = collect([]);
@@ -226,12 +226,14 @@ class LaporanCuController extends Controller{
                     return Redirect::back();
             }
 
-            $datas = LaporanCu::where('no_ba','=',$id)->orderBy('periode','asc')->get();
+            $datas = LaporanCu::with('diskusi')->where('no_ba','=',$id)->orderBy('periode','asc')->get();
             $datashapus = LaporanCu::onlyTrashed()->where('no_ba','=',$id)->orderBy('periode','asc')->get();
 
             $dataarray = $datas->sortBy('periode')->toArray();
             $datas2 = $datas->toArray();
             $periode = array_column($dataarray,'periode');
+            
+            // dd($datas2);
 
             foreach ($periode as $a){
                 $gperiode[] = date('F Y', strtotime($a));
@@ -552,6 +554,45 @@ class LaporanCuController extends Controller{
                 else
                     return Redirect::route('admins.'.$this->kelaspath.'.index_cu',array($cu))->with('sucessmessage', 'Laporan CU Telah berhasil diubah.');
             }
+        }catch (Exception $e){
+            return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
+        }
+    }
+
+    public function update_pearls()
+    {
+        try{
+            $id = Input::get('id_ubah');
+            $kelas = LaporanCu::findOrFail($id);
+
+            $validator = Validator::make($data = Input::all(), LaporanCu::$rules);
+            if ($validator->fails())
+            {
+                return Redirect::back()->withErrors($validator)->withInput();
+            }
+
+            $date = $kelas->periode;
+
+            if(!empty($date)){
+                $timestamp2 = strtotime(str_replace('/', '-',$date));
+                $tanggal2 = date('Y-m-d',$timestamp2);
+                $periodesave = date('F Y',$timestamp2);
+            }
+            
+            $cu = \Auth::user()->getCU();
+            if($cu != '0'){
+                $cuprimer = Cuprimer::withTrashed()->where('no_ba','=',$cu)->select('name')->first();
+                $this->notifikasi_store('0',$id,$cuprimer->name,$periodesave,'Mengubah');
+            }else{
+                $no_ba = $kelas->no_ba;
+                $this->notifikasi_store($no_ba,$id,'BKCU',$periodesave,'Mengubah'); 
+            }
+
+            $kelas->update($data);
+            if($cu == '0')
+                return Redirect::route('admins.'.$this->kelaspath.'.index_cu',array($no_ba))->with('sucessmessage', 'Laporan CU Telah berhasil diubah.');
+            else
+                return Redirect::route('admins.'.$this->kelaspath.'.index_cu',array($cu))->with('sucessmessage', 'Laporan CU Telah berhasil diubah.');
         }catch (Exception $e){
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
         }

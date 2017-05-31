@@ -17,6 +17,9 @@ foreach ($pilihperiode as $dataperiode){
 @extends('admins._layouts.layout')
 
 @section('content')
+@section('css')
+<link rel="stylesheet" type="text/css" href="{{asset('plugins/summernote/summernote.css')}}" >
+@stop
 <!-- header -->
 <section class="content-header">
     <h1>
@@ -118,8 +121,9 @@ foreach ($pilihperiode as $dataperiode){
                                                 <small class="text-muted pull-right">&nbsp | &nbsp</small>
                                             @endif
                                             <small class="text-muted pull-right"><i class="fa fa-clock-o"></i> {{ $date->format('j F Y, H:i')  }} &nbsp</small>
-                                            {{ $data2->user->name }}
+                                            <span style="font-size: larger;">{{ $data2->user->name }}</span>
                                           </span>
+                                          <br/><br/>
                                           {!! $data2->content !!}
                                         </p>
                                     </div>
@@ -135,11 +139,9 @@ foreach ($pilihperiode as $dataperiode){
                             <input type="text" name="id_laporan" value="{{ $data->id }}" hidden>
                             <input type="text" name="route" value="{{ Request::path() }}" hidden>
                             <input type="text" name="no_ba" value="{{ $data->no_ba }}" hidden>
-                            <div class="input-group">
-                                <input class="form-control" name="content" placeholder="Tuliskan pesan...." required="true" data-minlength="5">
-                                <div class="input-group-btn">
-                                  <button type="submit" class="btn btn-primary"><i class="fa fa-send"></i></button>
-                                </div>
+                            <textarea id="summernote" name="content"></textarea>
+                            <div class="input-group-btn">
+                              <button type="submit" class="btn btn-primary btn-block"><i class="fa fa-send"></i></button>
                           </div>
                         {{ Form::close() }}
                     </div>
@@ -310,7 +312,7 @@ foreach ($pilihperiode as $dataperiode){
 </div>
 <div class="modal fade" id="modalubah" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     {{ Form::open(array('route' => array('admins.'.$kelas2.'.update',$kelas2), 'method' => 'put','data-toggle' => 'validator','role' => 'form')) }}
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header bg-light-blue-active color-palette">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -322,11 +324,7 @@ foreach ($pilihperiode as $dataperiode){
                 <input type="text" name="no_ba" value="{{ $data->no_ba }}" hidden>
                 <div class="form-group">
                     <h4>Mengubah diskusi</h4>
-                    <div class="input-group">
-                        <span class="input-group-addon"><i class="fa fa-font"></i></span>
-                        {{ Form::text('content',null,array('class' => 'form-control','id'=>'modalubah_content',
-                        'placeholder' => 'Silahkan masukkan diskusi','autocomplete'=>'off','required','data-minlength'=>'5'))}}
-                    </div>
+                    <textarea name="content" id="modalubah_content"></textarea>
                 </div>
             </div>
             <div class="modal-footer">
@@ -361,43 +359,100 @@ foreach ($pilihperiode as $dataperiode){
 </div>
 
 @section('js')
-    <script type="text/javascript" src="{{ URL::asset('plugins/slimScroll/jquery.slimscroll.min.js') }}"></script>
-    <script type="text/javascript">
-        @if(!empty($datas2))
-            @if($datas2->count() > 3)
-                $('#chat-box').slimScroll({
-                    height: '50vh'
-                });
-            @endif    
-        @endif
-        $(function(){
-            // bind change event to select
-            $('#dynamic_select2').on('change', function () {
-                var url = $(this).val(); // get selected value
-                if (url) { // require a URL
-                    window.location.href = url; // redirect
-                }
-                return false;
+<script type="text/javascript" src="{{ URL::asset('plugins/summernote/summernote.js') }}"></script>
+<script type="text/javascript" src="{{ URL::asset('plugins/summernote/plugins/summernote-cleaner.js') }}"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#summernote').summernote({
+            minHeight: 300,
+            dialogsFade: true,
+            placeholder: 'Silahkan isi disini...',
+            cleaner:{
+                notTime:2400, // Time to display Notifications.
+                action:'both', // both|button|paste 'button' only cleans via toolbar button, 'paste' only clean when pasting content, both does both options.
+                newline:'<br>', // Summernote's default is to use '<p><br></p>'
+                notStyle:'position:absolute;bottom:0;left:2px', // Position of Notification
+                icon:'<i class="note-icon">Clean Word Format</i>'
+            },
+            toolbar: [
+                ['cleaner',['cleaner']],
+                ['para',['style']],
+                ['style', ['addclass','bold', 'italic', 'underline', 'hr']],
+                ['font', ['strikethrough', 'superscript', 'subscript','clear']],
+                ['fontsize', ['fontname','fontsize']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol']],
+                ['paragraph',['paragraph']],
+                ['table',['table']],
+                ['height', ['height']],
+                ['misc',['fullscreen']],
+                ['misc2',['undo','redo']]
+            ]
+        });
+        $('#modalubah_content').summernote({
+            minHeight: 300,
+            dialogsFade: true,
+            placeholder: 'Silahkan isi disini...',
+            cleaner:{
+                notTime:2400, // Time to display Notifications.
+                action:'both', // both|button|paste 'button' only cleans via toolbar button, 'paste' only clean when pasting content, both does both options.
+                newline:'<br>', // Summernote's default is to use '<p><br></p>'
+                notStyle:'position:absolute;bottom:0;left:2px', // Position of Notification
+                icon:'<i class="note-icon">Clean Word Format</i>'
+            },
+            toolbar: [
+                ['cleaner',['cleaner']],
+                ['para',['style']],
+                ['style', ['addclass','bold', 'italic', 'underline', 'hr']],
+                ['font', ['strikethrough', 'superscript', 'subscript','clear']],
+                ['fontsize', ['fontname','fontsize']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol']],
+                ['paragraph',['paragraph']],
+                ['table',['table']],
+                ['height', ['height']],
+                ['misc',['fullscreen']],
+                ['misc2',['undo','redo']]
+            ]
+        });
+    });    
+</script>
+<script type="text/javascript">
+    @if(!empty($datas2))
+        @if($datas2->count() > 3)
+            $('#chat-box').slimScroll({
+                height: '50vh'
             });
+        @endif    
+    @endif
+    $(function(){
+        // bind change event to select
+        $('#dynamic_select2').on('change', function () {
+            var url = $(this).val(); // get selected value
+            if (url) { // require a URL
+                window.location.href = url; // redirect
+            }
+            return false;
         });
-        // function hapusdiskusi(){
-        //     var id = $(this).data('id');
-        //      $('#modalhapus').modal({show:true});
-        //      $('#modalhapus_judul').text('Hapus Diskusi Laporan CU');
-        //      $('#modalhapus_detail').text('Hapus Diskusi Laporan CU');
-        //      $('#modalhapus_id').attr('value',id);
-        // }
-        $(document).on("click", "#btnmodalhapus", function () {
-             var id = $(this).data('id');
-             $('#modalhapus_id').attr('value',id);
-        });
-        $(document).on("click", "#btnmodalubah", function () {
-             var id = $(this).data('id');
-             var content = $(this).data('content');
-             $('#modalubah_id').attr('value',id);
-             $('#modalubah_content').attr('value',content);
-        });     
-    </script>
+    });
+    // function hapusdiskusi(){
+    //     var id = $(this).data('id');
+    //      $('#modalhapus').modal({show:true});
+    //      $('#modalhapus_judul').text('Hapus Diskusi Laporan CU');
+    //      $('#modalhapus_detail').text('Hapus Diskusi Laporan CU');
+    //      $('#modalhapus_id').attr('value',id);
+    // }
+    $(document).on("click", "#btnmodalhapus", function () {
+         var id = $(this).data('id');
+         $('#modalhapus_id').attr('value',id);
+    });
+    $(document).on("click", "#btnmodalubah", function () {
+         var id = $(this).data('id');
+         var content = $(this).data('content');
+         $('#modalubah_id').attr('value',id);
+         $('#modalubah_content').summernote('code',content);
+    });     
+</script>
 @stop
 
 @stop

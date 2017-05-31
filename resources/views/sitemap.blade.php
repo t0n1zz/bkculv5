@@ -1,5 +1,5 @@
 <?php
-$navberita = KategoriArtikel::whereNotIn('id',array(1,4,8))->get();
+$navberita = App\KategoriArtikel::whereNotIn('id',array(1,4,8))->get();
 ?>
 @extends('_layouts.layout')
 
@@ -57,7 +57,7 @@ $navberita = KategoriArtikel::whereNotIn('id',array(1,4,8))->get();
             </div>
             <div class="col-md-6 col-sm-6">
                 <ul class="no-list-style">
-                    <a href="{{ route('pengurus') }}" class="list-group-item">
+{{--                     <a href="{{ route('pengurus') }}" class="list-group-item">
                         <h4 class="list-group-item-heading">Pengurus</h4>
                         <p class="list-group-item-text">Halaman informasi pengurus Puskopdit BKCU Kalimantan</p>
                     </a>
@@ -68,7 +68,7 @@ $navberita = KategoriArtikel::whereNotIn('id',array(1,4,8))->get();
                     <a href="{{ route('manajemen') }}" class="list-group-item">
                         <h4 class="list-group-item-heading">Pengurus</h4>
                         <p class="list-group-item-text">Halaman informasi manajemen Puskopdit BKCU Kalimantan</p>
-                    </a>
+                    </a> --}}
                     <a href="{{ route('cuprimer') }}" class="list-group-item">
                         <h4 class="list-group-item-heading">Credit Union</h4>
                         <p class="list-group-item-text">Halaman informasi Credit Union dalam jaringan Puskopdit BKCU Kalimantan</p>
