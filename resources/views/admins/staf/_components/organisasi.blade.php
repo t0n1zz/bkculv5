@@ -7,7 +7,7 @@
         <div class="col-sm-6">
             <div class="input-group">
                 <span class="input-group-addon">
-                    <input type="radio" name="radioorganisasi" id="radioorganisasi" onclick="func_organsasiyes()" value="true">
+                    <input type="radio" name="radioorganisasi" id="radioorganisasi" onclick="func_organsasiyes()" value="true" required>
                 </span>
                 {!! Form::text('null','Ya',array('class' => 'form-control', 'id' => 'statustext' ,'disabled' => 'true')) !!}
             </div>
@@ -15,7 +15,7 @@
         <div class="col-sm-6">
             <div class="input-group">
                 <span class="input-group-addon">
-                    <input type="radio" name="radioorganisasi" id="radioorganisasi" onclick="func_organsasino()" value="true">
+                    <input type="radio" name="radioorganisasi" id="radioorganisasi" onclick="func_organsasino()" value="true" required>
                 </span>
                 {!! Form::text('null','Tidak',array('class' => 'form-control', 'id' => 'statustext' ,'disabled' => 'true')) !!}
             </div>

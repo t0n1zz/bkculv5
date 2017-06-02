@@ -22,8 +22,8 @@
             <h4>Status Pernikahan</h4>
             <div class="input-group">
                 <div class="input-group-addon"><i class="fa fa-list"></i></div>
-                <select class="form-control" name="status" onChange="func_selectstatus(value);">
-                    <option selected disabled>Status</option>
+                <select class="form-control" name="status" onChange="func_selectstatus(value);" required> 
+                    <option value="" hidden>Status</option>
                     <option value="Menikah"
                     @if(!empty($data))
                         @if($data->status == "Menikah")
@@ -54,7 +54,7 @@
             <h4>Nama Pasangan</h4>
             <div class="input-group">
                 <span class="input-group-addon"><i class="fa fa-font"></i></span>
-                {{ Form::text('namepasangan',null,array('class' => 'form-control', 'placeholder' => 'Silahkan masukkan nama pasangan','autocomplete'=>'off'))}}
+                {{ Form::text('namepasangan',null,array('class' => 'form-control','id'=>'namepasangan','placeholder' => 'Silahkan masukkan nama pasangan','autocomplete'=>'off'))}}
             </div>
         </div>
     </div>

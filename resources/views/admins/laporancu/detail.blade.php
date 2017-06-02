@@ -83,12 +83,12 @@ foreach ($pilihperiode as $dataperiode){
 
     <div class="nav-tabs-custom">
         <ul class="nav nav-tabs">
-            <li class="active"><a href="#tab_diskusi" data-toggle="tab">Diskusi
+            <li class="active"><a href="#tab_diskusi" data-toggle="tab"><i class="fa fa-comments-o fa-fw"></i> Diskusi
                 @if(!empty($datas2) && count($datas2) > 0 )
                     <small><span class="label label-primary">{{ count($datas2 ) }}</span></small>
                 @endif
             </a></li>
-            <li><a href="#tab_revisi" data-toggle="tab">Revisi
+            <li><a href="#tab_revisi" data-toggle="tab"><i class="fa fa-history fa-fw"></i> Revisi
                 @if(!empty($datahistories) && count($datahistories) > 0 )
                     <small><span class="label label-primary" >{{ count($datahistories ) }}</span></small>
                 @endif
@@ -141,7 +141,7 @@ foreach ($pilihperiode as $dataperiode){
                             <input type="text" name="no_ba" value="{{ $data->no_ba }}" hidden>
                             <textarea id="summernote" name="content"></textarea>
                             <div class="input-group-btn">
-                              <button type="submit" class="btn btn-primary btn-block"><i class="fa fa-send"></i></button>
+                              <button type="submit" class="btn btn-primary btn-block"><i class="fa fa-send"></i> Kirim</button>
                           </div>
                         {{ Form::close() }}
                     </div>
@@ -364,7 +364,7 @@ foreach ($pilihperiode as $dataperiode){
 <script type="text/javascript">
     $(document).ready(function(){
         $('#summernote').summernote({
-            minHeight: 300,
+            minHeight: 150,
             dialogsFade: true,
             placeholder: 'Silahkan isi disini...',
             cleaner:{
@@ -390,7 +390,7 @@ foreach ($pilihperiode as $dataperiode){
             ]
         });
         $('#modalubah_content').summernote({
-            minHeight: 300,
+            minHeight: 150,
             dialogsFade: true,
             placeholder: 'Silahkan isi disini...',
             cleaner:{

@@ -771,6 +771,9 @@ $i = 0;
 
                     $('#masihpekerjaan').hide();
                     $('#groupselesaipekerjaan').show();
+
+                    $('#radiocu').prop("required",true);
+                    $('#radiolembaga').prop("required",true);
                 }
             },
             {
@@ -791,14 +794,11 @@ $i = 0;
                     var tingkat = $.map(tablepekerjaan.rows({ selected: true }).data(),function(item){
                         return item[5];
                     });
-                    var bidang = $.map(tablepekerjaan.rows({ selected: true }).data(),function(item){
-                        return item[6];
-                    });
                     var mulai = $.map(tablepekerjaan.rows({ selected: true }).data(),function(item){
-                        return item[7].display;;
+                        return item[6].display;;
                     });
                     var selesai = $.map(tablepekerjaan.rows({ selected: true }).data(),function(item){
-                        return item[8].display;;
+                        return item[7].display;;
                     });
 
                     if(id != ""){
@@ -862,6 +862,7 @@ $i = 0;
                             $('#groupselesaipekerjaan').show();
                             $('#selesaipekerjaan').val(selesai);
                         }
+
                     }else{
                         $('#modalwarning').modal({show:true});
                     }

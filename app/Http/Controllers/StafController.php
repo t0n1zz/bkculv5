@@ -61,7 +61,12 @@ class StafController extends Controller{
         try{
             $data = Staf::with('pekerjaan_aktif','pekerjaan.cuprimer','pekerjaan.lembaga','pendidikan','organisasi','keluarga','anggotacu','kegiatanpeserta.kegiatan','kegiatanpanitia.kegiatan')->find($id);
 
-            $culists = Cuprimer::select('no_ba','name')->orderBy('name','asc')->get();
+            $cu = Auth::user()->getCU();   
+            if($cu == 0)
+                $culists = Cuprimer::select('no_ba','name')->orderBy('name','asc')->get();
+            else
+                $culists = Cuprimer::where('no_ba',$cu)->select('no_ba','name')->orderBy('name','asc')->get();
+            
             $lembagas = Lembaga::select('id','name')->orderBy('name','asc')->get();
 
             return view('admins.'.$this->kelaspath.'.detail', compact('data','culists','lembagas'));
@@ -73,7 +78,11 @@ class StafController extends Controller{
     public function create()
     {
         try{
-            $culists = Cuprimer::orderBy('name','asc')->get();
+            $cu = Auth::user()->getCU();   
+            if($cu == 0)
+                $culists = Cuprimer::select('no_ba','name')->orderBy('name','asc')->get();
+            else
+                $culists = Cuprimer::where('no_ba',$cu)->select('no_ba','name')->orderBy('name','asc')->get();
             $lembagas = Lembaga::orderBy('name','asc')->get();
             return view('admins.'.$this->kelaspath.'.create',compact('culists','lembagas'));
         }catch (Exception $e){
@@ -129,6 +138,7 @@ class StafController extends Controller{
             $nameanaks = Input::get('nameanak');
             $namecus = Input::get('namecu');
             $nocus = Input::get('nocu');
+            $selectpendidikan = Input::get('selectpendidikan');
 
             // anggota cu
             $i = 0;
@@ -161,7 +171,9 @@ class StafController extends Controller{
             }
             // riwayat
             $riwayatpekerjaan = $this->input_pekerjaan($savedata->id,null);
-            $this->input_pendidikan($savedata->id,null);
+
+            if(!empty($selectpendidikan))
+                $this->input_pendidikan($savedata->id,null);
 
             if(!empty($namaorganisasi))
                 $this->input_organisasi($savedata->id,null);

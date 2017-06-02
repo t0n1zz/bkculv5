@@ -13,12 +13,12 @@ $kelas = "pengumuman";
 <!-- header -->
 <section class="content-header">
     <h1>
-        <i class="fa fa-comments"></i> {{ $title }}
+        <i class="fa fa-bullhorn"></i> {{ $title }}
         <small>Mengelola Data Pengumuman</small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="{{ URL::to('admins') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active"><i class="fa fa-comments"></i> {{ $title }}</li>
+        <li class="active"><i class="fa fa-bullhorn"></i> {{ $title }}</li>
     </ol>
 </section>
 <!-- /header -->

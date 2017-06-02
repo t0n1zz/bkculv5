@@ -3121,6 +3121,7 @@ $cu = Auth::user()->getCU();
 
       $('#id_ubah').val(id);
       $('#ubahkonten').remove();
+      $('#hrubah').hide();
       htmlubah = '';
       htmlubah += '<div id="ubahkonten" class="row">';
       for(i=1; i< 10; i++){
@@ -3151,6 +3152,7 @@ $cu = Auth::user()->getCU();
     function func_batal(){
         $('#ubahkonten').remove();
         $('#areaubah').hide();
+        $('#hrubah').hide();
         $('#btn_simpan').hide();
         $('#btn_batal').hide();
 

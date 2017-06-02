@@ -80,8 +80,8 @@
                     <h4>Gender</h4>
                     <div class="input-group">
                         <div class="input-group-addon"><i class="fa fa-list"></i></div>
-                        <select class="form-control" name="kelamin">
-                            <option selected disabled>Jenis kelamin</option>
+                        <select class="form-control" name="kelamin" required="">
+                            <option value="" hidden>Jenis kelamin</option>
                             <option value="Pria"
                             @if(!empty($data))
                                 @if($data->kelamin == "Pria")
@@ -105,8 +105,8 @@
                     <h4>Agama</h4>
                     <div class="input-group">
                         <div class="input-group-addon"><i class="fa fa-list"></i></div>
-                        <select class="form-control" name="agama">
-                            <option selected disabled>Agama</option>
+                        <select class="form-control" name="agama" required>
+                            <option value="" hidden>Agama</option>
                             <option value="Khatolik"
                             @if(!empty($data))
                                 @if($data->agama == "Khatolik")

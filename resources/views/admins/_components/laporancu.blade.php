@@ -267,11 +267,11 @@
 <div class="nav-tabs-custom">
     <ul class="nav nav-tabs">
         @if($cu != '0' || Request::is('admins/laporancu/detail*'))
-            <li class="active"><a href="#tab_perkembangan" data-toggle="tab">Perkembangan CU</a></li>
-            <li><a href="#tab_pearls" data-toggle="tab">P.E.A.R.L.S.</a></li>
+            <li class="active"><a href="#tab_perkembangan" data-toggle="tab"><i class="fa fa-bar-chart fa-fw"></i> Perkembangan CU</a></li>
+            <li><a href="#tab_pearls" data-toggle="tab"><i class="fa fa-th-large fa-fw"></i> P.E.A.R.L.S.</a></li>
         @else
-            <li class="active"><a href="#tab_perkembangan" data-toggle="tab">Perkembangan CU (Konsolidasi)</a></li>
-            <li class="pull-right"><a href="#" class="text-muted ">Periode <b>{{ $data1['periode'] }}</b></a></li>  
+            <li class="active"><a href="#tab_perkembangan" data-toggle="tab"><i class="fa fa-bar-chart fa-fw"></i> Perkembangan CU (Konsolidasi)</a></li>
+            <li class="pull-right"><a href="#" class="text-muted "><i class="fa fa-clock-o fa-fw"></i> Periode <b>{{ $data1['periode'] }}</b></a></li>  
         @endif
     </ul>
     <div class="tab-content">

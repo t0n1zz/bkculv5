@@ -11,7 +11,7 @@
 |
 */
 Route::get('/',array( 'as' => 'home','uses' => 'PublicController@index'));
-Route::get('pelayanan/{id}',array( 'as' => 'pelayanans','uses' => 'PublicController@solusi'));
+// Route::get('pelayanan/{id}',array( 'as' => 'pelayanans','uses' => 'PublicController@solusi'));
 Route::get('pelayanan',array( 'as' => 'pelayanan','uses' => 'PublicController@pelayanan'));
 Route::get('kegiatan',array( 'as' => 'kegiatan','uses' => 'PublicController@agenda'));
 Route::get('profil',array( 'as' => 'profil','uses' => 'PublicController@profil'));

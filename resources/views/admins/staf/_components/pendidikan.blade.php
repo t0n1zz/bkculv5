@@ -5,7 +5,7 @@
     <div class="input-group">
         <span class="input-group-addon"><i class="fa fa-list"></i></span>
         <select class="form-control placeholder" onChange="func_selectpendidikan(value);"  name="selectpendidikan" id="selectpendidikan">
-            <option value="0" hidden>Silahkan pilih pendidikan</option>
+            <option value="" hidden>Silahkan pilih pendidikan</option>
             <option value="1">SD</option>
             <option value="2">SMP</option>
             <option value="3">SMA/SMK</option>

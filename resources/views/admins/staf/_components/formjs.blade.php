@@ -33,9 +33,10 @@
     // pekerjaan
     function func_radiocu(){
         $('#selectcu').prop('disabled',false);
+        $('#selectcu').prop('required',true);
         $('#selectlembaga').prop('disabled',true);
+        $('#selectlembaga').prop('required',false);
         $('#selectlembaga').val($('#selectlembaga option:first').val()); 
-        $('#tipepekerjaan').val('1');
 
         $('#jabatan').hide();
         $('#tingkatcu').hide();
@@ -47,8 +48,10 @@
 
     function func_radiolembaga(){
         $('#selectcu').prop('disabled',true);
+        $('#selectcu').prop('required',false);
         $('#selectcu').val($('#selectcu option:first').val());
         $('#selectlembaga').prop('disabled',false);
+        $('#selectlembaga').prop('required',true);
         $('#tipepekerjaan').val('2');
 
         $('#jabatan').hide();
@@ -72,7 +75,11 @@
          
         $('#namapekerjaan').val('');
         $('#selecttingkatcu').val($('#selecttingkatcu option:first').val());
-        $('#selecttingkatlembaga').val($('#selecttingkatlembaga option:first').val()); 
+        $('#selecttingkatlembaga').val($('#selecttingkatlembaga option:first').val());
+
+        $('#namapekerjaan').prop('required',true);
+        $('#selecttingkatcu').prop('required',true);
+        $('#selecttingkatlembaga').prop('required',false);  
     }
 
     function func_selectlembaga($i) { // lembaga
@@ -94,6 +101,10 @@
         $('#namapekerjaan').val('');
         $('#selecttingkatcu').val($('#selecttingkatcu option:first').val());
         $('#selecttingkatlembaga').val($('#selecttingkatlembaga option:first').val());
+
+        $('#namapekerjaan').prop('required',true);
+        $('#selecttingkatcu').prop('required',false);
+        $('#selecttingkatlembaga').prop('required',true);  
     }
 
     function func_selecttingkatan($i){
@@ -120,13 +131,13 @@
     // pendidikan
     function func_selectpendidikan($i){
         $('#pendidikangroup').show();
-
+        
         if($i == "1" || $i == "2"){
-            $('#namapendidikan').val('');
             $('#jurusan').hide();
-        }else{
             $('#namapendidikan').val('');
-            $('#jurusan').show(); 
+        }else{
+            $('#jurusan').show();
+            $('#namapendidikan').val('');
         }
     }
 
@@ -134,6 +145,9 @@
     function func_organsasiyes(){
         $('#tipeorganisasi').val('1');
         $('#organisasi').show();
+
+        $('#namaorganisasi').prop('required',true);
+        $('#jabatanorganisasi').prop('required',true);
     }
     
     function func_organsasino(){
@@ -141,9 +155,11 @@
         $('#organisasi').hide();
 
         $('#namaorganisasi').val('');
+        $('#namaorganisasi').prop('required',false);
+        $('#jabatanorganisasi').prop('required',false);
     }
 
-        function func_selectstatus($i){
+    function func_selectstatus($i){
         if($i == "Belum Menikah"){
             $('#pasangan').hide();
             $('#anak').hide();
@@ -169,15 +185,26 @@
     }
 
     var countercu = 0;
+    var htmlsimpanan = ''
     function func_cutambah(){
-        $('#cutambah').before("<div class='form-group' id='formcu"+ countercu +"'><div class='input-group'><span class='input-group-addon'><i class='fa fa-font'></i></span><input type='text' class='form-control' name='namecu[]' placeholder='Silahkan masukkan nama CU' /><span class='input-group-addon'>0-9</span><input type='text' class='form-control' name='nocu[]' placeholder='Silahkan masukkan no anggota CU' /><div class='input-group-btn'><button type='button' class='btn btn-default' onclick='func_cukurang()' ><i class='fa fa-times'></i></button></div></div></div>");
+        var htmlcu = '<div class="form-group" id="formcu'+ countercu +'">';
+                htmlcu += '<div class="input-group">';
+                htmlcu += '<span class="input-group-addon"><i class="fa fa-font"></i></span>';
+                    htmlcu += '<input type="text" class="form-control" name="namecu[] "placeholder="Silahkan masukkan nama CU" />';
+                htmlcu += '<span class="input-group-addon">0-9</span>';
+                    htmlcu += '<input type="text" class="form-control" name="nocu[] " placeholder="Silahkan masukkan no anggota CU" />';
+                htmlcu += '<div class="input-group-btn"><button type="button" class="btn btn-default" onclick="func_cukurang('+ countercu +')" ><i class="fa fa-times"></i></button></div>'
+            htmlcu +='<div></div>'
+
+        $('#cutambah').before(htmlcu);
+
         $('#cutambah').text('Tambah Keanggotaan di CU');
         countercu++;
     }
 
-    function func_cukurang(){
+    function func_cukurang(countcu){
         countercu--;
-        $('#formcu'+countercu).remove();
+        $('#formcu'+countcu).remove();
         if(countercu == 0){
             $('#cutambah').text('Punya keanggotaan di CU');
         }

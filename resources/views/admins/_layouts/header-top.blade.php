@@ -52,7 +52,7 @@
                 @endpermission   
                 @permission('view.pengumuman_view')
                   <li class="{{ Request::is('admins/pengumuman') ? 'active' : '' }}">
-                    <a href="{{ route('admins.pengumuman.index') }}"><i class="fa fa-comments-o fa-fw""></i> Pengumuman</a>
+                    <a href="{{ route('admins.pengumuman.index') }}"><i class="fa fa-bullhorn fa-fw""></i> Pengumuman</a>
                   </li>
                 @endpermission
                 @permission('view.statistikweb_view')
