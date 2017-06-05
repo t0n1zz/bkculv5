@@ -185,21 +185,44 @@
     }
 
     var countercu = 0;
-    var htmlsimpanan = ''
+    var countersimpanan = 0;
+
     function func_cutambah(){
-        var htmlcu = '<div class="form-group" id="formcu'+ countercu +'">';
-                htmlcu += '<div class="input-group">';
-                htmlcu += '<span class="input-group-addon"><i class="fa fa-font"></i></span>';
-                    htmlcu += '<input type="text" class="form-control" name="namecu[] "placeholder="Silahkan masukkan nama CU" />';
-                htmlcu += '<span class="input-group-addon">0-9</span>';
-                    htmlcu += '<input type="text" class="form-control" name="nocu[] " placeholder="Silahkan masukkan no anggota CU" />';
-                htmlcu += '<div class="input-group-btn"><button type="button" class="btn btn-default" onclick="func_cukurang('+ countercu +')" ><i class="fa fa-times"></i></button></div>'
-            htmlcu +='<div></div>'
+        var htmlcu = '<div id="formcu'+ countercu +'">';
+                htmlcu += '<div class="form-group">';
+                    htmlcu += '<div class="input-group">';
+                        htmlcu += '<span class="input-group-addon"><i class="fa fa-font"></i></span>';
+                            htmlcu += '<input type="text" class="form-control" name="namecu[] "placeholder="Silahkan masukkan nama CU" />';
+                        htmlcu += '<span class="input-group-addon">0-9</span>';
+                            htmlcu += '<input type="text" class="form-control" name="nocu[] " placeholder="Silahkan masukkan no anggota CU" />';
+                        htmlcu += '<div class="input-group-btn"><button type="button" class="btn btn-default" onclick="func_cukurang('+ countercu +')" ><i class="fa fa-times"></i></button></div>';
+                    htmlcu +='</div><br/>';
+                    htmlcu += func_htmlsimpanan();
+                htmlcu +='</div>';
+            htmlcu +='</div><hr/>';
 
         $('#cutambah').before(htmlcu);
 
         $('#cutambah').text('Tambah Keanggotaan di CU');
         countercu++;
+    }
+
+    function func_htmlsimpanan(){
+        var htmlsimpanan = '<div class="row" id="simpanancu'+countercu+'">';
+                htmlsimpanan +='<div class="col-sm-1"></div>';
+                htmlsimpanan +='<div class="col-sm-11">';
+                    htmlsimpanan += '<div class="form-group">';
+                        htmlsimpanan += '<div class="input-group">';
+                            htmlsimpanan += '<span class="input-group-addon"><i class="fa fa-font"></i></span>';
+                                htmlsimpanan += '<input type="text" class="form-control" name="namecu[] "placeholder="Silahkan masukkan nama CU" />';
+                            htmlsimpanan += '<span class="input-group-addon">0-9</span>';
+                                htmlsimpanan += '<input type="text" class="form-control" name="nocu[] " placeholder="Silahkan masukkan no anggota CU" />';
+                            htmlsimpanan += '<div class="input-group-btn"><button type="button" class="btn btn-default" onclick="func_cukurang('+ countercu +')" ><i class="fa fa-times"></i></button></div>';
+                        htmlsimpanan +='</div><br/>';
+                htmlsimpanan +='</div>';
+            htmlsimpanan +='</div>';
+
+        return htmlsimpanan;    
     }
 
     function func_cukurang(countcu){

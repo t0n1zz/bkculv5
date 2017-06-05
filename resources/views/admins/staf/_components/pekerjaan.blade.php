@@ -107,7 +107,7 @@ hidden>
     <h4>Jabatan</h4>
     <div class="input-group">
         <span class="input-group-addon"><i class="fa fa-font"></i></span>
-        {{ Form::text('namapekerjaan',null,array('class' => 'form-control','id'=>'namapekerjaan','placeholder' => 'Silahkan masukkan jabatan','autocomplete'=>'off'))}}
+        {{ Form::text('namapekerjaan',null,array('class' => 'form-control','id'=>'namapekerjaan','placeholder' => 'Silahkan masukkan jabatan','autocomplete'=>'off',($iscu ? 'required' : '')))}}
         <span class="glyphicon form-control-feedback" aria-hidden="true"></span>  
     </div>
     <div class="help-block">Jabatan harus diisi.</div>
@@ -117,7 +117,7 @@ hidden>
     <h4>Tingkatan</h4>
     <div class="input-group">
         <span class="input-group-addon"><i class="fa fa-list"></i></span>
-        <select class="form-control placeholder" name="selecttingkatcu" onChange="func_selecttingkatan(value);" id="selecttingkatcu">
+        <select class="form-control placeholder" name="selecttingkatcu" onChange="func_selecttingkatan(value);" id="selecttingkatcu" @if($iscu) required @endif>
             <option value="" hidden>Silahkan pilih tingkat</option>
             <option value="Pengurus">Pengurus</option>
             <option value="Pengawas">Pengawas</option>
