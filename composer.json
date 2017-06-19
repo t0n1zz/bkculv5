@@ -15,7 +15,9 @@
         "maatwebsite/excel": "~2.1.0",
         "jenssegers/date": "^3.2",
         "venturecraft/revisionable": "1.*",
-        "rap2hpoutre/laravel-log-viewer": "^0.10.1"
+        "rap2hpoutre/laravel-log-viewer": "^0.10.1",
+        "jacquestvanzuydam/laravel-firebird": "dev-5.4-support",
+        "barryvdh/laravel-debugbar": "^2.4"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

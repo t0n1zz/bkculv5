@@ -119,6 +119,11 @@
                     </li>
                     <li class="divider"></li>
                   @endpermission
+                  @permission('upload.laporancu_upload')
+                    <li class="{{ Request::is('admins/laporancu/perkiraan') ? 'active' : '' }}">
+                      <a href="{{ route('admins.laporancu.perkiraan') }}"><i class="fa fa-compass fa-fw"></i> Perkiraan</a>
+                    </li>
+                  @endpermission
                   @permission('view.laporancu_view')
                     <li class="{{ Request::is('admins/laporancu') || Request::is('admins/laporancu/index_cu*') || Request::is('admins/laporancu/index_hapus') || Request::is('admins/laporancu/index_bkcu') ? 'active' : '' }}">
                       <a href="{{ $cu == '0' ? route('admins.laporancu.index') : route('admins.laporancu.index_cu',array($cu)) }}"><i class="fa fa-bar-chart fa-fw"></i> Laporan CU</a>

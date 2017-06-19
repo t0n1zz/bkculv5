@@ -66,6 +66,15 @@ return [
             'engine' => null,
         ],
 
+        'firebird' => [
+            'driver'   => 'firebird',
+            'host'     => env('DB_HOST_Firebird', 'localhost'),
+            'database' => env('DB_DATABASE_Firebird','/storage/firebird/DBCUBIS_OPRS.FDB'),
+            'username' => env('DB_USERNAME_Firebird', 'SYSDBA'),
+            'password' => env('DB_PASSWORD_Firebird', 'masterkey'),
+            'charset'  => env('DB_CHARSET_Firebird', 'UTF8'),
+        ],
+
         'pgsql' => [
             'driver' => 'pgsql',
             'host' => env('DB_HOST', 'localhost'),

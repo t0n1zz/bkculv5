@@ -56,13 +56,13 @@
                             @if(!empty($artikel->gambar) && is_file($imagepath.$artikel->gambar."n.jpg"))
                                 <a class="lightbox" title="{{ $artikel->judul }}" href="{{ asset($imagepath.$artikel->gambar.".jpg") }}">
                                     <div class="thumb-overlay"><i class="fa fa-arrows-alt"></i></div>
-                                    {{ HTML::image($imagepath.$artikel->gambar.'n.jpg',$artikel->judul,
+                                    {{ Html::image($imagepath.$artikel->gambar.'n.jpg',$artikel->judul,
                                         array('class' => 'img-responsive ')) }}
                                 </a>
                             @else
                                 <a class="lightbox" title="{{ $artikel->judul }}" href="{{ asset('images/image-article.jpg') }}">
                                     <div class="thumb-overlay"><i class="fa fa-arrows-alt"></i></div>
-                                    {{ HTML::image('images/image-articlen.jpg', $artikel->judul, array(
+                                    {{ Html::image('images/image-articlen.jpg', $artikel->judul, array(
                                         'class' => 'img-responsive')) }}
                                 </a>
                             @endif

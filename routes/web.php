@@ -260,6 +260,12 @@ Route::group(['prefix' => 'admins','middleware' => 'auth'], function(){
         'uses'         => 'LaporanCuDiskusiController@destroy',
         'middleware'   => ['auth', 'acl'],
         'can'          => 'view.laporancu_view']);
+//laporan cu sikopdit cs
+    Route::get('laporancu/perkiraan', [
+        'as'           => 'admins.laporancu.perkiraan',           
+        'uses'         => 'LaporanCuController@perkiraan',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'upload.laporancu_upload']);   
 //tp CU
     Route::get('tpcu', [
         'as'           => 'admins.tpcu.index',           
@@ -685,9 +691,6 @@ Route::group(['prefix' => 'admins','middleware' => 'auth'], function(){
         'as'           => 'admins.pemilihan.calon',
         'uses'         => 'PemilihanController@calon']);
 });
-
-    
-
 
 // Route::get('importexport', function()
 // {

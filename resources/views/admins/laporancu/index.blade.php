@@ -131,7 +131,7 @@ $cu = Auth::user()->getCU();
                         <div class="input-group-addon"><i class="fa fa-search"></i></div>
                         <input type="text" id="searchtext" class="form-control" placeholder="Kata kunci pencarian...">
                     </div>
-                    <table class="table table-hover table-bordered" id="dataTables-all" cellspacing="0" width="100%" >
+                    <table class="table table-hover" id="dataTables-all" cellspacing="0" width="100%" >
                         <thead class="bg-light-blue-active color-palette">
                             <tr>
                                 <th data-sortable="false" >#</th>
@@ -143,28 +143,28 @@ $cu = Auth::user()->getCU();
                                 <th>District Office</th>
                                 <th>Wilayah</th>
                                 <th>Periode Laporan</th>
-                                <th>Anggota Lelaki Biasa</th>
-                                <th>Anggota Lelaki L.Biasa</th>
-                                <th>Anggota Perempuan Biasa</th>
-                                <th>Anggota Perempuan L.Biasa</th>
-                                <th>Total Anggota</th>
-                                <th>ASET</th>
-                                <th>Aktiva LANCAR</th>
-                                <th>Simpanan Saham(SP+SW)</th>
-                                <th>Simpanan Non-Saham Unggulan</th>
-                                <th>Simpanan Non-Saham Harian & Deposito</th>
-                                <th>Hutang SPD</th>
-                                <th>Piutang Beredar</th>
-                                <th>Piutang Bersih</th>
-                                <th>Piutang Lalai 1-12 Bulan</th>
-                                <th>Piutang Lalai > 12 Bulan</th>
-                                <th>Rasio Piutang Beredar</th>
-                                <th>Rasio Piutang Lalai</th>
-                                <th>DCR</th>
-                                <th>DCU</th>
-                                <th>Total Pendapatan</th>
-                                <th>Total Biaya</th>
-                                <th>SHU</th>
+                                <th class="text-right">Anggota Lelaki Biasa</th>
+                                <th class="text-right">Anggota Lelaki L.Biasa</th>
+                                <th class="text-right">Anggota Perempuan Biasa</th>
+                                <th class="text-right">Anggota Perempuan L.Biasa</th>
+                                <th class="text-right">Total Anggota</th>
+                                <th class="text-right">ASET</th>
+                                <th class="text-right">Aktiva LANCAR</th>
+                                <th class="text-right">Simpanan Saham(SP+SW)</th>
+                                <th class="text-right">Simpanan Non-Saham Unggulan</th>
+                                <th class="text-right">Simpanan Non-Saham Harian & Deposito</th>
+                                <th class="text-right">Hutang SPD</th>
+                                <th class="text-right">Piutang Beredar</th>
+                                <th class="text-right">Piutang Bersih</th>
+                                <th class="text-right">Piutang Lalai 1-12 Bulan</th>
+                                <th class="text-right">Piutang Lalai > 12 Bulan</th>
+                                <th class="text-right">Rasio Piutang Beredar</th>
+                                <th class="text-right">Rasio Piutang Lalai</th>
+                                <th class="text-right">DCR</th>
+                                <th class="text-right">DCU</th>
+                                <th class="text-right">Total Pendapatan</th>
+                                <th class="text-right">Total Biaya</th>
+                                <th class="text-right">SHU</th>
                                 <th>Tgl. Terima</th>
                                 <th>Tgl. Ubah</th>
                             </tr>
@@ -325,7 +325,7 @@ $cu = Auth::user()->getCU();
                                     <td>{{ $do }}</td>
                                     <td>{{ $wilayah }}</td>
                                     <td data-order="{{ $data->periode }}"> @if(!empty($data->periode)){{ $periode }}@else{{ '-' }}@endif</td>
-                                    <td>{{ number_format($data->l_biasa,"0",",",".") }} 
+                                    <td class="text-right">{{ number_format($data->l_biasa,"0",",",".") }} 
                                         @if($l_biasa1 != $data->l_biasa)
                                             @if($l_biasa1 > 0)
                                                 <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($l_biasa1,"0",",",".")}}"></i>
@@ -334,7 +334,7 @@ $cu = Auth::user()->getCU();
                                             @endif
                                         @endif
                                     </td>
-                                    <td>{{ number_format($data->l_lbiasa,"0",",",".") }}
+                                    <td class="text-right">{{ number_format($data->l_lbiasa,"0",",",".") }}
                                         @if($l_lbiasa1 != $data->l_lbiasa)
                                             @if($l_lbiasa1 > 0)
                                                 <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($l_lbiasa1,"0",",",".")}}"></i>
@@ -343,7 +343,7 @@ $cu = Auth::user()->getCU();
                                             @endif
                                         @endif
                                     </td>
-                                    <td>{{ number_format($data->p_biasa,"0",",",".") }}
+                                    <td class="text-right">{{ number_format($data->p_biasa,"0",",",".") }}
                                         @if($p_biasa1 != $data->p_biasa)
                                             @if($p_biasa1 > 0)
                                                 <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($p_biasa1,"0",",",".")}}"></i>
@@ -352,7 +352,7 @@ $cu = Auth::user()->getCU();
                                             @endif
                                         @endif
                                     </td>
-                                    <td>{{ number_format($data->p_lbiasa,"0",",",".") }}
+                                    <td class="text-right">{{ number_format($data->p_lbiasa,"0",",",".") }}
                                         @if($p_lbiasa1 != $data['p_lbiasa'])
                                             @if($p_lbiasa1 > 0)
                                                 <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($p_lbiasa1,"0",",",".")}}"></i>
@@ -361,7 +361,7 @@ $cu = Auth::user()->getCU();
                                             @endif
                                         @endif
                                     </td>
-                                    <td>{{ number_format($total,"0",",",".") }}
+                                    <td class="text-right">{{ number_format($total,"0",",",".") }}
                                         @if($total1 != $total)
                                             @if($total1 > 0)
                                                 <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($total1,"0",",",".")}}"></i>
@@ -370,7 +370,7 @@ $cu = Auth::user()->getCU();
                                             @endif
                                         @endif
                                     </td>
-                                    <td>{{ number_format($data->aset,"0",",",".") }}
+                                    <td class="text-right">{{ number_format($data->aset,"0",",",".") }}
                                         @if($aset1 != $data->aset)
                                             @if($aset1 > 0)
                                                 <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($aset1,"0",",",".")}}"></i>
@@ -379,7 +379,7 @@ $cu = Auth::user()->getCU();
                                             @endif
                                         @endif
                                     </td>
-                                    <td>{{ number_format($data->aktivalancar,"0",",",".") }}
+                                    <td class="text-right">{{ number_format($data->aktivalancar,"0",",",".") }}
                                         @if($aktivalancar1 != $data->aktivalancar)
                                             @if($aktivalancar1 > 0)
                                                 <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($aktivalancar1,"0",",",".")}}"></i>
@@ -388,7 +388,7 @@ $cu = Auth::user()->getCU();
                                             @endif
                                         @endif
                                     </td>
-                                    <td>{{ number_format($data->simpanansaham,"0",",",".") }}
+                                    <td class="text-right">{{ number_format($data->simpanansaham,"0",",",".") }}
                                         @if($simpanansaham1 != $data->simpanansaham)
                                             @if($simpanansaham1 > 0)
                                                 <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($simpanansaham1,"0",",",".")}}"></i>
@@ -397,7 +397,7 @@ $cu = Auth::user()->getCU();
                                             @endif
                                         @endif
                                     </td>
-                                    <td>{{ number_format($data->nonsaham_unggulan,"0",",",".") }}
+                                    <td class="text-right">{{ number_format($data->nonsaham_unggulan,"0",",",".") }}
                                         @if($nonsaham_unggulan1 != $data->nonsaham_unggulan)
                                             @if($nonsaham_unggulan1 > 0)
                                                 <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($nonsaham_unggulan1,"0",",",".")}}"></i>
@@ -406,7 +406,7 @@ $cu = Auth::user()->getCU();
                                             @endif
                                         @endif
                                     </td>
-                                    <td>{{ number_format($data->nonsaham_harian,"0",",",".") }}
+                                    <td class="text-right">{{ number_format($data->nonsaham_harian,"0",",",".") }}
                                         @if($nonsaham_harian1 != $data->nonsaham_harian)
                                             @if($nonsaham_harian1 > 0)
                                                 <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($nonsaham_harian1,"0",",",".")}}"></i>
@@ -415,7 +415,7 @@ $cu = Auth::user()->getCU();
                                             @endif
                                         @endif
                                     </td>
-                                    <td>{{ number_format($data->hutangspd,"0",",",".") }}
+                                    <td class="text-right">{{ number_format($data->hutangspd,"0",",",".") }}
                                         @if($hutangspd1 != $data->hutangspd)
                                             @if($hutangspd1 > 0)
                                                 <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($hutangspd1,"0",",",".")}}"></i>
@@ -424,7 +424,7 @@ $cu = Auth::user()->getCU();
                                             @endif
                                         @endif
                                     </td>
-                                    <td>{{ number_format($data->piutangberedar,"0",",",".")}}
+                                    <td class="text-right">{{ number_format($data->piutangberedar,"0",",",".")}}
                                         @if($piutangberedar1 != $data->piutangberedar)
                                             @if($piutangberedar1 > 0)
                                                 <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($piutangberedar1,"0",",",".")}}"></i>
@@ -433,7 +433,7 @@ $cu = Auth::user()->getCU();
                                             @endif
                                         @endif
                                     </td>
-                                    <td>{{ number_format($piutangbersih,"0",",",".") }}
+                                    <td class="text-right">{{ number_format($piutangbersih,"0",",",".") }}
                                         @if($piutangbersih1 != $piutangbersih)
                                             @if($piutangbersih1 > 0)
                                                 <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($piutangbersih1,"0",",",".")}}"></i>
@@ -442,7 +442,7 @@ $cu = Auth::user()->getCU();
                                             @endif
                                         @endif
                                     </td>
-                                    <td>{{ number_format($data->piutanglalai_1bulan,"0",",",".") }}
+                                    <td class="text-right">{{ number_format($data->piutanglalai_1bulan,"0",",",".") }}
                                         @if($piutanglalai_1bulan1 != $data->piutanglalai_1bulan)
                                             @if($piutanglalai_1bulan1 > 0)
                                                 <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($piutanglalai_1bulan1,"0",",",".")}}"></i>
@@ -451,7 +451,7 @@ $cu = Auth::user()->getCU();
                                             @endif
                                         @endif
                                     </td>
-                                    <td>{{ number_format($data->piutanglalai_12bulan,"0",",",".") }}
+                                    <td class="text-right">{{ number_format($data->piutanglalai_12bulan,"0",",",".") }}
                                         @if($piutanglalai_12bulan1 != $data->piutanglalai_12bulan)
                                             @if($piutanglalai_12bulan1 > 0)
                                                 <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($piutanglalai_12bulan1,"0",",",".")}}"></i>
@@ -460,7 +460,7 @@ $cu = Auth::user()->getCU();
                                             @endif
                                         @endif
                                     </td>
-                                    <td>{{ number_format($rasio_beredar*100,"0",",",".") }} %
+                                    <td class="text-right">{{ number_format($rasio_beredar*100,"0",",",".") }} %
                                         @if($rasio_beredar1 != $rasio_beredar)
                                             @if($rasio_beredar1 > 0)
                                                 <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format(($rasio_beredar1*100),2) }} %"></i>
@@ -469,7 +469,7 @@ $cu = Auth::user()->getCU();
                                             @endif
                                         @endif
                                     </td>
-                                    <td>{{ number_format($rasio_lalai*100,"0",",",".") }} %
+                                    <td class="text-right">{{ number_format($rasio_lalai*100,"0",",",".") }} %
                                         @if($rasio_lalai1 != $rasio_lalai)
                                             @if($rasio_lalai1 > 0)
                                                 <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format(($rasio_lalai1*100),2) }} %"></i>
@@ -478,7 +478,7 @@ $cu = Auth::user()->getCU();
                                             @endif
                                         @endif
                                     </td>
-                                    <td>{{ number_format($data->dcr,"0",",",".") }}
+                                    <td class="text-right">{{ number_format($data->dcr,"0",",",".") }}
                                         @if($dcr1 != $data->dcr)
                                             @if($dcr1 > 0)
                                                 <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($dcr1,"0",",",".")}}"></i>
@@ -487,7 +487,7 @@ $cu = Auth::user()->getCU();
                                             @endif
                                         @endif
                                     </td>
-                                    <td>{{ number_format($data->dcu,"0",",",".")}}
+                                    <td class="text-right">{{ number_format($data->dcu,"0",",",".")}}
                                         @if($dcu1 != $data->dcu)
                                             @if($dcu1 > 0)
                                                 <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($dcu1,"0",",",".")}}"></i>
@@ -496,7 +496,7 @@ $cu = Auth::user()->getCU();
                                             @endif
                                         @endif
                                     </td>
-                                    <td>{{ number_format($data->totalpendapatan,"0",",",".") }}
+                                    <td class="text-right">{{ number_format($data->totalpendapatan,"0",",",".") }}
                                         @if($totalpendapatan1 != $data->totalpendapatan)
                                             @if($totalpendapatan1 > 0)
                                                 <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($totalpendapatan1,"0",",",".")}}"></i>
@@ -505,7 +505,7 @@ $cu = Auth::user()->getCU();
                                             @endif
                                         @endif
                                     </td>
-                                    <td>{{ number_format($data->totalbiaya,"0",",",".") }}
+                                    <td class="text-right">{{ number_format($data->totalbiaya,"0",",",".") }}
                                         @if($totalbiaya1 != $data->totalbiaya)
                                             @if($totalbiaya1 > 0)
                                                 <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($totalbiaya1,"0",",",".")}}"></i>
@@ -514,7 +514,7 @@ $cu = Auth::user()->getCU();
                                             @endif
                                         @endif
                                     </td>
-                                    <td>{{ number_format($data->shu,"0",",",".") }}
+                                    <td class="text-right">{{ number_format($data->shu,"0",",",".") }}
                                         @if($shu1 != $data->shu)
                                             @if($shu1 > 0)
                                                 <i class="fa fa-caret-square-o-up fa-fw text-aqua" data-toggle="tooltip" data-placement="right" title="Bertambah {{ number_format($shu1,"0",",",".")}}"></i>
