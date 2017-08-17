@@ -25,7 +25,7 @@ class UserController extends controller{
     public function index()
     {
         try{
-            $datas = User::where('id', '!=','1')->orderBy('cu')->get();
+            $datas = User::where('id', '!=',1)->orderBy('cu')->get();
 
             return view('admins.'.$this->kelaspath.'.index', compact('datas'));
         }catch (Exception $e){
@@ -140,7 +140,6 @@ class UserController extends controller{
             $roles = $role->getPermissions();
 
             if(!empty($roles)){
-
                 return \Response::json(array_keys($roles));
             }
         }catch (Exception $e){

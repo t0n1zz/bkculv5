@@ -1,6 +1,6 @@
 <?php 
 $page = ""; 
-$hariraya = "0";
+$hariraya = "1";
 ?>
 @extends('_layouts.layout')
 
@@ -58,7 +58,7 @@ $hariraya = "0";
             @if($hariraya != 0)
                 <div class="item">
                    <div class="">
-                       {{ Html::image('images/slider-waisak.jpg', 'Selamat Hari Raya Waisak 2561', array(
+                       {{ Html::image('images/slider-harkopnas.jpg', 'Dirgahayu Hari Koperasi Nasional ke 70', array(
                       'class' => 'img-responsive')) }}
                    </div>
                    <div class="slider-content">

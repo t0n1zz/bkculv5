@@ -2,6 +2,8 @@
 $culists = App\Cuprimer::orderBy('name','asc')->get();
 $culists_non = App\Cuprimer::onlyTrashed()->orderBy('name','asc')->get();
 
+$data_tidak_lengkap = "perhitungan tidak akurat dikarenakan data perhitungan yang tidak lengkap. Silahkan melengkapinya.";
+
 if(Request::is('admins/laporancu/index_cu/*')){
     $cuname = App\Cuprimer::withTrashed()->orderBy('name','asc')->where('no_ba',$id)->first();
     $title = "Laporan CU " .$cuname->name;
@@ -23,7 +25,7 @@ $cu = Auth::user()->getCU();
 @include('admins._components.datatable_CSS')
 {{-- <link rel="stylesheet" type="text/css" href="{{asset('plugins/dataTables/extension/FixedColumns/css/fixedColumns.bootstrap.min.css')}}" > --}}
 @if(!Request::is('admins/laporancu/index_bkcu') && !Request::is('admins/laporancu/index_hapus'))
-    <script type="text/javascript" data-cfasync="false" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_CHTML"></script>
+    <script type="text/javascript" data-cfasync="false" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=AM_CHTML"></script>
 @endif
 @stop
 
@@ -2013,7 +2015,11 @@ $cu = Auth::user()->getCU();
                                             <span class="label bg-red">TIDAK IDEAL</span> 
                                         @else 
                                             <span class="label bg-aqua">IDEAL</span> 
-                                        @endif</span>
+                                        @endif
+                                        @if(empty($data->dcr) || empty($data->piutanglalai_12bulan))
+                                            <small class="label bg-yellow" data-toggle="tooltip" data-placement="right" title="{{$data_tidak_lengkap}}"><i class="fa fa-warning" ></i></small>
+                                        @endif
+                                        </span>
                                     </td>
 {{-- p2 --}}
                                     <td><span data-toggle="modal" data-target="#modalformula"style="cursor:pointer;"
@@ -2039,7 +2045,11 @@ $cu = Auth::user()->getCU();
                                             <small class="label bg-red">TIDAK IDEAL</small> 
                                         @else 
                                             <small class="label bg-aqua">IDEAL</small> 
-                                        @endif</span>
+                                        @endif
+                                        @if(empty($data->dcr) || empty($data->piutanglalai_12bulan) || empty($data->piutanglalai_1bulan))
+                                            <small class="label bg-yellow" data-toggle="tooltip" data-placement="right" title="{{$data_tidak_lengkap}}"><i class="fa fa-warning" ></i></small>
+                                        @endif
+                                        </span>
                                     </td>
 {{-- e1 --}}
                                     <td><span data-toggle="modal" data-target="#modalformula"style="cursor:pointer;"
@@ -2087,7 +2097,17 @@ $cu = Auth::user()->getCU();
                                             <small class="label bg-red">TIDAK IDEAL</small> 
                                         @else 
                                             <small class="label bg-aqua">IDEAL</small> 
-                                        @endif</span>
+                                        @endif
+                                        @if($p1 == 100 && $p2 > 35)
+                                            @if(empty($data->piutangberedar) || empty($data->piutanglalai_12bulan) || empty($data->piutanglalai_1bulan) || empty($data->piutanglalai_1bulan))
+                                                <small class="label bg-yellow" data-toggle="tooltip" data-placement="right" title="{{$data_tidak_lengkap}}"><i class="fa fa-warning" ></i></small>
+                                            @endif
+                                        @else
+                                            @if(empty($data->piutangberedar) || empty($data->dcr) || empty($data->aset))
+                                                <small class="label bg-yellow" data-toggle="tooltip" data-placement="right" title="{{$data_tidak_lengkap}}"><i class="fa fa-warning" ></i></small>
+                                            @endif
+                                        @endif    
+                                        </span>
                                     </td>
 {{-- e5 --}}
                                     <td><span data-toggle="modal" data-target="#modalformula"style="cursor:pointer;"
@@ -2113,7 +2133,12 @@ $cu = Auth::user()->getCU();
                                             <small class="label bg-red">TIDAK IDEAL</small> 
                                         @else 
                                             <small class="label bg-aqua">IDEAL</small> 
-                                        @endif</span>
+                                        @endif
+
+                                        @if(empty($data->nonsaham_unggulan) || empty($data->nonsaham_harian) || empty($data->aset))
+                                            <small class="label bg-yellow" data-toggle="tooltip" data-placement="right" title="{{$data_tidak_lengkap}}"><i class="fa fa-warning" ></i></small>
+                                        @endif
+                                        </span>
                                     </td>
 {{-- e6 --}}
                                     <td><span data-toggle="modal" data-target="#modalformula"style="cursor:pointer;"
@@ -2131,12 +2156,18 @@ $cu = Auth::user()->getCU();
                                         data-ubahvalue1 = {{ $data->aset != 0? $data->aset : 0 }}
                                         data-ubahvalue2 = {{ $data->totalhutang_pihak3 != 0? $data->totalhutang_pihak3 : 0 }}
                                         >
+                                        
                                         {{ $e6 }} % 
                                         @if($e6 > 5) 
                                             <small class="label bg-red">TIDAK IDEAL</small> 
                                         @else 
                                             <small class="label bg-aqua">IDEAL</small> 
-                                        @endif</span>
+                                        @endif
+
+                                        @if(empty($data->totalhutang_pihak3) || empty($data->aset))
+                                            <small class="label bg-yellow" data-toggle="tooltip" data-placement="right" title="{{$data_tidak_lengkap}}"><i class="fa fa-warning" ></i></small>
+                                        @endif
+                                        </span>
                                     </td>
 {{-- e9 --}}
                                     <td><span data-toggle="modal" data-target="#modalformula"style="cursor:pointer;"
@@ -2175,12 +2206,19 @@ $cu = Auth::user()->getCU();
                                         data-ubahvalue8 = {{ $data->aset_masalah != 0? $data->aset_masalah : 0 }}
                                         data-ubahvalue9 = {{ $data->aset != 0? $data->aset : 0 }}
                                         >
+                                        
                                         {{ $e9 }} % 
                                         @if($e9 < 10) 
                                             <small class="label bg-red">TIDAK IDEAL</small> 
                                         @else 
                                             <small class="label bg-aqua">IDEAL</small> 
-                                        @endif</span>
+                                        @endif
+
+                                        @if(empty($data->dcr) || empty($data->dcu) || empty($data->iuran_gedung) || empty($data->donasi)
+                                        || empty($data->shu_lalu)|| empty($data->piutanglalai_12bulan)|| empty($data->piutanglalai_1bulan)|| empty($data->aset_masalah) || empty($data->aset))
+                                            <small class="label bg-yellow" data-toggle="tooltip" data-placement="right" title="{{$data_tidak_lengkap}}"><i class="fa fa-warning" ></i></small>
+                                        @endif
+                                        </span>
                                     </td>
 {{-- a1 --}}
                                     <td><span data-toggle="modal" data-target="#modalformula"style="cursor:pointer;"
@@ -2201,12 +2239,18 @@ $cu = Auth::user()->getCU();
                                         data-ubahvalue2 = {{ $data->piutanglalai_12bulan != 0? $data->piutanglalai_12bulan : 0 }}
                                         data-ubahvalue3 = {{ $data->piutangberedar != 0? $data->piutangberedar : 0 }}
                                         >
+                                        
                                         {{ $a1 }} % 
                                         @if($a1 > 5) 
                                             <small class="label bg-red">TIDAK IDEAL</small> 
                                         @else 
                                             <small class="label bg-aqua">IDEAL</small> 
-                                        @endif</span>
+                                        @endif
+
+                                        @if(empty($data->piutanglalai_1bulan) || empty($data->piutanglalai_12bulan) || empty($data->piutangberedar))
+                                            <small class="label bg-yellow" data-toggle="tooltip" data-placement="right" title="{{$data_tidak_lengkap}}"><i class="fa fa-warning" ></i></small>
+                                        @endif
+                                        </span>
                                     </td>
 {{-- a2 --}}
                                     <td><span data-toggle="modal" data-target="#modalformula"style="cursor:pointer;"
@@ -2224,12 +2268,18 @@ $cu = Auth::user()->getCU();
                                         data-ubahvalue1 = {{ $data->aset_tidak_menghasilkan != 0 ? $data->aset_tidak_menghasilkan : 0 }}
                                         data-ubahvalue2 = {{ $data->aset != 0 ? $data->aset : 0 }}
                                         >
+                                        
                                         {{ $a2 }} % 
                                         @if($a2 > 5) 
                                             <small class="label bg-red">TIDAK IDEAL</small> 
                                         @else 
                                             <small class="label bg-aqua">IDEAL</small> 
-                                        @endif</span>
+                                        @endif
+
+                                        @if(empty($data->aset_tidak_menghasilkan) || empty($data->aset))
+                                            <small class="label bg-yellow" data-toggle="tooltip" data-placement="right" title="{{$data_tidak_lengkap}}"><i class="fa fa-warning" ></i></small>
+                                        @endif
+                                        </span>
                                     </td>
 {{-- r7 --}}
                                     <td><span data-toggle="modal" data-target="#modalformula"style="cursor:pointer;"
@@ -2314,7 +2364,11 @@ $cu = Auth::user()->getCU();
                                             @else 
                                                 <small class="label bg-aqua">IDEAL</small> 
                                             @endif
-                                        @endif       
+                                        @endif  
+
+                                        @if(empty($data->bjs_saham) || empty($data->hargapasar) || empty($data->simpanansaham))
+                                            <small class="label bg-yellow" data-toggle="tooltip" data-placement="right" title="{{$data_tidak_lengkap}}"><i class="fa fa-warning" ></i></small>
+                                        @endif   
                                         </span>
                                     </td>
 {{-- r9 --}}
@@ -2339,12 +2393,18 @@ $cu = Auth::user()->getCU();
                                         data-ubahvalue3 = {{ $data->aset != 0? $data->aset : 0 }}
                                         data-ubahvalue4 = {{ $data->aset_lalu != 0? $data->aset_lalu : 0 }}
                                         >
+                                        
                                         {{ $r9 }} % 
                                         @if($r9 != 5) 
                                             <small class="label bg-red">TIDAK IDEAL</small> 
                                         @else 
                                             <small class="label bg-aqua">IDEAL</small> 
-                                        @endif</span>
+                                        @endif
+
+                                        @if(empty($data->totalbiaya) || empty($data->beban_penyisihandcr) || empty($data->aset) || empty($data->aset_lalu))
+                                            <small class="label bg-yellow" data-toggle="tooltip" data-placement="right" title="{{$data_tidak_lengkap}}"><i class="fa fa-warning" ></i></small>
+                                        @endif
+                                        </span>
                                     </td>
 {{-- l1 --}}
                                     <td><span data-toggle="modal" data-target="#modalformula"style="cursor:pointer;"
@@ -2368,12 +2428,18 @@ $cu = Auth::user()->getCU();
                                         data-ubahvalue3 = {{ $data->hutang_tidak_berbiaya_30hari != 0? $data->hutang_tidak_berbiaya_30hari : 0 }}
                                         data-ubahvalue4 = {{ $tot_nonsaham != 0? $tot_nonsaham : 0 }}
                                         >
+                                        
                                         {{ $l1 }} % 
                                         @if($l1 < 15 || $l1 > 20) 
                                             <small class="label bg-red">TIDAK IDEAL</small> 
                                         @else 
                                             <small class="label bg-aqua">IDEAL</small> 
-                                        @endif</span>
+                                        @endif
+
+                                        @if(empty($data->investasi_likuid) || empty($data->aset_likuid_tidak_menghasilkan) || empty($data->hutang_tidak_berbiaya_30hari) || empty($tot_nonsaham))
+                                            <small class="label bg-yellow" data-toggle="tooltip" data-placement="right" title="{{$data_tidak_lengkap}}"><i class="fa fa-warning" ></i></small>
+                                        @endif
+                                        </span>
                                     </td>
 {{-- s10 --}}
                                     <td><span data-toggle="modal" data-target="#modalformula"style="cursor:pointer;"
@@ -2400,48 +2466,58 @@ $cu = Auth::user()->getCU();
                                         data-ubahvalue4 = {{ $data->p_lbiasa != 0? $data->p_lbiasa : 0  }}
                                         data-ubahvalue5 = {{ $data->totalanggota_lalu != 0? $data->totalanggota_lalu : 0  }}
                                         >
+                                        
                                         {{ $s10 }} % 
                                         @if($s10 < 12) 
                                             <small class="label bg-red">TIDAK IDEAL</small> 
                                         @else 
                                             <small class="label bg-aqua">IDEAL</small> 
-                                        @endif</span>
+                                        @endif
+
+                                        @if(empty($data->l_biasa) || empty($data->l_lbiasa) || empty($data->p_biasa) || empty($data->p_lbiasa) || empty($data->totalanggota_lalu))
+                                            <small class="label bg-yellow" data-toggle="tooltip" data-placement="right" title="{{$data_tidak_lengkap}}"><i class="fa fa-warning" ></i></small>
+                                        @endif
+
+                                        </span>
                                     </td>
 {{-- s11 --}}
                                     <td><span data-toggle="modal" data-target="#modalformula"style="cursor:pointer;"
-                                        data-judul ='S11 - Pertumbuhan Anggota'
+                                        data-judul ='S11 - Pertumbuhan aset'
                                         data-cu ='{{ $datacu }}' 
-                                        data-indikator='Pertumbuhan anggota 12% per tahun.'
-                                        data-formula='`sf"S11" = (sf"Total Anggota Tahun Ini" - sf"Total Anggota Tahun Lalu")/sf"Total Anggota Tahun Lalu" xx 100 % = sf"10 % Di Atas Laju Inflasi (IDEAL)"`'
-                                        data-nilai='`sf"S11" = (sf"{{ number_format($tot_anggota,"0",",",".") }}" - sf"{{ number_format($data->totalanggota_lalu,"0",",",".") }}")/ sf"{{ number_format($data->totalanggota_lalu,"0",",",".") }}" xx 100 % = {{ $s11 }}% @if($s11 < $data->lajuinflasi + 10) sf"(TIDAK IDEAL)" @else sf"(IDEAL)" @endif`'
+                                        data-indikator='Pertumbuhan aset 5% - 9% lebih tinggi dari tingkat inflasi.'
+                                        data-formula='`sf"S11" = (sf"Aset Akhir Tahun Ini" - sf"Aset Akhir Tahun Lalu")/sf"Aset Akhir Tahun Lalu" xx 100 % = sf"5% - 9% Di Atas Laju Inflasi (IDEAL)"`'
+                                        data-nilai='`sf"S11" = (sf"{{ number_format($data->aset,"0",",",".") }}" - sf"{{ number_format($data->aset_lalu,"0",",",".") }}")/ sf"{{ number_format($data->aset_lalu,"0",",",".") }}" xx 100 % = {{ $s11 }}% @if($s11 < $data->lajuinflasi + 10) sf"(TIDAK IDEAL)" @else sf"(IDEAL)" @endif`'
 
                                         data-id = {{ $data->id }}
-                                        data-ubahjudul1 = 'Anggota Laki-laki Biasa'
-                                        data-ubahjudul2 = 'Anggota Laki-laki Luar Biasa'
-                                        data-ubahjudul3 = 'Anggota Perempuan Biasa'
-                                        data-ubahjudul4 = 'Anggota Perempuan Luar Biasa'
-                                        data-ubahjudul5 = 'Total Anggota Tahun Lalu'
-                                        data-ubahparam1 = 'l_biasa';
-                                        data-ubahparam2 = 'l_lbiasa';
-                                        data-ubahparam3 = 'p_biasa'
-                                        data-ubahparam4 = 'p_lbiasa'
-                                        data-ubahparam5 = 'totalanggota_lalu'
-                                        data-ubahvalue1 = {{ $data->l_biasa != 0? $data->l_biasa : 0  }}
-                                        data-ubahvalue2 = {{ $data->l_lbiasa != 0? $data->l_lbiasa : 0  }}
-                                        data-ubahvalue3 = {{ $data->p_biasa != 0? $data->p_biasa : 0  }}
-                                        data-ubahvalue4 = {{ $data->p_lbiasa != 0? $data->p_lbiasa : 0  }}
-                                        data-ubahvalue5 = {{ $data->totalanggota_lalu != 0? $data->totalanggota_lalu : 0  }}
+                                        data-ubahjudul1 = 'Aset Akhir Tahun Ini'
+                                        data-ubahjudul2 = 'Aset Akhir Tahun Lalu'
+                                        data-ubahvalue1 = {{ $data->aset != 0? $data->aset : 0  }}
+                                        data-ubahvalue2 = {{ $data->aset_lalu != 0? $data->aset_lalu : 0  }}
                                         >
+                                       
                                         {{ $s11 }} % 
                                         @if($s11 < $data->lajuinflasi + 10) 
                                             <small class="label bg-red">TIDAK IDEAL</small> 
                                         @else 
                                             <small class="label bg-aqua">IDEAL</small> 
-                                        @endif</span>
+                                        @endif
+                                        @if(empty($data->aset_lalu) || empty($data->aset))
+                                            <small class="label bg-yellow" data-toggle="tooltip" data-placement="right" title="{{$data_tidak_lengkap}}"><i class="fa fa-warning" ></i></small>
+                                        @endif
+
+                                        </span>
                                     </td>
             
-                                    <td>{{ number_format($data->hargapasar,2) }} %</td>
-                                    <td>{{ number_format($data->lajuinflasi,2) }} %</td>
+                                    <td>{{ number_format($data->hargapasar,2) }} % 
+                                        @if(empty($data->hargapasar))
+                                            <small class="label bg-yellow" data-toggle="tooltip" data-placement="right" title="{{$data_tidak_lengkap}}"><i class="fa fa-warning" ></i></small>
+                                        @endif
+                                    </td>
+                                    <td>{{ number_format($data->lajuinflasi,2) }} %
+                                        @if(empty($data->lajuinflasi))
+                                            <small class="label bg-yellow" data-toggle="tooltip" data-placement="right" title="{{$data_tidak_lengkap}}"><i class="fa fa-warning" ></i></small>
+                                        @endif
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>

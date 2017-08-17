@@ -1,7 +1,7 @@
 @extends('_layouts.layout')
 
 @section('content')
-<div class="page-banner" style="padding:40px 0; background: url(images/slide-02-bg.jpg) center #f9f9f9;">
+<div class="page-banner" style="padding:40px 0;">
     <div class="container">
         <div class="row">
             <div class="col-md-6">

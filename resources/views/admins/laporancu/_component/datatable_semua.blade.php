@@ -30,7 +30,7 @@
                     extend: 'colvisGroup',
                     text: ' Anggota',
                     show: [ 0,1,2,3,4,8,9,10,11,12,13 ],
-                    hide: [ 5,6,7,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32 ]
+                    hide: [ 5,6,7,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32 ],
                 },
                 {
                     extend: 'colvisGroup',
@@ -74,7 +74,6 @@
             cell.innerHTML = i+1;
         } );
     } ).draw();
-
 
     @if(Request::is('admins/laporancu/index_hapus') || Request::is('admins/laporancu/index_cu*'))
         new $.fn.dataTable.Buttons(table,{

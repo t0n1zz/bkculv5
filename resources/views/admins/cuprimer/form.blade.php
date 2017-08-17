@@ -49,14 +49,13 @@ $cu = Auth::user()->getCU();
                 <span class="input-group-addon">0-9</span>
                 @if($cu == 0)
                     {{ Form::number('no_ba',null,array('class' => 'form-control', 'placeholder' => 'Silahkan masukkan nomor anggota',
-                        'onKeyPress' => 'return isNumberKey(event)','required','autocomplete'=>'off'))}}
+                        'onKeyPress' => 'return isNumberKey(event)','autocomplete'=>'off'))}}
                     <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                 @else
                     {{ Form::number('no_ba',null,array('class' => 'form-control', 'placeholder' => 'Silahkan masukkan nomor anggota','readonly'))}}
                 @endif    
                 
             </div>
-            <div class="help-block">No. BA harus diisi.</div>
         </div>
     </div>
     <div class="col-sm-6">

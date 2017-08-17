@@ -52,7 +52,7 @@ $data1 = array_last($infogerakans);
         {{--footer widgets--}}
         <div class="row footer-widgets">
             {{--infogerakan--}}
-            <div class="col-md-3 col-sm-6">
+            <div class="col-md-4 col-sm-6">
                 <div class="footer-widget">
                     <h4>Info Gerakan<span class="head-line"></span></h4>
                     <p>
@@ -103,7 +103,7 @@ $data1 = array_last($infogerakans);
             </div>
             {{--infogerakan--}}
             {{--navigasi website--}}
-            <div class="col-md-3 col-sm-6">
+            <div class="col-md-4 col-sm-6">
                 <div class="footer-widget">
                     <h4>Navigasi Website<span class="head-line"></span></h4>
                     <div class="row">
@@ -149,7 +149,7 @@ $data1 = array_last($infogerakans);
             </div>
             {{--navigasi website--}}
             {{--saran/kritik--}}
-            <div class="col-md-3 col-sm-6">
+            {{-- <div class="col-md-3 col-sm-6">
                 <div class="footer-widget mail-subscribe-widget">
                     <h4>Saran / Kritik<span class="head-line"></span></h4>
                     <?php
@@ -177,10 +177,10 @@ $data1 = array_last($infogerakans);
                         {{ Form::close() }}
                     @endif
                 </div>
-            </div>
+            </div> --}}
             {{--saran/kritik--}}
             {{--statistik website--}}
-            <div class="col-md-3 col-sm-6">
+            <div class="col-md-4 col-sm-6">
                 <div class="footer-widget contact-widget">
                     <h4>PUSKOPDIT BKCU KALIMANTAN<span class="head-line"></span></h4>
                     <p>Jaringan Puskopdit BKCU Kalimantan tersebar hampir ke seluruh wilayah Republik Indonesia.

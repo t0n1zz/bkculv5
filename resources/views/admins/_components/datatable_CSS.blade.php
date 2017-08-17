@@ -4,4 +4,3 @@
 <link rel="stylesheet" type="text/css" href="{{asset('plugins/dataTables/extension/Select/css/select.bootstrap.min.css')}}" >
 <link rel="stylesheet" type="text/css" href="{{asset('plugins/dataTables/extension/Buttons/css/buttons.dataTables.min.css')}}" >
 <link rel="stylesheet" type="text/css" href="{{asset('plugins/dataTables/extension/Buttons/css/buttons.bootstrap.min.css')}}" >
-<link rel="stylesheet" type="text/css" href="{{asset('plugins/dataTables/extension/RowGroup/css/rowGroup.bootstrap.min.css')}}" >

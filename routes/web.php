@@ -10,6 +10,24 @@
 | to using a Closure or controller method. Build something great!
 |
 */
+Route::get('/api_get', function (Request $request) {
+    return response()
+    ->json([
+        'authenticated' => true
+    ]);
+});
+
+Route::post('api_post', function(Request $request){
+    $judul = $request->judul;
+    $content = $request->content;
+
+    $artikel = new App\Artikel;
+    $artikel->judul = $judul;
+    $artikel->content = $content;
+
+    $artikel->save();
+});
+
 Route::get('/',array( 'as' => 'home','uses' => 'PublicController@index'));
 // Route::get('pelayanan/{id}',array( 'as' => 'pelayanans','uses' => 'PublicController@solusi'));
 Route::get('pelayanan',array( 'as' => 'pelayanan','uses' => 'PublicController@pelayanan'));
@@ -31,7 +49,6 @@ Route::get('download',array('as' => 'download','uses' => 'PublicController@downl
 Route::get('download/{filename}',array('as' => 'file','uses' => 'PublicController@download_file'));
 Route::get('attribution',array('as' => 'attribution','uses' => 'PublicController@attribution'));
 Route::get('sitemap',array('as' => 'sitemap','uses' => 'PublicController@sitemap'));
-Route::post('saran',array('as' => 'saran', 'uses' => 'PublicController@saran'));
 
 Route::get('promo',array('as' => 'promo', function()
 {
@@ -260,12 +277,69 @@ Route::group(['prefix' => 'admins','middleware' => 'auth'], function(){
         'uses'         => 'LaporanCuDiskusiController@destroy',
         'middleware'   => ['auth', 'acl'],
         'can'          => 'view.laporancu_view']);
-//laporan cu sikopdit cs
-    Route::get('laporancu/perkiraan', [
-        'as'           => 'admins.laporancu.perkiraan',           
-        'uses'         => 'LaporanCuController@perkiraan',
+//perkiraan
+    Route::get('perkiraan', [
+        'as'           => 'admins.perkiraan.index',           
+        'uses'         => 'PerkiraanController@index',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'upload.laporancu_upload']);
+    Route::post('perkiraan/save', [
+        'as'           => 'admins.perkiraan.save',
+        'uses'         => 'PerkiraanController@save',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'upload.laporancu_upload']);
+    Route::post('perkiraan/load_tp', [
+        'as'           => 'admins.perkiraan.load_tp',
+        'uses'         => 'PerkiraanController@load_tp',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'upload.laporancu_upload']);
+    Route::post('perkiraan/load_periode', [
+        'as'           => 'admins.perkiraan.load_periode',
+        'uses'         => 'PerkiraanController@load_periode',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'upload.laporancu_upload']);
+    Route::post('perkiraan/load_perkiraan', [
+        'as'           => 'admins.perkiraan.load_perkiraan',
+        'uses'         => 'PerkiraanController@load_perkiraan',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'upload.laporancu_upload']);
+    Route::delete('perkiraan/{migrasi}', [
+        'as'           => 'admins.perkiraan.destroy',
+        'uses'         => 'PerkiraanController@destroy',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'upload.laporancu_upload']);
+//migrasi
+    Route::get('migrasi', [
+        'as'           => 'admins.migrasi.index',           
+        'uses'         => 'MigrasiController@index',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'upload.laporancu_upload']);
+    Route::get('migrasi/perkiraan', [
+        'as'           => 'admins.migrasi.perkiraan',           
+        'uses'         => 'MigrasiController@perkiraan',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'upload.laporancu_upload']);  
+    Route::get('migrasi/simpanan_bkcu', [
+        'as'           => 'admins.migrasi.simpanan_bkcu',           
+        'uses'         => 'MigrasiController@simpanan_bkcu',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'upload.laporancu_upload']); 
+// simpanan
+    Route::get('simpanan_bkcu', [
+        'as'           => 'admins.simpanan.index_bkcu',           
+        'uses'         => 'SimpananController@index_bkcu',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'upload.laporancu_upload']);
+    Route::post('simpanan/load_simpananbkcu', [
+        'as'           => 'admins.simpanan.load_simpananbkcu',
+        'uses'         => 'SimpananController@load_simpananbkcu',
         'middleware'   => ['auth', 'acl'],
         'can'          => 'upload.laporancu_upload']);   
+    Route::post('simpanan/load_simpananbkcutr', [
+        'as'           => 'admins.simpanan.load_simpananbkcutr',
+        'uses'         => 'SimpananController@load_simpananbkcutr',
+        'middleware'   => ['auth', 'acl'],
+        'can'          => 'upload.laporancu_upload']);           
 //tp CU
     Route::get('tpcu', [
         'as'           => 'admins.tpcu.index',           

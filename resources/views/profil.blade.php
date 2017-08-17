@@ -1,12 +1,12 @@
 @extends('_layouts.layout')
 
 @section('map')
-<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA2kJmqYT0ClNQjXeW6HZtftdUPuPEz8DU"></script>
 @stop
 
 @section('content')
 <!-- Page Title -->
-<div class="page-banner" style="padding:40px 0; background: url(images/slide-02-bg.jpg) center #f9f9f9;">
+<div class="page-banner" style="padding:40px 0;">
     <div class="container">
         <div class="row">
             <div class="col-md-6">

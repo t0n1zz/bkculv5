@@ -182,8 +182,17 @@ class StafController extends Controller{
             $no_bkcu = sprintf("%'.03d", 15); //999
             $no_cu = sprintf("%'.03d", $riwayatpekerjaan[1]); //999
             $no_id = sprintf("%'.06d", $savedata->id); //999999
-            $nim = $no_bkcu . $riwayatpekerjaan[0] . $no_cu  . $no_id;
 
+            $cek_nim = $no_bkcu . $riwayatpekerjaan[0] . $no_cu;
+            $cekdata = Staf::where('nim','LIKE','%'.$cek_nim.'%')->select('nim')->orderBy('nim','desc')->first();
+
+            if(!empty($cekdata)){
+                $nim_baru = sprintf("%'.06d",ltrim(substr($cekdata->nim,7,6),'0')+1);
+            }else{
+                $nim_baru = sprintf("%'.06d", 1);
+            }
+
+            $nim = $no_bkcu . $riwayatpekerjaan[0] . $no_cu  . $nim_baru;
 
             $kelasdata2 = Staf::find($savedata->id);
             $kelasdata2->nim = $nim;

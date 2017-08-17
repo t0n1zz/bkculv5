@@ -61,7 +61,7 @@ $kelas ='admin';
         <!--password 2-->
         <div class="col-sm-6">
             <div class="form-group has-feedback">
-                <h4>Ualngi Password</h4>
+                <h4>Ulangi Password</h4>
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-font"></i></span>
                     {{ Form::password('password2',array('class' => 'form-control','id'=>'konfirmpassword',

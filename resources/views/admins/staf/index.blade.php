@@ -99,9 +99,8 @@ $id_old="";
                         </thead>
                         <tbody>
                         @foreach($datas as $data)
+                            @if($id_old != $data->id_staf)
                             <?php
-                                if($id_old == $data->id_staf)
-                                    break;
 
                                 $pekerjaan ='';
                                 $i = 0;
@@ -199,6 +198,7 @@ $id_old="";
                                 <td>{{ $kontak }}</td>
                                 <td></td>
                             </tr>
+                            @endif
                             <?php $id_old = $data->id_staf; ?>
                         @endforeach
                         </tbody>

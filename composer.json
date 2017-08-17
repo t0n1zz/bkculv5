@@ -17,7 +17,9 @@
         "venturecraft/revisionable": "1.*",
         "rap2hpoutre/laravel-log-viewer": "^0.10.1",
         "jacquestvanzuydam/laravel-firebird": "dev-5.4-support",
-        "barryvdh/laravel-debugbar": "^2.4"
+        "barryvdh/laravel-debugbar": "^2.4",
+        "pion/laravel-chunk-upload": "^1.0",
+        "yajra/laravel-datatables-oracle": "^7.5"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

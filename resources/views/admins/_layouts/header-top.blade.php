@@ -108,7 +108,7 @@
             @endpermission
             {{-- litbang --}}
             @permission('view.laporancu_view')
-              <li class="dropdown {{ Request::is('admins/laporancu') || Request::is('admins/laporancu*') ? 'active' : '' }}"> 
+              <li class="dropdown {{ Request::is('admins/laporancu') || Request::is('admins/laporancu*') || Request::is('admins/perkiraan') || Request::is('admins/perkiraan*') ? 'active' : '' }}"> 
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                 <i class="fa fa-bar-chart fa-fw"></i> Litbang <span class="caret"></span></a>
                 <ul class="dropdown-menu" role="menu">
@@ -119,16 +119,14 @@
                     </li>
                     <li class="divider"></li>
                   @endpermission
-                  @permission('upload.laporancu_upload')
-                    <li class="{{ Request::is('admins/laporancu/perkiraan') ? 'active' : '' }}">
-                      <a href="{{ route('admins.laporancu.perkiraan') }}"><i class="fa fa-compass fa-fw"></i> Perkiraan</a>
-                    </li>
-                  @endpermission
                   @permission('view.laporancu_view')
+                    <li class="{{ Request::is('admins/perkiraan') ? 'active' : '' }}">
+                      <a href="{{ route('admins.perkiraan.index') }}"><i class="fa fa-compass fa-fw"></i> Perkiraan</a>
+                    </li>
                     <li class="{{ Request::is('admins/laporancu') || Request::is('admins/laporancu/index_cu*') || Request::is('admins/laporancu/index_hapus') || Request::is('admins/laporancu/index_bkcu') ? 'active' : '' }}">
                       <a href="{{ $cu == '0' ? route('admins.laporancu.index') : route('admins.laporancu.index_cu',array($cu)) }}"><i class="fa fa-bar-chart fa-fw"></i> Laporan CU</a>
                     </li>
-                  @endpermission  
+                  @endpermission
                 </ul>
               </li>
             @endpermission
@@ -174,6 +172,23 @@
               </ul>
             </li>
             @endpermission
+            <li class="dropdown {{ Request::is('admins/simpanan_bkcu')  ? 'active' : '' }}">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i></i> BKCU <span class="caret"></span></a>
+              <ul class="dropdown-menu" role="menu">
+                <li class="{{ Request::is('admins/simpanan_bkcu') ? 'active' : '' }}">
+                  <a href="{{ route('admins.simpanan.index_bkcu')}}">Simpanan</a>
+                </li>
+                <li class="{{ Request::is('admins/pinjaman_bkcu') ? 'active' : '' }}">
+                  <a href="#">Pinjaman</a>
+                </li>
+                <li class="{{ Request::is('admins/pinjaman_bkcu') ? 'active' : '' }}">
+                  <a href="#">Solidaritas Gerakan</a>
+                </li>
+                <li class="{{ Request::is('admins/pinjaman_bkcu') ? 'active' : '' }}">
+                  <a href="#">JALINAN</a>
+                </li>
+              </ul>
+            </li>
             @permission('view.admin_view')
               <li class="{{ Request::is('admins/admin') ? 'active' : '' }}"><a href="#" data-toggle="modal" data-target="#modalcheckpass"><i class="fa fa-user-circle-o fa-fw"></i> Admin <span class="sr-only">(current)</span></a></li>
             @endpermission

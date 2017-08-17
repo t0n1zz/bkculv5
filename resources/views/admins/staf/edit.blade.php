@@ -1,7 +1,13 @@
 <?php
 $title="Ubah Identitas Staf";
 $kelas="staf";
-$batal_route = route('admins.'.$kelas.'.index');
+
+$cu = Auth::user()->getCU();
+if($cu == 0){
+    $batal_route = route('admins.'.$kelas.'.index');
+}else{
+    $batal_route = route('admins.'.$kelas.'.index_cu',array($cu));
+}
 ?>
 @extends('admins._layouts.layout')
 

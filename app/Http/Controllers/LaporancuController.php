@@ -10,7 +10,6 @@ use Validator;
 use App\LaporanCu;
 use App\LaporanCuDiskusi;
 use App\LaporanCuHistory;
-use App\SikopditCS\PERKIRAAN;
 use App\Cuprimer;
 use App\WilayahCuprimer;
 use App\Excelitems;
@@ -66,7 +65,6 @@ class LaporanCuController extends Controller{
     public function index_periode($periode)
     {
         try{
-
             $data = LaporanCu::with('cuprimer')->where('periode','<=',$periode)->orderBy('periode','DESC')->get();
 
             $data1 = $data->groupBy('no_ba');
@@ -416,63 +414,6 @@ class LaporanCuController extends Controller{
             return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
         }
     }
-
-    public function perkiraan()
-    {
-        try{
-            $datas = PERKIRAAN::with('JURNALDTL')->where('TIPE','DETIL')->get();
-            $juduls =  PERKIRAAN::where('TIPE','JUDUL')->get();
-            $cu = DB::connection('firebird')->table('SETCU')->first();
-            $blnsaham = DB::connection('firebird')->table('BULANSHM')->select('TGL')->orderBy('TGL','desc')->first();
-            $blnsahamdate = new Date($blnsaham->TGL);
-            $blnsaham = $blnsahamdate->format('F');
-            $datas2 = array( array( 'NOPRK' => '10000',
-                                    'NMPRK' => 'KAS',
-                                    'NILAI' => 0
-                                  ),
-                             array( 'NOPRK' => '1001',
-                                    'NMPRK' => 'Bank',
-                                    'NILAI' => 0
-                                  ),
-                             array( 'NOPRK' => '1002',
-                                    'NMPRK' => 'Deposito',
-                                    'NILAI' => 0
-                                  ),
-                             array( 'NOPRK' => '101',
-                                    'NMPRK' => 'Piutang Anggota',
-                                    'NILAI' => 0
-                                  ),
-                             array( 'NOPRK' => '102',
-                                    'NMPRK' => 'Pendapatan Yg Masih Harus Diterima',
-                                    'NILAI' => 0
-                                  ),
-                             array( 'NOPRK' => '200',
-                                    'NMPRK' => 'Hutang di BKCU Kalimantan (≤ 1 tahun)',
-                                    'NILAI' => 0
-                                  ),
-                           );
-            foreach($datas as $data){
-                $akun = 0;
-                foreach($data->JURNALDTL as $jurnal){
-                    $akun = $akun + $jurnal->JUMLAH;
-                }
-                $perksa = $data->PERKSA->FIRST(); 
-                $sldawl = !empty($perksa) ? $perksa->SLDAWL : 0;
-                $total = $sldawl + $akun;
-                foreach($datas2 as &$data2){
-                    if($data->NOPRK == $data2['NOPRK']){
-                        $data2['NILAI'] += $total; 
-                    }elseif($data->INDUK == $data2['NOPRK']){
-                        $data2['NILAI'] += $total; 
-                    }
-                }
-            }
-            return view('admins.laporancu.perkiraan',compact('datas','juduls','cu','blnsaham'));
-        }catch (Exception $e){
-            return Redirect::back()->withInput()->with('errormessage',$e->getMessage());
-        }
-    }
-
     /**
      * Show the form for creating a new artikel
      *
